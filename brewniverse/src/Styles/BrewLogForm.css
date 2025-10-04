@@ -100,35 +100,6 @@
   border-top: 1px solid var(--color-border);
 }
 
-/* Ingredients list styles */
-.ingredients-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.ingredient-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem;
-  background-color: var(--color-surface);
-  border-radius: 8px;
-  border: 1px solid var(--color-border);
-}
-
-.ingredient-display {
-  flex: 1;
-  font-weight: 500;
-  color: var(--color-text);
-}
-
-.ingredient-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
 /* Section description styles */
 .section-description {
   font-weight: normal;

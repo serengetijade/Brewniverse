@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import IngredientEditor from '../UI/IngredientEditor';
+import IngredientList from '../UI/IngredientList';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -317,73 +317,7 @@ function BrewLogForm() {
     }
   };
 
-  // Handle Ingredients
-  const addIngredient = (type) => {
-    const newIngredient = {
-      id: Date.now().toString(),
-      name: '',
-      amount: '',
-      unit: 'oz'
-    };
-    setFormData(prev => ({
-      ...prev,
-      [type]: [...prev[type], newIngredient]
-    }));
-    // Immediately open the editor for the new ingredient
-    setEditingIngredient({ type, id: newIngredient.id });
-  };
-
-  const updateIngredient = (type, id, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      [type]: prev[type].map(ingredient =>
-        ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
-      )
-    }));
-  };
-
-  const removeIngredient = (type, id) => {
-    setFormData(prev => ({
-      ...prev,
-      [type]: prev[type].filter(ingredient => ingredient.id !== id)
-    }));
-  };
-
-  const [editingIngredient, setEditingIngredient] = useState(null);
   const [showEventsTimeline, setShowEventsTimeline] = useState(false);
-
-  const editIngredient = (type, id) => {
-    setEditingIngredient({ type, id });
-  };
-
-  const cancelEditIngredient = () => {
-    // If canceling an ingredient that has no data, remove it
-    if (editingIngredient) {
-      const { type, id } = editingIngredient;
-      const ingredient = formData[type].find(ing => ing.id === id);
-      if (ingredient && !ingredient.name && !ingredient.amount) {
-        // Remove empty ingredient
-        setFormData(prev => ({
-          ...prev,
-          [type]: prev[type].filter(ing => ing.id !== id)
-        }));
-      }
-    }
-    setEditingIngredient(null);
-  };
-
-  const saveEditIngredient = (type, id, updatedIngredient) => {
-    // Validate that at least name is provided
-    if (!updatedIngredient.name.trim()) {
-      alert('Please enter an ingredient name.');
-      return;
-    }
-    
-    updateIngredient(type, id, 'name', updatedIngredient.name);
-    updateIngredient(type, id, 'amount', updatedIngredient.amount);
-    updateIngredient(type, id, 'unit', updatedIngredient.unit);
-    setEditingIngredient(null);
-  };
 
   const addNutrientScheduleEntry = () => {
     // Create event directly
@@ -564,8 +498,6 @@ function BrewLogForm() {
       addEvent(newEvent);
     }
   };
-
-
 
   const handleDateRackedChange = (value) => {
     if (value) {
@@ -898,194 +830,43 @@ function BrewLogForm() {
 
         {/* Adjuncts */}
         <div className="form-section">
-          <div className="section-header">
-            {/*<h3>Adjuncts <span className="section-description">(fermentable sugars, honey, etc.)</span></h3>*/}
-            <h3>Adjuncts</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="small"
-              onClick={() => addIngredient('adjuncts')}
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="adjuncts"
+                sectionName="Adjuncts"
+                sectionDescription=""
+                sectionInfoMessage= "Adjuncts are fermentable ingredients that are not malted grains. Examples include sugar, honey, molasses, fruit, and other fermentable additives. Adjuncts can contribute to the flavor, color, and alcohol content of the brew. No adjuncts added yet."
             >
-              <Plus size={16} />
-              Add Ingredient
-            </Button>
-          </div>
-          
-          {formData.adjuncts.length === 0 ? (
-            <p className="empty-message">Record added fermentables here. 
-                <br />Examples are sugar, honey, molasses, etc.
-                <br />No adjuncts added yet.
-            </p>
-          ) : (
-            <div className="ingredients-list">
-              {formData.adjuncts.map((ingredient) => (
-                <div key={ingredient.id} className="ingredient-item">
-                  {editingIngredient && editingIngredient.type === 'adjuncts' && editingIngredient.id === ingredient.id ? (
-                    <IngredientEditor
-                      ingredient={ingredient}
-                      type="adjuncts"
-                      onSave={saveEditIngredient}
-                      onCancel={cancelEditIngredient}
-                    />
-                  ) : (
-                    <>
-                      <div className="ingredient-display">
-                        {ingredient.name && ingredient.amount && ingredient.unit 
-                          ? `${ingredient.name} - ${ingredient.amount} ${ingredient.unit}`
-                          : 'Incomplete adjunct'
-                        }
-                      </div>
-                      <div className="ingredient-actions">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => editIngredient('adjuncts', ingredient.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => removeIngredient('adjuncts', ingredient.id)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-              </div>
+            </IngredientList>
+        </div>
 
         {/* Primary Ingredients */}
         <div className="form-section">
-          <div className="section-header">
-            <h3>Primary Ingredients</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="small"
-              onClick={() => addIngredient('ingredientsPrimary')}
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="ingredientsPrimary"
+                sectionName="Primary Ingredients"
+                sectionDescription=""
+                sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
             >
-              <Plus size={16} />
-              Add Ingredient
-            </Button>
-          </div>
-          
-          {formData.ingredientsPrimary.length === 0 ? (
-            <p className="empty-message">List ingredients used during primary fermentation.<br/>No primary ingredients added yet.</p>
-          ) : (
-            <div className="ingredients-list">
-              {formData.ingredientsPrimary.map((ingredient) => (
-                <div key={ingredient.id} className="ingredient-item">
-                  {editingIngredient && editingIngredient.type === 'ingredientsPrimary' && editingIngredient.id === ingredient.id ? (
-                    <IngredientEditor
-                      ingredient={ingredient}
-                      type="ingredientsPrimary"
-                      onSave={saveEditIngredient}
-                      onCancel={cancelEditIngredient}
-                    />
-                  ) : (
-                    <>
-                      <div className="ingredient-display">
-                        {ingredient.name && ingredient.amount && ingredient.unit 
-                          ? `${ingredient.name} - ${ingredient.amount} ${ingredient.unit}`
-                          : 'Incomplete ingredient'
-                        }
-                      </div>
-                      <div className="ingredient-actions">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => editIngredient('ingredientsPrimary', ingredient.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => removeIngredient('ingredientsPrimary', ingredient.id)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+            </IngredientList>
         </div>
 
         {/* Secondary Ingredients */}
         <div className="form-section">
-          <div className="section-header">
-            <h3>Secondary Ingredients</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="small"
-              onClick={() => addIngredient('ingredientsSecondary')}
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="ingredientsSecondary"
+                sectionName="Secondary Ingredients"
+                sectionDescription=""
+                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
             >
-              <Plus size={16} />
-              Add Ingredient
-            </Button>
-          </div>
-          
-          {formData.ingredientsSecondary.length === 0 ? (
-            <p className="empty-message">List ingredients used during secondary <br/> or any used to backsweeten your brew.<br/>No secondary ingredients added yet.</p>
-          ) : (
-            <div className="ingredients-list">
-              {formData.ingredientsSecondary.map((ingredient) => (
-                <div key={ingredient.id} className="ingredient-item">
-                  {editingIngredient && editingIngredient.type === 'ingredientsSecondary' && editingIngredient.id === ingredient.id ? (
-                    <IngredientEditor
-                      ingredient={ingredient}
-                      type="ingredientsSecondary"
-                      onSave={saveEditIngredient}
-                      onCancel={cancelEditIngredient}
-                    />
-                  ) : (
-                    <>
-                      <div className="ingredient-display">
-                        {ingredient.name && ingredient.amount && ingredient.unit 
-                          ? `${ingredient.name} - ${ingredient.amount} ${ingredient.unit}`
-                          : 'Incomplete ingredient'
-                        }
-                      </div>
-                      <div className="ingredient-actions">
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => editIngredient('ingredientsSecondary', ingredient.id)}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="small"
-                          onClick={() => removeIngredient('ingredientsSecondary', ingredient.id)}
-                        >
-                          <Trash2 size={16} />
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+            </IngredientList>
         </div>
-                
+
         {/* Gravity Readings */}
         <div className="form-section">
           <h3>Gravity Readings</h3>
@@ -1845,4 +1626,3 @@ function BrewLogForm() {
 }
 
 export default BrewLogForm;
-
