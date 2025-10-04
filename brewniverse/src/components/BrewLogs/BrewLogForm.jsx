@@ -655,6 +655,39 @@ function BrewLogForm() {
     }
   };
 
+  // Additional gravity readings functions
+  const addAdditionalGravityReading = () => {
+    const newReading = createEvent(
+      'Gravity',
+      'Gravity Reading',
+      'Gravity reading',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newReading);
+  };
+
+  const getAdditionalGravityReadings = () => {
+    return getEventsByType('Gravity').filter(event => 
+      event.name === 'Gravity Reading' // Filter out Original Gravity Reading
+    );
+  };
+
+  const updateAdditionalGravityReading = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'reading') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+  };
+
+  const removeAdditionalGravityReading = (eventId) => {
+    removeEvent(eventId);
+  };
+
   return (
     <div className="brewlog-form">
       <div className="form-header">
@@ -1170,6 +1203,61 @@ function BrewLogForm() {
                 <span className="input-suffix">%</span>
               </div>
             </div>
+          </div>
+
+          {/* Additional Gravity Readings */}
+          <div className="form-group">
+            <div className="section-header">
+              <label className="form-label">Additional Gravity Readings</label>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addAdditionalGravityReading}
+              >
+                <Plus size={16} />
+                Add Reading
+              </Button>
+            </div>
+            
+            {getAdditionalGravityReadings().length === 0 ? (
+              <p className="empty-message">No additional gravity readings recorded.</p>
+            ) : (
+              <div className="compact-list">
+                {getAdditionalGravityReadings().map((reading) => (
+                  <div key={reading.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Gravity Reading</label>
+                      <input
+                        type="number"
+                        step="0.001"
+                        className="form-input"
+                        placeholder="1.020"
+                        value={reading.description}
+                        onChange={(e) => updateAdditionalGravityReading(reading.id, 'reading', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={reading.date}
+                        onChange={(e) => updateAdditionalGravityReading(reading.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeAdditionalGravityReading(reading.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
