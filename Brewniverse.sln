@@ -8,12 +8,16 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		mobile app|Any CPU = mobile app|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.mobile app|Any CPU.ActiveCfg = Debug|Any CPU
+		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.mobile app|Any CPU.Build.0 = Debug|Any CPU
+		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.mobile app|Any CPU.Deploy.0 = Debug|Any CPU
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F71AD7AD-8ADD-DA6F-9A65-C811475E218E}.Release|Any CPU.Deploy.0 = Release|Any CPU

@@ -17,12 +17,14 @@ function BrewLogsList() {
     switch (type) {
       case 'Beer':
         return '🍺';
-      case 'Wine':
-        return '🍷';
       case 'Mead':
         return '🍯';
       case 'Kombucha':
         return '🫖';
+      case 'Wine':
+        return '🍷';
+      case 'Other':
+        return '🧪';
       default:
         return '🧪';
     }
@@ -101,7 +103,7 @@ function BrewLogsList() {
                   {brewLog.dateBottled ? (
                     <span className="status-badge status-completed">Bottled</span>
                   ) : brewLog.dateRacked ? (
-                    <span className="status-badge status-racked">Racked</span>
+                    <span className="status-badge status-racked">Secondary</span>
                   ) : (
                     <span className="status-badge status-fermenting">Fermenting</span>
                   )}
