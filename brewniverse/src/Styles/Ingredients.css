@@ -1,0 +1,18 @@
+/* Ingredient Editor */
+.ingredient-editor {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--color-background);
+    border-radius: 8px;
+    border: 2px solid var(--color-primary);
+}
+
+.ingredient-editor-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+}
