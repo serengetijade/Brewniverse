@@ -745,12 +745,12 @@ function BrewLogForm() {
               placeholder="Nutrient details"
             />
           </div>
-        </div>
 
-        {/* Nutrient Schedule */}
-        <div className="form-section">
-          <div className="section-header">
-            <h3>Nutrient Schedule</h3>
+          {/* Nutrient Schedule */}
+          <div>
+            <label htmlFor="nutrients" className="form-label">
+                Nutrient Schedule
+            </label>
             <div className="nutrient-schedule-buttons">
               <Button
                 type="button"
