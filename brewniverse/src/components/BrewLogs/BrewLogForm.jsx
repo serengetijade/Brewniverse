@@ -14,33 +14,25 @@ function BrewLogForm() {
   const initialFormData = useRef(null);
 
   const [formData, setFormData] = useState({
-    name: '',
-    type: 'Beer',
+    acids: '',
+    adjuncts: [],
+    bases: '',
+    dateCreated: '',
+    dateBottled: '',
     description: '',
     dateCreated: new Date().toISOString().split('T')[0],
     ingredientsPrimary: [],
-    adjuncts: [],
-    pecticEnzyme: '',
-    yeast: '',
-    nutrients: '',
-    nutrientSchedule: [],
-    alerts: [],
     ingredientsSecondary: [],
-    gravity: {
-      original: '',
-      final: '',
-      estimated: ''
-    },
-    gravityFinal: '',
-    gravity13Break: '',
     estimatedABV: '',
+    events: [], // Events for: NutrientSchedule, DateRacked, Gravity, GravityFinal, PecticEnzyme, Yeast, DateCreated
     finalABV: '',
+    gravity13Break: '',
+    name: '',
     notes: '',
-    acids: '',
-    bases: '',
-    dateBottled: '',
-    dateRacked: '',
-    recipeId: ''
+    nutrients: '',
+    recipeId: '',
+    type: 'Mead',
+    yeast: '', 
   });
 
   useEffect(() => {
@@ -49,13 +41,59 @@ function BrewLogForm() {
       if (brewLog) {
         const loadedData = {
           ...brewLog,
-          dateCreated: brewLog.dateCreated.split('T')[0]
+          dateCreated: brewLog.dateCreated.split('T')[0],
+          events: brewLog.events || [] // Ensure events array exists
         };
+        
+        // If no events exist, create them from existing data
+        if (!brewLog.events || brewLog.events.length === 0) {
+          const generatedEvents = [];
+          
+          // Create DateCreated event
+          generatedEvents.push(createEvent(
+            'DateCreated',
+            'Date Created',
+            'New brew started',
+            loadedData.dateCreated,
+            false,
+            false
+          ));
+          
+          // Create events from nutrientSchedule
+          if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
+            loadedData.nutrientSchedule.forEach(entry => {
+              generatedEvents.push(createEvent(
+                'Nutrient',
+                'Nutrients Added',
+                entry.description,
+                entry.date,
+                entry.completed,
+                false
+              ));
+            });
+          }
+          
+          loadedData.events = generatedEvents;
+        }
+        
         setFormData(loadedData);
         initialFormData.current = JSON.stringify(loadedData);
       }
     } else {
-      initialFormData.current = JSON.stringify(formData);
+      // For new brew logs, create initial DateCreated event
+      const initialData = {
+        ...formData,
+        events: [createEvent(
+          'DateCreated',
+          'Date Created',
+          'New brew started',
+          formData.dateCreated,
+          false,
+          false
+        )]
+      };
+      setFormData(initialData);
+      initialFormData.current = JSON.stringify(initialData);
     }
   }, [id, isEditing, state.brewLogs]);
 
@@ -117,72 +155,126 @@ function BrewLogForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (name.startsWith('gravity.')) {
+    
+    // Handle converted event-based fields
+    if (name === 'yeast') {
+      handleYeastChange(value);
+      return;
+    }
+    else if (name === 'pecticEnzyme') {
+      handlePecticEnzymeChange(value);
+      return;
+    }
+    else if (name === 'nutrients') {
+      // Nutrients field saves directly to property, NOT as event
+      setFormData(prev => ({
+        ...prev,
+        nutrients: value
+      }));
+      return;
+    }
+    else if (name === 'dateRacked') {
+      handleDateRackedChange(value);
+      return;
+    }
+    else if (name.startsWith('gravity.')) {
       const gravityField = name.split('.')[1];
-      const newGravity = {
-        ...formData.gravity,
-        [gravityField]: value
-      };
+      handleGravityChange(gravityField, value);
       
       // Auto-calculate 1/3 Break Gravity when original gravity is entered
       if (gravityField === 'original' && value) {
         const originalGravity = parseFloat(value);
         if (originalGravity > 1) {
           const gravity13Break = ((originalGravity - 1) * 2/3) + 1;
-          newGravity.final = gravity13Break.toFixed(3);
-          
-          // Update the gravity13Break field as well
           setFormData(prev => ({
             ...prev,
-            gravity: newGravity,
             gravity13Break: gravity13Break.toFixed(3),
             estimatedABV: ((originalGravity - 1) * 131.25).toFixed(1)
           }));
-          return;
         }
       }
+      return;
+    }
+    else if (name === 'gravityFinal' && value) {
+      handleGravityChange('final', value);
       
-      setFormData(prev => ({
-        ...prev,
-        gravity: newGravity
-      }));
-    } else if (name === 'gravity13Break' && value) {
-      // Auto-calculate when 1/3 break gravity is manually entered
-      const gravity13Break = parseFloat(value);
-      if (gravity13Break > 1) {
-        const originalGravity = parseFloat(formData.gravity.original);
-        if (originalGravity > 1) {
-          const estimatedABV = ((originalGravity - 1) * 131.25).toFixed(1);
-          setFormData(prev => ({
-            ...prev,
-            [name]: value,
-            estimatedABV: estimatedABV
-          }));
-          return;
-        }
-      }
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    } else if (name === 'gravityFinal' && value) {
       // Auto-calculate Final ABV when final gravity is entered
       const gravityFinal = parseFloat(value);
-      const originalGravity = parseFloat(formData.gravity.original);
+      const originalGravity = parseFloat(getGravityOriginal());
       if (gravityFinal > 0 && originalGravity > 1) {
         const finalABV = ((originalGravity - gravityFinal) * 131.25).toFixed(1);
         setFormData(prev => ({
           ...prev,
-          [name]: value,
           finalABV: finalABV
         }));
-        return;
       }
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    } else {
+      return;
+    }
+    else if (name === 'dateCreated') {
+      setFormData(prev => {
+        const newFormData = {
+          ...prev,
+          dateCreated: value
+        };
+        
+        const existingEventIndex = prev.events.findIndex(event => event.type === 'DateCreated');
+        const dateCreatedEvent = createEvent(
+          'DateCreated',
+          'Date Created',
+          'New brew started',
+          value,
+          false,
+          false
+        );
+
+        if (existingEventIndex >= 0) {
+          newFormData.events = prev.events.map((event, index) =>
+            index === existingEventIndex ? { ...event, date: value } : event
+          );
+        } else {
+          newFormData.events = [...prev.events, dateCreatedEvent];
+        }
+
+        return newFormData;
+      });
+      return;
+    }
+    else if (name === 'dateBottled') {
+      setFormData(prev => {
+        const newFormData = {
+          ...prev,
+          dateBottled: value
+        };
+        
+        const existingEventIndex = prev.events.findIndex(event => event.type === 'DateBottled');
+        const dateBottledEvent = createEvent(
+          'DateBottled',
+          'Brew Bottled',
+          'Brew bottled and ready for aging',
+          value,
+          false,
+          false
+        );
+
+        if (value) {
+          if (existingEventIndex >= 0) {
+            newFormData.events = prev.events.map((event, index) =>
+              index === existingEventIndex ? { ...event, date: value } : event
+            );
+          } else {
+            newFormData.events = [...prev.events, dateBottledEvent];
+          }
+        } else {
+          // Remove event if date is cleared
+          newFormData.events = prev.events.filter(event => event.type !== 'DateBottled');
+        }
+
+        return newFormData;
+      });
+      return;
+    }
+    else {
+      // Handle all other regular fields
       setFormData(prev => ({
         ...prev,
         [name]: value
@@ -222,6 +314,7 @@ function BrewLogForm() {
   };
 
   const [editingIngredient, setEditingIngredient] = useState(null);
+  const [showEventsTimeline, setShowEventsTimeline] = useState(false);
 
   const editIngredient = (type, id) => {
     setEditingIngredient({ type, id });
@@ -352,32 +445,31 @@ function BrewLogForm() {
   };
 
   const addNutrientScheduleEntry = () => {
-    const newEntry = {
-      id: Date.now().toString(),
-      date: '',
-      description: '',
-      completed: false
-    };
-    setFormData(prev => ({
-      ...prev,
-      nutrientSchedule: [...prev.nutrientSchedule, newEntry]
-    }));
+    // Create event directly
+    const nutrientEvent = createEvent(
+      'Nutrient',
+      'Nutrients Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(nutrientEvent);
   };
 
   const updateNutrientScheduleEntry = (id, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      nutrientSchedule: prev.nutrientSchedule.map(entry =>
-        entry.id === id ? { ...entry, [field]: value } : entry
-      )
-    }));
+    // Update the event directly
+    const updates = {};
+    if (field === 'date') updates.date = value;
+    if (field === 'description') updates.description = value;
+    if (field === 'completed') updates.completed = value;
+    
+    updateEvent(id, updates);
   };
 
   const removeNutrientScheduleEntry = (id) => {
-    setFormData(prev => ({
-      ...prev,
-      nutrientSchedule: prev.nutrientSchedule.filter(entry => entry.id !== id)
-    }));
+    // Remove the event directly
+    removeEvent(id);
   };
 
   const addScheduleEntries = (scheduleType) => {
@@ -401,7 +493,7 @@ function BrewLogForm() {
         entries = [{
             id: Date.now().toString(),
             date: today.toISOString().split('T')[0],
-            description: 'Staggered nutrient - initial addition',
+            description: 'Staggered nutrient - yeast added',
             completed: false
         }];
         // Add future entries
@@ -419,15 +511,149 @@ function BrewLogForm() {
         break;
     }
 
+    // Create events directly (no more nutrientSchedule array)
+    const nutrientEvents = entries.map(entry => 
+      createEvent(
+        'Nutrient',
+        'Nutrients Added',
+        entry.description,
+        entry.date,
+        entry.completed,
+        false
+      )
+    );
+
     setFormData(prev => ({
       ...prev,
-      nutrientSchedule: [...prev.nutrientSchedule, ...entries]
+      events: [...prev.events, ...nutrientEvents]
     }));
   };
 
   const addSplitSchedule = () => addScheduleEntries('split');
   const addStaggered2Schedule = () => addScheduleEntries('staggered2');
   const addStaggered3Schedule = () => addScheduleEntries('staggered3');
+
+  // Event management functions
+  const createEvent = (type, name, description, date, completed = false, hasAlert = false) => {
+    return {
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      name,
+      description,
+      date,
+      completed,
+      hasAlert,
+      type
+    };
+  };
+
+  const addEvent = (event) => {
+    setFormData(prev => ({
+      ...prev,
+      events: [...prev.events, event]
+    }));
+  };
+
+  const updateEvent = (eventId, updates) => {
+    setFormData(prev => ({
+      ...prev,
+      events: prev.events.map(event =>
+        event.id === eventId ? { ...event, ...updates } : event
+      )
+    }));
+  };
+
+  const removeEvent = (eventId) => {
+    setFormData(prev => ({
+      ...prev,
+      events: prev.events.filter(event => event.id !== eventId)
+    }));
+  };
+
+  // Helper functions to derive UI data from events
+  const getEventsByType = (type) => {
+    return formData.events.filter(event => event.type === type);
+  };
+
+  const getNutrientSchedule = () => {
+    return getEventsByType('Nutrient').map(event => ({
+      id: event.id,
+      date: event.date,
+      description: event.description,
+      completed: event.completed
+    }));
+  };
+
+  const getYeast = () => {
+    const yeastEvent = formData.events.find(event => event.type === 'Yeast');
+    return yeastEvent ? yeastEvent.description : '';
+  };
+
+  const getPecticEnzyme = () => {
+    const pecticEvent = formData.events.find(event => event.type === 'PecticEnzyme');
+    return pecticEvent ? pecticEvent.description : '';
+  };
+
+  const getDateRacked = () => {
+    const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
+    return rackedEvent ? rackedEvent.date : '';
+  };
+
+  const getGravityOriginal = () => {
+    const gravityEvent = formData.events.find(event => event.type === 'Gravity');
+    return gravityEvent ? gravityEvent.description : '';
+  };
+
+  const getGravityFinal = () => {
+    const gravityFinalEvent = formData.events.find(event => event.type === 'GravityFinal');
+    return gravityFinalEvent ? gravityFinalEvent.description : '';
+  };
+
+  const formatEventDate = (dateString) => {
+    if (!dateString) return '';
+    // Parse YYYY-MM-DD format without timezone conversion
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    return date.toLocaleDateString();
+  };
+
+  const updateEventField = (eventType, name, description, date = new Date().toISOString().split('T')[0]) => {
+    const existingEvent = formData.events.find(event => event.type === eventType);
+    
+    if (existingEvent) {
+      updateEvent(existingEvent.id, { name, description, date });
+    } else {
+      const newEvent = createEvent(eventType, name, description, date, false, false);
+      addEvent(newEvent);
+    }
+  };
+
+  const handleYeastChange = (value) => {
+    updateEventField('Yeast', 'Yeast Added', value);
+  };
+
+  const handlePecticEnzymeChange = (value) => {
+    updateEventField('PecticEnzyme', 'Pectic Enzyme Added', value);
+  };
+
+  const handleDateRackedChange = (value) => {
+    if (value) {
+      updateEventField('DateRacked', 'Brew Racked', 'Brew transferred to secondary', value);
+    } else {
+      // Remove event if date is cleared
+      const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
+      if (rackedEvent) {
+        removeEvent(rackedEvent.id);
+      }
+    }
+  };
+
+  const handleGravityChange = (field, value) => {
+    if (field === 'original') {
+      updateEventField('Gravity', 'Original Gravity Reading', value);
+    } else if (field === 'final') {
+      updateEventField('GravityFinal', 'Final Gravity Reading', value);
+    }
+  };
 
   return (
     <div className="brewlog-form">
@@ -720,7 +946,7 @@ function BrewLogForm() {
               id="yeast"
               name="yeast"
               className="form-input"
-              value={formData.yeast}
+              value={getYeast()}
               onChange={handleChange}
               placeholder="Yeast strain and details"
             />
@@ -788,7 +1014,7 @@ function BrewLogForm() {
             </div>
           </div>
           
-          {formData.nutrientSchedule.map((entry) => (
+          {getNutrientSchedule().map((entry) => (
             <div key={entry.id} className="nutrient-schedule-entry">
               <div className="form-group">
                 <input
@@ -842,7 +1068,7 @@ function BrewLogForm() {
               id="pecticEnzyme"
               name="pecticEnzyme"
               className="form-input"
-              value={formData.pecticEnzyme}
+              value={getPecticEnzyme()}
               onChange={handleChange}
               placeholder="Pectic enzyme details"
             />
@@ -864,7 +1090,7 @@ function BrewLogForm() {
                 id="gravity.original"
                 name="gravity.original"
                 className="form-input"
-                value={formData.gravity.original}
+                value={getGravityOriginal()}
                 onChange={handleChange}
                 placeholder="1.050"
               />
@@ -897,7 +1123,7 @@ function BrewLogForm() {
                 id="gravityFinal"
                 name="gravityFinal"
                 className="form-input"
-                value={formData.gravityFinal}
+                value={getGravityFinal()}
                 onChange={handleChange}
                 placeholder="1.000"
               />
@@ -996,7 +1222,7 @@ function BrewLogForm() {
                 id="dateRacked"
                 name="dateRacked"
                 className="form-input"
-                value={formData.dateRacked}
+                value={getDateRacked()}
                 onChange={handleChange}
               />
             </div>
@@ -1069,6 +1295,37 @@ function BrewLogForm() {
           </Button>
         </div>
       </form>
+
+      {/* Events Timeline */}
+      <div className="card mt-4">
+        <div className="card-header" style={{ cursor: 'pointer' }} onClick={() => setShowEventsTimeline(!showEventsTimeline)}>
+          <h3>Events Timeline {showEventsTimeline ? '▼' : '▶'}</h3>
+          <p>Click to {showEventsTimeline ? 'hide' : 'show'} chronological events</p>
+        </div>
+        {showEventsTimeline && formData.events.length > 0 && (
+          <div className="events-timeline">
+            {formData.events
+              .sort((a, b) => new Date(a.date) - new Date(b.date))
+              .map(event => (
+                <div key={event.id} className="event-timeline-item">
+                  <div className="event-date">{formatEventDate(event.date)}</div>
+                  <div className="event-content">
+                    <strong>{event.name}</strong>
+                    <span className="event-type">({event.type})</span>
+                    {event.description && <div className="event-description">{event.description}</div>}
+                    <div className="event-status">
+                      {event.completed ? '✅ Completed' : '⏳ Pending'}
+                      {event.hasAlert && ' 🔔 Has Alert'}
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+        {showEventsTimeline && formData.events.length === 0 && (
+          <p className="empty-message">No events recorded yet.</p>
+        )}
+      </div>
 
     </div>
   );
