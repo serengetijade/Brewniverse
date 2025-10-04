@@ -31,6 +31,7 @@ function BrewLogForm() {
     nutrients: '',
     pecticEnzyme: '', 
     recipeId: '',
+    tannins: '',
     type: 'Mead',
     yeast: '', 
   });
@@ -824,6 +825,37 @@ function BrewLogForm() {
     removeEvent(eventId);
   };
 
+  // Tannins functions
+  const addTanninsEntry = () => {
+    const newEntry = createEvent(
+      'Tannins',
+      'Tannins Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newEntry);
+  };
+
+  const getTanninsEntries = () => {
+    return getEventsByType('Tannins');
+  };
+
+  const updateTanninsEntry = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'description') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+  };
+
+  const removeTanninsEntry = (eventId) => {
+    removeEvent(eventId);
+  };
+
   return (
     <div className="brewlog-form">
       <div className="form-header">
@@ -1218,9 +1250,7 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getAdditionalGravityReadings().length === 0 ? (
-              <p className="empty-message">No additional gravity readings recorded.</p>
-            ) : (
+            {getAdditionalGravityReadings().length > 0 && (
               <div className="compact-list">
                 {getAdditionalGravityReadings().map((reading) => (
                   <div key={reading.id} className="compact-item">
@@ -1277,7 +1307,7 @@ function BrewLogForm() {
             </div>
             
             {getYeastEntries().length === 0 ? (
-              <p className="empty-message">No yeast additions recorded.</p>
+              <p className="empty-message">Wild or cultured, record your yeast here. <br/>No yeast additions recorded.</p>
             ) : (
               <div className="compact-list">
                 {getYeastEntries().map((entry) => (
@@ -1452,9 +1482,7 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getPecticEnzymeEntries().length === 0 ? (
-              <p className="empty-message">Pectic enzyme is a popular, but totally optional, addition.<br/>No pectic enzyme additions recorded.</p>
-            ) : (
+            {getPecticEnzymeEntries().length > 0 && (
               <div className="compact-list">
                 {getPecticEnzymeEntries().map((entry) => (
                   <div key={entry.id} className="compact-item">
@@ -1526,9 +1554,7 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getAcidsEntries().length === 0 ? (
-              <p className="empty-message">No acid additions recorded.</p>
-            ) : (
+            {getAcidsEntries().length > 0 && (
               <div className="compact-list">
                 {getAcidsEntries().map((entry) => (
                   <div key={entry.id} className="compact-item">
@@ -1595,9 +1621,7 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getBasesEntries().length === 0 ? (
-              <p className="empty-message">No base additions recorded.</p>
-            ) : (
+            {getBasesEntries().length > 0 && (
               <div className="compact-list">
                 {getBasesEntries().map((entry) => (
                   <div key={entry.id} className="compact-item">
@@ -1625,6 +1649,78 @@ function BrewLogForm() {
                       variant="ghost"
                       size="small"
                       onClick={() => removeBasesEntry(entry.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Tannins */}
+        <div className="form-section">
+          <h3>Tannins</h3>
+          
+          <div className="form-group">
+            <label htmlFor="tannins" className="form-label">
+              Tannins
+            </label>
+            <textarea
+              id="tannins"
+              name="tannins"
+              className="form-textarea"
+              value={formData.tannins}
+              onChange={handleChange}
+              placeholder="General tannin information and notes"
+              rows={3}
+            />
+          </div>
+
+          {/* Tannin Additions */}
+          <div className="form-group">
+            <div className="section-header">
+              <label className="form-label">Tannin Additions</label>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addTanninsEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+            
+            {getTanninsEntries().length > 0 && (
+              <div className="compact-list">
+                {getTanninsEntries().map((entry) => (
+                  <div key={entry.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Tannin Details</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Tannin type and amount"
+                        value={entry.description}
+                        onChange={(e) => updateTanninsEntry(entry.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={entry.date}
+                        onChange={(e) => updateTanninsEntry(entry.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeTanninsEntry(entry.id)}
                     >
                       <Trash2 size={16} />
                     </Button>
