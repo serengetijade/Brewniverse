@@ -23,12 +23,13 @@ function BrewLogForm() {
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     estimatedABV: '',
-    events: [], // Events for: NutrientSchedule, DateRacked, Gravity, GravityFinal, PecticEnzyme, Yeast, DateCreated
+    events: [], // Events for: NutrientSchedule, DateRacked, Gravity, GravityFinal, PecticEnzyme, Yeast, DateCreated, etc
     finalABV: '',
     gravity13Break: '',
     name: '',
     notes: '',
     nutrients: '',
+    pecticEnzyme: '', 
     recipeId: '',
     type: 'Mead',
     yeast: '', 
@@ -1422,7 +1423,24 @@ function BrewLogForm() {
           <h3>Pectic Enzyme</h3>
           
           <div className="form-group">
+            <label htmlFor="pecticEnzyme" className="form-label">
+              Pectic Enzyme
+            </label>
+            <textarea
+              id="pecticEnzyme"
+              name="pecticEnzyme"
+              className="form-textarea"
+              value={formData.pecticEnzyme}
+              onChange={handleChange}
+              placeholder="General pectic enzyme information and notes"
+              rows={3}
+            />
+          </div>
+
+          {/* Pectic Enzyme Additions */}
+          <div className="form-group">
             <div className="section-header">
+              <label className="form-label">Pectic Enzyme Additions</label>
               <Button
                 type="button"
                 variant="outline"
