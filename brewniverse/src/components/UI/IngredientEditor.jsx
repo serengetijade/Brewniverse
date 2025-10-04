@@ -75,7 +75,7 @@ function IngredientEditor({
                     <option value="tsp">tsp</option>
                     <option value="tbsp">tbsp</option>
                     <option value="cups">cups</option>
-                    <option value="unit">unit(s)</option>
+                    <option value="unit(s)">unit(s)</option>
                 </select>
             </div>
             <div className="ingredient-editor-actions">
