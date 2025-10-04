@@ -23,7 +23,7 @@ function BrewLogForm() {
     pecticEnzyme: '',
     yeast: '',
     nutrients: '',
-    feedingSchedule: [],
+    nutrientSchedule: [],
     alerts: [],
     ingredientsSecondary: [],
     gravity: {
@@ -351,7 +351,7 @@ function BrewLogForm() {
     );
   };
 
-  const addFeedingScheduleEntry = () => {
+  const addNutrientScheduleEntry = () => {
     const newEntry = {
       id: Date.now().toString(),
       date: '',
@@ -360,23 +360,23 @@ function BrewLogForm() {
     };
     setFormData(prev => ({
       ...prev,
-      feedingSchedule: [...prev.feedingSchedule, newEntry]
+      nutrientSchedule: [...prev.nutrientSchedule, newEntry]
     }));
   };
 
-  const updateFeedingScheduleEntry = (id, field, value) => {
+  const updateNutrientScheduleEntry = (id, field, value) => {
     setFormData(prev => ({
       ...prev,
-      feedingSchedule: prev.feedingSchedule.map(entry =>
+      nutrientSchedule: prev.nutrientSchedule.map(entry =>
         entry.id === id ? { ...entry, [field]: value } : entry
       )
     }));
   };
 
-  const removeFeedingScheduleEntry = (id) => {
+  const removeNutrientScheduleEntry = (id) => {
     setFormData(prev => ({
       ...prev,
-      feedingSchedule: prev.feedingSchedule.filter(entry => entry.id !== id)
+      nutrientSchedule: prev.nutrientSchedule.filter(entry => entry.id !== id)
     }));
   };
 
@@ -396,7 +396,7 @@ function BrewLogForm() {
     
     setFormData(prev => ({
       ...prev,
-      feedingSchedule: [...prev.feedingSchedule, ...entries]
+      nutrientSchedule: [...prev.nutrientSchedule, ...entries]
     }));
   };
 
@@ -413,26 +413,26 @@ function BrewLogForm() {
       {
         id: Date.now().toString(),
         date: day1.toISOString().split('T')[0],
-        description: 'Staggered feeding - 24 hours later',
+        description: 'Staggered nutrient - 24 hours later',
         completed: false
       },
       {
         id: (Date.now() + 1).toString(),
         date: day2.toISOString().split('T')[0],
-        description: 'Staggered feeding - 48 hours later',
+        description: 'Staggered nutrient - 48 hours later',
         completed: false
       },
       {
         id: (Date.now() + 2).toString(),
         date: day3.toISOString().split('T')[0],
-        description: 'Staggered feeding - 72 hours later',
+        description: 'Staggered nutrient - 72 hours later',
         completed: false
       }
     ];
     
     setFormData(prev => ({
       ...prev,
-      feedingSchedule: [...prev.feedingSchedule, ...entries]
+      nutrientSchedule: [...prev.nutrientSchedule, ...entries]
     }));
   };
 
@@ -754,11 +754,11 @@ function BrewLogForm() {
           </div>
         </div>
 
-        {/* Feeding Schedule */}
+        {/* Nutrient Schedule */}
         <div className="form-section">
           <div className="section-header">
-            <h3>Feeding Schedule</h3>
-            <div className="feeding-buttons">
+            <h3>Nutrient Schedule</h3>
+            <div className="nutrient-schedule-buttons">
               <Button
                 type="button"
                 variant="outline"
@@ -779,7 +779,7 @@ function BrewLogForm() {
                 type="button"
                 variant="outline"
                 size="small"
-                onClick={addFeedingScheduleEntry}
+                onClick={addNutrientScheduleEntry}
               >
                 <Plus size={16} />
                 Add Entry
@@ -787,23 +787,23 @@ function BrewLogForm() {
             </div>
           </div>
           
-          {formData.feedingSchedule.map((entry) => (
-            <div key={entry.id} className="feeding-entry">
+          {formData.nutrientSchedule.map((entry) => (
+            <div key={entry.id} className="nutrient-schedule-entry">
               <div className="form-group">
                 <input
                   type="date"
                   className="form-input"
                   value={entry.date}
-                  onChange={(e) => updateFeedingScheduleEntry(entry.id, 'date', e.target.value)}
+                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'date', e.target.value)}
                 />
               </div>
               <div className="form-group">
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Feeding description"
+                  placeholder="Nutrient description"
                   value={entry.description}
-                  onChange={(e) => updateFeedingScheduleEntry(entry.id, 'description', e.target.value)}
+                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'description', e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -811,7 +811,7 @@ function BrewLogForm() {
                   <input
                     type="checkbox"
                     checked={entry.completed}
-                    onChange={(e) => updateFeedingScheduleEntry(entry.id, 'completed', e.target.checked)}
+                    onChange={(e) => updateNutrientScheduleEntry(entry.id, 'completed', e.target.checked)}
                   />
                   Completed
                 </label>
@@ -820,7 +820,7 @@ function BrewLogForm() {
                 type="button"
                 variant="ghost"
                 size="small"
-                onClick={() => removeFeedingScheduleEntry(entry.id)}
+                onClick={() => removeNutrientScheduleEntry(entry.id)}
               >
                 <Trash2 size={16} />
               </Button>

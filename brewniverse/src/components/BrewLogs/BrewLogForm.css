@@ -64,7 +64,7 @@
   border: 1px solid var(--color-border);
 }
 
-.feeding-entry {
+.nutrient-schedule-entry {
   display: grid;
   grid-template-columns: 1fr 2fr auto auto;
   gap: 0.75rem;
@@ -156,8 +156,8 @@
   font-style: italic;
 }
 
-/* Feeding buttons */
-.feeding-buttons {
+/* Nutrient Schedule buttons */
+.nutrient-schedule-buttons {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
@@ -216,7 +216,7 @@
     gap: 0.5rem;
   }
   
-  .feeding-entry {
+  .nutrient-schedule-entry {
     grid-template-columns: 1fr;
     gap: 0.5rem;
   }
@@ -249,7 +249,7 @@
 /* Enhanced mobile touch targets */
 @media (max-width: 480px) {
   .ingredient-row,
-  .feeding-entry {
+  .nutrient-schedule-entry {
     padding: 1.25rem;
   }
   
