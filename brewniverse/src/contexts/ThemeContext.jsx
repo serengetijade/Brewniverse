@@ -1,0 +1,144 @@
+import React, { createContext, useContext } from 'react';
+
+// Theme definitions
+export const themes = {
+  default: {
+    name: 'Brewniverse Purple',
+    colors: {
+      primary: '#170e3f',
+      secondary: '#310B78',
+      accent: '#6E1593',
+      highlight: '#8D17A2',
+      background: '#ffffff',
+      text: '#170e3f',
+      textLight: '#6E1593',
+      surface: '#f8f9fa',
+      border: '#e9ecef',
+      success: '#28a745',
+      warning: '#ffc107',
+      error: '#dc3545',
+      info: '#17a2b8',
+    },
+  },
+  dark: {
+    name: 'Dark Mode',
+    colors: {
+      primary: '#8D17A2',
+      secondary: '#6E1593',
+      accent: '#310B78',
+      highlight: '#170e3f',
+      background: '#1a1a1a',
+      text: '#ffffff',
+      textLight: '#cccccc',
+      surface: '#2d2d2d',
+      border: '#404040',
+      success: '#28a745',
+      warning: '#ffc107',
+      error: '#dc3545',
+      info: '#17a2b8',
+    },
+  },
+  forest: {
+    name: 'Forest Green',
+    colors: {
+      primary: '#1b4332',
+      secondary: '#2d5a3d',
+      accent: '#40916c',
+      highlight: '#52b788',
+      background: '#ffffff',
+      text: '#1b4332',
+      textLight: '#2d5a3d',
+      surface: '#f8fffe',
+      border: '#e9f5f0',
+      success: '#28a745',
+      warning: '#ffc107',
+      error: '#dc3545',
+      info: '#17a2b8',
+    },
+  },
+  amber: {
+    name: 'Amber Ale',
+    colors: {
+      primary: '#8b4513',
+      secondary: '#a0522d',
+      accent: '#cd853f',
+      highlight: '#daa520',
+      background: '#ffffff',
+      text: '#8b4513',
+      textLight: '#a0522d',
+      surface: '#fefcf8',
+      border: '#f5e6d3',
+      success: '#28a745',
+      warning: '#ffc107',
+      error: '#dc3545',
+      info: '#17a2b8',
+    },
+  },
+  ocean: {
+    name: 'Ocean Blue',
+    colors: {
+      primary: '#003049',
+      secondary: '#0077b6',
+      accent: '#0096c7',
+      highlight: '#00b4d8',
+      background: '#ffffff',
+      text: '#003049',
+      textLight: '#0077b6',
+      surface: '#f8fcff',
+      border: '#e3f2fd',
+      success: '#28a745',
+      warning: '#ffc107',
+      error: '#dc3545',
+      info: '#17a2b8',
+    },
+  },
+};
+
+const ThemeContext = createContext();
+
+export function ThemeProvider({ children }) {
+  const [currentTheme, setCurrentTheme] = React.useState(() => {
+    // Load theme from localStorage or default
+    const savedData = localStorage.getItem('brewniverse-data');
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        return parsedData.settings?.theme || 'default';
+      } catch (error) {
+        return 'default';
+      }
+    }
+    return 'default';
+  });
+  
+  const theme = themes[currentTheme] || themes.default;
+
+  // Apply CSS custom properties to the root element
+  React.useEffect(() => {
+    const root = document.documentElement;
+    Object.entries(theme.colors).forEach(([key, value]) => {
+      root.style.setProperty(`--color-${key}`, value);
+    });
+  }, [theme]);
+
+  const switchTheme = (themeName) => {
+    if (themes[themeName]) {
+      setCurrentTheme(themeName);
+    }
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, themes, currentTheme, switchTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+}
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}
+
