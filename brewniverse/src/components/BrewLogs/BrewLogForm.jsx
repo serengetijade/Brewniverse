@@ -17,10 +17,9 @@ function BrewLogForm() {
     acids: '',
     adjuncts: [],
     bases: '',
-    dateCreated: '',
     dateBottled: '',
-    description: '',
     dateCreated: new Date().toISOString().split('T')[0],
+    description: '',
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     estimatedABV: '',
@@ -157,15 +156,7 @@ function BrewLogForm() {
     const { name, value } = e.target;
     
     // Handle converted event-based fields
-    if (name === 'yeast') {
-      handleYeastChange(value);
-      return;
-    }
-    else if (name === 'pecticEnzyme') {
-      handlePecticEnzymeChange(value);
-      return;
-    }
-    else if (name === 'nutrients') {
+    if (name === 'nutrients') {
       // Nutrients field saves directly to property, NOT as event
       setFormData(prev => ({
         ...prev,
@@ -584,14 +575,11 @@ function BrewLogForm() {
   };
 
   const getYeast = () => {
-    const yeastEvent = formData.events.find(event => event.type === 'Yeast');
-    return yeastEvent ? yeastEvent.description : '';
+    // Return the first yeast entry for backward compatibility
+    const yeastEvents = getEventsByType('Yeast');
+    return yeastEvents.length > 0 ? yeastEvents[0].description : '';
   };
 
-  const getPecticEnzyme = () => {
-    const pecticEvent = formData.events.find(event => event.type === 'PecticEnzyme');
-    return pecticEvent ? pecticEvent.description : '';
-  };
 
   const getDateRacked = () => {
     const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
@@ -627,13 +615,7 @@ function BrewLogForm() {
     }
   };
 
-  const handleYeastChange = (value) => {
-    updateEventField('Yeast', 'Yeast Added', value);
-  };
 
-  const handlePecticEnzymeChange = (value) => {
-    updateEventField('PecticEnzyme', 'Pectic Enzyme Added', value);
-  };
 
   const handleDateRackedChange = (value) => {
     if (value) {
@@ -686,6 +668,97 @@ function BrewLogForm() {
 
   const removeAdditionalGravityReading = (eventId) => {
     removeEvent(eventId);
+  };
+
+  // Pectic enzyme functions
+  const addPecticEnzymeEntry = () => {
+    const newEntry = createEvent(
+      'PecticEnzyme',
+      'Pectic Enzyme Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newEntry);
+  };
+
+  const getPecticEnzymeEntries = () => {
+    return getEventsByType('PecticEnzyme');
+  };
+
+  const updatePecticEnzymeEntry = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'description') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+  };
+
+  const removePecticEnzymeEntry = (eventId) => {
+    removeEvent(eventId);
+  };
+
+  // Yeast functions
+  const addYeastEntry = () => {
+    const newEntry = createEvent(
+      'Yeast',
+      'Yeast Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newEntry);
+    
+    // Update yeast property if this is the first entry
+    const yeastEvents = getEventsByType('Yeast');
+    if (yeastEvents.length === 0) {
+      setFormData(prev => ({
+        ...prev,
+        yeast: ''
+      }));
+    }
+  };
+
+  const getYeastEntries = () => {
+    return getEventsByType('Yeast');
+  };
+
+  const updateYeastEntry = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'description') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+    
+    // Update the yeast property with the first entry for backward compatibility
+    const yeastEvents = getEventsByType('Yeast');
+    if (yeastEvents.length > 0) {
+      const firstYeastDescription = yeastEvents[0].id === eventId ? value : yeastEvents[0].description;
+      setFormData(prev => ({
+        ...prev,
+        yeast: firstYeastDescription
+      }));
+    }
+  };
+
+  const removeYeastEntry = (eventId) => {
+    removeEvent(eventId);
+    
+    // Update yeast property with the new first entry (or empty if none left)
+    const remainingYeastEvents = formData.events.filter(event => 
+      event.type === 'Yeast' && event.id !== eventId
+    );
+    const newYeastValue = remainingYeastEvents.length > 0 ? remainingYeastEvents[0].description : '';
+    setFormData(prev => ({
+      ...prev,
+      yeast: newYeastValue
+    }));
   };
 
   return (
@@ -783,7 +856,8 @@ function BrewLogForm() {
         {/* Adjuncts */}
         <div className="form-section">
           <div className="section-header">
-            <h3>Adjuncts <span className="section-description">(fermentable sugars, honey etc.)</span></h3>
+            {/*<h3>Adjuncts <span className="section-description">(fermentable sugars, honey, etc.)</span></h3>*/}
+            <h3>Adjuncts</h3>
             <Button
               type="button"
               variant="outline"
@@ -791,12 +865,15 @@ function BrewLogForm() {
               onClick={() => addIngredient('adjuncts')}
             >
               <Plus size={16} />
-              Add Adjunct
+              Add Ingredient
             </Button>
           </div>
           
           {formData.adjuncts.length === 0 ? (
-            <p className="empty-message">No adjuncts added yet.</p>
+            <p className="empty-message">Record added fermentables here. 
+                <br />Examples are sugar, honey, molasses, etc.
+                <br />No adjuncts added yet.
+            </p>
           ) : (
             <div className="ingredients-list">
               {formData.adjuncts.map((ingredient) => (
@@ -858,7 +935,7 @@ function BrewLogForm() {
           </div>
           
           {formData.ingredientsPrimary.length === 0 ? (
-            <p className="empty-message">No primary ingredients added yet.</p>
+            <p className="empty-message">List ingredients used during primary fermentation.<br/>No primary ingredients added yet.</p>
           ) : (
             <div className="ingredients-list">
               {formData.ingredientsPrimary.map((ingredient) => (
@@ -920,7 +997,7 @@ function BrewLogForm() {
           </div>
           
           {formData.ingredientsSecondary.length === 0 ? (
-            <p className="empty-message">No secondary ingredients added yet.</p>
+            <p className="empty-message">List ingredients used during secondary <br/> or any used to backsweeten your brew.<br/>No secondary ingredients added yet.</p>
           ) : (
             <div className="ingredients-list">
               {formData.ingredientsSecondary.map((ingredient) => (
@@ -965,149 +1042,7 @@ function BrewLogForm() {
             </div>
           )}
         </div>
-
-        {/* Yeast */}
-        <div className="form-section">
-          <h3>Yeast</h3>
-          
-          <div className="form-group">
-            <label htmlFor="yeast" className="form-label">
-              Yeast Strain and Details
-            </label>
-            <input
-              type="text"
-              id="yeast"
-              name="yeast"
-              className="form-input"
-              value={getYeast()}
-              onChange={handleChange}
-              placeholder="Yeast strain and details"
-            />
-          </div>
-        </div>
-
-        {/* Nutrients */}
-        <div className="form-section">
-          <h3>Nutrients</h3>
-          
-          <div className="form-group">
-            <label htmlFor="nutrients" className="form-label">
-              Nutrient Details
-            </label>
-            <input
-              type="text"
-              id="nutrients"
-              name="nutrients"
-              className="form-input"
-              value={formData.nutrients}
-              onChange={handleChange}
-              placeholder="Nutrient details"
-            />
-          </div>
-
-          {/* Nutrient Schedule */}
-          <div>
-            <label htmlFor="nutrients" className="form-label">
-                Nutrient Schedule
-            </label>
-            <div className="nutrient-schedule-buttons">
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addSplitSchedule}
-              >
-                Split Schedule
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addStaggered2Schedule}
-              >
-                Staggered +2
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addStaggered3Schedule}
-              >
-                Staggered +3
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addNutrientScheduleEntry}
-              >
-                <Plus size={16} />
-                Add Entry
-              </Button>
-            </div>
-          </div>
-          
-          {getNutrientSchedule().map((entry) => (
-            <div key={entry.id} className="nutrient-schedule-entry">
-              <div className="form-group">
-                <input
-                  type="date"
-                  className="form-input"
-                  value={entry.date}
-                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'date', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Nutrient description"
-                  value={entry.description}
-                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'description', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={entry.completed}
-                    onChange={(e) => updateNutrientScheduleEntry(entry.id, 'completed', e.target.checked)}
-                  />
-                  Completed
-                </label>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="small"
-                onClick={() => removeNutrientScheduleEntry(entry.id)}
-              >
-                <Trash2 size={16} />
-              </Button>
-            </div>
-          ))}
-        </div>
-
-        {/* Pectic Enzyme */}
-        <div className="form-section">
-          <h3>Pectic Enzyme</h3>
-          
-          <div className="form-group">
-            <label htmlFor="pecticEnzyme" className="form-label">
-              Pectic Enzyme Details
-            </label>
-            <input
-              type="text"
-              id="pecticEnzyme"
-              name="pecticEnzyme"
-              className="form-input"
-              value={getPecticEnzyme()}
-              onChange={handleChange}
-              placeholder="Pectic enzyme details"
-            />
-          </div>
-        </div>
-
+                
         {/* Gravity Readings */}
         <div className="form-section">
           <h3>Gravity Readings</h3>
@@ -1261,6 +1196,222 @@ function BrewLogForm() {
           </div>
         </div>
 
+        {/* Yeast */}
+        <div className="form-section">
+          <h3>Yeast</h3>
+          
+          <div className="form-group">
+            <div className="section-header">
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addYeastEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+            
+            {getYeastEntries().length === 0 ? (
+              <p className="empty-message">No yeast additions recorded.</p>
+            ) : (
+              <div className="compact-list">
+                {getYeastEntries().map((entry) => (
+                  <div key={entry.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Yeast Details</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Yeast strain and details"
+                        value={entry.description}
+                        onChange={(e) => updateYeastEntry(entry.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={entry.date}
+                        onChange={(e) => updateYeastEntry(entry.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeYeastEntry(entry.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Nutrients */}
+        <div className="form-section">
+          <h3>Nutrients</h3>
+          
+          <div className="form-group">
+            <label htmlFor="nutrients" className="form-label">
+              Nutrient Details
+            </label>
+            <input
+              type="text"
+              id="nutrients"
+              name="nutrients"
+              className="form-input"
+              value={formData.nutrients}
+              onChange={handleChange}
+              placeholder="Nutrient details"
+            />
+          </div>
+
+          {/* Nutrient Schedule */}
+          <div>
+            <label htmlFor="nutrients" className="form-label">
+                Nutrient Schedule
+            </label>
+            <div className="nutrient-schedule-buttons">
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addSplitSchedule}
+              >
+                Split Schedule
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addStaggered2Schedule}
+              >
+                Staggered +2
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addStaggered3Schedule}
+              >
+                Staggered +3
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addNutrientScheduleEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+          </div>
+          
+          {getNutrientSchedule().map((entry) => (
+            <div key={entry.id} className="nutrient-schedule-entry">
+              <div className="form-group">
+                <input
+                  type="date"
+                  className="form-input"
+                  value={entry.date}
+                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'date', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Nutrient description"
+                  value={entry.description}
+                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'description', e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    checked={entry.completed}
+                    onChange={(e) => updateNutrientScheduleEntry(entry.id, 'completed', e.target.checked)}
+                  />
+                  Completed
+                </label>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="small"
+                onClick={() => removeNutrientScheduleEntry(entry.id)}
+              >
+                <Trash2 size={16} />
+              </Button>
+            </div>
+          ))}
+        </div>
+
+        {/* Pectic Enzyme */}
+        <div className="form-section">
+          <h3>Pectic Enzyme</h3>
+          
+          <div className="form-group">
+            <div className="section-header">
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addPecticEnzymeEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+            
+            {getPecticEnzymeEntries().length === 0 ? (
+              <p className="empty-message">Pectic enzyme is a popular, but totally optional, addition.<br/>No pectic enzyme additions recorded.</p>
+            ) : (
+              <div className="compact-list">
+                {getPecticEnzymeEntries().map((entry) => (
+                  <div key={entry.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Enzyme Details</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Pectic enzyme details"
+                        value={entry.description}
+                        onChange={(e) => updatePecticEnzymeEntry(entry.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={entry.date}
+                        onChange={(e) => updatePecticEnzymeEntry(entry.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removePecticEnzymeEntry(entry.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Acids and Bases */}
         <div className="form-section">
           <h3>Acids and Bases</h3>
@@ -1330,7 +1481,6 @@ function BrewLogForm() {
             </div>
           </div>
         </div>
-
 
         {/* Notes */}
         <div className="form-section">
