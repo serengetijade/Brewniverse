@@ -380,61 +380,54 @@ function BrewLogForm() {
     }));
   };
 
-  const addSplitSchedule = () => {
+  const addScheduleEntries = (scheduleType) => {
     const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    
-    const entries = [
-      {
-        id: Date.now().toString(),
-        date: today.toISOString().split('T')[0],
-        description: 'Half now & half at 1/3 Break',
-        completed: false
-      }
-    ];
-    
+    let entries = [];
+
+    switch (scheduleType) {
+      case 'split':
+        entries = [{
+          id: Date.now().toString(),
+          date: today.toISOString().split('T')[0],
+          description: 'Half now & half at 1/3 Break',
+          completed: false
+        }];
+        break;
+      
+      case 'staggered2':
+      case 'staggered3':
+        const days = scheduleType === 'staggered2' ? 2 : 3;
+        // Add initial entry for today
+        entries = [{
+            id: Date.now().toString(),
+            date: today.toISOString().split('T')[0],
+            description: 'Staggered nutrient - initial addition',
+            completed: false
+        }];
+        // Add future entries
+        const futureEntries = Array.from({ length: days }, (_, index) => {
+          const futureDate = new Date(today);
+          futureDate.setDate(today.getDate() + index + 1);
+          return {
+            id: (Date.now() + index + 1).toString(),
+            date: futureDate.toISOString().split('T')[0],
+            description: `Staggered nutrient - ${(index + 1) * 24} hours later`,
+            completed: false
+          };
+        });
+        entries = [...entries, ...futureEntries];
+        break;
+    }
+
     setFormData(prev => ({
       ...prev,
       nutrientSchedule: [...prev.nutrientSchedule, ...entries]
     }));
   };
 
-  const addStaggeredSchedule = () => {
-    const today = new Date();
-    const day1 = new Date(today);
-    day1.setDate(day1.getDate() + 1);
-    const day2 = new Date(today);
-    day2.setDate(day2.getDate() + 2);
-    const day3 = new Date(today);
-    day3.setDate(day3.getDate() + 3);
-    
-    const entries = [
-      {
-        id: Date.now().toString(),
-        date: day1.toISOString().split('T')[0],
-        description: 'Staggered nutrient - 24 hours later',
-        completed: false
-      },
-      {
-        id: (Date.now() + 1).toString(),
-        date: day2.toISOString().split('T')[0],
-        description: 'Staggered nutrient - 48 hours later',
-        completed: false
-      },
-      {
-        id: (Date.now() + 2).toString(),
-        date: day3.toISOString().split('T')[0],
-        description: 'Staggered nutrient - 72 hours later',
-        completed: false
-      }
-    ];
-    
-    setFormData(prev => ({
-      ...prev,
-      nutrientSchedule: [...prev.nutrientSchedule, ...entries]
-    }));
-  };
+  const addSplitSchedule = () => addScheduleEntries('split');
+  const addStaggered2Schedule = () => addScheduleEntries('staggered2');
+  const addStaggered3Schedule = () => addScheduleEntries('staggered3');
 
   return (
     <div className="brewlog-form">
@@ -771,9 +764,17 @@ function BrewLogForm() {
                 type="button"
                 variant="outline"
                 size="small"
-                onClick={addStaggeredSchedule}
+                onClick={addStaggered2Schedule}
               >
-                Staggered x3
+                Staggered +2
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addStaggered3Schedule}
+              >
+                Staggered +3
               </Button>
               <Button
                 type="button"
