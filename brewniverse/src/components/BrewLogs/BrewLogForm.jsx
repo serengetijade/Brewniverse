@@ -761,6 +761,68 @@ function BrewLogForm() {
     }));
   };
 
+  // Acids functions
+  const addAcidsEntry = () => {
+    const newEntry = createEvent(
+      'Acids',
+      'Acids Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newEntry);
+  };
+
+  const getAcidsEntries = () => {
+    return getEventsByType('Acids');
+  };
+
+  const updateAcidsEntry = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'description') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+  };
+
+  const removeAcidsEntry = (eventId) => {
+    removeEvent(eventId);
+  };
+
+  // Bases functions
+  const addBasesEntry = () => {
+    const newEntry = createEvent(
+      'Bases',
+      'Bases Added',
+      '',
+      new Date().toISOString().split('T')[0],
+      false,
+      false
+    );
+    addEvent(newEntry);
+  };
+
+  const getBasesEntries = () => {
+    return getEventsByType('Bases');
+  };
+
+  const updateBasesEntry = (eventId, field, value) => {
+    const updates = {};
+    if (field === 'description') {
+      updates.description = value;
+    } else if (field === 'date') {
+      updates.date = value;
+    }
+    updateEvent(eventId, updates);
+  };
+
+  const removeBasesEntry = (eventId) => {
+    removeEvent(eventId);
+  };
+
   return (
     <div className="brewlog-form">
       <div className="form-header">
@@ -1426,9 +1488,63 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.acids}
               onChange={handleChange}
-              placeholder="Acid additions and details"
+              placeholder="General acid information and notes"
               rows={3}
             />
+          </div>
+
+          {/* Acid Additions */}
+          <div className="form-group">
+            <div className="section-header">
+              <label className="form-label">Acid Additions</label>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addAcidsEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+            
+            {getAcidsEntries().length === 0 ? (
+              <p className="empty-message">No acid additions recorded.</p>
+            ) : (
+              <div className="compact-list">
+                {getAcidsEntries().map((entry) => (
+                  <div key={entry.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Acid Details</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Acid type and amount"
+                        value={entry.description}
+                        onChange={(e) => updateAcidsEntry(entry.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={entry.date}
+                        onChange={(e) => updateAcidsEntry(entry.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeAcidsEntry(entry.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="form-group">
@@ -1441,9 +1557,63 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.bases}
               onChange={handleChange}
-              placeholder="Base additions and details"
+              placeholder="General base information and notes"
               rows={3}
             />
+          </div>
+
+          {/* Base Additions */}
+          <div className="form-group">
+            <div className="section-header">
+              <label className="form-label">Base Additions</label>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addBasesEntry}
+              >
+                <Plus size={16} />
+                Add Entry
+              </Button>
+            </div>
+            
+            {getBasesEntries().length === 0 ? (
+              <p className="empty-message">No base additions recorded.</p>
+            ) : (
+              <div className="compact-list">
+                {getBasesEntries().map((entry) => (
+                  <div key={entry.id} className="compact-item">
+                    <div className="form-group">
+                      <label className="form-label">Base Details</label>
+                      <input
+                        type="text"
+                        className="form-input"
+                        placeholder="Base type and amount"
+                        value={entry.description}
+                        onChange={(e) => updateBasesEntry(entry.id, 'description', e.target.value)}
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">Date</label>
+                      <input
+                        type="date"
+                        className="form-input"
+                        value={entry.date}
+                        onChange={(e) => updateBasesEntry(entry.id, 'date', e.target.value)}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="small"
+                      onClick={() => removeBasesEntry(entry.id)}
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
