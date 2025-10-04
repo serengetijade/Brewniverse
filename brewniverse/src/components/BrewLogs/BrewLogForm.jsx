@@ -19,6 +19,7 @@ function BrewLogForm() {
     bases: '',
     dateBottled: '',
     dateCreated: new Date().toISOString().split('T')[0],
+    dateStabilized: new Date().toISOString().split('T')[0],
     description: '',
     ingredientsPrimary: [],
     ingredientsSecondary: [],
@@ -31,6 +32,7 @@ function BrewLogForm() {
     nutrients: '',
     pecticEnzyme: '', 
     recipeId: '',
+    stabilize: '',
     tannins: '',
     type: 'Mead',
     yeast: '', 
@@ -260,6 +262,45 @@ function BrewLogForm() {
         } else {
           // Remove event if date is cleared
           newFormData.events = prev.events.filter(event => event.type !== 'DateBottled');
+        }
+
+        return newFormData;
+      });
+      return;
+    }
+    else if (name === 'stabilize' || name === 'stabilizeDate') {
+      // Handle stabilize field and create/update event
+      setFormData(prev => {
+        const newFormData = {
+          ...prev,
+          [name]: value
+        };
+
+        // Create/update Stabilize event when either field changes
+        const stabilizeText = name === 'stabilize' ? value : prev.stabilize;
+        const stabilizeDate = name === 'stabilizeDate' ? value : prev.dateStabilized;
+        
+        if (stabilizeText.trim()) {
+          const existingEventIndex = prev.events.findIndex(event => event.type === 'Stabilize');
+          const stabilizeEvent = createEvent(
+            'Stabilize',
+            'Stabilization',
+            stabilizeText,
+            stabilizeDate,
+            false,
+            false
+          );
+
+          if (existingEventIndex >= 0) {
+            newFormData.events = prev.events.map((event, index) =>
+              index === existingEventIndex ? { ...event, description: stabilizeText, date: stabilizeDate } : event
+            );
+          } else {
+            newFormData.events = [...prev.events, stabilizeEvent];
+          }
+        } else {
+          // Remove event if stabilize text is empty
+          newFormData.events = prev.events.filter(event => event.type !== 'Stabilize');
         }
 
         return newFormData;
@@ -1194,25 +1235,6 @@ function BrewLogForm() {
           </div>
 
           <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="estimatedABV" className="form-label">
-                Estimated ABV (auto-calculated)
-              </label>
-              <div className="input-with-suffix">
-                <input
-                  type="number"
-                  step="0.1"
-                  id="estimatedABV"
-                  name="estimatedABV"
-                  className="form-input calculated-field"
-                  value={formData.estimatedABV}
-                  readOnly
-                  placeholder="12.5"
-                  title="This field is automatically calculated from Original Gravity"
-                />
-                <span className="input-suffix">%</span>
-              </div>
-            </div>
 
             <div className="form-group">
               <label htmlFor="finalABV" className="form-label">
@@ -1233,6 +1255,28 @@ function BrewLogForm() {
                 <span className="input-suffix">%</span>
               </div>
             </div>
+            
+            <div className="form-group">
+              <label htmlFor="estimatedABV" className="form-label">
+                Estimated ABV (auto-calculated)
+              </label>
+              <div className="input-with-suffix">
+                <input
+                  type="number"
+                  step="0.1"
+                  id="estimatedABV"
+                  name="estimatedABV"
+                  className="form-input calculated-field"
+                  value={formData.estimatedABV}
+                  readOnly
+                  placeholder="12.5"
+                  title="This field is automatically calculated from Original Gravity"
+                />
+                <span className="input-suffix">%</span>
+              </div>
+            </div>
+
+
           </div>
 
           {/* Additional Gravity Readings */}
@@ -1733,8 +1777,7 @@ function BrewLogForm() {
 
         {/* Important Dates */}
         <div className="form-section">
-          <h3>Important Dates</h3>
-          
+          <h3>Important Dates</h3>          
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="dateRacked" className="form-label">
@@ -1749,7 +1792,6 @@ function BrewLogForm() {
                 onChange={handleChange}
               />
             </div>
-
             <div className="form-group">
               <label htmlFor="dateBottled" className="form-label">
                 Date Bottled
@@ -1766,12 +1808,54 @@ function BrewLogForm() {
           </div>
         </div>
 
+        {/* Stabilize */}
+        <div className="form-section">
+          <h3>Stabilization</h3>          
+
+          <div className="form-row">
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="stabilizeDate" className="form-label">
+                Date Stabilized
+              </label>
+              <input
+                type="date"
+                id="stabilizeDate"
+                name="stabilizeDate"
+                className="form-input"
+                value={formData.dateStabilized}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="form-group"></div>
+          </div>
+            
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="stabilize" className="form-label">
+                Stabilization Notes
+              </label>
+              <textarea
+                id="stabilize"
+                name="stabilize"
+                className="form-textarea"
+                value={formData.stabilize}
+                onChange={handleChange}
+                placeholder="Stabilization process and details"
+                rows={3}
+              />
+            </div>
+            
+          </div>
+        </div>
+
         {/* Notes */}
         <div className="form-section">
           <div className="form-group">
-            <label htmlFor="description" className="form-label">
+            <h3>
               Description
-            </label>
+            </h3>
             <textarea
               id="description"
               name="description"
@@ -1784,9 +1868,9 @@ function BrewLogForm() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="notes" className="form-label">
+            <h3>
               Notes
-            </label>
+            </h3>
             <textarea
               id="notes"
               name="notes"
