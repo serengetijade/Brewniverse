@@ -65,16 +65,16 @@ function IngredientEditor({
                     onChange={(e) => setEditData(prev => ({ ...prev, unit: e.target.value }))}
                     onKeyDown={handleKeyPress}
                 >
-                    <option value="lbs">lbs</option>
                     <option value="oz">oz</option>
-                    <option value="kg">kg</option>
-                    <option value="g">g</option>
+                    <option value="lbs">lbs</option>
                     <option value="gal">gal</option>
-                    <option value="L">L</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
                     <option value="ml">ml</option>
-                    <option value="cups">cups</option>
+                    <option value="L">L</option>
                     <option value="tsp">tsp</option>
                     <option value="tbsp">tbsp</option>
+                    <option value="cups">cups</option>
                     <option value="unit">unit(s)</option>
                 </select>
             </div>
