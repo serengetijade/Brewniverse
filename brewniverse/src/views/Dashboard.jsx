@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BookOpen, FileText, Bell, Clipboard } from 'lucide-react';
 import Button from '../components/UI/Button';
 import { useApp } from '../contexts/AppContext';
-import './Dashboard.css';
+import '../Styles/Dashboard.css';
 
 function Dashboard() {
   const navigate = useNavigate();

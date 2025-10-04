@@ -9,7 +9,7 @@ import Recipes from './views/Recipes';
 import Alerts from './views/Alerts';
 import Instructions from './views/Instructions';
 import Settings from './views/Settings';
-import './App.css';
+import './Styles/App.css';
 
 function App() {
   return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, ArrowLeft, Home, BookOpen, Bell, FileText, Settings } from 'lucide-react';
-import './Navigation.css';
+import '../../Styles/Navigation.css';
 
 function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -2,7 +2,7 @@ import React from 'react';
 import { useApp, ActionTypes } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Button from '../components/UI/Button';
-import './Settings.css';
+import '../Styles/Settings.css';
 
 function Settings() {
   const { state, dispatch } = useApp();
@@ -64,7 +64,7 @@ function Settings() {
                   ))}
                 </select>
                 <p className="setting-description">
-                  Choose your preferred color scheme. More themes coming soon!
+                  Choose your preferred color scheme.
                 </p>
               </div>
             </div>

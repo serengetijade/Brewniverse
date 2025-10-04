@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Calendar, Beaker } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import './BrewLogsList.css';
+import '../../Styles/BrewLogsList.css';
 
 function BrewLogsList() {
   const navigate = useNavigate();

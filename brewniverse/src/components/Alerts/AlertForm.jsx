@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import './AlertForm.css';
+import '../../Styles/AlertForm.css';
 
 function AlertForm() {
   const { id } = useParams();

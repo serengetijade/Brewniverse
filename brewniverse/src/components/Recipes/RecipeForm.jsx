@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import './RecipeForm.css';
+import '../../Styles/RecipeForm.css';
 
 function RecipeForm() {
   const { id } = useParams();
