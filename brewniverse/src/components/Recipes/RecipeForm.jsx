@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import IngredientList from '../UI/IngredientList';
 import '../../Styles/RecipeForm.css';
 
 function RecipeForm() {
@@ -14,12 +15,14 @@ function RecipeForm() {
   const [formData, setFormData] = useState({
     name: '',
     dateCreated: new Date().toISOString().split('T')[0],
-    ingredients: [],
+    ingredientsAdjunct: [],
+    ingredientsPrimary: [],
+    ingredientsSecondary: [],
     description: '',
     notes: '',
-    estimatedYield: '',
     estimatedABV: '',
-    difficulty: 'Beginner'
+    difficulty: 'Beginner',
+    volume: '',
   });
 
   useEffect(() => {
@@ -65,34 +68,34 @@ function RecipeForm() {
     }));
   };
 
-  const addIngredient = () => {
-    const newIngredient = {
-      id: Date.now().toString(),
-      name: '',
-      amount: '',
-      unit: 'lbs'
-    };
-    setFormData(prev => ({
-      ...prev,
-      ingredients: [...prev.ingredients, newIngredient]
-    }));
-  };
+  //const addIngredient = () => {
+  //  const newIngredient = {
+  //    id: Date.now().toString(),
+  //    name: '',
+  //    amount: '',
+  //    unit: 'lbs'
+  //  };
+  //  setFormData(prev => ({
+  //    ...prev,
+  //    ingredients: [...prev.ingredients, newIngredient]
+  //  }));
+  //};
 
-  const updateIngredient = (id, field, value) => {
-    setFormData(prev => ({
-      ...prev,
-      ingredients: prev.ingredients.map(ingredient =>
-        ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
-      )
-    }));
-  };
+  //const updateIngredient = (id, field, value) => {
+  //  setFormData(prev => ({
+  //    ...prev,
+  //    ingredients: prev.ingredients.map(ingredient =>
+  //      ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
+  //    )
+  //  }));
+  //};
 
-  const removeIngredient = (id) => {
-    setFormData(prev => ({
-      ...prev,
-      ingredients: prev.ingredients.filter(ingredient => ingredient.id !== id)
-    }));
-  };
+  //const removeIngredient = (id) => {
+  //  setFormData(prev => ({
+  //    ...prev,
+  //    ingredients: prev.ingredients.filter(ingredient => ingredient.id !== id)
+  //  }));
+  //};
 
   // Get brew logs that use this recipe
   const getConnectedBrewLogs = () => {
@@ -167,15 +170,15 @@ function RecipeForm() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="estimatedYield" className="form-label">
+              <label htmlFor="volume" className="form-label">
                 Estimated Yield
               </label>
               <input
                 type="text"
-                id="estimatedYield"
-                name="estimatedYield"
+                id="volume"
+                name="volume"
                 className="form-input"
-                value={formData.estimatedYield}
+                value={formData.volume}
                 onChange={handleChange}
                 placeholder="e.g., 5 gallons, 1 gallon"
               />
@@ -214,76 +217,43 @@ function RecipeForm() {
           </div>
         </div>
 
-        {/* Ingredients */}
+        {/* Adjunct Ingredients */}
         <div className="form-section">
-          <div className="section-header">
-            <h3>Ingredients</h3>
-            <Button
-              type="button"
-              variant="outline"
-              size="small"
-              onClick={addIngredient}
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="ingredientsAdjunct"
+                sectionName="Adjuncts"
+                sectionDescription=""
+                sectionInfoMessage= "Adjuncts are fermentable ingredients that are not malted grains. Examples include sugar, honey, molasses, fruit, and other fermentable additives. Adjuncts can contribute to the flavor, color, and alcohol content of the brew. No adjuncts added yet."
             >
-              <Plus size={16} />
-              Add Ingredient
-            </Button>
-          </div>
-          
-          {formData.ingredients.length === 0 && (
-            <p className="empty-message">No ingredients added yet. Click "Add Ingredient" to get started.</p>
-          )}
-          
-          {formData.ingredients.map((ingredient) => (
-            <div key={ingredient.id} className="ingredient-row">
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Ingredient name"
-                  value={ingredient.name}
-                  onChange={(e) => updateIngredient(ingredient.id, 'name', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="number"
-                  step="0.01"
-                  className="form-input"
-                  placeholder="Amount"
-                  value={ingredient.amount}
-                  onChange={(e) => updateIngredient(ingredient.id, 'amount', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <select
-                  className="form-select"
-                  value={ingredient.unit}
-                  onChange={(e) => updateIngredient(ingredient.id, 'unit', e.target.value)}
-                >
-                  <option value="lbs">lbs</option>
-                  <option value="oz">oz</option>
-                  <option value="kg">kg</option>
-                  <option value="g">g</option>
-                  <option value="gal">gal</option>
-                  <option value="L">L</option>
-                  <option value="ml">ml</option>
-                  <option value="cups">cups</option>
-                  <option value="tsp">tsp</option>
-                  <option value="tbsp">tbsp</option>
-                  <option value="packets">packets</option>
-                  <option value="pieces">pieces</option>
-                </select>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="small"
-                onClick={() => removeIngredient(ingredient.id)}
-              >
-                <Trash2 size={16} />
-              </Button>
-            </div>
-          ))}
+            </IngredientList>
+        </div>
+
+        {/* Primary Ingredients */}
+        <div className="form-section">
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="ingredientsPrimary"
+                sectionName="Primary Ingredients"
+                sectionDescription=""
+                sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
+            >
+            </IngredientList>
+        </div>
+
+        {/* Secondary Ingredients */}
+        <div className="form-section">
+            <IngredientList
+                formData={formData}
+                setFormData={setFormData}
+                ingredientType="ingredientsSecondary"
+                sectionName="Secondary Ingredients"
+                sectionDescription=""
+                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
+            >
+            </IngredientList>
         </div>
 
         {/* Notes */}

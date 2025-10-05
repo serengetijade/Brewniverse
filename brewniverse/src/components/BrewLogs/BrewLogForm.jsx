@@ -22,7 +22,6 @@ function BrewLogForm() {
     dateCreated: new Date().toISOString().split('T')[0],
     dateStabilized: new Date().toISOString().split('T')[0],
     description: '',
-    ingredients: [],
     ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
@@ -820,8 +819,7 @@ function BrewLogForm() {
               className="form-input"
               value={formData.volume}
               onChange={handleChange}
-              required
-              placeholder="Enter volume quantity"
+              placeholder="e.g., 5 gallons, 1 gallon"
             />
           </div>
 

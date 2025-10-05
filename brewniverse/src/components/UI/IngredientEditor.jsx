@@ -7,7 +7,8 @@ function IngredientEditor({
     ingredient,
     type,
     onSave,
-    onCancel }) {
+    onCancel
+}){
     const [editData, setEditData] = useState({
         name: ingredient.name,
         amount: ingredient.amount,
@@ -15,7 +16,6 @@ function IngredientEditor({
     });
     const nameInputRef = useRef(null);
 
-    // Focus on name input when editor opens
     useEffect(() => {
         if (nameInputRef.current) {
             nameInputRef.current.focus();
@@ -29,7 +29,8 @@ function IngredientEditor({
     const handleKeyPress = (e) => {
         if (e.key === 'Enter') {
             handleSave();
-        } else if (e.key === 'Escape') {
+        }
+        else if (e.key === 'Escape') {
             onCancel();
         }
     };
@@ -85,7 +86,7 @@ function IngredientEditor({
                     size="small"
                     onClick={handleSave}
                 >
-                    <Save size={16} />
+                <Save size={16} />
                     Save
                 </Button>
                 <Button
@@ -94,7 +95,7 @@ function IngredientEditor({
                     size="small"
                     onClick={onCancel}
                 >
-                    <X size={16} />
+                <X size={16} />
                     Cancel
                 </Button>
             </div>
