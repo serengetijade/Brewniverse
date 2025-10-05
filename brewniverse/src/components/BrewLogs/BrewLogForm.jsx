@@ -1001,7 +1001,6 @@ function BrewLogForm() {
           </div>
 
           <div className="form-row">
-
             <div className="form-group">
               <label htmlFor="finalABV" className="form-label">
                 Final ABV (auto-calculated)
@@ -1543,8 +1542,7 @@ function BrewLogForm() {
 
         {/* Important Dates */}
         <div className="form-section">
-          <h3>Important Dates</h3>          
-          <div className="form-row">
+          <h3>Important Dates</h3>     
             <div className="form-group">
               <label htmlFor="dateRacked" className="form-label">
                 Date Racked
@@ -1558,21 +1556,6 @@ function BrewLogForm() {
                 onChange={handleChange}
               />
             </div>
-
-            <div className="form-group">
-              <label htmlFor="dateBottled" className="form-label">
-                Date Bottled
-              </label>
-              <input
-                type="date"
-                id="dateBottled"
-                name="dateBottled"
-                className="form-input"
-                value={formData.dateBottled}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
  
             <div className="form-group">
               <label htmlFor="stabilizeDate" className="form-label">
@@ -1587,7 +1570,6 @@ function BrewLogForm() {
                 onChange={handleChange}
               />
             </div>
-            <div className="form-group"></div>
             
             <div className="form-group">
               <label htmlFor="stabilize" className="form-label">
@@ -1601,6 +1583,20 @@ function BrewLogForm() {
                 onChange={handleChange}
                 placeholder="Stabilization process and details"
                 rows={3}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="dateBottled" className="form-label">
+                Date Bottled
+              </label>
+              <input
+                type="date"
+                id="dateBottled"
+                name="dateBottled"
+                className="form-input"
+                value={formData.dateBottled}
+                onChange={handleChange}
               />
             </div>
         </div>
