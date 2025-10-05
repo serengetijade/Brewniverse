@@ -1558,6 +1558,7 @@ function BrewLogForm() {
                 onChange={handleChange}
               />
             </div>
+
             <div className="form-group">
               <label htmlFor="dateBottled" className="form-label">
                 Date Bottled
@@ -1572,15 +1573,7 @@ function BrewLogForm() {
               />
             </div>
           </div>
-        </div>
-
-        {/* Stabilize */}
-        <div className="form-section">
-          <h3>Stabilization</h3>          
-
-          <div className="form-row">
-          </div>
-          <div className="form-row">
+ 
             <div className="form-group">
               <label htmlFor="stabilizeDate" className="form-label">
                 Date Stabilized
@@ -1595,9 +1588,7 @@ function BrewLogForm() {
               />
             </div>
             <div className="form-group"></div>
-          </div>
             
-          <div className="form-row">
             <div className="form-group">
               <label htmlFor="stabilize" className="form-label">
                 Stabilization Notes
@@ -1612,8 +1603,6 @@ function BrewLogForm() {
                 rows={3}
               />
             </div>
-            
-          </div>
         </div>
 
         {/* Notes */}
@@ -1668,10 +1657,10 @@ function BrewLogForm() {
         </div>
       </form>
 
-      {/* Events Timeline */}
+      {/* Activity Timeline */}
       <div className="card mt-4">
         <div className="card-header" style={{ cursor: 'pointer' }} onClick={() => setShowEventsTimeline(!showEventsTimeline)}>
-          <h3>Events Timeline {showEventsTimeline ? '▼' : '▶'}</h3>
+          <h3>Activity Timeline {showEventsTimeline ? '▼' : '▶'}</h3>
           <p>Click to {showEventsTimeline ? 'hide' : 'show'} chronological events</p>
         </div>
         {showEventsTimeline && formData.events.length > 0 && (
