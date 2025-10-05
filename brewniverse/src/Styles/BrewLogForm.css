@@ -108,6 +108,15 @@
   font-style: italic;
 }
 
+/* Recipe buttons*/
+.recipe-buttons
+{
+    display: flex; 
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 /* Nutrient Schedule buttons */
 .nutrient-schedule-buttons {
   display: flex;

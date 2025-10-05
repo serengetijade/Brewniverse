@@ -13,6 +13,7 @@ function BrewLogForm() {
   const isEditing = Boolean(id);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const initialFormData = useRef(null);
+  let buttonSize = 14;
 
   const [formData, setFormData] = useState({
     acids: '',
@@ -40,6 +41,7 @@ function BrewLogForm() {
     volume: '',
     yeast: '' 
   });
+  const [showEventsTimeline, setShowEventsTimeline] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -310,8 +312,7 @@ function BrewLogForm() {
     }
   };
 
-  const [showEventsTimeline, setShowEventsTimeline] = useState(false);
-
+  // Nutrients
   const addNutrientScheduleEntry = () => {
     // Create event directly
     const nutrientEvent = createEvent(
@@ -400,6 +401,15 @@ function BrewLogForm() {
   const addSplitSchedule = () => addScheduleEntries('split');
   const addStaggered2Schedule = () => addScheduleEntries('staggered2');
   const addStaggered3Schedule = () => addScheduleEntries('staggered3');
+  
+  const getNutrientSchedule = () => {
+    return getEventsByType('Nutrient').map(event => ({
+      id: event.id,
+      date: event.date,
+      description: event.description,
+      completed: event.completed
+    }));
+    };
 
   // Event management functions
   const createEvent = (type, name, description, date, completed = false, hasAlert = false) => {
@@ -437,26 +447,34 @@ function BrewLogForm() {
     }));
   };
 
-  // Helper functions to derive UI data from events
   const getEventsByType = (type) => {
     return formData.events.filter(event => event.type === type);
   };
 
-  const getNutrientSchedule = () => {
-    return getEventsByType('Nutrient').map(event => ({
-      id: event.id,
-      date: event.date,
-      description: event.description,
-      completed: event.completed
-    }));
+  const updateEventField = (eventType, name, description, date = new Date().toISOString().split('T')[0]) => {
+    const existingEvent = formData.events.find(event => event.type === eventType);
+    
+    if (existingEvent) {
+      updateEvent(existingEvent.id, { name, description, date });
+    } else {
+      const newEvent = createEvent(eventType, name, description, date, false, false);
+      addEvent(newEvent);
+    }
   };
-
+  // Helper functions to derive UI data from events
+  const formatEventDate = (dateString) => {
+    if (!dateString) return '';
+    // Parse YYYY-MM-DD format without timezone conversion
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(year, month - 1, day); // month is 0-indexed
+    return date.toLocaleDateString();
+  };
+  
   const getYeast = () => {
     // Return the first yeast entry for backward compatibility
     const yeastEvents = getEventsByType('Yeast');
     return yeastEvents.length > 0 ? yeastEvents[0].description : '';
   };
-
 
   const getDateRacked = () => {
     const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
@@ -471,25 +489,6 @@ function BrewLogForm() {
   const getGravityFinal = () => {
     const gravityFinalEvent = formData.events.find(event => event.type === 'GravityFinal');
     return gravityFinalEvent ? gravityFinalEvent.description : '';
-  };
-
-  const formatEventDate = (dateString) => {
-    if (!dateString) return '';
-    // Parse YYYY-MM-DD format without timezone conversion
-    const [year, month, day] = dateString.split('-');
-    const date = new Date(year, month - 1, day); // month is 0-indexed
-    return date.toLocaleDateString();
-  };
-
-  const updateEventField = (eventType, name, description, date = new Date().toISOString().split('T')[0]) => {
-    const existingEvent = formData.events.find(event => event.type === eventType);
-    
-    if (existingEvent) {
-      updateEvent(existingEvent.id, { name, description, date });
-    } else {
-      const newEvent = createEvent(eventType, name, description, date, false, false);
-      addEvent(newEvent);
-    }
   };
 
   const handleDateRackedChange = (value) => {
@@ -862,7 +861,7 @@ function BrewLogForm() {
             <label htmlFor="recipeId" className="form-label">
               Recipe
             </label>
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="form-group">
               <select
                 id="recipeId"
                 name="recipeId"
@@ -878,31 +877,33 @@ function BrewLogForm() {
                   </option>
                 ))}
               </select>
-
-              <div className="recipe-actions" style={{ display: 'flex', gap: '6px' }}>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="small"
-                  onClick={goToRecipe}
-                  disabled={!formData.recipeId}
-                >
-                  Jump to Recipe
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="small"
-                  onClick={importIngredientsFromRecipe}
-                  disabled={!formData.recipeId}
-                >
-                <Plus size={14} />
-                  Import Ingredients
-                </Button>
-              </div>
             </div>
+
+            {(formData.recipeId) ? (
+            <div className="recipe-buttons">
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="small"
+                    onClick={goToRecipe}
+                    disabled={!formData.recipeId}
+                >
+                    Go to Recipe
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="small"
+                    onClick={importIngredientsFromRecipe}
+                    disabled={!formData.recipeId}
+                >
+                <Plus size={buttonSize} />
+                    Import Ingredients
+                </Button>
+            </div> 
+            ): null
+          }
           </div>
-          
         </div>
 
         {/* Adjunct Ingredients */}
@@ -1054,7 +1055,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addAdditionalGravityReading}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Reading
               </Button>
             </div>
@@ -1110,7 +1111,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addYeastEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -1210,7 +1211,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addNutrientScheduleEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -1286,7 +1287,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addPecticEnzymeEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -1358,7 +1359,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addAcidsEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -1425,7 +1426,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addBasesEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -1497,7 +1498,7 @@ function BrewLogForm() {
                 size="small"
                 onClick={addTanninsEntry}
               >
-                <Plus size={16} />
+              <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
