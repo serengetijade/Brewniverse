@@ -137,13 +137,11 @@ export default function IngredientList({
           ))}  
         </div>  
       )} 
-
       <Button  
           type="button"  
           variant="outline"  
-              size="small"
-              onClick={() => addIngredient(ingredientType
-          )}  
+          size="small"  
+          onClick={() => addIngredient(ingredientType)}  
         >  
           <Plus size={16} />  
           Add Ingredient  

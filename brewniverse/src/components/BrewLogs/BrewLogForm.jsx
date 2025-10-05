@@ -22,6 +22,8 @@ function BrewLogForm() {
     dateCreated: new Date().toISOString().split('T')[0],
     dateStabilized: new Date().toISOString().split('T')[0],
     description: '',
+    ingredients: [],
+    ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     estimatedABV: '',
@@ -36,7 +38,8 @@ function BrewLogForm() {
     stabilize: '',
     tannins: '',
     type: 'Mead',
-    yeast: '', 
+    volume: '',
+    yeast: '' 
   });
 
   useEffect(() => {
@@ -160,9 +163,8 @@ function BrewLogForm() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Handle converted event-based fields
     if (name === 'nutrients') {
-      // Nutrients field saves directly to property, NOT as event
+      // Nutrients field saves directly to property, AND an event
       setFormData(prev => ({
         ...prev,
         nutrients: value
@@ -808,6 +810,22 @@ function BrewLogForm() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="name" className="form-label">
+              Volume
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="volume"
+              className="form-input"
+              value={formData.volume}
+              onChange={handleChange}
+              required
+              placeholder="Enter volume quantity"
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="recipeId" className="form-label">
               Recipe
             </label>
@@ -825,7 +843,7 @@ function BrewLogForm() {
                 </option>
               ))}
             </select>
-          </div>
+          </div>          
         </div>
 
         {/* Adjuncts */}
@@ -833,7 +851,7 @@ function BrewLogForm() {
             <IngredientList
                 formData={formData}
                 setFormData={setFormData}
-                ingredientType="adjuncts"
+                ingredientType="ingredientsAdjunct"
                 sectionName="Adjuncts"
                 sectionDescription=""
                 sectionInfoMessage= "Adjuncts are fermentable ingredients that are not malted grains. Examples include sugar, honey, molasses, fruit, and other fermentable additives. Adjuncts can contribute to the flavor, color, and alcohol content of the brew. No adjuncts added yet."
