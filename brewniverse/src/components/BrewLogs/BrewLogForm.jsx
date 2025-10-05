@@ -4,6 +4,7 @@ import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../UI/IngredientList';
+import Activity from '../UI/Activity'; 
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -17,6 +18,7 @@ function BrewLogForm() {
 
   const [formData, setFormData] = useState({
     acids: '',
+    activity: [],
     adjuncts: [],
     bases: '',
     dateBottled: '',
@@ -414,7 +416,7 @@ function BrewLogForm() {
   // Event management functions
   const createEvent = (type, name, description, date, completed = false, hasAlert = false) => {
     return {
-      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
       name,
       description,
       date,
@@ -555,11 +557,7 @@ function BrewLogForm() {
       false
     );
     addEvent(newEntry);
-  };
-
-  const getPecticEnzymeEntries = () => {
-    return getEventsByType('PecticEnzyme');
-  };
+};
 
   const updatePecticEnzymeEntry = (eventId, field, value) => {
     const updates = {};
@@ -595,10 +593,6 @@ function BrewLogForm() {
         yeast: ''
       }));
     }
-  };
-
-  const getYeastEntries = () => {
-    return getEventsByType('Yeast');
   };
 
   const updateYeastEntry = (eventId, field, value) => {
@@ -648,10 +642,6 @@ function BrewLogForm() {
     addEvent(newEntry);
   };
 
-  const getAcidsEntries = () => {
-    return getEventsByType('Acids');
-  };
-
   const updateAcidsEntry = (eventId, field, value) => {
     const updates = {};
     if (field === 'description') {
@@ -679,10 +669,6 @@ function BrewLogForm() {
     addEvent(newEntry);
   };
 
-  const getBasesEntries = () => {
-    return getEventsByType('Bases');
-  };
-
   const updateBasesEntry = (eventId, field, value) => {
     const updates = {};
     if (field === 'description') {
@@ -708,10 +694,6 @@ function BrewLogForm() {
       false
     );
     addEvent(newEntry);
-  };
-
-  const getTanninsEntries = () => {
-    return getEventsByType('Tannins');
   };
 
   const updateTanninsEntry = (eventId, field, value) => {
@@ -751,7 +733,7 @@ function BrewLogForm() {
 
     const copyWithNewIds = (items = []) => {
       return items.map(item => ({
-        id: Date.now().toString() + Math.random().toString(36).substr(2, 6), //Create unique ids to avoid collisions
+        id: Date.now().toString() + Math.random().toString(36).substring(2, 6), //Create unique ids to avoid collisions
         name: item.name || '',
         amount: item.amount || '',
         unit: item.unit || 'oz'
@@ -1100,8 +1082,7 @@ function BrewLogForm() {
 
         {/* Yeast */}
         <div className="form-section">
-          <h3>Yeast</h3>
-          
+          <h3>Yeast</h3>          
           <div className="form-group">
             <div className="section-header">
               <Button
@@ -1115,11 +1096,11 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getYeastEntries().length === 0 ? (
+            {getEventsByType('Yeast').length === 0 ? (
               <p className="empty-message">Wild or cultured, record your yeast here. <br/>No yeast additions recorded.</p>
             ) : (
               <div className="compact-list">
-                {getYeastEntries().map((entry) => (
+                {getEventsByType('Yeast').map((entry) => (
                   <div key={entry.id} className="compact-item">
                     <div className="form-group">
                       <label className="form-label">Yeast Details</label>
@@ -1291,9 +1272,9 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getPecticEnzymeEntries().length > 0 && (
+            {getEventsByType('PecticEnzyme').length > 0 && (
               <div className="compact-list">
-                {getPecticEnzymeEntries().map((entry) => (
+                {getEventsByType('PecticEnzyme').map((entry) => (
                   <div key={entry.id} className="compact-item">
                     <div className="form-group">
                       <label className="form-label">Enzyme Details</label>
@@ -1363,9 +1344,9 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getAcidsEntries().length > 0 && (
+            {getEventsByType('Acids').length > 0 && (
               <div className="compact-list">
-                {getAcidsEntries().map((entry) => (
+                {getEventsByType('Acids').map((entry) => (
                   <div key={entry.id} className="compact-item">
                     <div className="form-group">
                       <label className="form-label">Acid Details</label>
@@ -1430,9 +1411,9 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getBasesEntries().length > 0 && (
+            {getEventsByType('Bases').length > 0 && (
               <div className="compact-list">
-                {getBasesEntries().map((entry) => (
+                {getEventsByType('Bases').map((entry) => (
                   <div key={entry.id} className="compact-item">
                     <div className="form-group">
                       <label className="form-label">Base Details</label>
@@ -1502,9 +1483,9 @@ function BrewLogForm() {
               </Button>
             </div>
             
-            {getTanninsEntries().length > 0 && (
+            {getEventsByType('Tannins').length > 0 && (
               <div className="compact-list">
-                {getTanninsEntries().map((entry) => (
+                {getEventsByType('Tannins').map((entry) => (
                   <div key={entry.id} className="compact-item">
                     <div className="form-group">
                       <label className="form-label">Tannin Details</label>

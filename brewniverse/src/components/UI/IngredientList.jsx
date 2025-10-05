@@ -14,7 +14,6 @@ export default function IngredientList({
 }) {
     const [editingIngredient, setEditingIngredient] = React.useState(null);
 
-    // Handle Ingredients
     const addIngredient = (type) => {
         const newIngredient = {
             id: Date.now().toString(),
@@ -33,8 +32,8 @@ export default function IngredientList({
     const updateIngredient = (type, id, field, value) => {
         setFormData(prev => ({
             ...prev,
-            [type]: prev[type].map(ingredient =>
-                ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
+            [type]: prev[type].map(item =>
+                item.id === id ? { ...item, [field]: value } : item
             )
         }));
     };
@@ -42,7 +41,7 @@ export default function IngredientList({
     const removeIngredient = (type, id) => {
         setFormData(prev => ({
             ...prev,
-            [type]: prev[type].filter(ingredient => ingredient.id !== id)
+            [type]: prev[type].filter(item => item.id !== id)
         }));
     };
 

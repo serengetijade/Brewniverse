@@ -14,8 +14,8 @@ function IngredientEditor({
         amount: ingredient.amount,
         unit: ingredient.unit
     });
-    const nameInputRef = useRef(null);
 
+    const nameInputRef = useRef(null);
     useEffect(() => {
         if (nameInputRef.current) {
             nameInputRef.current.focus();
@@ -44,7 +44,7 @@ function IngredientEditor({
                     className="form-input"
                     placeholder="Ingredient name"
                     value={editData.name}
-                    onChange={(e) => setEditData(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(x) => setEditData(prev => ({ ...prev, name: x.target.value }))}
                     onKeyDown={handleKeyPress}
                 />
             </div>
