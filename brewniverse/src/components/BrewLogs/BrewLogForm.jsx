@@ -162,15 +162,7 @@ function BrewLogForm() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    if (name === 'nutrients') {
-      // Nutrients field saves directly to property, AND an event
-      setFormData(prev => ({
-        ...prev,
-        nutrients: value
-      }));
-      return;
-    }
-    else if (name === 'dateRacked') {
+    if (name === 'dateRacked') {
       handleDateRackedChange(value);
       return;
     }
@@ -310,7 +302,7 @@ function BrewLogForm() {
       return;
     }
     else {
-      // Handle all other regular fields
+      // Handle all other regular fields: recipe, name, volume, nutrients, recipeId
       setFormData(prev => ({
         ...prev,
         [name]: value
@@ -737,6 +729,49 @@ function BrewLogForm() {
     removeEvent(eventId);
   };
 
+  // Recipe functions
+  const goToRecipe = () => {
+    if (!formData.recipeId) {
+      alert('Please select a recipe first.');
+      return;
+    }
+    handleNavigation(`/recipes/${formData.recipeId}`);
+  };
+
+  const importIngredientsFromRecipe = () => {
+    if (!formData.recipeId) {
+      alert('Please select a recipe to import ingredients from.');
+      return;
+    }
+
+    const recipe = state.recipes.find(r => r.id === formData.recipeId);
+    if (!recipe) {
+      alert('Selected recipe not found.');
+      return;
+    }
+
+    const copyWithNewIds = (items = []) => {
+      return items.map(item => ({
+        id: Date.now().toString() + Math.random().toString(36).substr(2, 6), //Create unique ids to avoid collisions
+        name: item.name || '',
+        amount: item.amount || '',
+        unit: item.unit || 'oz'
+        //type: item.type || 'primary'
+      }));
+    };
+
+    const adjuncts = copyWithNewIds(recipe.ingredientsAdjunct);
+    const primary = copyWithNewIds(recipe.ingredientsPrimary);
+    const secondary = copyWithNewIds(recipe.ingredientsSecondary);
+
+    setFormData(prev => ({
+      ...prev,
+      ingredientsAdjunct: [...prev.ingredientsAdjunct, ...adjuncts],
+      ingredientsPrimary: [...prev.ingredientsPrimary, ...primary],
+      ingredientsSecondary: [...prev.ingredientsSecondary, ...secondary]
+    }));
+  };
+
   return (
     <div className="brewlog-form">
       <div className="form-header">
@@ -827,24 +862,50 @@ function BrewLogForm() {
             <label htmlFor="recipeId" className="form-label">
               Recipe
             </label>
-            <select
-              id="recipeId"
-              name="recipeId"
-              className="form-select"
-              value={formData.recipeId}
-              onChange={handleChange}
-            >
-              <option value="">Select a recipe (optional)</option>
-              {state.recipes.map(recipe => (
-                <option key={recipe.id} value={recipe.id}>
-                  {recipe.name}
-                </option>
-              ))}
-            </select>
-          </div>          
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <select
+                id="recipeId"
+                name="recipeId"
+                className="form-select"
+                value={formData.recipeId}
+                onChange={handleChange}
+                style={{ flex: 1 }}
+              >
+                <option value="">Select a recipe (optional)</option>
+                {state.recipes.map(recipe => (
+                  <option key={recipe.id} value={recipe.id}>
+                    {recipe.name}
+                  </option>
+                ))}
+              </select>
+
+              <div className="recipe-actions" style={{ display: 'flex', gap: '6px' }}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="small"
+                  onClick={goToRecipe}
+                  disabled={!formData.recipeId}
+                >
+                  Jump to Recipe
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="small"
+                  onClick={importIngredientsFromRecipe}
+                  disabled={!formData.recipeId}
+                >
+                <Plus size={14} />
+                  Import Ingredients
+                </Button>
+              </div>
+            </div>
+          </div>
+          
         </div>
 
-        {/* Adjuncts */}
+        {/* Adjunct Ingredients */}
         <div className="form-section">
             <IngredientList
                 formData={formData}
