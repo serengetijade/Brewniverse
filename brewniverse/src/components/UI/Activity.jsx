@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Save, X, Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { Plus, Trash2 } from 'lucide-react';
 import Button from './Button';
 
 const topics = [
@@ -15,7 +15,7 @@ function Activity({
     labelDetailsName,
     sectionInfoMessage })
 {
-    const [editingActivity, setEditingActivity] = React.useState(null);
+    const [setEditingActivity] = React.useState(null);
 
     const nameInputRef = useRef(null);
     useEffect(() => {

@@ -472,12 +472,6 @@ function BrewLogForm() {
     return date.toLocaleDateString();
   };
   
-  const getYeast = () => {
-    // Return the first yeast entry for backward compatibility
-    const yeastEvents = getEventsByType('Yeast');
-    return yeastEvents.length > 0 ? yeastEvents[0].description : '';
-  };
-
   const getDateRacked = () => {
     const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
     return rackedEvent ? rackedEvent.date : '';
@@ -511,203 +505,6 @@ function BrewLogForm() {
     } else if (field === 'final') {
       updateEventField('GravityFinal', 'Final Gravity Reading', value);
     }
-  };
-
-  // Additional gravity readings functions
-  const addAdditionalGravityReading = () => {
-    const newReading = createEvent(
-      'Gravity',
-      'Gravity Reading',
-      'Gravity reading',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newReading);
-  };
-
-  const getAdditionalGravityReadings = () => {
-    return getEventsByType('Gravity').filter(event => 
-      event.name === 'Gravity Reading' // Filter out Original Gravity Reading
-    );
-  };
-
-  const updateAdditionalGravityReading = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'reading') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-  };
-
-  const removeAdditionalGravityReading = (eventId) => {
-    removeEvent(eventId);
-  };
-
-  // Pectic enzyme functions
-  const addPecticEnzymeEntry = () => {
-    const newEntry = createEvent(
-      'PecticEnzyme',
-      'Pectic Enzyme Added',
-      '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newEntry);
-};
-
-  const updatePecticEnzymeEntry = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'description') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-  };
-
-  const removePecticEnzymeEntry = (eventId) => {
-    removeEvent(eventId);
-  };
-
-  // Yeast functions
-  const addYeastEntry = () => {
-    const newEntry = createEvent(
-      'Yeast',
-      'Yeast Added',
-      '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newEntry);
-    
-    // Update yeast property if this is the first entry
-    const yeastEvents = getEventsByType('Yeast');
-    if (yeastEvents.length === 0) {
-      setFormData(prev => ({
-        ...prev,
-        yeast: ''
-      }));
-    }
-  };
-
-  const updateYeastEntry = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'description') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-    
-    // Update the yeast property with the first entry for backward compatibility
-    const yeastEvents = getEventsByType('Yeast');
-    if (yeastEvents.length > 0) {
-      const firstYeastDescription = yeastEvents[0].id === eventId ? value : yeastEvents[0].description;
-      setFormData(prev => ({
-        ...prev,
-        yeast: firstYeastDescription
-      }));
-    }
-  };
-
-  const removeYeastEntry = (eventId) => {
-    removeEvent(eventId);
-    
-    // Update yeast property with the new first entry (or empty if none left)
-    const remainingYeastEvents = formData.events.filter(event => 
-      event.type === 'Yeast' && event.id !== eventId
-    );
-    const newYeastValue = remainingYeastEvents.length > 0 ? remainingYeastEvents[0].description : '';
-    setFormData(prev => ({
-      ...prev,
-      yeast: newYeastValue
-    }));
-  };
-
-  // Acids functions
-  const addAcidsEntry = () => {
-    const newEntry = createEvent(
-      'Acids',
-      'Acids Added',
-      '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newEntry);
-  };
-
-  const updateAcidsEntry = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'description') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-  };
-
-  const removeAcidsEntry = (eventId) => {
-    removeEvent(eventId);
-  };
-
-  // Bases functions
-  const addBasesEntry = () => {
-    const newEntry = createEvent(
-      'Bases',
-      'Bases Added',
-      '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newEntry);
-  };
-
-  const updateBasesEntry = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'description') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-  };
-
-  const removeBasesEntry = (eventId) => {
-    removeEvent(eventId);
-  };
-
-  // Tannins functions
-  const addTanninsEntry = () => {
-    const newEntry = createEvent(
-      'Tannins',
-      'Tannins Added',
-      '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
-    );
-    addEvent(newEntry);
-  };
-
-  const updateTanninsEntry = (eventId, field, value) => {
-    const updates = {};
-    if (field === 'description') {
-      updates.description = value;
-    } else if (field === 'date') {
-      updates.date = value;
-    }
-    updateEvent(eventId, updates);
-  };
-
-  const removeTanninsEntry = (eventId) => {
-    removeEvent(eventId);
   };
 
   // Recipe functions
@@ -1022,118 +819,32 @@ function BrewLogForm() {
                 <span className="input-suffix">%</span>
               </div>
             </div>
-
-
           </div>
 
-          {/* Additional Gravity Readings */}
-          <div className="form-group">
-            <div className="section-header">
-              <label className="form-label">Additional Gravity Readings</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addAdditionalGravityReading}
-              >
-              <Plus size={buttonSize} />
-                Add Reading
-              </Button>
-            </div>
-            
-            {getAdditionalGravityReadings().length > 0 && (
-              <div className="compact-list">
-                {getAdditionalGravityReadings().map((reading) => (
-                  <div key={reading.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Gravity Reading</label>
-                      <input
-                        type="number"
-                        step="0.001"
-                        className="form-input"
-                        placeholder="1.020"
-                        value={reading.description}
-                        onChange={(e) => updateAdditionalGravityReading(reading.id, 'reading', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={reading.date}
-                        onChange={(e) => updateAdditionalGravityReading(reading.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removeAdditionalGravityReading(reading.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="Gravity"
+            labelName="Additional Gravity Readings"
+            labelDetailsName="Gravity Reading"
+            sectionInfoMessage=""
+          >
+          </Activity>       
         </div>
 
         {/* Yeast */}
         <div className="form-section">
-          <h3>Yeast</h3>          
-          <div className="form-group">
-            <div className="section-header">
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addYeastEntry}
-              >
-              <Plus size={buttonSize} />
-                Add Entry
-              </Button>
-            </div>
-            
-            {getEventsByType('Yeast').length === 0 ? (
-              <p className="empty-message">Wild or cultured, record your yeast here. <br/>No yeast additions recorded.</p>
-            ) : (
-              <div className="compact-list">
-                {getEventsByType('Yeast').map((entry) => (
-                  <div key={entry.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Yeast Details</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Yeast strain and details"
-                        value={entry.description}
-                        onChange={(e) => updateYeastEntry(entry.id, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={entry.date}
-                        onChange={(e) => updateYeastEntry(entry.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removeYeastEntry(entry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <h3>Yeast</h3>       
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="Yeast"
+            labelName="Yeast Additions"
+            labelDetailsName="Yeast Details"
+            sectionInfoMessage="Wild or cultured, record your yeast here.
+No yeast additions recorded."
+          >
+          </Activity>          
         </div>
 
         {/* Nutrients */}
@@ -1241,7 +952,6 @@ function BrewLogForm() {
         {/* Pectic Enzyme */}
         <div className="form-section">
           <h3>Pectic Enzyme</h3>
-          
           <div className="form-group">
             <label htmlFor="pecticEnzyme" className="form-label">
               Pectic Enzyme
@@ -1258,62 +968,22 @@ function BrewLogForm() {
           </div>
 
           {/* Pectic Enzyme Additions */}
-          <div className="form-group">
-            <div className="section-header">
-              <label className="form-label">Pectic Enzyme Additions</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addPecticEnzymeEntry}
-              >
-              <Plus size={buttonSize} />
-                Add Entry
-              </Button>
-            </div>
-            
-            {getEventsByType('PecticEnzyme').length > 0 && (
-              <div className="compact-list">
-                {getEventsByType('PecticEnzyme').map((entry) => (
-                  <div key={entry.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Enzyme Details</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Pectic enzyme details"
-                        value={entry.description}
-                        onChange={(e) => updatePecticEnzymeEntry(entry.id, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={entry.date}
-                        onChange={(e) => updatePecticEnzymeEntry(entry.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removePecticEnzymeEntry(entry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="PecticEnzyme"
+            labelName="Pectic Enzyme Additions"
+            labelDetailsName="Enzyme Details"
+            sectionInfoMessage=""
+          >          
+          </Activity>
         </div>
 
         {/* Acids and Bases */}
         <div className="form-section">
           <h3>Acids and Bases</h3>
           
+          {/* Acids */}
           <div className="form-group">
             <label htmlFor="acids" className="form-label">
               Acids
@@ -1328,59 +998,17 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="Acid"
+            labelName="Acid Additions"
+            labelDetailsName="Acid Details"
+            sectionInfoMessage=""
+          >
+          </Activity>
 
-          {/* Acid Additions */}
-          <div className="form-group">
-            <div className="section-header">
-              <label className="form-label">Acid Additions</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addAcidsEntry}
-              >
-              <Plus size={buttonSize} />
-                Add Entry
-              </Button>
-            </div>
-            
-            {getEventsByType('Acids').length > 0 && (
-              <div className="compact-list">
-                {getEventsByType('Acids').map((entry) => (
-                  <div key={entry.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Acid Details</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Acid type and amount"
-                        value={entry.description}
-                        onChange={(e) => updateAcidsEntry(entry.id, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={entry.date}
-                        onChange={(e) => updateAcidsEntry(entry.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removeAcidsEntry(entry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
+          {/* Bases */}
           <div className="form-group">
             <label htmlFor="bases" className="form-label">
               Bases
@@ -1395,58 +1023,15 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
-
-          {/* Base Additions */}
-          <div className="form-group">
-            <div className="section-header">
-              <label className="form-label">Base Additions</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addBasesEntry}
-              >
-              <Plus size={buttonSize} />
-                Add Entry
-              </Button>
-            </div>
-            
-            {getEventsByType('Bases').length > 0 && (
-              <div className="compact-list">
-                {getEventsByType('Bases').map((entry) => (
-                  <div key={entry.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Base Details</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Base type and amount"
-                        value={entry.description}
-                        onChange={(e) => updateBasesEntry(entry.id, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={entry.date}
-                        onChange={(e) => updateBasesEntry(entry.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removeBasesEntry(entry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="Base"
+            labelName="Base Additions"
+            labelDetailsName="Base Details"
+            sectionInfoMessage=""
+          >
+          </Activity>
         </div>
 
         {/* Tannins */}
@@ -1467,58 +1052,15 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
-
-          {/* Tannin Additions */}
-          <div className="form-group">
-            <div className="section-header">
-              <label className="form-label">Tannin Additions</label>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addTanninsEntry}
-              >
-              <Plus size={buttonSize} />
-                Add Entry
-              </Button>
-            </div>
-            
-            {getEventsByType('Tannins').length > 0 && (
-              <div className="compact-list">
-                {getEventsByType('Tannins').map((entry) => (
-                  <div key={entry.id} className="compact-item">
-                    <div className="form-group">
-                      <label className="form-label">Tannin Details</label>
-                      <input
-                        type="text"
-                        className="form-input"
-                        placeholder="Tannin type and amount"
-                        value={entry.description}
-                        onChange={(e) => updateTanninsEntry(entry.id, 'description', e.target.value)}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label className="form-label">Date</label>
-                      <input
-                        type="date"
-                        className="form-input"
-                        value={entry.date}
-                        onChange={(e) => updateTanninsEntry(entry.id, 'date', e.target.value)}
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="small"
-                      onClick={() => removeTanninsEntry(entry.id)}
-                    >
-                      <Trash2 size={16} />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+          <Activity
+            formData={formData}
+            setFormData={setFormData}
+            topic="Tannin"
+            labelName="Tannin Additions"
+            labelDetailsName="Tannin Details"
+            sectionInfoMessage=""
+          >
+          </Activity>
         </div>
 
         {/* Important Dates */}
