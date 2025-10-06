@@ -4,7 +4,7 @@ import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../UI/IngredientList';
-import Activity from '../UI/Activity'; 
+import Activity from '../UI/Activity';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -58,26 +58,25 @@ function BrewLogForm() {
         if (!brewLog.activity || brewLog.activity.length === 0) {
           const generatedActivities = [];
           
-          // Create DateCreated activity
-          generatedActivities.push(createEvent(
-            'DateCreated',
-            'Date Created',
-            'New brew started',
-            loadedData.dateCreated,
-            false,
-            false
+            generatedActivities.push(createActivity(
+                'DateCreated',
+                false,
+                '', //date = now
+                'New brew started',
+                "Date Created",
+                "Complete"
           ));
           
           // Create activity(s) from nutrientSchedule
           if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
             loadedData.nutrientSchedule.forEach(entry => {
-              generatedActivities.push(createEvent(
+              generatedActivities.push(createActivity(
                 'Nutrient',
-                'Nutrients Added',
-                entry.description,
+                true,
                 entry.date,
-                entry.completed,
-                false
+                entry.description,
+                'Nutrients Added',
+                entry.statusOfActivity
               ));
             });
           }
@@ -92,13 +91,13 @@ function BrewLogForm() {
       // For new brew logs, create initial DateCreated event
       const initialData = {
         ...formData,
-        activity: [createEvent(
+        activity: [createActivity(
           'DateCreated',
-          'Date Created',
-          'New brew started',
-          formData.dateCreated,
           false,
-          false
+          formData.dateCreated,
+          'New brew started',
+          'Date Created',
+          "Complete"
         )]
       };
       setFormData(initialData);
@@ -209,22 +208,22 @@ function BrewLogForm() {
           dateCreated: value
         };
         
-        const existingEventIndex = prev.activity.findIndex(event => event.type === 'DateCreated');
-        const dateCreatedEvent = createEvent(
-          'DateCreated',
-          'Date Created',
-          'New brew started',
-          value,
-          false,
-          false
+        const existingEventIndex = prev.activity.findIndex(item => item.topic === 'DateCreated');
+        const dateCreatedActivity = createActivity(
+            'DateCreated',
+            false,
+            value,
+            'New brew started',
+            "Date Created",
+            "Complete"
         );
 
         if (existingEventIndex >= 0) {
-          newFormData.activity = prev.activity.map((event, index) =>
-            index === existingEventIndex ? { ...event, date: value } : event
+          newFormData.activity = prev.activity.map((item, index) =>
+            index === existingEventIndex ? { ...item, date: value } : item
           );
         } else {
-          newFormData.activity = [...prev.activity, dateCreatedEvent];
+          newFormData.activity = [...prev.activity, dateCreatedActivity];
         }
 
         return newFormData;
@@ -239,13 +238,13 @@ function BrewLogForm() {
         };
         
         const existingEventIndex = prev.activity.findIndex(event => event.type === 'DateBottled');
-        const dateBottledEvent = createEvent(
-          'DateBottled',
-          'Brew Bottled',
-          'Brew bottled and ready for aging',
-          value,
+        const dateBottledEvent = createActivity(
+            'DateBottled',
           false,
-          false
+          value,
+          'Brew bottled and ready for aging',
+          'Brew Bottled',
+          'Complete'
         );
 
         if (value) {
@@ -278,14 +277,14 @@ function BrewLogForm() {
         const stabilizeDate = name === 'stabilizeDate' ? value : prev.dateStabilized;
         
         if (stabilizeText.trim()) {
-          const existingEventIndex = prev.activity.findIndex(event => event.type === 'Stabilize');
-          const stabilizeEvent = createEvent(
+          const existingEventIndex = prev.activity.findIndex(event => event.topic === 'Stabilize');
+          const stabilizeEvent = createActivity(
             'Stabilize',
-            'Stabilization',
-            stabilizeText,
-            stabilizeDate,
             false,
-            false
+            stabilizeDate,
+            '',
+            'Stabilization',
+            'Complete'
           );
 
           if (existingEventIndex >= 0) {
@@ -297,7 +296,7 @@ function BrewLogForm() {
           }
         } else {
           // Remove event if stabilize text is empty
-          newFormData.activity = prev.activity.filter(event => event.type !== 'Stabilize');
+          newFormData.activity = prev.activity.filter(event => event.topic !== 'Stabilize');
         }
 
         return newFormData;
@@ -314,17 +313,17 @@ function BrewLogForm() {
   };
 
   // Nutrients
-  const addNutrientScheduleEntry = () => {
-    // Create event directly
-    const nutrientEvent = createEvent(
+  //ToDo: Pass description from editor
+  const addNutrientScheduleEntry = (description) => {
+    const nutrientEvent = createActivity(
       'Nutrient',
-      'Nutrients Added',
+      true,
       '',
-      new Date().toISOString().split('T')[0],
-      false,
-      false
+      '',
+      'Nutrients Added',
+      'Pending'
     );
-    addEvent(nutrientEvent);
+    addActivity(nutrientEvent);
   };
 
   const updateNutrientScheduleEntry = (id, field, value) => {
@@ -334,12 +333,12 @@ function BrewLogForm() {
     if (field === 'description') updates.description = value;
     if (field === 'completed') updates.completed = value;
     
-    updateEvent(id, updates);
+    updateActivity(id, updates);
   };
 
   const removeNutrientScheduleEntry = (id) => {
     // Remove the event directly
-    removeEvent(id);
+    removeActivity(id);
   };
 
   const addScheduleEntries = (scheduleType) => {
@@ -364,7 +363,7 @@ function BrewLogForm() {
             id: Date.now().toString(),
             date: today.toISOString().split('T')[0],
             description: 'Staggered nutrient - yeast added',
-            completed: false
+            statusOfActivity: "Pending"
         }];
         // Add future entries
         const futureEntries = Array.from({ length: days }, (_, index) => {
@@ -373,8 +372,8 @@ function BrewLogForm() {
           return {
             id: (Date.now() + index + 1).toString(),
             date: futureDate.toISOString().split('T')[0],
-            description: `Staggered nutrient - ${(index + 1) * 24} hours later`,
-            completed: false
+              description: `Staggered nutrient - ${(index + 1) * 24} hours later`,
+              statusOfActivity: "Pending"
           };
         });
         entries = [...entries, ...futureEntries];
@@ -383,13 +382,13 @@ function BrewLogForm() {
 
     // Create activity directly (no more nutrientSchedule array)
     const nutrientActivity = entries.map(entry => 
-      createEvent(
+      createActivity(
         'Nutrient',
-        'Nutrients Added',
-        entry.description,
+        false,
         entry.date,
-        entry.completed,
-        false
+        entry.description,
+          'Nutrients Added',
+          entry.statusOfActivity,
       )
     );
 
@@ -404,7 +403,7 @@ function BrewLogForm() {
   const addStaggered3Schedule = () => addScheduleEntries('staggered3');
   
   const getNutrientSchedule = () => {
-    return getEventsByType('Nutrient').map(event => ({
+    return getActivitiesByTopic('Nutrient').map(event => ({
       id: event.id,
       date: event.date,
       description: event.description,
@@ -412,56 +411,62 @@ function BrewLogForm() {
     }));
     };
 
-  // Event management functions
-  const createEvent = (type, name, description, date, completed = false, hasAlert = false) => {
+  // Activity management functions
+  const getActivitiesByTopic = (topic) => {
+    return formData.activity.filter(event => event.topic === topic);
+    };
+
+  const createActivity = (topic, alert = false, date, description, name, statusOfActivity) => {
     return {
-      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
-      name,
-      description,
-      date,
-      completed,
-      hasAlert,
-      type
+      id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
+      alert: alert,
+      date: date ? date : new Date().toISOString().split('T')[0],
+      description: description,
+      name: name,
+      statusOfActivity: statusOfActivity ?? "Completed",
+      topic: topic
     };
   };
 
-  const addEvent = (event) => {
+  const addActivity = (activity) => {
     setFormData(prev => ({
       ...prev,
-      activity: [...prev.activity, event]
+      activity: [...prev.activity, activity]
     }));
   };
 
-  const updateEvent = (eventId, updates) => {
+  const updateActivity = (eventId, updates) => {
     setFormData(prev => ({
       ...prev,
-      activity: prev.activity.map(event =>
-        event.id === eventId ? { ...event, ...updates } : event
+      activity: prev.activity.map(item =>
+        item.id === eventId ? { ...item, ...updates } : item
       )
     }));
   };
 
-  const removeEvent = (eventId) => {
+  const removeActivity = (eventId) => {
     setFormData(prev => ({
       ...prev,
-      activity: prev.activity.filter(event => event.id !== eventId)
+      activity: prev.activity.filter(item => item.id !== eventId)
     }));
   };
 
-  const getEventsByType = (type) => {
-    return formData.activity.filter(event => event.type === type);
-  };
-
-  const updateEventField = (eventType, name, description, date = new Date().toISOString().split('T')[0]) => {
-    const existingEvent = formData.activity.find(event => event.type === eventType);
+  const updateEventField = (topic, name, description, date = new Date().toISOString().split('T')[0]) => {
+    const existingEvent = formData.activity.find(event => event.topic === topic);
     
     if (existingEvent) {
-      updateEvent(existingEvent.id, { name, description, date });
+      updateActivity(existingEvent.id, { name, description, date });
     } else {
-      const newEvent = createEvent(eventType, name, description, date, false, false);
-      addEvent(newEvent);
+    const newActivity = createActivity(
+        date = date,
+        description = description,
+        name = name,
+        topic = topic,
+    );
+      addActivity(newActivity);
     }
   };
+
   // Helper functions to derive UI data from events
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -472,17 +477,17 @@ function BrewLogForm() {
   };
   
   const getDateRacked = () => {
-    const rackedEvent = formData.activity.find(event => event.type === 'DateRacked');
+    const rackedEvent = formData.activity.find(event => event.topic === 'DateRacked');
     return rackedEvent ? rackedEvent.date : '';
   };
 
   const getGravityOriginal = () => {
-    const gravityEvent = formData.activity.find(event => event.type === 'Gravity');
+    const gravityEvent = formData.activity.find(event => event.topic === 'Gravity');
     return gravityEvent ? gravityEvent.description : '';
   };
 
   const getGravityFinal = () => {
-    const gravityFinalEvent = formData.activity.find(event => event.type === 'GravityFinal');
+    const gravityFinalEvent = formData.activity.find(event => event.topic === 'GravityFinal');
     return gravityFinalEvent ? gravityFinalEvent.description : '';
   };
 
@@ -491,9 +496,9 @@ function BrewLogForm() {
       updateEventField('DateRacked', 'Brew Racked', 'Brew transferred to secondary', value);
     } else {
       // Remove event if date is cleared
-      const rackedEvent = formData.activity.find(event => event.type === 'DateRacked');
+      const rackedEvent = formData.activity.find(item => item.topic === 'DateRacked');
       if (rackedEvent) {
-        removeEvent(rackedEvent.id);
+        removeActivity(rackedEvent.id);
       }
     }
   };
@@ -786,7 +791,7 @@ function BrewLogForm() {
               <div className="input-with-suffix">
                 <input
                   type="number"
-                  step="0.1"
+                  step="0.01"
                   id="finalABV"
                   name="finalABV"
                   className="form-input calculated-field"
@@ -806,7 +811,7 @@ function BrewLogForm() {
               <div className="input-with-suffix">
                 <input
                   type="number"
-                  step="0.1"
+                  step="0.01"
                   id="estimatedABV"
                   name="estimatedABV"
                   className="form-input calculated-field"
@@ -1190,11 +1195,11 @@ No yeast additions recorded."
                   <div className="event-date">{formatDate(item.date)}</div>
                   <div className="event-content">
                     <strong>{item.name}</strong>
-                    <span className="event-type">({item.type})</span>
+                    <span className="event-type">({item.topic})</span>
                     {item.description && <div className="event-description">{item.description}</div>}
-                    <div className="event-status">
-                      {item.completed ? '✅ Completed' : '⏳ Pending'}
-                      {item.hasAlert && ' 🔔 Has Alert'}
+                      <div className="event-status">
+                         {item.statusOfActivity == "Complete" ? '✅ Completed' : '⏳ Pending'}
+                         {item.alert && ' 🔔 Has Alert'}
                     </div>
                   </div>
                 </div>

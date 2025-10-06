@@ -7,6 +7,7 @@ const topics = [
     'Nutrient', 'PecticEnzyme', 'Tannin', 'Yeast', 'Other'
 ];
 
+const activityStatus = [ "Pending", "Complete"]
 
 function Activity({
     formData,
@@ -20,13 +21,14 @@ function Activity({
 
     const nameInputRef = useRef(null);
     useEffect(() => {
-    if (nameInputRef.current) {
-        nameInputRef.current.focus();
-    }
+        if (nameInputRef.current) {
+            nameInputRef.current.focus();
+        }
     }, []);
+
     let buttonSize = 14;
 
-    const createActivity = (topic, alert = false, date, description, name) => {
+    const createActivity = (topic, alert = false, date, description, name, statusOfActivity) => {
         let setName = "";
         switch (topic) {
             case "Gravity":
@@ -50,11 +52,11 @@ function Activity({
 
         let result = {
             id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
-            //activityStatus = "Completed",
             alert: alert,
             date: date ? date : new Date().toISOString().split('T')[0],
             description: description,
             name: name ?? setName,
+            statusOfActivity: statusOfActivity ?? "Complete",
             topic: topic
         };
         return(result);
