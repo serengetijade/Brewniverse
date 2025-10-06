@@ -823,8 +823,8 @@ function BrewLogForm() {
             formData={formData}
             setFormData={setFormData}
             topic="Gravity"
-            labelName="Additional Gravity Readings"
-            labelDetailsName="Gravity Reading"
+            headerLabel="Gravity Readings"
+            itemLabel="Gravity Reading"
             sectionInfoMessage=""
           >
           </Activity>       
@@ -837,8 +837,8 @@ function BrewLogForm() {
             formData={formData}
             setFormData={setFormData}
             topic="Yeast"
-            labelName="Yeast Additions"
-            labelDetailsName="Yeast Details"
+            headerLabel="Yeast Additions"
+            itemLabel="Yeast Details"
             sectionInfoMessage="Wild or cultured, record your yeast here.
 No yeast additions recorded."
           >
@@ -970,8 +970,8 @@ No yeast additions recorded."
             formData={formData}
             setFormData={setFormData}
             topic="PecticEnzyme"
-            labelName="Pectic Enzyme Additions"
-            labelDetailsName="Enzyme Details"
+            headerLabel="Pectic Enzyme Additions"
+            itemLabel="Enzyme Details"
             sectionInfoMessage=""
           >          
           </Activity>
@@ -1000,8 +1000,8 @@ No yeast additions recorded."
             formData={formData}
             setFormData={setFormData}
             topic="Acid"
-            labelName="Acid Additions"
-            labelDetailsName="Acid Details"
+            headerLabel="Acid Additions"
+            itemLabel="Acid Details"
             sectionInfoMessage=""
           >
           </Activity>
@@ -1025,8 +1025,8 @@ No yeast additions recorded."
             formData={formData}
             setFormData={setFormData}
             topic="Base"
-            labelName="Base Additions"
-            labelDetailsName="Base Details"
+            headerLabel="Base Additions"
+            itemLabel="Base Details"
             sectionInfoMessage=""
           >
           </Activity>
@@ -1054,8 +1054,8 @@ No yeast additions recorded."
             formData={formData}
             setFormData={setFormData}
             topic="Tannin"
-            labelName="Tannin Additions"
-            labelDetailsName="Tannin Details"
+            headerLabel="Tannin Additions"
+            itemLabel="Tannin Details"
             sectionInfoMessage=""
           >
           </Activity>
@@ -1122,7 +1122,7 @@ No yeast additions recorded."
             </div>
         </div>
 
-        {/* Notes */}
+        {/* Description & Notes */}
         <div className="form-section">
           <div className="form-group">
             <h3>

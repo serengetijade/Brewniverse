@@ -13,8 +13,8 @@ function Activity({
     formData,
     setFormData,
     topic,
-    labelName,
-    labelDetailsName,
+    headerLabel,
+    itemLabel,
     sectionInfoMessage })
 {
     const [setEditingActivity] = React.useState(null);
@@ -106,7 +106,7 @@ function Activity({
     return (
         <div className="form-group">
             <div className="section-header">
-                <label className="form-label">{labelName}</label>
+                <label className="form-label">{headerLabel}</label>
                 <Button
                     type="button"
                     variant="outline"
@@ -129,7 +129,7 @@ function Activity({
                         {getActivitiesByTopic(topic).map((item) => (
                             <div key={item.id} className="compact-item">
                                 <div className="form-group">
-                                    <label className="form-label">{labelDetailsName}</label>
+                                    <label className="form-label">{itemLabel}</label>
                                     <input
                                         type={(item.topic == "Gravity") ? "number" : "text"}
                                         step="0.001"
