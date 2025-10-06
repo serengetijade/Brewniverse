@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
-import Button from './Button';
+import Button from '../UI/Button';
 
 const topics = [
     'Acid', 'Base', 'Gravity', 'GravityOriginal', 'GravityFinal',
@@ -131,7 +131,8 @@ function Activity({
                                 <div className="form-group">
                                     <label className="form-label">{labelDetailsName}</label>
                                     <input
-                                        type="text"
+                                        type={(item.topic == "Gravity") ? "number" : "text"}
+                                        step="0.001"
                                         className="form-input"
                                         placeholder="Item details"
                                         value={item.description}

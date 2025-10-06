@@ -4,7 +4,8 @@ import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../UI/IngredientList';
-import Activity from '../UI/Activity';
+import Activity from '../Activity/Activity';
+import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -19,7 +20,6 @@ function BrewLogForm() {
   const [formData, setFormData] = useState({
     acids: '',
     activity: [],
-    adjuncts: [],
     bases: '',
     dateBottled: '',
     dateCreated: new Date().toISOString().split('T')[0],
@@ -1175,36 +1175,12 @@ No yeast additions recorded."
       </form>
 
       {/* Activity Timeline */}
-      <div className="card mt-4">
-        <div className="card-header" style={{ cursor: 'pointer' }} onClick={() => setShowActivityTimeline(!showActivityTimeline)}>
-          <h3>Activity Timeline {showActivityTimeline ? '▼' : '▶'}</h3>
-          <p>Click to {showActivityTimeline ? 'hide' : 'show'} chronological events</p>
-        </div>
-        {showActivityTimeline && formData.activity.length > 0 && (
-          <div className="activity-timeline">
-            {formData.activity
-              .sort((a, b) => new Date(a.date) - new Date(b.date))
-              .map(item => (
-                <div key={item.id} className="event-timeline-item">
-                  <div className="event-date">{formatDate(item.date)}</div>
-                  <div className="event-content">
-                    <strong>{item.name}</strong>
-                    <span className="event-type">({item.topic})</span>
-                    {item.description && <div className="event-description">{item.description}</div>}
-                      <div className="event-status">
-                         {item.statusOfActivity == "Complete" ? '✅ Completed' : '⏳ Pending'}
-                         {item.alert && ' 🔔 Has Alert'}
-                    </div>
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-        {showActivityTimeline && formData.activity.length === 0 && (
-          <p className="empty-message">No events recorded yet.</p>
-        )}
-      </div>
-
+      <ActivityTimeline
+        formData={formData}
+        showActivityTimeline={showActivityTimeline}
+        setShowActivityTimeline={setShowActivityTimeline}
+      >
+      </ActivityTimeline>
     </div>
   );
 }
