@@ -29,7 +29,6 @@ function BrewLogForm() {
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     estimatedABV: '',
-    events: [], // Events for: NutrientSchedule, DateRacked, Gravity, GravityFinal, PecticEnzyme, Yeast, DateCreated, etc
     finalABV: '',
     gravity13Break: '',
     name: '',
@@ -52,15 +51,15 @@ function BrewLogForm() {
         const loadedData = {
           ...brewLog,
           dateCreated: brewLog.dateCreated.split('T')[0],
-          events: brewLog.events || [] // Ensure events array exists
+          activity: brewLog.activity || [] // Ensure events array exists
         };
         
-        // If no events exist, create them from existing data
-        if (!brewLog.events || brewLog.events.length === 0) {
-          const generatedEvents = [];
+        // If no activity(s) exist, create from existing data
+        if (!brewLog.activity || brewLog.activity.length === 0) {
+          const generatedActivities = [];
           
-          // Create DateCreated event
-          generatedEvents.push(createEvent(
+          // Create DateCreated activity
+          generatedActivities.push(createEvent(
             'DateCreated',
             'Date Created',
             'New brew started',
@@ -69,10 +68,10 @@ function BrewLogForm() {
             false
           ));
           
-          // Create events from nutrientSchedule
+          // Create activity(s) from nutrientSchedule
           if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
             loadedData.nutrientSchedule.forEach(entry => {
-              generatedEvents.push(createEvent(
+              generatedActivities.push(createEvent(
                 'Nutrient',
                 'Nutrients Added',
                 entry.description,
@@ -83,7 +82,7 @@ function BrewLogForm() {
             });
           }
           
-          loadedData.events = generatedEvents;
+          loadedData.events = generatedActivities;
         }
         
         setFormData(loadedData);
@@ -93,7 +92,7 @@ function BrewLogForm() {
       // For new brew logs, create initial DateCreated event
       const initialData = {
         ...formData,
-        events: [createEvent(
+        activity: [createEvent(
           'DateCreated',
           'Date Created',
           'New brew started',
@@ -210,7 +209,7 @@ function BrewLogForm() {
           dateCreated: value
         };
         
-        const existingEventIndex = prev.events.findIndex(event => event.type === 'DateCreated');
+        const existingEventIndex = prev.activity.findIndex(event => event.type === 'DateCreated');
         const dateCreatedEvent = createEvent(
           'DateCreated',
           'Date Created',
@@ -221,11 +220,11 @@ function BrewLogForm() {
         );
 
         if (existingEventIndex >= 0) {
-          newFormData.events = prev.events.map((event, index) =>
+          newFormData.activity = prev.activity.map((event, index) =>
             index === existingEventIndex ? { ...event, date: value } : event
           );
         } else {
-          newFormData.events = [...prev.events, dateCreatedEvent];
+          newFormData.activity = [...prev.activity, dateCreatedEvent];
         }
 
         return newFormData;
@@ -239,7 +238,7 @@ function BrewLogForm() {
           dateBottled: value
         };
         
-        const existingEventIndex = prev.events.findIndex(event => event.type === 'DateBottled');
+        const existingEventIndex = prev.activity.findIndex(event => event.type === 'DateBottled');
         const dateBottledEvent = createEvent(
           'DateBottled',
           'Brew Bottled',
@@ -251,15 +250,15 @@ function BrewLogForm() {
 
         if (value) {
           if (existingEventIndex >= 0) {
-            newFormData.events = prev.events.map((event, index) =>
+            newFormData.activity = prev.activity.map((event, index) =>
               index === existingEventIndex ? { ...event, date: value } : event
             );
           } else {
-            newFormData.events = [...prev.events, dateBottledEvent];
+            newFormData.activity = [...prev.activity, dateBottledEvent];
           }
         } else {
           // Remove event if date is cleared
-          newFormData.events = prev.events.filter(event => event.type !== 'DateBottled');
+          newFormData.activity = prev.activity.filter(event => event.type !== 'DateBottled');
         }
 
         return newFormData;
@@ -279,7 +278,7 @@ function BrewLogForm() {
         const stabilizeDate = name === 'stabilizeDate' ? value : prev.dateStabilized;
         
         if (stabilizeText.trim()) {
-          const existingEventIndex = prev.events.findIndex(event => event.type === 'Stabilize');
+          const existingEventIndex = prev.activity.findIndex(event => event.type === 'Stabilize');
           const stabilizeEvent = createEvent(
             'Stabilize',
             'Stabilization',
@@ -290,15 +289,15 @@ function BrewLogForm() {
           );
 
           if (existingEventIndex >= 0) {
-            newFormData.events = prev.events.map((event, index) =>
+            newFormData.activity = prev.activity.map((event, index) =>
               index === existingEventIndex ? { ...event, description: stabilizeText, date: stabilizeDate } : event
             );
           } else {
-            newFormData.events = [...prev.events, stabilizeEvent];
+            newFormData.activity = [...prev.activity, stabilizeEvent];
           }
         } else {
           // Remove event if stabilize text is empty
-          newFormData.events = prev.events.filter(event => event.type !== 'Stabilize');
+          newFormData.activity = prev.activity.filter(event => event.type !== 'Stabilize');
         }
 
         return newFormData;
@@ -382,8 +381,8 @@ function BrewLogForm() {
         break;
     }
 
-    // Create events directly (no more nutrientSchedule array)
-    const nutrientEvents = entries.map(entry => 
+    // Create activity directly (no more nutrientSchedule array)
+    const nutrientActivity = entries.map(entry => 
       createEvent(
         'Nutrient',
         'Nutrients Added',
@@ -396,7 +395,7 @@ function BrewLogForm() {
 
     setFormData(prev => ({
       ...prev,
-      events: [...prev.events, ...nutrientEvents]
+      activity: [...prev.activity, ...nutrientActivity]
     }));
   };
 
@@ -429,14 +428,14 @@ function BrewLogForm() {
   const addEvent = (event) => {
     setFormData(prev => ({
       ...prev,
-      events: [...prev.events, event]
+      activity: [...prev.activity, event]
     }));
   };
 
   const updateEvent = (eventId, updates) => {
     setFormData(prev => ({
       ...prev,
-      events: prev.events.map(event =>
+      activity: prev.activity.map(event =>
         event.id === eventId ? { ...event, ...updates } : event
       )
     }));
@@ -445,16 +444,16 @@ function BrewLogForm() {
   const removeEvent = (eventId) => {
     setFormData(prev => ({
       ...prev,
-      events: prev.events.filter(event => event.id !== eventId)
+      activity: prev.activity.filter(event => event.id !== eventId)
     }));
   };
 
   const getEventsByType = (type) => {
-    return formData.events.filter(event => event.type === type);
+    return formData.activity.filter(event => event.type === type);
   };
 
   const updateEventField = (eventType, name, description, date = new Date().toISOString().split('T')[0]) => {
-    const existingEvent = formData.events.find(event => event.type === eventType);
+    const existingEvent = formData.activity.find(event => event.type === eventType);
     
     if (existingEvent) {
       updateEvent(existingEvent.id, { name, description, date });
@@ -464,7 +463,7 @@ function BrewLogForm() {
     }
   };
   // Helper functions to derive UI data from events
-  const formatEventDate = (dateString) => {
+  const formatDate = (dateString) => {
     if (!dateString) return '';
     // Parse YYYY-MM-DD format without timezone conversion
     const [year, month, day] = dateString.split('-');
@@ -473,17 +472,17 @@ function BrewLogForm() {
   };
   
   const getDateRacked = () => {
-    const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
+    const rackedEvent = formData.activity.find(event => event.type === 'DateRacked');
     return rackedEvent ? rackedEvent.date : '';
   };
 
   const getGravityOriginal = () => {
-    const gravityEvent = formData.events.find(event => event.type === 'Gravity');
+    const gravityEvent = formData.activity.find(event => event.type === 'Gravity');
     return gravityEvent ? gravityEvent.description : '';
   };
 
   const getGravityFinal = () => {
-    const gravityFinalEvent = formData.events.find(event => event.type === 'GravityFinal');
+    const gravityFinalEvent = formData.activity.find(event => event.type === 'GravityFinal');
     return gravityFinalEvent ? gravityFinalEvent.description : '';
   };
 
@@ -492,7 +491,7 @@ function BrewLogForm() {
       updateEventField('DateRacked', 'Brew Racked', 'Brew transferred to secondary', value);
     } else {
       // Remove event if date is cleared
-      const rackedEvent = formData.events.find(event => event.type === 'DateRacked');
+      const rackedEvent = formData.activity.find(event => event.type === 'DateRacked');
       if (rackedEvent) {
         removeEvent(rackedEvent.id);
       }
@@ -1182,27 +1181,27 @@ No yeast additions recorded."
           <h3>Activity Timeline {showEventsTimeline ? '▼' : '▶'}</h3>
           <p>Click to {showEventsTimeline ? 'hide' : 'show'} chronological events</p>
         </div>
-        {showEventsTimeline && formData.events.length > 0 && (
-          <div className="events-timeline">
-            {formData.events
+        {showEventsTimeline && formData.activity.length > 0 && (
+          <div className="activity-timeline">
+            {formData.activity
               .sort((a, b) => new Date(a.date) - new Date(b.date))
-              .map(event => (
-                <div key={event.id} className="event-timeline-item">
-                  <div className="event-date">{formatEventDate(event.date)}</div>
+              .map(item => (
+                <div key={item.id} className="event-timeline-item">
+                  <div className="event-date">{formatDate(item.date)}</div>
                   <div className="event-content">
-                    <strong>{event.name}</strong>
-                    <span className="event-type">({event.type})</span>
-                    {event.description && <div className="event-description">{event.description}</div>}
+                    <strong>{item.name}</strong>
+                    <span className="event-type">({item.type})</span>
+                    {item.description && <div className="event-description">{item.description}</div>}
                     <div className="event-status">
-                      {event.completed ? '✅ Completed' : '⏳ Pending'}
-                      {event.hasAlert && ' 🔔 Has Alert'}
+                      {item.completed ? '✅ Completed' : '⏳ Pending'}
+                      {item.hasAlert && ' 🔔 Has Alert'}
                     </div>
                   </div>
                 </div>
               ))}
           </div>
         )}
-        {showEventsTimeline && formData.events.length === 0 && (
+        {showEventsTimeline && formData.activity.length === 0 && (
           <p className="empty-message">No events recorded yet.</p>
         )}
       </div>

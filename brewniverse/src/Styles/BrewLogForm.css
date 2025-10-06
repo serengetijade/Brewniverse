@@ -163,10 +163,10 @@
 }
 
 /* Events Timeline styles */
-.events-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
 .event-timeline-item {
