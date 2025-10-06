@@ -42,7 +42,7 @@ function BrewLogForm() {
     volume: '',
     yeast: '' 
   });
-  const [showEventsTimeline, setShowEventsTimeline] = useState(false);
+  const [showActivityTimeline, setShowActivityTimeline] = useState(false);
 
   useEffect(() => {
     if (isEditing) {
@@ -314,7 +314,7 @@ function BrewLogForm() {
 
   // Nutrients
   //ToDo: Pass description from editor
-  const addNutrientScheduleEntry = (description) => {
+    const addNutrientScheduleEntry = (description) => {
     const nutrientEvent = createActivity(
       'Nutrient',
       true,
@@ -334,11 +334,6 @@ function BrewLogForm() {
     if (field === 'completed') updates.completed = value;
     
     updateActivity(id, updates);
-  };
-
-  const removeNutrientScheduleEntry = (id) => {
-    // Remove the event directly
-    removeActivity(id);
   };
 
   const addScheduleEntries = (scheduleType) => {
@@ -380,7 +375,6 @@ function BrewLogForm() {
         break;
     }
 
-    // Create activity directly (no more nutrientSchedule array)
     const nutrientActivity = entries.map(entry => 
       createActivity(
         'Nutrient',
@@ -906,7 +900,7 @@ No yeast additions recorded."
                 size="small"
                 onClick={addNutrientScheduleEntry}
               >
-              <Plus size={buttonSize} />
+                <Plus size={buttonSize} />
                 Add Entry
               </Button>
             </div>
@@ -945,7 +939,7 @@ No yeast additions recorded."
                 type="button"
                 variant="ghost"
                 size="small"
-                onClick={() => removeNutrientScheduleEntry(entry.id)}
+                onClick={() => removeActivity(entry.id)}
               >
                 <Trash2 size={16} />
               </Button>
@@ -1182,11 +1176,11 @@ No yeast additions recorded."
 
       {/* Activity Timeline */}
       <div className="card mt-4">
-        <div className="card-header" style={{ cursor: 'pointer' }} onClick={() => setShowEventsTimeline(!showEventsTimeline)}>
-          <h3>Activity Timeline {showEventsTimeline ? '▼' : '▶'}</h3>
-          <p>Click to {showEventsTimeline ? 'hide' : 'show'} chronological events</p>
+        <div className="card-header" style={{ cursor: 'pointer' }} onClick={() => setShowActivityTimeline(!showActivityTimeline)}>
+          <h3>Activity Timeline {showActivityTimeline ? '▼' : '▶'}</h3>
+          <p>Click to {showActivityTimeline ? 'hide' : 'show'} chronological events</p>
         </div>
-        {showEventsTimeline && formData.activity.length > 0 && (
+        {showActivityTimeline && formData.activity.length > 0 && (
           <div className="activity-timeline">
             {formData.activity
               .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -1206,7 +1200,7 @@ No yeast additions recorded."
               ))}
           </div>
         )}
-        {showEventsTimeline && formData.activity.length === 0 && (
+        {showActivityTimeline && formData.activity.length === 0 && (
           <p className="empty-message">No events recorded yet.</p>
         )}
       </div>
