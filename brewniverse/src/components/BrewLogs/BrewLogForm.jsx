@@ -163,12 +163,8 @@ function BrewLogForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === 'dateRacked') {
-      handleDateRackedChange(value);
-      return;
-    }
-    else if (name.startsWith('gravity.')) {
+
+    if (name.startsWith('gravity.')) {
       const gravityField = name.split('.')[1];
       handleGravityChange(gravityField, value);
       
@@ -485,18 +481,6 @@ function BrewLogForm() {
   const getGravityFinal = () => {
     const gravityFinalEvent = formData.activity.find(event => event.topic === 'GravityFinal');
     return gravityFinalEvent ? gravityFinalEvent.description : '';
-  };
-
-  const handleDateRackedChange = (value) => {
-    if (value) {
-      updateEventField('DateRacked', 'Brew Racked', 'Brew transferred to secondary', value);
-    } else {
-      // Remove event if date is cleared
-      const rackedEvent = formData.activity.find(item => item.topic === 'DateRacked');
-      if (rackedEvent) {
-        removeActivity(rackedEvent.id);
-      }
-    }
   };
 
   const handleGravityChange = (field, value) => {
@@ -1074,9 +1058,28 @@ No yeast additions recorded."
                 id="dateRacked"
                 name="dateRacked"
                 className="form-input"
-                value={getDateRacked()}
-                onChange={handleChange}
+                onChange={(e) => {
+                  addActivity(
+                    createActivity(
+                      "Racked",
+                      false,
+                      e.target.value,
+                      "Brew moved to secondary",
+                      "Brew Racked",
+                      "Complete"
+                    )
+                  )
+                }}
               />
+            <Activity
+                formData={formData}
+                setFormData={setFormData}
+                topic="Racked"
+                headerLabel=""
+                itemLabel="Racking Details"
+                sectionInfoMessage=""
+            >
+            </Activity>
             </div>
  
             <div className="form-group">

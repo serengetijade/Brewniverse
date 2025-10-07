@@ -4,7 +4,7 @@ import Button from '../UI/Button';
 
 const topics = [
     'Acid', 'Base', 'Gravity', 'GravityOriginal', 'GravityFinal',
-    'Nutrient', 'PecticEnzyme', 'Tannin', 'Yeast', 'Other'
+    'Nutrient', 'PecticEnzyme', 'Racked', 'Tannin', 'Yeast', 'Other'
 ];
 
 const activityStatus = [ "Pending", "Complete"]
@@ -42,6 +42,9 @@ function Activity({
                 break;
             case "PecticEnzyme":
                 setName = "Pectic Enzyme Added";
+                break;
+            case "Racked":
+                setName = "Brew Racked";
                 break;
             case "Other":
                 setName = "Activity";
