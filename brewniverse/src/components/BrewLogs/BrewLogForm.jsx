@@ -4,7 +4,7 @@ import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../UI/IngredientList';
-import Activity from '../Activity/Activity';
+import ActivityList from '../Activity/ActivityList';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
@@ -407,10 +407,19 @@ function BrewLogForm() {
     };
 
   const createActivity = (topic, alertId = null, date, description, name, statusOfActivity) => {
+    // Get today's date in local timezone (YYYY-MM-DD format)
+    const getTodayLocal = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     return {
       id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
       alertId: alertId,
-      date: date ? date : new Date().toISOString().split('T')[0],
+      date: date ? date : getTodayLocal(),
       description: description,
       name: name,
       statusOfActivity: statusOfActivity ?? "Completed",
@@ -441,18 +450,29 @@ function BrewLogForm() {
     }));
   };
 
-  const updateEventField = (topic, name, description, date = new Date().toISOString().split('T')[0]) => {
+  const updateEventField = (topic, name, description, date) => {
+    const getTodayLocal = () => {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const eventDate = date || getTodayLocal();
     const existingEvent = formData.activity.find(event => event.topic === topic);
     
     if (existingEvent) {
-      updateActivity(existingEvent.id, { name, description, date });
+      updateActivity(existingEvent.id, { name, description, date: eventDate });
     } else {
-    const newActivity = createActivity(
-        date = date,
-        description = description,
-        name = name,
-        topic = topic,
-    );
+      const newActivity = createActivity(
+        topic,
+        null,
+        eventDate,
+        description,
+        name,
+        "Complete"
+      );
       addActivity(newActivity);
     }
   };
@@ -804,7 +824,7 @@ function BrewLogForm() {
             </div>
           </div>
 
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="Gravity"
@@ -813,13 +833,13 @@ function BrewLogForm() {
             sectionInfoMessage=""
             brewLogId={id}
           >
-          </Activity>       
+          </ActivityList>       
         </div>
 
         {/* Yeast */}
         <div className="form-section">
           <h3>Yeast</h3>       
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="Yeast"
@@ -829,7 +849,7 @@ function BrewLogForm() {
 No yeast additions recorded."
             brewLogId={id}
           >
-          </Activity>          
+          </ActivityList>          
         </div>
 
         {/* Nutrients */}
@@ -893,14 +913,14 @@ No yeast additions recorded."
             </div>
           </div>
           
-          {getNutrientSchedule().map((entry) => (
-            <div key={entry.id} className="nutrient-schedule-entry">
+          {getNutrientSchedule().map((activity) => (
+            <div key={activity.id} className="nutrient-schedule-entry">
               <div className="form-group">
                 <input
                   type="date"
                   className="form-input"
-                  value={entry.date}
-                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'date', e.target.value)}
+                  value={activity.date}
+                  onChange={(e) => updateNutrientScheduleEntry(activity.id, 'date', e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -908,16 +928,16 @@ No yeast additions recorded."
                   type="text"
                   className="form-input"
                   placeholder="Nutrient description"
-                  value={entry.description}
-                  onChange={(e) => updateNutrientScheduleEntry(entry.id, 'description', e.target.value)}
+                  value={activity.description}
+                  onChange={(e) => updateNutrientScheduleEntry(activity.id, 'description', e.target.value)}
                 />
               </div>
               <div className="form-group">
                 <label className="checkbox-label">
                   <input
                     type="checkbox"
-                    checked={entry.completed}
-                    onChange={(e) => updateNutrientScheduleEntry(entry.id, 'completed', e.target.checked)}
+                    checked={activity.completed}
+                    onChange={(e) => updateNutrientScheduleEntry(activity.id, 'completed', e.target.checked)}
                   />
                   Completed
                 </label>
@@ -926,7 +946,7 @@ No yeast additions recorded."
                 type="button"
                 variant="ghost"
                 size="small"
-                onClick={() => removeActivity(entry.id)}
+                onClick={() => removeActivity(activity.id)}
               >
                 <Trash2 size={16} />
               </Button>
@@ -953,7 +973,7 @@ No yeast additions recorded."
           </div>
 
           {/* Pectic Enzyme Additions */}
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="PecticEnzyme"
@@ -962,7 +982,7 @@ No yeast additions recorded."
             sectionInfoMessage=""
             brewLogId={id}
           >          
-          </Activity>
+          </ActivityList>
         </div>
 
         {/* Acids and Bases */}
@@ -984,7 +1004,7 @@ No yeast additions recorded."
               rows={3}
             />
           </div>
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="Acid"
@@ -993,7 +1013,7 @@ No yeast additions recorded."
             sectionInfoMessage=""
             brewLogId={id}
           >
-          </Activity>
+          </ActivityList>
 
           {/* Bases */}
           <div className="form-group">
@@ -1010,7 +1030,7 @@ No yeast additions recorded."
               rows={3}
             />
           </div>
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="Base"
@@ -1019,7 +1039,7 @@ No yeast additions recorded."
             sectionInfoMessage=""
             brewLogId={id}
           >
-          </Activity>
+          </ActivityList>
         </div>
 
         {/* Tannins */}
@@ -1040,7 +1060,7 @@ No yeast additions recorded."
               rows={3}
             />
           </div>
-          <Activity
+          <ActivityList
             formData={formData}
             setFormData={setFormData}
             topic="Tannin"
@@ -1049,7 +1069,7 @@ No yeast additions recorded."
             sectionInfoMessage=""
             brewLogId={id}
           >
-          </Activity>
+          </ActivityList>
         </div>
 
         {/* Important Dates */}
@@ -1068,7 +1088,7 @@ No yeast additions recorded."
                   addActivity(
                     createActivity(
                       "Racked",
-                      false,
+                      null,
                       e.target.value,
                       "Brew moved to secondary",
                       "Brew Racked",
@@ -1077,7 +1097,7 @@ No yeast additions recorded."
                   )
                 }}
               />
-              <Activity
+              <ActivityList
                 formData={formData}
                 setFormData={setFormData}
                 topic="Racked"
@@ -1086,7 +1106,7 @@ No yeast additions recorded."
                 sectionInfoMessage=""
                 brewLogId={id}
               >
-              </Activity>
+              </ActivityList>
             </div>
  
             <div className="form-group">

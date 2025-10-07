@@ -77,7 +77,7 @@ function AlertButton({ activity, brewLogId, onAlertCreated }) {
             onClick={handleAlertButtonClick}
             title={activity.alertId ? "Alert exists - click to view" : "Create alert for this activity"}
         >
-            {activity.alertId ? <Bell size={16} /> : <BellOff size={16} />}
+            {activity.alertId ? <Bell size={16} /> : <Bell size={16} />}
         </Button>
     );
 }

@@ -47,7 +47,7 @@
 
 /* Editor Items*/
 .activity-editor-actions {
-    display: table-cell;
+    display: flex;
     gap: 0.5rem;
     flex-direction: column;
 }
