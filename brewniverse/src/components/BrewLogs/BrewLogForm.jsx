@@ -406,10 +406,10 @@ function BrewLogForm() {
     return formData.activity.filter(event => event.topic === topic);
     };
 
-  const createActivity = (topic, alert = false, date, description, name, statusOfActivity) => {
+  const createActivity = (topic, alertId = null, date, description, name, statusOfActivity) => {
     return {
       id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
-      alert: alert,
+      alertId: alertId,
       date: date ? date : new Date().toISOString().split('T')[0],
       description: description,
       name: name,
@@ -811,6 +811,7 @@ function BrewLogForm() {
             headerLabel="Gravity Readings"
             itemLabel="Gravity Reading"
             sectionInfoMessage=""
+            brewLogId={id}
           >
           </Activity>       
         </div>
@@ -826,6 +827,7 @@ function BrewLogForm() {
             itemLabel="Yeast Details"
             sectionInfoMessage="Wild or cultured, record your yeast here.
 No yeast additions recorded."
+            brewLogId={id}
           >
           </Activity>          
         </div>
@@ -958,6 +960,7 @@ No yeast additions recorded."
             headerLabel="Pectic Enzyme Additions"
             itemLabel="Enzyme Details"
             sectionInfoMessage=""
+            brewLogId={id}
           >          
           </Activity>
         </div>
@@ -988,6 +991,7 @@ No yeast additions recorded."
             headerLabel="Acid Additions"
             itemLabel="Acid Details"
             sectionInfoMessage=""
+            brewLogId={id}
           >
           </Activity>
 
@@ -1013,6 +1017,7 @@ No yeast additions recorded."
             headerLabel="Base Additions"
             itemLabel="Base Details"
             sectionInfoMessage=""
+            brewLogId={id}
           >
           </Activity>
         </div>
@@ -1042,6 +1047,7 @@ No yeast additions recorded."
             headerLabel="Tannin Additions"
             itemLabel="Tannin Details"
             sectionInfoMessage=""
+            brewLogId={id}
           >
           </Activity>
         </div>
@@ -1078,6 +1084,7 @@ No yeast additions recorded."
                 headerLabel=""
                 itemLabel="Racking Details"
                 sectionInfoMessage=""
+                brewLogId={id}
               >
               </Activity>
             </div>

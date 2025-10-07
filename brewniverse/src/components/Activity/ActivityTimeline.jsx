@@ -1,10 +1,6 @@
 ﻿import React from 'react';
 import '../../Styles/Activity.css';
 
-const topics = [
-    'Acid', 'Base', 'Gravity', 'GravityOriginal', 'GravityFinal',
-    'Nutrient', 'PecticEnzyme', 'Tannin', 'Yeast', 'Other'
-];
 function ActivityTimeline({ formData, showActivityTimeline, setShowActivityTimeline }) {
     const formatDate = (dateString) => {
         if (!dateString) return '';

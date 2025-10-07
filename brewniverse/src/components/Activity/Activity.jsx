@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import Button from '../UI/Button';
+import AlertButton from '../Alerts/AlertButton';
+import '../../Styles/Activity.css';
 
 const topics = [
-    'Acid', 'Base', 'Gravity', 'GravityOriginal', 'GravityFinal',
+    'Acid', 'Base', 'Gravity', 'GravityFinal',
     'Nutrient', 'PecticEnzyme', 'Racked', 'Tannin', 'Yeast', 'Other'
 ];
 
@@ -15,7 +17,8 @@ function Activity({
     topic,
     headerLabel,
     itemLabel,
-    sectionInfoMessage })
+    sectionInfoMessage,
+    brewLogId })
 {
     const [editingActivity, setEditingActivity] = React.useState(null);
 
@@ -28,18 +31,18 @@ function Activity({
 
     let buttonSize = 14;
 
-    const createActivity = (topic, alert = false, date, description, name, statusOfActivity) => {
+    const createActivity = (topic, alertId, date, description, name, statusOfActivity) => {
         let setName = "";
         switch (topic) {
             case "Gravity":
                 setName = "Gravity Reading";
                 break;
-            case "GravityOriginal":
-                setName = "Original Gravity Reading";
-                break;
-            case "GravityFinal":
-                setName = "Final Gravity Reading";
-                break;
+            //case "GravityOriginal":
+            //    setName = "Original Gravity Reading";
+            //    break;
+            //case "GravityFinal":
+            //    setName = "Final Gravity Reading";
+            //    break;
             case "PecticEnzyme":
                 setName = "Pectic Enzyme Added";
                 break;
@@ -53,10 +56,19 @@ function Activity({
                 setName = `${topic} Added`;
         }
 
+        // Get today's date in local timezone (YYYY-MM-DD format)
+        const getTodayLocal = () => {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
         let result = {
             id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
-            alert: alert,
-            date: date ? date : new Date().toISOString().split('T')[0],
+            alertId: alertId,
+            date: date ? date : getTodayLocal(),
             description: description,
             name: name ?? setName,
             statusOfActivity: statusOfActivity ?? "Complete",
@@ -65,10 +77,10 @@ function Activity({
         return(result);
     };
 
-    const addActivity = (topic, alert, date, description, name) => {
+    const addActivity = (topic, alertId, date, description, name) => {
         let newActivity = createActivity(
             topic = topic,
-            alert = alert,
+            alertId = alertId,
             date = date, 
             description = description,
             name = name,
@@ -80,7 +92,7 @@ function Activity({
         setEditingActivity({
             id: newActivity.id,
             topic: topic,
-            alert: newActivity.alert,
+            alertId: newActivity.alertId,
             date: newActivity.date,
             name: newActivity.name
         });
@@ -104,6 +116,10 @@ function Activity({
             ...prev,
             activity: prev.activity.filter(item => item.id !== id)
         }));
+    };
+
+    const handleAlertCreated = (activityId, alertId) => {
+        updateActivity(activityId, 'alertId', alertId);
     };
 
     return (
@@ -151,14 +167,21 @@ function Activity({
                                         onChange={(e) => updateActivity(item.id, 'date', e.target.value)}
                                     />
                                 </div>
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="small"
-                                    onClick={() => removeActivity(item.id)}
-                                >
-                                    <Trash2 size={16} />
-                                </Button>
+                                <div className="activity-editor-actions">
+                                    <AlertButton
+                                        activity={item}
+                                        brewLogId={brewLogId}
+                                        onAlertCreated={handleAlertCreated}
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="small"
+                                        onClick={() => removeActivity(item.id)}
+                                    >
+                                        <Trash2 size={16} />
+                                    </Button>
+                                </div>
                             </div>
                         ))}
                     </div>
