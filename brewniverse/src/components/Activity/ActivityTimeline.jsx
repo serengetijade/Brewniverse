@@ -4,10 +4,16 @@ import '../../Styles/Activity.css';
 function ActivityTimeline({ formData, showActivityTimeline, setShowActivityTimeline }) {
     const formatDate = (dateString) => {
         if (!dateString) return '';
-        // Parse YYYY-MM-DD format without timezone conversion
-        const [year, month, day] = dateString.split('-');
-        const date = new Date(year, month - 1, day); // month is 0-indexed
-        return date.toLocaleDateString();
+        let date;
+        if (dateString.includes('T')) {
+            date = new Date(dateString);
+        } else {
+            const [year, month, day] = dateString.split('-');
+            date = new Date(year, month - 1, day);
+        }
+        const datePart = date.toLocaleDateString(undefined, { year: '2-digit', month: '2-digit', day: '2-digit' });
+        const timePart = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: true });
+        return `${datePart} ${timePart}`;
     };
 
     return (<div className="card mt-4">

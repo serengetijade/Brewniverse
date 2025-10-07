@@ -5,6 +5,7 @@ import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../UI/IngredientList';
 import ActivityList from '../Activity/ActivityList';
+import Activity from '../Activity/Activity';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
@@ -308,6 +309,18 @@ function BrewLogForm() {
     }
   };
 
+  // Helper functions to derive UI data from events
+  // Get today's date in local timezone (YYYY-MM-DD format)
+  const getTodayLocal = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const hour = String(today.getHours()).padStart(2, '0');
+    const minute = String(today.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+  };
+
   // Nutrients
   //ToDo: Pass description from editor
     const addNutrientScheduleEntry = (description) => {
@@ -322,16 +335,6 @@ function BrewLogForm() {
     addActivity(nutrientEvent);
   };
 
-  const updateNutrientScheduleEntry = (id, field, value) => {
-    // Update the event directly
-    const updates = {};
-    if (field === 'date') updates.date = value;
-    if (field === 'description') updates.description = value;
-    if (field === 'completed') updates.completed = value;
-    
-    updateActivity(id, updates);
-  };
-
   const addScheduleEntries = (scheduleType) => {
     const today = new Date();
     let entries = [];
@@ -340,7 +343,7 @@ function BrewLogForm() {
       case 'split':
         entries = [{
           id: Date.now().toString(),
-          date: today.toISOString().split('T')[0],
+          date: getTodayLocal(today),
           description: 'Half now & half at 1/3 Break',
           completed: false
         }];
@@ -352,7 +355,7 @@ function BrewLogForm() {
         // Add initial entry for today
         entries = [{
             id: Date.now().toString(),
-            date: today.toISOString().split('T')[0],
+            date: getTodayLocal(today),
             description: 'Staggered nutrient - yeast added',
             statusOfActivity: "Pending"
         }];
@@ -361,8 +364,8 @@ function BrewLogForm() {
           const futureDate = new Date(today);
           futureDate.setDate(today.getDate() + index + 1);
           return {
-            id: (Date.now() + index + 1).toString(),
-            date: futureDate.toISOString().split('T')[0],
+              id: (Date.now() + index + 1).toString(),
+              date: getTodayLocal(futureDate),
               description: `Staggered nutrient - ${(index + 1) * 24} hours later`,
               statusOfActivity: "Pending"
           };
@@ -407,15 +410,6 @@ function BrewLogForm() {
     };
 
   const createActivity = (topic, alertId = null, date, description, name, statusOfActivity) => {
-    // Get today's date in local timezone (YYYY-MM-DD format)
-    const getTodayLocal = () => {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    };
-
     return {
       id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
       alertId: alertId,
@@ -477,20 +471,8 @@ function BrewLogForm() {
     }
   };
 
-  // Helper functions to derive UI data from events
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    // Parse YYYY-MM-DD format without timezone conversion
-    const [year, month, day] = dateString.split('-');
-    const date = new Date(year, month - 1, day); // month is 0-indexed
-    return date.toLocaleDateString();
-  };
-  
-  const getDateRacked = () => {
-    const rackedEvent = formData.activity.find(event => event.topic === 'DateRacked');
-    return rackedEvent ? rackedEvent.date : '';
-  };
 
+  // Gravity
   const getGravityOriginal = () => {
     const gravityEvent = formData.activity
         .sort((a, b) => new Date(a.date) - new Date(b.date))
@@ -872,7 +854,7 @@ No yeast additions recorded."
           </div>
 
           {/* Nutrient Schedule */}
-          <div>
+          <div class="form-group">
             <label htmlFor="nutrients" className="form-label">
                 Nutrient Schedule
             </label>
@@ -912,46 +894,18 @@ No yeast additions recorded."
               </Button>
             </div>
           </div>
-          
-          {getNutrientSchedule().map((activity) => (
-            <div key={activity.id} className="nutrient-schedule-entry">
-              <div className="form-group">
-                <input
-                  type="date"
-                  className="form-input"
-                  value={activity.date}
-                  onChange={(e) => updateNutrientScheduleEntry(activity.id, 'date', e.target.value)}
+
+          <div className="compact-list">
+            {getNutrientSchedule().map((activity) => (
+                <Activity
+                    formData={formData}
+                    setFormData={setFormData}
+                    item={activity}
+                    itemLabel={activity.description}
+                    brewLogId={formData.id}
                 />
-              </div>
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="Nutrient description"
-                  value={activity.description}
-                  onChange={(e) => updateNutrientScheduleEntry(activity.id, 'description', e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={activity.completed}
-                    onChange={(e) => updateNutrientScheduleEntry(activity.id, 'completed', e.target.checked)}
-                  />
-                  Completed
-                </label>
-              </div>
-              <Button
-                type="button"
-                variant="ghost"
-                size="small"
-                onClick={() => removeActivity(activity.id)}
-              >
-                <Trash2 size={16} />
-              </Button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Pectic Enzyme */}
