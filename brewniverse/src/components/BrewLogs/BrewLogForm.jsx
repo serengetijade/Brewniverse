@@ -1071,15 +1071,15 @@ No yeast additions recorded."
                   )
                 }}
               />
-            <Activity
+              <Activity
                 formData={formData}
                 setFormData={setFormData}
                 topic="Racked"
                 headerLabel=""
                 itemLabel="Racking Details"
                 sectionInfoMessage=""
-            >
-            </Activity>
+              >
+              </Activity>
             </div>
  
             <div className="form-group">

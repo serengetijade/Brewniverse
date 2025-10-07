@@ -17,7 +17,7 @@ function Activity({
     itemLabel,
     sectionInfoMessage })
 {
-    const [setEditingActivity] = React.useState(null);
+    const [editingActivity, setEditingActivity] = React.useState(null);
 
     const nameInputRef = useRef(null);
     useEffect(() => {
