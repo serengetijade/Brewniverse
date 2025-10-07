@@ -476,7 +476,9 @@ function BrewLogForm() {
   };
 
   const getGravityOriginal = () => {
-    const gravityEvent = formData.activity.find(event => event.topic === 'Gravity');
+    const gravityEvent = formData.activity
+        .sort((a, b) => new Date(a.date) - new Date(b.date))
+        .find(event => event.topic === 'Gravity');
     return gravityEvent ? gravityEvent.description : '';
   };
 
@@ -729,17 +731,17 @@ function BrewLogForm() {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="gravity.original" className="form-label">
-                Original Gravity
+                Original Gravity {getActivitiesByTopic("Gravity").length === 0 ? " (please add entry)" : null}
               </label>
               <input
-                type="number"
                 step="0.001"
                 id="gravity.original"
                 name="gravity.original"
-                className="form-input"
+                className="form-input  calculated-field"
                 value={getGravityOriginal()}
-                onChange={handleChange}
+                //onChange={handleChange}
                 placeholder="1.050"
+                readOnly
               />
             </div>
 
@@ -748,7 +750,6 @@ function BrewLogForm() {
                 1/3 Break Gravity (auto-calculated)
               </label>
               <input
-                type="number"
                 step="0.001"
                 id="gravity13Break"
                 name="gravity13Break"
@@ -764,7 +765,7 @@ function BrewLogForm() {
               <label htmlFor="gravityFinal" className="form-label">
                 Final Gravity
               </label>
-              <input
+                <input
                 type="number"
                 step="0.001"
                 id="gravityFinal"
