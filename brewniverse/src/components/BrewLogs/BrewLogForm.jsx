@@ -1050,16 +1050,18 @@ No yeast additions recorded."
                     )
                   )
                 }}
-              />
-              <ActivityList
-                formData={formData}
-                setFormData={setFormData}
-                topic="Racked"
-                headerLabel=""
-                itemLabel="Racking Details"
-                sectionInfoMessage=""
-                brewLogId={id}
-              >
+                      />
+              </div>
+              <div className="form-group">
+                  <ActivityList
+                    formData={formData}
+                    setFormData={setFormData}
+                    topic="Racked"
+                    headerLabel=""
+                    itemLabel="Racking Details"
+                    sectionInfoMessage=""
+                    brewLogId={id}
+                  >
               </ActivityList>
             </div>
  
@@ -1106,6 +1108,23 @@ No yeast additions recorded."
               />
             </div>
         </div>
+
+        {/*Other Activities*/ }
+              <div className="form-section">
+                  <div className="form-group">
+                      <h3>Other Activities</h3>
+                      <ActivityList
+                          formData={formData}
+                          setFormData={setFormData}
+                          topic="Other"
+                          headerLabel=""
+                          itemLabel="Activity Details"
+                          sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, or degassing."
+                          brewLogId={id}
+                      >
+                      </ActivityList>
+                  </div>
+              </div>
 
         {/* Description & Notes */}
         <div className="form-section">
