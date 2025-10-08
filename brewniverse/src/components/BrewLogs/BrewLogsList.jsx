@@ -4,7 +4,7 @@ import { Plus, Calendar, Beaker } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import '../../Styles/BrewLogsList.css';
-
+import ListHeader from '../Layout/ListHeader'
 function BrewLogsList() {
   const navigate = useNavigate();
   const { state } = useApp();
@@ -32,20 +32,13 @@ function BrewLogsList() {
 
   return (
     <div className="brewlogs-list">
-      <div className="list-header">
-        <div className="header-content">
-          <h1>Brew Logs</h1>
-          <p>Track your brewing batches and progress</p>
-        </div>
-        <Button
-          variant="primary"
-          size="large"
-          onClick={() => navigate('/brewlogs/new')}
+        <ListHeader
+            h1="Brew Logs"
+            description="Track your brewing batches and progress"
+            buttonText="New Brew Log"
+            url="/brewlogs/new"
         >
-          <Plus size={20} />
-          New Brew Log
-        </Button>
-      </div>
+        </ListHeader>
 
       {brewLogs.length === 0 ? (
         <div className="empty-state">
