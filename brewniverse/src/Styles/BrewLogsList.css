@@ -239,6 +239,55 @@
   .empty-state {
     padding: 3rem 1.5rem;
   }
+  
+  /* Search and Sort Controls Mobile */
+  .search-sort-controls {
+    padding: 1rem;
+    gap: 1rem;
+  }
+  
+  .sort-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .sort-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .sort-button {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .alerts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .alert-card {
+    padding: 1.25rem;
+  }
+  
+  .alert-actions {
+    flex-direction: column;
+  }
+  
+  .alert-actions .btn {
+    width: 100%;
+  }
+  
+  .group-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .group-header .btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 480px) {
