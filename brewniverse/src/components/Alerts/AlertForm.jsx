@@ -15,7 +15,6 @@ function AlertForm() {
     name: '',
     description: '',
     date: new Date().toISOString().slice(0, 16), // datetime-local format
-    alertGroupId: '',
     brewLogId: '',
     isRecurring: false,
     recurringType: 'daily',
@@ -154,26 +153,6 @@ function AlertForm() {
           <h3>Associations</h3>
           
           <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="alertGroupId" className="form-label">
-                Alert Group
-              </label>
-              <select
-                id="alertGroupId"
-                name="alertGroupId"
-                className="form-select"
-                value={formData.alertGroupId}
-                onChange={handleChange}
-              >
-                <option value="">No group (individual alert)</option>
-                {state.alertGroups.map(group => (
-                  <option key={group.id} value={group.id}>
-                    {group.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <div className="form-group">
               <label htmlFor="brewLogId" className="form-label">
                 Related Brew Log

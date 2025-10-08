@@ -1119,7 +1119,7 @@ No yeast additions recorded."
                           topic="Other"
                           headerLabel=""
                           itemLabel="Activity Details"
-                          sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, or degassing."
+                          sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, degassing, tastings, and more."
                           brewLogId={id}
                       >
                       </ActivityList>

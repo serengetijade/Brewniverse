@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Bell, Users } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import ListHeader from '../Layout/ListHeader'
+import "../../Styles/BrewLogsList.css"
+//import "../../Styles/Shared/list.css"
 
 function AlertsList() {
   const navigate = useNavigate();
@@ -12,31 +15,14 @@ function AlertsList() {
   const alertGroups = state.alertGroups;
 
   return (
-    <div className="alerts-list">
-      <div className="list-header">
-        <div className="header-content">
-          <h1>Alerts & Reminders</h1>
-          <p>Manage your brewing alerts and reminder groups</p>
-        </div>
-        <div className="header-actions">
-          <Button
-            variant="secondary"
-            size="large"
-            onClick={() => navigate('/alerts/groups/new')}
-          >
-            <Users size={20} />
-            New Group
-          </Button>
-          <Button
-            variant="primary"
-            size="large"
-            onClick={() => navigate('/alerts/new')}
-          >
-            <Plus size={20} />
-            New Alert
-          </Button>
-        </div>
-      </div>
+    <div className="brewlogs-list">
+        <ListHeader
+            h1="Alerts & Reminders"
+            description="Manage your brewing alerts and reminders - never miss a step!"
+            buttonText="New Alert"
+            url="/alerts/new"
+        >
+        </ListHeader>          
 
       <div className="alerts-sections">
         {/* Alert Groups Section */}
