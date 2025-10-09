@@ -104,9 +104,18 @@ function appReducer(state, action) {
       };
     
     case ActionTypes.DELETE_ALERT:
+      // When deleting an alert, also remove the alertId from any brew log activities
+      const updatedBrewLogs = state.brewLogs.map(brewLog => ({
+        ...brewLog,
+        activity: brewLog.activity ? brewLog.activity.map(activity => 
+          activity.alertId === action.payload ? { ...activity, alertId: null } : activity
+        ) : []
+      }));
+      
       return {
         ...state,
         alerts: state.alerts.filter(alert => alert.id !== action.payload),
+        brewLogs: updatedBrewLogs,
       };
     
     case ActionTypes.ADD_ALERT_GROUP:

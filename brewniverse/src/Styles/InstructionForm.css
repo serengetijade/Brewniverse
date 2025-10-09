@@ -60,9 +60,28 @@
   min-height: 80px;
 }
 
-.remove-step-btn {
+.step-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   flex-shrink: 0;
   margin-top: 0.75rem;
+}
+
+.reorder-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.reorder-buttons .btn {
+  padding: 0.25rem;
+  min-width: auto;
+  width: 32px;
+  height: 32px;
+}
+
+.remove-step-btn {
   color: var(--color-error);
 }
 

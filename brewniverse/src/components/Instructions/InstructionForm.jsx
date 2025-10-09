@@ -1,177 +1,125 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, Plus, Trash2 } from 'lucide-react';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
+import React, { useState } from 'react';
+import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import Button from '../UI/Button';
-import '../../Styles/InstructionForm.css';
 
-function InstructionForm() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { state, dispatch } = useApp();
-  const isEditing = Boolean(id);
-
-  const [formData, setFormData] = useState({
-    name: '',
-    steps: ['']
-  });
-
-  useEffect(() => {
-    if (isEditing) {
-      const instruction = state.instructions.find(inst => inst.id === id);
-      if (instruction) {
-        setFormData({
-          name: instruction.name,
-          steps: instruction.steps && instruction.steps.length > 0 ? instruction.steps : ['']
-        });
-      }
-    }
-  }, [id, isEditing, state.instructions]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const instructionData = {
-      ...formData,
-      steps: formData.steps.filter(step => step.trim() !== '')
-    };
-
-    if (isEditing) {
-      dispatch({
-        type: ActionTypes.UPDATE_INSTRUCTION,
-        payload: { ...instructionData, id }
-      });
-    } else {
-      dispatch({
-        type: ActionTypes.ADD_INSTRUCTION,
-        payload: instructionData
-      });
-    }
-
-    navigate('/instructions');
-  };
-
-  const handleNameChange = (e) => {
-    setFormData(prev => ({
-      ...prev,
-      name: e.target.value
-    }));
-  };
+function InstructionForm({ instructions = [''], onInstructionsChange, showControls = true }) {
+  const [showEditButtons, setShowEditButtons] = useState({});
 
   const handleStepChange = (index, value) => {
-    const newSteps = [...formData.steps];
+    const newSteps = [...instructions];
     newSteps[index] = value;
-    setFormData(prev => ({
-      ...prev,
-      steps: newSteps
-    }));
+    onInstructionsChange(newSteps);
   };
 
   const addStep = () => {
-    setFormData(prev => ({
-      ...prev,
-      steps: [...prev.steps, '']
-    }));
+    const newSteps = [...instructions, ''];
+    onInstructionsChange(newSteps);
   };
 
   const removeStep = (index) => {
-    if (formData.steps.length > 1) {
-      const newSteps = formData.steps.filter((_, i) => i !== index);
-      setFormData(prev => ({
-        ...prev,
-        steps: newSteps
-      }));
+    if (instructions.length > 1) {
+      const newSteps = instructions.filter((_, i) => i !== index);
+      onInstructionsChange(newSteps);
     }
+  };
+
+  const moveStepUp = (index) => {
+    if (index > 0) {
+      const newSteps = [...instructions];
+      [newSteps[index - 1], newSteps[index]] = [newSteps[index], newSteps[index - 1]];
+      onInstructionsChange(newSteps);
+    }
+  };
+
+  const moveStepDown = (index) => {
+    if (index < instructions.length - 1) {
+      const newSteps = [...instructions];
+      [newSteps[index], newSteps[index + 1]] = [newSteps[index + 1], newSteps[index]];
+      onInstructionsChange(newSteps);
+    }
+  };
+
+  const toggleEditButtons = (index) => {
+    setShowEditButtons(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
   };
 
   return (
     <div className="instruction-form">
-      <div className="form-header">
-        <h1>{isEditing ? 'Edit Instruction' : 'New Instruction'}</h1>
-        <p>
-          {isEditing 
-            ? 'Update your instruction details' 
-            : 'Create a new instruction set'
-          }
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="card">
-        <div className="form-group">
-          <label htmlFor="name" className="form-label">
-            Instruction Name *
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className="form-input"
-            value={formData.name}
-            onChange={handleNameChange}
-            required
-            placeholder="Enter instruction name"
-          />
-        </div>
-
-        <div className="form-group">
-          <div className="steps-header">
-            <label className="form-label">Steps</label>
+        <div className="steps-header">
+            <label className="form-label">Instructions</label>
             <Button
-              type="button"
-              variant="ghost"
-              size="small"
-              onClick={addStep}
+            type="button"
+            variant="ghost"
+            size="small"
+            onClick={addStep}
             >
-              <Plus size={16} />
-              Add Step
+            <Plus size={16} />
+            Add Step
             </Button>
-          </div>
-          
-          <div className="steps-container">
-            {formData.steps.map((step, index) => (
-              <div key={index} className="step-input-group">
-                <div className="step-number">{index + 1}</div>
-                <textarea
-                  className="form-textarea step-textarea"
-                  value={step}
-                  onChange={(e) => handleStepChange(index, e.target.value)}
-                  placeholder={`Enter step ${index + 1}`}
-                  rows={2}
-                />
-                {formData.steps.length > 1 && (
+        </div>
+      
+      <div className="steps-container">
+        {instructions.map((step, index) => (
+          <div key={index} className="step-input-group">
+            <div 
+              className="step-number" 
+              onClick={() => toggleEditButtons(index)}
+              style={{ cursor: 'pointer' }}
+              title="Click to show reorder buttons"
+            >
+              {index + 1}
+            </div>
+            <textarea
+              className="form-textarea step-textarea"
+              value={step}
+              onChange={(e) => handleStepChange(index, e.target.value)}
+              placeholder={`Enter step ${index + 1}`}
+              rows={2}
+            />
+            <div className="step-controls">
+              {showEditButtons[index] && (
+                <div className="reorder-buttons">
                   <Button
                     type="button"
                     variant="ghost"
                     size="small"
-                    onClick={() => removeStep(index)}
-                    className="remove-step-btn"
+                    onClick={() => moveStepUp(index)}
+                    disabled={index === 0}
+                    title="Move step up"
                   >
-                    <Trash2 size={16} />
+                    <ChevronUp size={16} />
                   </Button>
-                )}
-              </div>
-            ))}
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="small"
+                    onClick={() => moveStepDown(index)}
+                    disabled={index === instructions.length - 1}
+                    title="Move step down"
+                  >
+                    <ChevronDown size={16} />
+                  </Button>
+                  {instructions.length > 1 && (
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="small"
+                        onClick={() => removeStep(index)}
+                        className="remove-step-btn"
+                        title="Remove step"
+                    >
+                        <Trash2 size={16} />
+                        </Button>
+                    )}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-
-        <div className="form-actions">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => navigate('/instructions')}
-          >
-            <X size={16} />
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-          >
-            <Save size={16} />
-            {isEditing ? 'Update' : 'Create'} Instruction
-          </Button>
-        </div>
-      </form>
+        ))}
+      </div>
     </div>
   );
 }

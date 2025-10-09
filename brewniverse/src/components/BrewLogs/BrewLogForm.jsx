@@ -54,17 +54,17 @@ function BrewLogForm() {
           ...brewLog,
           id: brewLog.id, // Ensure ID is preserved
           dateCreated: brewLog.dateCreated.split('T')[0],
-          activity: brewLog.activity || [] // Ensure events array exists
+          activity: brewLog.activity || []
         };
         
-        // If no activity(s) exist, create from existing data
+        // Add initial Date Created activity
         if (!brewLog.activity || brewLog.activity.length === 0) {
-          const generatedActivities = [];
+            const generatedActivities = [];
           
             generatedActivities.push(createActivity(
                 'DateCreated',
-                false,
-                '', //date = now
+                null,
+                '', 
                 'New brew started',
                 "Date Created",
                 "Complete"
@@ -75,7 +75,7 @@ function BrewLogForm() {
             loadedData.nutrientSchedule.forEach(entry => {
               generatedActivities.push(createActivity(
                 'Nutrient',
-                true,
+                null,
                 entry.date,
                 entry.description,
                 'Nutrients Added',
@@ -96,7 +96,7 @@ function BrewLogForm() {
         ...formData,
         activity: [createActivity(
           'DateCreated',
-          false,
+          null,
           formData.dateCreated,
           'New brew started',
           'Date Created',
@@ -165,7 +165,7 @@ function BrewLogForm() {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+      const { name, value } = e.target;
 
     if (name.startsWith('gravity.')) {
       const gravityField = name.split('.')[1];
@@ -210,7 +210,7 @@ function BrewLogForm() {
         const existingEventIndex = prev.activity.findIndex(item => item.topic === 'DateCreated');
         const dateCreatedActivity = createActivity(
             'DateCreated',
-            false,
+            null,
             value,
             'New brew started',
             "Date Created",
@@ -328,7 +328,7 @@ function BrewLogForm() {
     const addNutrientScheduleEntry = (description) => {
     const nutrientEvent = createActivity(
       'Nutrient',
-      true,
+      null,
       '',
       '',
       'Nutrients Added',
@@ -394,8 +394,8 @@ function BrewLogForm() {
   };
 
   const addSplitSchedule = () => addScheduleEntries('split');
-  const addStaggered2Schedule = () => addScheduleEntries('staggered2');
-  const addStaggered3Schedule = () => addScheduleEntries('staggered3');
+  const addStaggered3Schedule = () => addScheduleEntries('staggered2');
+  const addStaggered4Schedule = () => addScheduleEntries('staggered3');
   
   const getNutrientSchedule = () => {
     return getActivitiesByTopic('Nutrient').map(event => ({
@@ -444,17 +444,9 @@ function BrewLogForm() {
       ...prev,
       activity: prev.activity.filter(item => item.id !== eventId)
     }));
-  };
-
-  const updateEventField = (topic, name, description, date) => {
-    const getTodayLocal = () => {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = String(today.getMonth() + 1).padStart(2, '0');
-      const day = String(today.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
     };
 
+  const updateEventField = (topic, name, description, date) => { 
     const eventDate = date || getTodayLocal();
     const existingEvent = formData.activity.find(event => event.topic === topic);
     
@@ -472,7 +464,6 @@ function BrewLogForm() {
       addActivity(newActivity);
     }
   };
-
 
   // Gravity
   const getGravityOriginal = () => {
@@ -867,15 +858,7 @@ No yeast additions recorded."
                 size="small"
                 onClick={addSplitSchedule}
               >
-                Split Schedule
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                size="small"
-                onClick={addStaggered2Schedule}
-              >
-                Staggered +2
+                Split Schedule (2 days)
               </Button>
               <Button
                 type="button"
@@ -883,7 +866,15 @@ No yeast additions recorded."
                 size="small"
                 onClick={addStaggered3Schedule}
               >
-                Staggered +3
+                Staggered (3 days)
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="small"
+                onClick={addStaggered4Schedule}
+              >
+                Staggered (4 days)
               </Button>
               <Button
                 type="button"

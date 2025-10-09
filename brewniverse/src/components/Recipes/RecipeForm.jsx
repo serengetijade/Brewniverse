@@ -4,7 +4,9 @@ import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import IngredientList from '../Ingredients/IngredientList';
+import InstructionForm from '../Instructions/InstructionForm';
 import '../../Styles/RecipeForm.css';
+import '../../Styles/InstructionForm.css';
 
 function RecipeForm() {
   const { id } = useParams();
@@ -23,6 +25,7 @@ function RecipeForm() {
     estimatedABV: '',
     difficulty: 'Beginner',
     volume: '',
+    instructions: [''],
   });
 
   useEffect(() => {
@@ -31,7 +34,8 @@ function RecipeForm() {
       if (recipe) {
         setFormData({
           ...recipe,
-          dateCreated: recipe.dateCreated.split('T')[0]
+          dateCreated: recipe.dateCreated.split('T')[0],
+          instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
         });
       }
     }
@@ -68,34 +72,12 @@ function RecipeForm() {
     }));
   };
 
-  //const addIngredient = () => {
-  //  const newIngredient = {
-  //    id: Date.now().toString(),
-  //    name: '',
-  //    amount: '',
-  //    unit: 'lbs'
-  //  };
-  //  setFormData(prev => ({
-  //    ...prev,
-  //    ingredients: [...prev.ingredients, newIngredient]
-  //  }));
-  //};
-
-  //const updateIngredient = (id, field, value) => {
-  //  setFormData(prev => ({
-  //    ...prev,
-  //    ingredients: prev.ingredients.map(ingredient =>
-  //      ingredient.id === id ? { ...ingredient, [field]: value } : ingredient
-  //    )
-  //  }));
-  //};
-
-  //const removeIngredient = (id) => {
-  //  setFormData(prev => ({
-  //    ...prev,
-  //    ingredients: prev.ingredients.filter(ingredient => ingredient.id !== id)
-  //  }));
-  //};
+  const handleInstructionsChange = (instructions) => {
+    setFormData(prev => ({
+      ...prev,
+      instructions: instructions
+    }));
+  };
 
   // Get brew logs that use this recipe
   const getConnectedBrewLogs = () => {
@@ -256,11 +238,19 @@ function RecipeForm() {
             </IngredientList>
         </div>
 
+        {/* Instructions */}
+        <div className="form-section">
+          <InstructionForm
+            instructions={formData.instructions}
+            onInstructionsChange={handleInstructionsChange}
+          />
+        </div>
+
         {/* Notes */}
         <div className="form-section">
           <div className="form-group">
             <label htmlFor="notes" className="form-label">
-              Notes & Instructions
+              Notes & Tips
             </label>
             <textarea
               id="notes"
@@ -268,8 +258,8 @@ function RecipeForm() {
               className="form-textarea"
               value={formData.notes}
               onChange={handleChange}
-              placeholder="Detailed brewing instructions, notes, and tips for this recipe"
-              rows={6}
+              placeholder="Additional notes, tips, and observations for this recipe"
+              rows={4}
             />
           </div>
         </div>
@@ -321,7 +311,6 @@ function RecipeForm() {
           </Button>
         </div>
       </form>
-
     </div>
   );
 }

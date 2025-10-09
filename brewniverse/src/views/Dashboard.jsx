@@ -32,10 +32,10 @@ function Dashboard() {
       color: 'accent'
     },
     {
-      title: 'Instructions',
+      title: 'Calculator',
       icon: Clipboard,
-      path: '/instructions',
-      count: state.instructions.length,
+      path: '/calculator',
+      count: null,
       color: 'highlight'
     }
   ];
@@ -68,7 +68,7 @@ function Dashboard() {
               </div>
               <div className="shortcut-content">
                 <h3>{shortcut.title}</h3>
-                <p className="shortcut-count">{shortcut.count} items</p>
+                  <p className="shortcut-count">{ shortcut.count ? `${shortcut.count} items` : ''}</p>
               </div>
               <Button
                 variant="ghost"

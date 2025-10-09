@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, ArrowLeft, Home, BookOpen, Bell, FileText, Settings } from 'lucide-react';
+import { Menu, ArrowLeft, Home, BookOpen, Bell, FileText, Calculator, Settings } from 'lucide-react';
 import '../../Styles/Navigation.css';
 
 function Navigation() {
@@ -12,8 +12,8 @@ function Navigation() {
     { path: '/', icon: Home, label: 'Dashboard' },
     { path: '/brewlogs', icon: BookOpen, label: 'Brew Logs' },
     { path: '/recipes', icon: FileText, label: 'Recipes' },
-    { path: '/alerts', icon: Bell, label: 'Alerts' },
-    { path: '/instructions', icon: FileText, label: 'Instructions' },
+      { path: '/alerts', icon: Bell, label: 'Alerts' },
+      { path: '/calculator', icon: Calculator, label: 'Calculator' },
     { path: '/settings', icon: Settings, label: 'Settings' },
   ];
 
