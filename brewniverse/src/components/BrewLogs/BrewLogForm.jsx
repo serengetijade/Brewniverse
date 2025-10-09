@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import IngredientList from '../UI/IngredientList';
+import IngredientList from '../Ingredients/IngredientList';
 import ActivityList from '../Activity/ActivityList';
 import Activity from '../Activity/Activity';
 import ActivityTimeline from '../Activity/ActivityTimeline';
@@ -19,6 +19,7 @@ function BrewLogForm() {
   let buttonSize = 14;
 
   const [formData, setFormData] = useState({
+    id: Date.now().toString(), // Generate temporary ID for new brew logs
     acids: '',
     activity: [],
     bases: '',
@@ -51,6 +52,7 @@ function BrewLogForm() {
       if (brewLog) {
         const loadedData = {
           ...brewLog,
+          id: brewLog.id, // Ensure ID is preserved
           dateCreated: brewLog.dateCreated.split('T')[0],
           activity: brewLog.activity || [] // Ensure events array exists
         };
@@ -854,7 +856,7 @@ No yeast additions recorded."
           </div>
 
           {/* Nutrient Schedule */}
-          <div class="form-group">
+          <div className="form-group">
             <label htmlFor="nutrients" className="form-label">
                 Nutrient Schedule
             </label>
@@ -898,6 +900,7 @@ No yeast additions recorded."
           <div className="compact-list">
             {getNutrientSchedule().map((activity) => (
                 <Activity
+                    key={activity.id}
                     formData={formData}
                     setFormData={setFormData}
                     item={activity}

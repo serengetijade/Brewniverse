@@ -52,7 +52,7 @@ function appReducer(state, action) {
     case ActionTypes.ADD_BREW_LOG:
       return {
         ...state,
-        brewLogs: [...state.brewLogs, { ...action.payload, id: Date.now().toString() }],
+        brewLogs: [...state.brewLogs, { ...action.payload, id: action.payload.id || Date.now().toString() }],
       };
     
     case ActionTypes.UPDATE_BREW_LOG:
@@ -72,7 +72,7 @@ function appReducer(state, action) {
     case ActionTypes.ADD_RECIPE:
       return {
         ...state,
-        recipes: [...state.recipes, { ...action.payload, id: Date.now().toString() }],
+        recipes: [...state.recipes, { ...action.payload, id: action.payload.id || Date.now().toString() }],
       };
     
     case ActionTypes.UPDATE_RECIPE:
@@ -92,7 +92,7 @@ function appReducer(state, action) {
     case ActionTypes.ADD_ALERT:
       return {
         ...state,
-        alerts: [...state.alerts, { ...action.payload, id: Date.now().toString() }],
+        alerts: [...state.alerts, { ...action.payload, id: action.payload.id || Date.now().toString() }],
       };
     
     case ActionTypes.UPDATE_ALERT:
@@ -112,7 +112,7 @@ function appReducer(state, action) {
     case ActionTypes.ADD_ALERT_GROUP:
       return {
         ...state,
-        alertGroups: [...state.alertGroups, { ...action.payload, id: Date.now().toString() }],
+        alertGroups: [...state.alertGroups, { ...action.payload, id: action.payload.id || Date.now().toString() }],
       };
     
     case ActionTypes.UPDATE_ALERT_GROUP:
@@ -132,7 +132,7 @@ function appReducer(state, action) {
     case ActionTypes.ADD_INSTRUCTION:
       return {
         ...state,
-        instructions: [...state.instructions, { ...action.payload, id: Date.now().toString() }],
+        instructions: [...state.instructions, { ...action.payload, id: action.payload.id || Date.now().toString() }],
       };
     
     case ActionTypes.UPDATE_INSTRUCTION:

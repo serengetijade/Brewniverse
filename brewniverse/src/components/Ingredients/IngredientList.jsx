@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Trash2 } from 'lucide-react';
 import Button from '../UI/Button';
-import IngredientEditor from '../UI/IngredientEditor';
+import IngredientEditor from './IngredientEditor';
 import '../../Styles/Ingredients.css';
   
 export default function IngredientList({  

@@ -127,6 +127,7 @@ function ActivityList({
                     <div className="compact-list">
                         {getActivitiesByTopic(topic).map((item) => (
                             <Activity
+                                key={item.id}
                                 formData={formData}
                                 setFormData={setFormData}
                                 item={item}

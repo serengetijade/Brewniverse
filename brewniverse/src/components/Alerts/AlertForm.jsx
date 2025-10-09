@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X } from 'lucide-react';
+import { Save, X, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import '../../Styles/AlertForm.css';
@@ -65,6 +65,16 @@ function AlertForm() {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete "${formData.name}"?`)) {
+      dispatch({
+        type: ActionTypes.DELETE_ALERT,
+        payload: id
+      });
+      navigate('/alerts');
+    }
   };
 
   return (
@@ -270,6 +280,16 @@ function AlertForm() {
             <X size={16} />
             Cancel
           </Button>
+          {isEditing && (
+            <Button
+              type="button"
+              variant="error"
+              onClick={handleDelete}
+            >
+              <Trash2 size={16} />
+              Delete
+            </Button>
+          )}
           <Button
             type="submit"
             variant="primary"

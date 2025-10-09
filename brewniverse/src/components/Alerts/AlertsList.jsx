@@ -1,11 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Bell, Users, Search, ArrowUpDown, Calendar, Beaker, FileText } from 'lucide-react';
+import { Plus, Bell, Search } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import ListHeader from '../Layout/ListHeader'
-import "../../Styles/BrewLogsList.css"
-import "../../Styles/Shared/search.css"
+import ListHeader from '../Layout/ListHeader';
+import SearchSortControls from '../UI/SearchSortControls';
+import AlertCard from './AlertCard';
+import AlertGroup from './AlertGroup';
+import "../../Styles/BrewLogsList.css";
+import "../../Styles/Shared/search.css";
 
 function AlertsList() {
   const navigate = useNavigate();
@@ -19,8 +22,8 @@ function AlertsList() {
   // Process and filter alerts based on search and sort criteria
   const processedAlerts = useMemo(() => {
     let filteredAlerts = state.alerts.filter(alert => 
-      alert.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      alert.description.toLowerCase().includes(searchTerm.toLowerCase())
+      (alert.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (alert.description || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Sort alerts based on selected criteria
@@ -78,15 +81,6 @@ function AlertsList() {
     return filteredAlerts;
   }, [state.alerts, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
-  const handleSortChange = (newSortBy) => {
-    if (sortBy === newSortBy) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(newSortBy);
-      setSortOrder('asc');
-    }
-  };
-
   return (
     <div className="brewlogs-list">
         <ListHeader
@@ -97,51 +91,17 @@ function AlertsList() {
         >
         </ListHeader>          
 
-        {/* Search Bar & Sort Controls */}
-        <div className="search-sort-controls">
-          <div className="search-bar">
-            <Search size={20} className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search alerts by name or description..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
-            />
-          </div>
-          
-          <div className="sort-controls">
-            <div className="sort-buttons">
-              <Button
-                variant={sortBy === 'date' ? 'primary' : 'outline'}
-                size="small"
-                onClick={() => handleSortChange('date')}
-                className="sort-button"
-              >
-                <Calendar size={16} />
-                Date {sortBy === 'date' && (sortOrder === 'asc' ? '↑' : '↓')}
-              </Button>
-              <Button
-                variant={sortBy === 'brewlog' ? 'primary' : 'outline'}
-                size="small"
-                onClick={() => handleSortChange('brewlog')}
-                className="sort-button"
-              >
-                <Beaker size={16} />
-                Brew Log {sortBy === 'brewlog' && (sortOrder === 'asc' ? '↑' : '↓')}
-              </Button>
-              <Button
-                variant={sortBy === 'recipe' ? 'primary' : 'outline'}
-                size="small"
-                onClick={() => handleSortChange('recipe')}
-                className="sort-button"
-              >
-                <FileText size={16} />
-                Recipe {sortBy === 'recipe' && (sortOrder === 'asc' ? '↑' : '↓')}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <SearchSortControls
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={(newSortBy, newSortOrder) => {
+            setSortBy(newSortBy);
+            setSortOrder(newSortOrder);
+          }}
+          searchPlaceholder="Search alerts by name or description..."
+        />
 
         {/* Individual Alerts Section */}
         <div className="alerts-section">
@@ -162,128 +122,55 @@ function AlertsList() {
               </Button>
             </div>
           ) : (
-            <div className="alerts-container">
+            <div className="items-container">
               {sortBy === 'date' ? (
                 // Simple list view for date sorting
-                <div className="alerts-grid">
+                <div className="items-grid">
                   {processedAlerts.map((alert) => (
-                    <div key={alert.id} className="alert-card">
-                      <div className="alert-content">
-                        <h3>{alert.name}</h3>
-                        <p className="alert-description">{alert.description}</p>
-                        <p className="alert-date">
-                          {new Date(alert.date).toLocaleDateString()} at {new Date(alert.date).toLocaleTimeString()}
-                        </p>
-                      </div>
-                      <div className="alert-actions">
-                        <Button
-                          variant="outline"
-                          size="small"
-                          onClick={() => navigate(`/alerts/${alert.id}/edit`)}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    </div>
+                    <AlertCard
+                      key={alert.id}
+                      alert={alert}
+                      editUrl={`/alerts/${alert.id}/edit`}
+                    />
                   ))}
                 </div>
               ) : sortBy === 'brewlog' ? (
                 // Grouped by BrewLog
-                <div className="alerts-grouped">
+                <div className="items-grouped">
                   {Object.entries(processedAlerts).map(([brewLogId, alerts]) => {
                     const brewLog = state.brewLogs.find(bl => bl.id === brewLogId);
                     const brewLogName = brewLog ? brewLog.name : 'No Brew Log';
                     
                     return (
-                      <div key={brewLogId} className="alert-group">
-                        <div className="group-header">
-                          <h3 className="group-title">
-                            <Beaker size={20} />
-                            {brewLogName}
-                          </h3>
-                          {brewLog && (
-                            <Button
-                              variant="outline"
-                              size="small"
-                              onClick={() => navigate(`/brewlogs/${brewLogId}`)}
-                            >
-                              Go To Brew
-                            </Button>
-                          )}
-                        </div>
-                        <div className="alerts-grid">
-                          {alerts.map((alert) => (
-                            <div key={alert.id} className="alert-card">
-                              <div className="alert-content">
-                                <h4>{alert.name}</h4>
-                                <p className="alert-description">{alert.description}</p>
-                                <p className="alert-date">
-                                  {new Date(alert.date).toLocaleDateString()} at {new Date(alert.date).toLocaleTimeString()}
-                                </p>
-                              </div>
-                              <div className="alert-actions">
-                                <Button
-                                  variant="outline"
-                                  size="small"
-                                  onClick={() => navigate(`/alerts/${alert.id}/edit`)}
-                                >
-                                  Edit
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      <AlertGroup
+                        key={brewLogId}
+                        groupKey={brewLogId}
+                        alerts={alerts}
+                        groupType="brewlog"
+                        groupName={brewLogName}
+                        navigateUrl={brewLog ? `/brewlogs/${brewLogId}` : null}
+                        editUrlTemplate="/alerts/:id/edit"
+                      />
                     );
                   })}
                 </div>
               ) : sortBy === 'recipe' ? (
                 // Grouped by Recipe
-                <div className="alerts-grouped">
+                <div className="items-grouped">
                   {Object.entries(processedAlerts).map(([recipeId, alerts]) => {
                     const recipe = state.recipes.find(r => r.id === recipeId);
                     const recipeName = recipe ? recipe.name : 'No Recipe';
                     
                     return (
-                      <div key={recipeId} className="alert-group">
-                        <div className="group-header">
-                          <h3 className="group-title">
-                            <FileText size={20} />
-                            {recipeName}
-                          </h3>
-                          {recipe && (
-                            <Button
-                              variant="outline"
-                              size="small"
-                              onClick={() => navigate(`/recipes/${recipeId}`)}
-                            >
-                              Go To Recipe
-                            </Button>
-                          )}
-                        </div>
-                        <div className="alerts-grid">
-                          {alerts.map((alert) => (
-                            <div key={alert.id} className="alert-card">
-                              <div className="alert-content">
-                                <h4>{alert.name}</h4>
-                                <p className="alert-description">{alert.description}</p>
-                                <p className="alert-date">
-                                  {new Date(alert.date).toLocaleDateString()} at {new Date(alert.date).toLocaleTimeString()}
-                                </p>
-                              </div>
-                              <div className="alert-actions">
-                                <Button
-                                  variant="outline"
-                                  size="small"
-                                  onClick={() => navigate(`/alerts/${alert.id}/edit`)}
-                                >
-                                  Edit
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
+                      <AlertGroup
+                        key={recipeId}
+                        groupKey={recipeId}
+                        alerts={alerts}
+                        groupType="recipe"
+                        groupName={recipeName}
+                        navigateUrl={recipe ? `/recipes/${recipeId}` : null}
+                        editUrlTemplate="/alerts/:id/edit"
+                      />
                     );
                   })}
                 </div>

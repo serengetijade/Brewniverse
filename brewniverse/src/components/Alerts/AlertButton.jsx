@@ -38,7 +38,7 @@ function AlertButton({ activity, brewLogId, onAlertCreated }) {
             
             const newAlert = {
                 id: newAlertId,
-                name: activity.name,
+                name: activity.name || activity.description || `${activity.topic} Alert`,
                 description: activity.description || '',
                 date: new Date(activity.date).toISOString(),
                 brewLogId: brewLogId || '',

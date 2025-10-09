@@ -1,35 +1,96 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText } from 'lucide-react';
+import { Plus, FileText, Calendar, Search, Beaker } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import ListHeader from '../Layout/ListHeader';
+import SearchSortControls from '../UI/SearchSortControls';
+import RecipeCard from './RecipeCard';
+import '../../Styles/BrewLogsList.css';
+import '../../Styles/Shared/search.css';
 
 function RecipesList() {
   const navigate = useNavigate();
   const { state } = useApp();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('date');
+  const [sortOrder, setSortOrder] = useState('desc');
 
-  const recipes = state.recipes.sort((a, b) => 
-    new Date(b.dateCreated) - new Date(a.dateCreated)
-  );
+  // Process and filter recipes based on search and sort criteria
+  const processedRecipes = useMemo(() => {
+    let filteredRecipes = state.recipes.filter(recipe => 
+      (recipe.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (recipe.description || '').toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Sort recipes based on selected criteria
+    if (sortBy === 'date') {
+      filteredRecipes.sort((a, b) => {
+        const dateA = new Date(a.dateCreated);
+        const dateB = new Date(b.dateCreated);
+        return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+    } else if (sortBy === 'name') {
+      filteredRecipes.sort((a, b) => {
+        const nameA = a.name.toLowerCase();
+        const nameB = b.name.toLowerCase();
+        return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      });
+    } else if (sortBy === 'brewlog') {
+      // Group by brew logs that use this recipe, then sort by date within each group
+      const grouped = {};
+      filteredRecipes.forEach(recipe => {
+        const brewLogsUsingRecipe = state.brewLogs.filter(bl => bl.recipeId === recipe.id);
+        const groupKey = brewLogsUsingRecipe.length > 0 ? 'used' : 'unused';
+        if (!grouped[groupKey]) {
+          grouped[groupKey] = [];
+        }
+        grouped[groupKey].push(recipe);
+      });
+      
+      // Sort recipes within each group by date
+      Object.keys(grouped).forEach(groupKey => {
+        grouped[groupKey].sort((a, b) => {
+          const dateA = new Date(a.dateCreated);
+          const dateB = new Date(b.dateCreated);
+          return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+      });
+      
+      return grouped;
+    }
+
+    return filteredRecipes;
+  }, [state.recipes, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
   return (
-    <div className="recipes-list">
-      <div className="list-header">
-        <div className="header-content">
-          <h1>Recipes</h1>
-          <p>Manage your brewing recipes and ingredients</p>
-        </div>
-        <Button
-          variant="primary"
-          size="large"
-          onClick={() => navigate('/recipes/new')}
+    <div className="brewlogs-list">
+        <ListHeader
+            h1="Recipes"
+            description="Manage your brewing recipes and ingredients"
+            buttonText="New Recipe"
+            url="/recipes/new"
         >
-          <Plus size={20} />
-          New Recipe
-        </Button>
-      </div>
+        </ListHeader>
 
-      {recipes.length === 0 ? (
+        <SearchSortControls
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={(newSortBy, newSortOrder) => {
+            setSortBy(newSortBy);
+            setSortOrder(newSortOrder);
+          }}
+          sortOptions={[
+            { key: 'date', label: 'Date', icon: Calendar },
+            { key: 'name', label: 'Name', icon: FileText },
+            { key: 'brewlog', label: 'Usage', icon: Beaker }
+          ]}
+          searchPlaceholder="Search recipes by name or description..."
+        />
+
+      {state.recipes.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">
             <FileText size={64} />
@@ -46,39 +107,55 @@ function RecipesList() {
           </Button>
         </div>
       ) : (
-        <div className="recipes-grid">
-          {recipes.map((recipe) => (
-            <div key={recipe.id} className="recipe-card">
-              <div className="recipe-content">
-                <h3 className="recipe-name">{recipe.name}</h3>
-                <p className="recipe-date">
-                  Created {new Date(recipe.dateCreated).toLocaleDateString()}
-                </p>
-                {recipe.ingredients && (
-                  <p className="recipe-ingredients">
-                    {recipe.ingredients.length} ingredient{recipe.ingredients.length !== 1 ? 's' : ''}
-                  </p>
-                )}
-              </div>
-              
-              <div className="recipe-actions">
-                <Button
-                  variant="outline"
-                  size="medium"
-                  onClick={() => navigate(`/recipes/${recipe.id}`)}
-                >
-                  View Details
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="medium"
-                  onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
-                >
-                  Edit
-                </Button>
-              </div>
+        <div className="items-container">
+          {sortBy === 'date' || sortBy === 'name' ? (
+            // Simple list view for date and name sorting
+            <div className="items-grid">
+              {processedRecipes.map((recipe) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                />
+              ))}
             </div>
-          ))}
+          ) : sortBy === 'brewlog' ? (
+            // Grouped by Usage (Used vs Unused)
+            <div className="items-grouped">
+              {Object.entries(processedRecipes).map(([groupKey, recipes]) => {
+                const groupName = groupKey === 'used' ? 'Used in Brew Logs' : 'Not Yet Used';
+                const groupIcon = groupKey === 'used' ? <Beaker size={20} /> : <FileText size={20} />;
+                
+                return (
+                  <div key={groupKey} className="item-group">
+                    <div className="group-header">
+                      <h3 className="group-title">
+                        {groupIcon}
+                        {groupName}
+                      </h3>
+                    </div>
+                    <div className="items-grid">
+                      {recipes.map((recipe) => (
+                        <RecipeCard
+                          key={recipe.id}
+                          recipe={recipe}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : null}
+          
+          {searchTerm && processedRecipes.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <Search size={64} />
+              </div>
+              <h3>No Results Found</h3>
+              <p>No recipes match your search criteria. Try adjusting your search terms.</p>
+            </div>
+          )}
         </div>
       )}
     </div>

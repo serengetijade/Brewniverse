@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, X, Plus, Trash2 } from 'lucide-react';
 import '../../Styles/Ingredients.css';
-import Button from './Button';
+import Button from '../UI/Button';
 
 function IngredientEditor({
     ingredient,
