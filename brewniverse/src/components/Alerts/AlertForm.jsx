@@ -108,90 +108,12 @@ function AlertForm() {
               required
               placeholder="Enter alert name"
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="description" className="form-label">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              className="form-textarea"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Optional description"
-              rows={3}
-            />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="priority" className="form-label">
-                Priority
-              </label>
-              <select
-                id="priority"
-                name="priority"
-                className="form-select"
-                value={formData.priority}
-                onChange={handleChange}
-              >
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  name="isCompleted"
-                  checked={formData.isCompleted}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isCompleted: e.target.checked }))}
-                />
-                Mark as completed
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Associations */}
-        <div className="form-section">
-          <h3>Associations</h3>
+                  </div>
           
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="brewLogId" className="form-label">
-                Related Brew Log
-              </label>
-              <select
-                id="brewLogId"
-                name="brewLogId"
-                className="form-select"
-                value={formData.brewLogId}
-                onChange={handleChange}
-              >
-                <option value="">No brew log</option>
-                {state.brewLogs.map(brewLog => (
-                  <option key={brewLog.id} value={brewLog.id}>
-                    {brewLog.name} ({brewLog.type})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
         {/* Timing */}
-        <div className="form-section">
-          <h3>Timing</h3>
-          
           <div className="form-group">
             <label htmlFor="date" className="form-label">
-              Alert Date & Time *
+              Date & Time *
             </label>
             <input
               type="datetime-local"
@@ -269,6 +191,78 @@ function AlertForm() {
               </div>
             </div>
           )}
+
+          <div className="form-group">
+            <label htmlFor="description" className="form-label">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              className="form-textarea"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Optional description"
+              rows={3}
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="priority" className="form-label">
+                Priority
+              </label>
+              <select
+                id="priority"
+                name="priority"
+                className="form-select"
+                value={formData.priority}
+                onChange={handleChange}
+              >
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  name="isCompleted"
+                  checked={formData.isCompleted}
+                  onChange={(e) => setFormData(prev => ({ ...prev, isCompleted: e.target.checked }))}
+                />
+                Mark as completed
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Associations */}
+        <div className="form-section">
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="brewLogId" className="form-label">
+                Related Brew Log
+              </label>
+              <select
+                id="brewLogId"
+                name="brewLogId"
+                className="form-select"
+                value={formData.brewLogId}
+                onChange={handleChange}
+              >
+                <option value="">No brew log</option>
+                {state.brewLogs.map(brewLog => (
+                  <option key={brewLog.id} value={brewLog.id}>
+                    {brewLog.name} ({brewLog.type})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
         <div className="form-actions">

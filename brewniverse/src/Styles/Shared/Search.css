@@ -63,13 +63,10 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-
-.sort-button {
-  display: flex;
   align-items: center;
   gap: 0.5rem;
   white-space: nowrap;
+  margin: auto;
 }
 
 /* Generic Grid Layout */
