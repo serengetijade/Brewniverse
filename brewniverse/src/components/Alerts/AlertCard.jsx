@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2 } from 'lucide-react';
+import { Trash2, BookOpen } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 
@@ -46,6 +46,13 @@ function AlertCard({ alert, editUrl }) {
         )}
       </div>
       <div className="item-actions">
+        <Button
+          variant="outline"
+          size="small"
+          onClick={() => navigate(`/brewlogs/${alert.brewLogId}`)}
+        >
+          <BookOpen size={16} />
+        </Button>
         <Button
           variant="outline"
           size="small"

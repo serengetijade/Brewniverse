@@ -19,6 +19,12 @@
   --color-warning: #ffc107;
   --color-error: #dc3545;
   --color-info: #17a2b8;
+  
+  /* RGB values for alpha transparency */
+  --color-primary-rgb: 23, 14, 63;
+  --color-secondary-rgb: 49, 11, 120;
+  --color-accent-rgb: 110, 21, 147;
+  --color-highlight-rgb: 141, 23, 162;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

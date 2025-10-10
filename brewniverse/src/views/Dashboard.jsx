@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, FileText, Bell, Clipboard } from 'lucide-react';
+import { BookOpen, FileText, Bell, Calculator } from 'lucide-react';
 import Button from '../components/UI/Button';
 import { useApp } from '../contexts/AppContext';
 import '../Styles/Dashboard.css';
@@ -33,7 +33,7 @@ function Dashboard() {
     },
     {
       title: 'Calculator',
-      icon: Clipboard,
+      icon: Calculator,
       path: '/calculator',
       count: null,
       color: 'highlight'
@@ -62,7 +62,12 @@ function Dashboard() {
         {shortcuts.map((shortcut) => {
           const Icon = shortcut.icon;
           return (
-            <div key={shortcut.path} className={`shortcut-card shortcut-${shortcut.color}`}>
+            <div 
+              key={shortcut.path} 
+              className={`shortcut-card shortcut-${shortcut.color}`}
+              onClick={() => navigate(shortcut.path)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="shortcut-icon">
                 <Icon size={32} />
               </div>
@@ -70,14 +75,6 @@ function Dashboard() {
                 <h3>{shortcut.title}</h3>
                   <p className="shortcut-count">{ shortcut.count ? `${shortcut.count} items` : ''}</p>
               </div>
-              <Button
-                variant="ghost"
-                size="medium"
-                onClick={() => navigate(shortcut.path)}
-                className="shortcut-button"
-              >
-                Open
-              </Button>
             </div>
           );
         })}

@@ -68,7 +68,7 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
               className="step-number" 
               onClick={() => toggleEditButtons(index)}
               style={{ cursor: 'pointer' }}
-              title="Click to show reorder buttons"
+              title="Click to edit"
             >
               {index + 1}
             </div>
