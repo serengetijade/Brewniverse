@@ -1,53 +1,87 @@
-/* Activity Timeline styles */
-.activity-timeline {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.activity-timeline-item {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
+.activity {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.75rem;
+    align-items: end;
+    padding: 0.5rem 0.75rem;
     background-color: var(--color-surface);
-    border-radius: 8px;
+    border-radius: var(--border-radius-sm);
     border: 1px solid var(--color-border);
-    align-items: flex-start;
+    margin: .5rem 0rem;
 }
 
-.activity-date {
-    flex-shrink: 0;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: 0.875rem;
-    min-width: 80px;
+.activity .form-group {
+    /*margin-bottom: 0rem;*/
 }
 
-.activity-content {
-    flex: 1;
-}
-
-.activity-topic {
-    color: var(--color-textLight);
-    font-size: 0.75rem;
-    margin-left: 0.5rem;
-}
-
-.activity-description {
-    color: var(--color-text);
-    font-size: 0.875rem;
-    margin: 0.25rem 0;
-}
-
-.activity-status {
-    color: var(--color-textLight);
-    font-size: 0.75rem;
-    margin-top: 0.25rem;
-}
-
-/* Editor Items*/
 .activity-editor-actions {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto;
+}
+
+.activity .btn {
+    padding: 0.5rem 0.25rem;
+    min-width: 44px;
+    justify-content: center;
+}
+
+.activity .form-input {
+    padding: 0.5rem 0.75rem;
+    min-height: 40px;
+    font-size: 0.875rem;
+}
+
+.activity .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .activity {
     gap: 0.5rem;
-    flex-direction: column;
+    padding: 0.75rem 0.5rem;
+  }
+    
+  .activity .btn {
+    padding: 0.5rem 0.2rem;
+    min-width: 40px;
+  }
+  
+  .activity .form-input {
+    padding: 0.5rem;
+    min-height: 36px;
+    font-size: 0.8rem;
+  }
+  
+  .activity .form-label {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) { 
+  .activity {
+    grid-template-columns: auto;
+    padding: 0.75rem 0.75rem;
+  }
+    
+  .activity .form-group {
+    margin-bottom: .5rem;
+  }
+
+  .activity-editor-actions{
+    grid-template-columns: auto auto;
+    justify-content: center;
+  }
+  
+  .activity .btn {
+    padding: 0.4rem 0.15rem;
+    min-width: 36px;
+  }
+  
+  .activity .form-input {
+    padding: 0.4rem;
+    min-height: 32px;
+    font-size: 0.75rem;
+  }
 }

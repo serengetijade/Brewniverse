@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, Trash2 } from 'lucide-react';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
-import Button from '../UI/Button';
+import { getDate, useApp, ActionTypes } from '../../contexts/AppContext';
+import FormHeader from '../Layout/FormHeader';
+import FormFooter from '../Layout/FormFooter';
 import '../../Styles/AlertForm.css';
 
 function AlertForm() {
@@ -14,7 +14,7 @@ function AlertForm() {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    date: new Date().toISOString().slice(0, 16), // datetime-local format
+    date: getDate(),
     brewLogId: '',
     isRecurring: false,
     recurringType: 'daily',
@@ -49,7 +49,8 @@ function AlertForm() {
         type: ActionTypes.UPDATE_ALERT,
         payload: { ...alertData, id }
       });
-    } else {
+    }
+    else {
       dispatch({
         type: ActionTypes.ADD_ALERT,
         payload: alertData
@@ -78,16 +79,11 @@ function AlertForm() {
   };
 
   return (
-    <div className="alert-form">
-      <div className="form-header">
-        <h1>{isEditing ? 'Edit Alert' : 'New Alert'}</h1>
-        <p>
-          {isEditing 
-            ? 'Update your alert details' 
-            : 'Create a new alert reminder'
-          }
-        </p>
-      </div>
+    <div className="form-container form-with-footer">
+      <FormHeader 
+        isEditing={isEditing} 
+        entityName="Alert" 
+      />
 
       <form onSubmit={handleSubmit} className="card">
         {/* Basic Information */}
@@ -240,7 +236,7 @@ function AlertForm() {
           </div>
         </div>
 
-        {/* Associations */}
+        {/* Brew Logs */}
         <div className="form-section">
           <div className="form-row">
             <div className="form-group">
@@ -264,36 +260,14 @@ function AlertForm() {
             </div>
           </div>
         </div>
-
-        <div className="form-actions">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => navigate('/alerts')}
-          >
-            <X size={16} />
-            Cancel
-          </Button>
-          {isEditing && (
-            <Button
-              type="button"
-              variant="error"
-              onClick={handleDelete}
-            >
-              <Trash2 size={16} />
-              Delete
-            </Button>
-          )}
-          <Button
-            type="submit"
-            variant="primary"
-          >
-            <Save size={16} />
-            {isEditing ? 'Update' : 'Create'} Alert
-          </Button>
-        </div>
       </form>
 
+      <FormFooter 
+        isEditing={isEditing}
+        entityName="Alert"
+        onCancel={() => navigate('/alerts')}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

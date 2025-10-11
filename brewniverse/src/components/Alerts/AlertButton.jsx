@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bell, BellOff } from 'lucide-react';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
+import { Bell, BellPlus, BellOff } from 'lucide-react';
+import { generateId, useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 
 function AlertButton({ activity, brewLogId, onAlertCreated }) {
@@ -34,10 +34,8 @@ function AlertButton({ activity, brewLogId, onAlertCreated }) {
             }
         }
         else {
-            const newAlertId = Date.now().toString() + Math.random().toString(36).substring(2, 7);
-            
             const newAlert = {
-                id: newAlertId,
+                id: generateId(),
                 name: activity.name || activity.description || `${activity.topic} Alert`,
                 description: activity.description || '',
                 date: new Date(activity.date).toISOString(),
@@ -77,7 +75,7 @@ function AlertButton({ activity, brewLogId, onAlertCreated }) {
             onClick={handleAlertButtonClick}
             title={activity.alertId ? "Alert exists - click to view" : "Create alert for this activity"}
         >
-            {activity.alertId ? <Bell size={16} /> : <Bell size={16} />}
+            {activity.alertId ? <Bell size={16} /> : <BellPlus size={16} />}
         </Button>
     );
 }

@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import '../../Styles/Activity.css';
+import '../../Styles/Shared/activityTimeline.css';
 
 function ActivityTimeline({ formData, showActivityTimeline, setShowActivityTimeline }) {
     const formatDate = (dateString) => {

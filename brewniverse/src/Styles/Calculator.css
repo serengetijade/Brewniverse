@@ -32,7 +32,7 @@
 .calculator-card {
   background: var(--color-surface);
   border: 2px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   padding: 2rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -125,7 +125,7 @@
   margin-bottom: 2rem;
   padding: 2rem;
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   border: 2px solid var(--color-border);
 }
 
@@ -148,7 +148,7 @@
 /* Calculator Form */
 .calculator-form {
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   padding: 2rem;
   border: 2px solid var(--color-border);
   margin-bottom: 2rem;
@@ -216,7 +216,7 @@
 /* Results Section */
 .calculator-results {
   background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-background) 100%);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   padding: 2rem;
   border: 2px solid var(--color-primary);
   margin-bottom: 2rem;
@@ -250,7 +250,7 @@
 
 .result-card {
   background: var(--color-background);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   padding: 1.5rem;
   text-align: center;
   border: 2px solid var(--color-border);
@@ -305,7 +305,7 @@
 
 .result-info {
   background: var(--color-background);
-  border-radius: 8px;
+  border-radius: var(--border-radius-sm);
   padding: 1.5rem;
   border-left: 4px solid var(--color-primary);
 }
@@ -331,7 +331,7 @@
 /* Calculator Info Section */
 .calculator-info {
   background: var(--color-surface);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   padding: 2rem;
   border: 2px solid var(--color-border);
 }

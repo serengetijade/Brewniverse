@@ -48,7 +48,7 @@ export const ActionTypes = {
 
 // Reducer function
 function appReducer(state, action) {
-  switch (action.type) {
+    switch (action.type) {    
     case ActionTypes.ADD_BREW_LOG:
       return {
         ...state,
@@ -163,7 +163,7 @@ function appReducer(state, action) {
       if (originalInstruction) {
         const clonedInstruction = {
           ...originalInstruction,
-          id: Date.now().toString(),
+          id: generateId(),
           name: action.payload.newName,
         };
         return {
@@ -226,5 +226,20 @@ export function useApp() {
     throw new Error('useApp must be used within an AppProvider');
   }
   return context;
+}
+
+// Helpers
+export function getDate(){
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const hour = String(today.getHours()).padStart(2, '0');
+    const minute = String(today.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+};
+
+export function generateId() {
+    return Date.now().toString() + Math.random().toString(36).substring(2, 7);
 }
 

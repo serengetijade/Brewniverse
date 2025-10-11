@@ -25,7 +25,7 @@ function Settings() {
     { value: 'brewlogs', label: 'Brew Logs' },
     { value: 'recipes', label: 'Recipes' },
     { value: 'alerts', label: 'Alerts' },
-    { value: 'instructions', label: 'Instructions' },
+    { value: 'calculator', label: 'Calculator' },
   ];
 
   const themeOptions = Object.entries(themes).map(([key, theme]) => ({
@@ -40,6 +40,11 @@ function Settings() {
         <p>Customize your Brewniverse experience</p>
       </div>
 
+      <div className="settings-logo">
+        <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" width="500" height="500" />
+      </div>
+
+      {/* Themes */}
       <div className="settings-sections">
         <div className="settings-section">
           <div className="card">
@@ -71,6 +76,7 @@ function Settings() {
           </div>
         </div>
 
+        {/* Navigation */}
         <div className="settings-section">
           <div className="card">
             <div className="card-header">
@@ -101,6 +107,7 @@ function Settings() {
           </div>
         </div>
 
+        {/* Data */}
         <div className="settings-section">
           <div className="card">
             <div className="card-header">
@@ -180,6 +187,7 @@ function Settings() {
           </div>
         </div>
 
+        {/* About */}
         <div className="settings-section">
           <div className="card">
             <div className="card-header">
@@ -196,7 +204,7 @@ function Settings() {
                     <li>Track brew logs with detailed information</li>
                     <li>Manage and reference recipes</li>
                     <li>Set up alerts and reminders</li>
-                    <li>Create reusable instructions</li>
+                    <li>Calculate brew outcomes</li>
                     <li>Customizable themes and settings</li>
                   </ul>
                 </div>

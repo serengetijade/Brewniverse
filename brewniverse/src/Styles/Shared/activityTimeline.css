@@ -1,0 +1,46 @@
+/* Activity Timeline styles */
+.activity-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.activity-timeline-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: var(--color-surface);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+    align-items: flex-start;
+}
+
+.activity-date {
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--color-primary);
+    font-size: 0.875rem;
+    min-width: 80px;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-topic {
+    color: var(--color-textLight);
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+}
+
+.activity-description {
+    color: var(--color-text);
+    font-size: 0.875rem;
+    margin: 0.25rem 0;
+}
+
+.activity-status {
+    color: var(--color-textLight);
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}

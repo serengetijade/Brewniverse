@@ -32,7 +32,7 @@
 
 .brewlog-card {
   background: var(--color-surface);
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg);
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border);
@@ -137,7 +137,7 @@
 .status-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  border-radius: 20px;
+  border-radius: var(--border-radius-xl);
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -169,7 +169,7 @@
   text-align: center;
   padding: 4rem 2rem;
   background: var(--color-surface);
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
