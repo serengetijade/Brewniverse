@@ -52,14 +52,7 @@ function BrewLogForm() {
     volume: '',
     yeast: '' 
   });
-
   const [showActivityTimeline, setShowActivityTimeline] = useState(false);
-      
-  setFormData(prev => ({
-      ...prev,
-      activity: [...prev.activity, ...nutrientActivities]
-    }));
-  };
 
   // Track form changes
   useEffect(() => {
@@ -248,41 +241,6 @@ function BrewLogForm() {
     //}, [formData.activity]);
 
     // Nutrients
-    useEffect(() => {
-        if (isEditing) {
-            const brewLog = state.brewLogs.find(log => log.id === id);
-            if (brewLog) {
-                const loadedData = {
-                    ...brewLog,
-                    id: brewLog.id, // Ensure ID is preserved
-                    activity: brewLog.activity || []
-                };
-
-                if (!brewLog.activity || brewLog.activity.length === 0) {
-                    // Create activity(s) from nutrientSchedule
-                    const generatedActivities = [];
-
-                    if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
-                        loadedData.nutrientSchedule.forEach(entry => {
-                            generatedActivities.push(createActivity(
-                                entry.date,
-                                getActivityDisplayName('Nutrient'),
-                                entry.description,
-                                'Nutrient',
-                                id
-                            ));
-                        });
-                    }
-
-                    loadedData.events = generatedActivities;
-                }
-
-                setFormData(loadedData);
-                initialFormData.current = JSON.stringify(loadedData);
-            }
-        }
-    }, [id, isEditing, state.brewLogs]);
-
     const addNutrientScheduleEntry = () => {
         addActivity(
             setFormData,
@@ -297,56 +255,52 @@ function BrewLogForm() {
     const add3DayNutrientSchedule = () => getNutrientActivitiesByOption('3days');
     const add4DayNutrientSchedule = () => getNutrientActivitiesByOption('4days');
 
-  const getNutrientActivitiesByOption = (scheduleOption) => {
-    const today = new Date();
-    let entries = [];
+    const getNutrientActivitiesByOption = (scheduleOption) => {
+        const today = new Date();
+        let nutrientActivities = [];
 
-    switch (scheduleOption) {
-      case '2days':
-        entries = [{
-          date: getDate(),
-          description: 'Half now & half at 1/3 Break'
-        }];
-        break;
+        switch (scheduleOption) {
+          case '2days':
+            nutrientActivities = [{
+              date: getDate(),
+              description: 'Half now & half at 1/3 Break'
+            }];
+            break;
       
-      case '3days':
-      case '4days':
-        const days = scheduleOption === '3days' ? 2 : 3;
-        // Add initial entry for today
-        entries = [{
-            date: getDate(),
-            description: 'Staggered nutrient - yeast added'
-        }];
-        // Add future entries
-        const futureEntries = Array.from({ length: days }, (_, index) => {
-          const futureDate = new Date(today);
-          futureDate.setDate(today.getDate() + index + 1);
-          return {
-              //date: formatDateForActivity(futureDate),
-              date: getDate(futureDate),
-              description: `Staggered nutrient - ${(index + 1) * 24} hours later`
-          };
-        });
-        entries = [...entries, ...futureEntries];
-        break;
-    }
+          case '3days':
+          case '4days':
+            const days = scheduleOption === '3days' ? 2 : 3;
+            // Add initial entry for today
+            nutrientActivities = [{
+                date: getDate(),
+                description: 'Staggered nutrient - yeast added'
+            }];
+            // Add future entries
+            const futureEntries = Array.from({ length: days }, (_, index) => {
+              const futureDate = new Date(today);
+              futureDate.setDate(today.getDate() + index + 1);
+              return {
+                  date: getDate(futureDate),
+                  description: `Staggered nutrient - ${(index + 1) * 24} hours later`
+              };
+            });
+            nutrientActivities = [...nutrientActivities, ...futureEntries];
+            break;
+        }
 
-    const nutrientActivities = entries.map(entry => 
-      createActivity(
-        entry.date,
-        getActivityDisplayName('Nutrient'),
-        entry.description,
-        'Nutrient',
-        formData.id,
-        null
-      )
-    );
-
-
-  const getActivitiesByTopic = (topic) => {
-        return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
+        nutrientActivities.map(entry => 
+            addActivity( 
+                setFormData,
+                entry.date,
+                getActivityDisplayName('Nutrient'),
+                entry.description,
+                'Nutrient',
+                formData.id
+            )
+        );
   };
 
+  // Recipe
   const importIngredientsFromRecipe = () => {
     if (!formData.recipeId) {
       alert('Please select a recipe to import ingredients from.');
@@ -365,7 +319,6 @@ function BrewLogForm() {
         name: item.name || '',
         amount: item.amount || '',
         unit: item.unit || 'oz'
-        //type: item.type || 'primary'
       }));
     };
 
@@ -379,7 +332,11 @@ function BrewLogForm() {
       ingredientsPrimary: [...prev.ingredientsPrimary, ...primary],
       ingredientsSecondary: [...prev.ingredientsSecondary, ...secondary]
     }));
-  };
+    };
+
+    const getActivitiesByTopic = (topic) => {
+        return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
+    };
 
   return (
     <div className="form-container form-with-footer">
