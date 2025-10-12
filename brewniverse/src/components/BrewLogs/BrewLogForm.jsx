@@ -414,13 +414,6 @@ function BrewLogForm() {
     }));
   };
 
-  const removeActivity = (eventId) => {
-    setFormData(prev => ({
-      ...prev,
-      activity: prev.activity.filter(item => item.id !== eventId)
-    }));
-    };
-
   const updateActivityItem = (date, name, description, topic) => { 
     const eventDate = date || getDate();
     const existingEvent = formData.activity.find(event => event.topic === topic);
@@ -487,7 +480,6 @@ function BrewLogForm() {
         }
         //return formData.estimatedABV;
     }
-
 
   const handleGravityChange = (topic, value) => {
       if (topic === 'original') {
@@ -897,10 +889,7 @@ function BrewLogForm() {
                     activity={activity}
                     itemLabel="Nutrient Details"
                     brewLogId={formData.id}
-                    onUpdate={(activityId, field, value) => {
-                      updateActivity(activityId, { [field]: value });
-                    }}
-                    onRemove={removeActivity}
+                    setFormData={setFormData}
                 />
             ))}
         </div>

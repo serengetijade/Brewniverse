@@ -3,8 +3,7 @@ import React from 'react';
 import '../../Styles/Activity.css';
 import { generateId, getDate } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import Activity, { createActivity, getActivityDisplayName } from './Activity';
-
+import Activity, { addActivity, getActivityDisplayName, deleteActivity, updateActivity } from './Activity';
 
 export function ActivityList({
     formData,
@@ -16,41 +15,6 @@ export function ActivityList({
     brewLogId
 }) {
     const buttonSize = 14;
-
-    const addActivity = () => {
-        const newActivity = createActivity(
-            getDate(),
-            getActivityDisplayName(topic),
-            null,
-            topic,
-            null,
-            null
-        );
-        
-        // Set the brewLogId
-        newActivity.brewLogId = brewLogId;
-        
-        setFormData(prev => ({
-            ...prev,
-            activity: [...prev.activity, newActivity]
-        }));
-    };
-
-    const updateActivity = (id, field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            activity: prev.activity.map(item =>
-                item.id === id ? { ...item, [field]: value } : item
-            )
-        }));
-    };
-
-    const removeActivity = (id) => {
-        setFormData(prev => ({
-            ...prev,
-            activity: prev.activity.filter(item => item.id !== id)
-        }));
-    };
 
     const getActivitiesByTopic = () => {
         return formData.activity.filter(x => x.topic === topic);
@@ -64,7 +28,15 @@ export function ActivityList({
                     type="button"
                     variant="outline"
                     size="small"
-                    onClick={() => addActivity(topic)}
+                    onClick={() => addActivity(
+                        setFormData,
+                        getDate(),
+                        getActivityDisplayName(topic),
+                        null,
+                        topic,
+                        formData.id,
+                        null)
+                    }
                 >
                     <Plus size={buttonSize} />
                     Add Entry
@@ -83,8 +55,7 @@ export function ActivityList({
                                 activity={item}
                                 itemLabel={itemLabel}
                                 brewLogId={brewLogId}
-                                onUpdate={updateActivity}
-                                onRemove={removeActivity}
+                                setFormData={setFormData}
                             />
                         ))}
                     </div>         

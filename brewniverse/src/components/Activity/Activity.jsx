@@ -9,8 +9,7 @@ function Activity({
     activity,
     itemLabel,
     brewLogId,
-    onUpdate,
-    onRemove
+    setFormData
 }) {
     const { state, dispatch } = useApp();
     const navigate = useNavigate();
@@ -39,11 +38,11 @@ function Activity({
 
     const alertExists = activityData.alertId && state.alerts.some(alert => alert.id === activityData.alertId);
 
-    const handleFieldChange = (field, value) => {
+    const handleChange = (id, field, value) => {
         const updatedData = { ...activityData, [field]: value };
         setActivityData(updatedData);
-        if (onUpdate) {
-            onUpdate(activityData.id, field, value);
+        if (setFormData) {
+            updateActivity(setFormData, id, field, value);
         }
     };
 
@@ -100,7 +99,7 @@ function Activity({
             });
 
             // Update activity with alert ID
-            handleFieldChange('alertId', newAlertId);
+            handleChange('alertId', newAlertId);
         }
     };
 
@@ -118,7 +117,7 @@ function Activity({
                     className="form-input"
                     placeholder="Item details"
                     value={activityData.description}
-                    onChange={(e) => handleFieldChange('description', e.target.value)}
+                    onChange={(e) => handleChange(activityData.id, 'description', e.target.value)}
                 />
             </div>
             <div className="form-group">
@@ -127,7 +126,7 @@ function Activity({
                     type="datetime-local"
                     className="form-input"
                     value={activityData.date}
-                    onChange={(e) => handleFieldChange('date', e.target.value)}
+                    onChange={(e) => handleChange(activityData.id, 'date', e.target.value)}
                 />
             </div>
             <div className="activity-editor-actions">
@@ -146,7 +145,7 @@ function Activity({
                     type="button"
                     variant="ghost"
                     size="small"
-                    onClick={() => onRemove && onRemove(activityData.id)}
+                    onClick={() => deleteActivity(setFormData, activityData.id)}
                 >
                     <Trash2 size={buttonSize} />
                 </Button>
@@ -155,8 +154,25 @@ function Activity({
     );
 }
 
+export function addActivity (setFormData, date, name, description, topic, brewLogId, alertId){
+    const newActivity = createActivity(
+        date ? date : getDate(),
+        name ? name : getActivityDisplayName(topic),
+        description,
+        topic,
+        brewLogId,
+        alertId
+    );
+
+    setFormData(prev => ({
+        ...prev,
+        activity: [...prev.activity, newActivity]
+    }));
+
+    return newActivity;
+};
+
 export function createActivity(date, name, description, topic, brewLogId, alertId) {
-//export function createActivity(topic, alertId = null, date, description, name, statusOfActivity = "Complete") {
     return {
         id: generateId(),
         date: date ? date : getDate(),
@@ -167,6 +183,26 @@ export function createActivity(date, name, description, topic, brewLogId, alertI
         alertId: alertId
     };
 }
+
+export function deleteActivity (setFormData, id) {
+    setFormData(prev => ({
+        ...prev,
+        activity: prev.activity.filter(item => item.id !== id)
+    }));
+
+    //ToDo: delete any associated alerts: 
+
+};
+
+export function updateActivity (setFormData, id, field, value) {
+    setFormData(prev => ({
+        ...prev,
+        activity: prev.activity.map(item =>
+            item.id === id ? { ...item, [field]: value } : item
+        )
+    }));
+};
+
 
 export function getActivityDisplayName(topic) {
     switch (topic) {
