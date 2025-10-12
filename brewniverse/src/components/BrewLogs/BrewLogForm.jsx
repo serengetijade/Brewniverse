@@ -32,9 +32,7 @@ function BrewLogForm() {
     ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
-    estimatedABV: '',
-    finalABV: '',
-    gravity13Break: '',
+    //finalABV: '',
     name: '',
     notes: '',
     nutrients: '',
@@ -107,27 +105,6 @@ function BrewLogForm() {
     }
   }, [formData]);
 
-  // Recalculate estimated ABV when gravity readings change
-  useEffect(() => {
-    const gravityReadings = formData.activity
-      .filter(event => event.topic === 'Gravity')
-      .sort((a, b) => new Date(a.date) - new Date(b.date));
-    
-    const count = gravityReadings.length;
-    if (count < 1) return;
-
-    const originalGravity = parseFloat(gravityReadings[0].description);
-    const latestGravity = parseFloat(gravityReadings[count - 1].description);
-    
-    if (originalGravity > 1 && latestGravity > 0) {
-      const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
-      setFormData(prev => ({
-        ...prev,
-        estimatedABV: result
-      }));
-    }
-  }, [formData.activity]);
-
   // Handle browser navigation/refresh
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -180,30 +157,7 @@ function BrewLogForm() {
       const { name, value } = e.target;
       //e.target is the input changed. input.name == the property name for this input
 
-    if (name.startsWith('gravity.')) {
-      const gravityField = name.split('.')[1];
-      handleGravityChange(gravityField, value);
-        getGravity13Break(gravityField, value);
-        //getEstimatedAbv();
-      return;
-    }
-    else if (name === 'gravityFinal' && value) {
-        handleGravityChange(name, value);
-        //getEstimatedAbv();
-      
-      // Auto-calculate Final ABV when final gravity is entered
-      const gravityFinal = parseFloat(value);
-      const originalGravity = parseFloat(getGravityOriginal());
-      if (gravityFinal > 0 && originalGravity > 1) {
-        const finalABV = ((originalGravity - gravityFinal) * 131.25).toFixed(1);
-        setFormData(prev => ({
-          ...prev,
-          finalABV: finalABV
-        }));
-      }
-      return;
-    }
-    else if (name === 'dateCreated') {
+    if (name === 'dateCreated') {
       setFormData(prev => {
         const newFormData = {
           ...prev,
@@ -308,7 +262,58 @@ function BrewLogForm() {
         [name]: value
       }));
     }
-  };
+    };
+
+    // Gravity: Recalculate estimated ABV & 1/3 Break
+    var gravityActivities = formData.activity
+        .filter(event => event.topic === 'Gravity')
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const getGravityOriginal = () => {
+        return gravityActivities.length > 0 ? gravityActivities[0].description : '';
+    };
+
+    const getGravityFinal = () => {
+        if (gravityActivities.length <= 1) return '';
+        const latestGravity = gravityActivities[gravityActivities.length - 1];
+        return latestGravity && latestGravity.description ? latestGravity.description : '';
+    };
+
+    const getGravity13Break = () => {
+        if (gravityActivities.length < 1) return '';
+        const originalGravity = getGravityOriginal();
+        return ((parseFloat(originalGravity - 1) * 2 / 3) + 1).toFixed(3);
+    }
+
+    const getCurrentAbv = () => {
+        if (gravityActivities.length < 1) return '';
+        const originalGravity = getGravityOriginal();
+        const latestGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description);
+        return ((originalGravity - latestGravity) * 131.25).toFixed(2)
+    }
+
+    const getPotentialAbv = () => {
+        if (gravityActivities.length < 1) return '';
+        const originalGravity = parseFloat(gravityActivities[0].description);
+        return ((originalGravity - 1) * 131.25).toFixed(2)
+    }
+
+    //useEffect(() => {
+    //  const gravityActivities = formData.activity
+    //    .filter(event => event.topic === 'Gravity')
+    //    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    //  if (gravityActivities.length < 1) return;
+
+    //  const originalGravity = parseFloat(gravityActivities[0].description);
+    //  const finalAbv = ((originalGravity - 1) * 131.25).toFixed(2)
+
+    //  if (originalGravity > 1) {
+    //    setFormData(prev => ({
+    //          ...prev,
+    //          finalABV: finalAbv,
+    //    }));
+    //  }
+    //}, [formData.activity]);
 
   // Nutrients
   const addNutrientScheduleEntry = () => {
@@ -433,62 +438,6 @@ function BrewLogForm() {
     }
   };
 
-  // Gravity
-  const getGravityOriginal = () => {
-    const gravityEvent = formData.activity
-        .sort((a, b) => new Date(a.date) - new Date(b.date))
-        .find(event => event.topic === 'Gravity');
-    return gravityEvent ? gravityEvent.description : '';
-  };
-
-  const getGravityFinal = () => {
-    const gravityFinalEvent = formData.activity.find(event => event.topic === 'GravityFinal');
-    return gravityFinalEvent ? gravityFinalEvent.description : '';
-    };
-
-    const getGravity13Break = (gravityField, value) => {
-        if (gravityField === 'original' && value) {
-            const originalGravity = parseFloat(value);
-            if (originalGravity > 1) {
-                const gravity13Break = ((originalGravity - 1) * 2 / 3) + 1;
-                setFormData(prev => ({
-                    ...prev,
-                    gravity13Break: gravity13Break.toFixed(3)
-                }));
-            }
-        }
-    }
-
-    const getEstimatedAbv = () => {
-        const gravityReadings = formData.activity
-            .filter(event => event.topic === 'Gravity')
-            .sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        const count = gravityReadings.length;
-        if (count < 1) return;
-
-        const originalGravity = parseFloat(gravityReadings[0].description);
-        const latestGravity = parseFloat(gravityReadings[count - 1].description);
-        
-        if (originalGravity > 1 && latestGravity > 0) {
-            const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
-            setFormData(prev => ({
-                ...prev,
-                estimatedABV: result
-            }));
-            //return result;
-        }
-        //return formData.estimatedABV;
-    }
-
-  const handleGravityChange = (topic, value) => {
-      if (topic === 'original') {
-          updateActivityItem(getDate(), 'Original Gravity Reading', value, 'Gravity');
-      }
-      else if (topic == 'gravityFinal') {
-          updateActivityItem(getDate(), 'Final Gravity Reading', value, 'GravityFinal');
-    }
-  };
 
   // Recipe functions
   const goToRecipe = () => {
@@ -727,9 +676,8 @@ function BrewLogForm() {
                 step="0.001"
                 id="gravity.original"
                 name="gravity.original"
-                className="form-input  calculated-field"
                 value={getGravityOriginal()}
-                //onChange={handleChange}
+                className="form-input  calculated-field"
                 placeholder="1.050"
                 readOnly
               />
@@ -744,7 +692,7 @@ function BrewLogForm() {
                 id="gravity13Break"
                 name="gravity13Break"
                 className="form-input calculated-field"
-                value={formData.gravity13Break}
+                value={getGravity13Break()}
                 readOnly
                 placeholder="1.030"
                 title="This field is automatically calculated from Original Gravity"
@@ -760,9 +708,9 @@ function BrewLogForm() {
                 step="0.001"
                 id="gravityFinal"
                 name="gravityFinal"
-                className="form-input"
+                className="form-input  calculated-field"
                 value={getGravityFinal()}
-                onChange={handleChange}
+                readOnly
                 placeholder="1.000"
               />
             </div>
@@ -771,7 +719,7 @@ function BrewLogForm() {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="estimatedABV" className="form-label">
-                Estimated ABV (auto-calculated)
+                Current ABV (auto-calculated)
               </label>
               <div className="input-with-suffix">
                 <input
@@ -780,7 +728,8 @@ function BrewLogForm() {
                   id="estimatedABV"
                   name="estimatedABV"
                   className="form-input calculated-field"
-                  value={formData.estimatedABV}
+                  //value={formData.currentABV}
+                  value={getCurrentAbv()}
                   readOnly
                   placeholder="12.5"
                   title="This field is automatically calculated from Original Gravity"
@@ -791,7 +740,7 @@ function BrewLogForm() {
 
             <div className="form-group">
               <label htmlFor="finalABV" className="form-label">
-                Final ABV (auto-calculated)
+                Potential Final ABV (auto-calculated)
               </label>
               <div className="input-with-suffix">
                 <input
@@ -800,7 +749,7 @@ function BrewLogForm() {
                   id="finalABV"
                   name="finalABV"
                   className="form-input calculated-field"
-                  value={formData.finalABV}
+                  value={getPotentialAbv()}
                   readOnly
                   placeholder="12.5"
                   title="This field is automatically calculated from Original and Final Gravity"
