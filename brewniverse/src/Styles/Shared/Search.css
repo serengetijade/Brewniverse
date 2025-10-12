@@ -1,14 +1,14 @@
 /* Search and Sort Controls */
 .search-sort-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background: var(--color-surface);
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--color-surface);
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-border);
 }
 
 .search-bar {
@@ -28,7 +28,7 @@
   width: 100%;
   padding: 0.75rem 1rem 0.75rem 3rem;
   border: 2px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: var(--border-radius-med);
   font-size: 1rem;
   background: var(--color-background);
   color: var(--color-text);
@@ -78,7 +78,7 @@
 
 .item-card {
   background: var(--color-surface);
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg);
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border);
@@ -152,7 +152,7 @@
 
 .item-group {
   background: var(--color-surface);
-  border-radius: 16px;
+  border-radius: var(--border-radius-lg);
   padding: 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border);

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import Button from '../UI/Button';
+import '../../Styles/Shared/InstructionForm.css';
 
 function InstructionForm({ instructions = [''], onInstructionsChange, showControls = true }) {
   const [showEditButtons, setShowEditButtons] = useState({});
@@ -47,7 +48,7 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
   };
 
   return (
-    <div className="instruction-form">
+    <div className="instruction-container">
         <div className="steps-header">
             <label className="form-label">Instructions</label>
             <Button

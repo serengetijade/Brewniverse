@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, Plus, Trash2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import FormHeader from '../Layout/FormHeader';
+import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
 import '../../Styles/RecipeForm.css';
-import '../../Styles/InstructionForm.css';
 
 function RecipeForm() {
   const { id } = useParams();
@@ -85,16 +85,11 @@ function RecipeForm() {
   };
 
   return (
-    <div className="recipe-form">
-      <div className="form-header">
-        <h1>{isEditing ? 'Edit Recipe' : 'New Recipe'}</h1>
-        <p>
-          {isEditing 
-            ? 'Update your recipe details' 
-            : 'Create a new recipe for your brewing library'
-          }
-        </p>
-      </div>
+    <div className="form-container form-with-footer">
+      <FormHeader 
+        isEditing={isEditing} 
+        entityName="Recipe" 
+      />
 
       <form onSubmit={handleSubmit} className="card">
         {/* Basic Information */}
@@ -292,25 +287,14 @@ function RecipeForm() {
             )}
           </div>
         )}
-
-        <div className="form-actions">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => navigate('/recipes')}
-          >
-            <X size={16} />
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-          >
-            <Save size={16} />
-            {isEditing ? 'Update' : 'Create'} Recipe
-          </Button>
-        </div>
       </form>
+
+      <FormFooter 
+        isEditing={isEditing}
+        entityName="Recipe"
+        onCancel={() => navigate('/recipes')}
+        showDelete={false}
+      />
     </div>
   );
 }

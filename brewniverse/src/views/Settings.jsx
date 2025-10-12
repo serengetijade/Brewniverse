@@ -41,7 +41,7 @@ function Settings() {
       </div>
 
       <div className="settings-logo">
-        <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" width="500" height="500" />
+        <img src="/BrewniverseLogo.png" alt="Brewniverse Logo"/>
       </div>
 
       {/* Themes */}

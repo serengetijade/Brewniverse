@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Save, X, Plus, Trash2 } from 'lucide-react';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
+import { Plus } from 'lucide-react';
+import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import FormHeader from '../Layout/FormHeader';
+import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import ActivityList from '../Activity/ActivityList';
-import Activity from '../Activity/Activity';
+import Activity, { createActivity, getActivityDisplayName, ACTIVITY_TOPICS } from '../Activity/Activity';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
@@ -19,7 +21,7 @@ function BrewLogForm() {
   let buttonSize = 14;
 
   const [formData, setFormData] = useState({
-    id: Date.now().toString(), // Generate temporary ID for new brew logs
+    id: generateId(),
     acids: '',
     activity: [],
     bases: '',
@@ -59,28 +61,18 @@ function BrewLogForm() {
         
         // Add initial Date Created activity
         if (!brewLog.activity || brewLog.activity.length === 0) {
-            const generatedActivities = [];
+            const generatedActivities = [];    
           
-            generatedActivities.push(createActivity(
-                'DateCreated',
-                null,
-                '', 
-                'New brew started',
-                "Date Created",
-                "Complete"
-          ));
-          
-          // Create activity(s) from nutrientSchedule
-          if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
-            loadedData.nutrientSchedule.forEach(entry => {
-              generatedActivities.push(createActivity(
-                'Nutrient',
-                null,
-                entry.date,
-                entry.description,
-                'Nutrients Added',
-                entry.statusOfActivity
-              ));
+            // Create activity(s) from nutrientSchedule
+            if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
+                loadedData.nutrientSchedule.forEach(entry => {
+                    generatedActivities.push(createActivity(
+                        entry.date,
+                        getActivityDisplayName('Nutrient'),
+                        entry.description,
+                        'Nutrient',
+                        formData.id
+                  ));
             });
           }
           
@@ -95,12 +87,11 @@ function BrewLogForm() {
       const initialData = {
         ...formData,
         activity: [createActivity(
-          'DateCreated',
-          null,
-          formData.dateCreated,
-          'New brew started',
+          getDate(),
           'Date Created',
-          "Complete"
+          'New brew started',
+          'Other',
+          formData.id
         )]
       };
       setFormData(initialData);
@@ -115,6 +106,27 @@ function BrewLogForm() {
       setHasUnsavedChanges(currentData !== initialFormData.current);
     }
   }, [formData]);
+
+  // Recalculate estimated ABV when gravity readings change
+  useEffect(() => {
+    const gravityReadings = formData.activity
+      .filter(event => event.topic === 'Gravity')
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+    
+    const count = gravityReadings.length;
+    if (count < 1) return;
+
+    const originalGravity = parseFloat(gravityReadings[0].description);
+    const latestGravity = parseFloat(gravityReadings[count - 1].description);
+    
+    if (originalGravity > 1 && latestGravity > 0) {
+      const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
+      setFormData(prev => ({
+        ...prev,
+        estimatedABV: result
+      }));
+    }
+  }, [formData.activity]);
 
   // Handle browser navigation/refresh
   useEffect(() => {
@@ -166,27 +178,18 @@ function BrewLogForm() {
 
   const handleChange = (e) => {
       const { name, value } = e.target;
+      //e.target is the input changed. input.name == the property name for this input
 
     if (name.startsWith('gravity.')) {
       const gravityField = name.split('.')[1];
       handleGravityChange(gravityField, value);
-      
-      // Auto-calculate 1/3 Break Gravity when original gravity is entered
-      if (gravityField === 'original' && value) {
-        const originalGravity = parseFloat(value);
-        if (originalGravity > 1) {
-          const gravity13Break = ((originalGravity - 1) * 2/3) + 1;
-          setFormData(prev => ({
-            ...prev,
-            gravity13Break: gravity13Break.toFixed(3),
-            estimatedABV: ((originalGravity - 1) * 131.25).toFixed(1)
-          }));
-        }
-      }
+        getGravity13Break(gravityField, value);
+        //getEstimatedAbv();
       return;
     }
     else if (name === 'gravityFinal' && value) {
-      handleGravityChange('final', value);
+        handleGravityChange(name, value);
+        //getEstimatedAbv();
       
       // Auto-calculate Final ABV when final gravity is entered
       const gravityFinal = parseFloat(value);
@@ -206,16 +209,11 @@ function BrewLogForm() {
           ...prev,
           dateCreated: value
         };
-        
+
         const existingEventIndex = prev.activity.findIndex(item => item.topic === 'DateCreated');
-        const dateCreatedActivity = createActivity(
-            'DateCreated',
-            null,
-            value,
-            'New brew started',
-            "Date Created",
-            "Complete"
-        );
+        let existingEvent = prev.activity.find(item => item.topic === 'DateCreated');
+        existingEvent.date = value;
+        const dateCreatedActivity = existingEvent;
 
         if (existingEventIndex >= 0) {
           newFormData.activity = prev.activity.map((item, index) =>
@@ -223,6 +221,7 @@ function BrewLogForm() {
           );
         } else {
           newFormData.activity = [...prev.activity, dateCreatedActivity];
+          //updateActivity(existingEvent.id, { date: value });
         }
 
         return newFormData;
@@ -236,14 +235,14 @@ function BrewLogForm() {
           dateBottled: value
         };
         
-        const existingEventIndex = prev.activity.findIndex(event => event.type === 'DateBottled');
+        const existingEventIndex = prev.activity.findIndex(event => event.topic === 'DateBottled');
         const dateBottledEvent = createActivity(
-            'DateBottled',
-          false,
           value,
+          getActivityDisplayName('DateBottled'),
           'Brew bottled and ready for aging',
-          'Brew Bottled',
-          'Complete'
+          'DateBottled',
+          prev.id,
+          null
         );
 
         if (value) {
@@ -256,7 +255,7 @@ function BrewLogForm() {
           }
         } else {
           // Remove event if date is cleared
-          newFormData.activity = prev.activity.filter(event => event.type !== 'DateBottled');
+          newFormData.activity = prev.activity.filter(event => event.topic !== 'DateBottled');
         }
 
         return newFormData;
@@ -278,12 +277,12 @@ function BrewLogForm() {
         if (stabilizeText.trim()) {
           const existingEventIndex = prev.activity.findIndex(event => event.topic === 'Stabilize');
           const stabilizeEvent = createActivity(
-            'Stabilize',
-            false,
             stabilizeDate,
-            '',
-            'Stabilization',
-            'Complete'
+            getActivityDisplayName('Stabilize'),
+            stabilizeText,
+            'Stabilize',
+            prev.id,
+            null
           );
 
           if (existingEventIndex >= 0) {
@@ -311,30 +310,26 @@ function BrewLogForm() {
     }
   };
 
-  // Helper functions to derive UI data from events
-  // Get today's date in local timezone (YYYY-MM-DD format)
-  const getTodayLocal = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const hour = String(today.getHours()).padStart(2, '0');
-    const minute = String(today.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hour}:${minute}`;
-  };
-
   // Nutrients
-  //ToDo: Pass description from editor
-    const addNutrientScheduleEntry = (description) => {
+  const addNutrientScheduleEntry = () => {
     const nutrientEvent = createActivity(
+      getDate(),
+      getActivityDisplayName('Nutrient'),
+      '',
       'Nutrient',
-      null,
-      '',
-      '',
-      'Nutrients Added',
-      'Pending'
+      formData.id,
+      null
     );
     addActivity(nutrientEvent);
+  };
+
+  const formatDateForActivity = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hour = String(date.getHours()).padStart(2, '0');
+    const minute = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hour}:${minute}`;
   };
 
   const addScheduleEntries = (scheduleType) => {
@@ -344,10 +339,9 @@ function BrewLogForm() {
     switch (scheduleType) {
       case 'split':
         entries = [{
-          id: Date.now().toString(),
-          date: getTodayLocal(today),
+          date: formatDateForActivity(today),
           description: 'Half now & half at 1/3 Break',
-          completed: false
+          statusOfActivity: "Pending"
         }];
         break;
       
@@ -356,8 +350,7 @@ function BrewLogForm() {
         const days = scheduleType === 'staggered2' ? 2 : 3;
         // Add initial entry for today
         entries = [{
-            id: Date.now().toString(),
-            date: getTodayLocal(today),
+            date: formatDateForActivity(today),
             description: 'Staggered nutrient - yeast added',
             statusOfActivity: "Pending"
         }];
@@ -366,8 +359,7 @@ function BrewLogForm() {
           const futureDate = new Date(today);
           futureDate.setDate(today.getDate() + index + 1);
           return {
-              id: (Date.now() + index + 1).toString(),
-              date: getTodayLocal(futureDate),
+              date: formatDateForActivity(futureDate),
               description: `Staggered nutrient - ${(index + 1) * 24} hours later`,
               statusOfActivity: "Pending"
           };
@@ -376,20 +368,20 @@ function BrewLogForm() {
         break;
     }
 
-    const nutrientActivity = entries.map(entry => 
+    const nutrientActivities = entries.map(entry => 
       createActivity(
-        'Nutrient',
-        false,
         entry.date,
+        getActivityDisplayName('Nutrient'),
         entry.description,
-          'Nutrients Added',
-          entry.statusOfActivity,
+        'Nutrient',
+        formData.id,
+        null
       )
     );
 
     setFormData(prev => ({
       ...prev,
-      activity: [...prev.activity, ...nutrientActivity]
+      activity: [...prev.activity, ...nutrientActivities]
     }));
   };
 
@@ -398,30 +390,13 @@ function BrewLogForm() {
   const addStaggered4Schedule = () => addScheduleEntries('staggered3');
   
   const getNutrientSchedule = () => {
-    return getActivitiesByTopic('Nutrient').map(event => ({
-      id: event.id,
-      date: event.date,
-      description: event.description,
-      completed: event.completed
-    }));
-    };
+    return getActivitiesByTopic('Nutrient');
+  };
 
   // Activity management functions
   const getActivitiesByTopic = (topic) => {
     return formData.activity.filter(event => event.topic === topic);
     };
-
-  const createActivity = (topic, alertId = null, date, description, name, statusOfActivity) => {
-    return {
-      id: Date.now().toString() + Math.random().toString(36).substring(2, 7),
-      alertId: alertId,
-      date: date ? date : getTodayLocal(),
-      description: description,
-      name: name,
-      statusOfActivity: statusOfActivity ?? "Completed",
-      topic: topic
-    };
-  };
 
   const addActivity = (activity) => {
     setFormData(prev => ({
@@ -446,20 +421,20 @@ function BrewLogForm() {
     }));
     };
 
-  const updateEventField = (topic, name, description, date) => { 
-    const eventDate = date || getTodayLocal();
+  const updateActivityItem = (date, name, description, topic) => { 
+    const eventDate = date || getDate();
     const existingEvent = formData.activity.find(event => event.topic === topic);
     
     if (existingEvent) {
       updateActivity(existingEvent.id, { name, description, date: eventDate });
     } else {
       const newActivity = createActivity(
-        topic,
-        null,
         eventDate,
-        description,
         name,
-        "Complete"
+        description,
+        topic,
+        formData.id,
+        null
       );
       addActivity(newActivity);
     }
@@ -476,13 +451,50 @@ function BrewLogForm() {
   const getGravityFinal = () => {
     const gravityFinalEvent = formData.activity.find(event => event.topic === 'GravityFinal');
     return gravityFinalEvent ? gravityFinalEvent.description : '';
-  };
+    };
 
-  const handleGravityChange = (field, value) => {
-    if (field === 'original') {
-      updateEventField('Gravity', 'Original Gravity Reading', value);
-    } else if (field === 'final') {
-      updateEventField('GravityFinal', 'Final Gravity Reading', value);
+    const getGravity13Break = (gravityField, value) => {
+        if (gravityField === 'original' && value) {
+            const originalGravity = parseFloat(value);
+            if (originalGravity > 1) {
+                const gravity13Break = ((originalGravity - 1) * 2 / 3) + 1;
+                setFormData(prev => ({
+                    ...prev,
+                    gravity13Break: gravity13Break.toFixed(3)
+                }));
+            }
+        }
+    }
+
+    const getEstimatedAbv = () => {
+        const gravityReadings = formData.activity
+            .filter(event => event.topic === 'Gravity')
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        const count = gravityReadings.length;
+        if (count < 1) return;
+
+        const originalGravity = parseFloat(gravityReadings[0].description);
+        const latestGravity = parseFloat(gravityReadings[count - 1].description);
+        
+        if (originalGravity > 1 && latestGravity > 0) {
+            const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
+            setFormData(prev => ({
+                ...prev,
+                estimatedABV: result
+            }));
+            //return result;
+        }
+        //return formData.estimatedABV;
+    }
+
+
+  const handleGravityChange = (topic, value) => {
+      if (topic === 'original') {
+          updateActivityItem(getDate(), 'Original Gravity Reading', value, 'Gravity');
+      }
+      else if (topic == 'gravityFinal') {
+          updateActivityItem(getDate(), 'Final Gravity Reading', value, 'GravityFinal');
     }
   };
 
@@ -509,7 +521,7 @@ function BrewLogForm() {
 
     const copyWithNewIds = (items = []) => {
       return items.map(item => ({
-        id: Date.now().toString() + Math.random().toString(36).substring(2, 6), //Create unique ids to avoid collisions
+        id: generateId(),
         name: item.name || '',
         amount: item.amount || '',
         unit: item.unit || 'oz'
@@ -530,20 +542,12 @@ function BrewLogForm() {
   };
 
   return (
-    <div className="brewlog-form">
-      <div className="form-header">
-        <h1>
-          {isEditing ? 'Edit Brew Log' : 'New Brew Log'}
-          {hasUnsavedChanges && <span className="unsaved-indicator"> *</span>}
-        </h1>
-        <p>
-          {isEditing 
-            ? 'Update your brew log details' 
-            : 'Create a new brew log to track your batch'
-          }
-          {hasUnsavedChanges && <span className="unsaved-text"> (You have unsaved changes)</span>}
-        </p>
-      </div>
+    <div className="form-container form-with-footer">
+      <FormHeader 
+        isEditing={isEditing} 
+        entityName="Brew Log" 
+        hasUnsavedChanges={hasUnsavedChanges}
+      />
 
       <form onSubmit={handleSubmit} className="card">
         {/* Basic Information */}
@@ -703,6 +707,21 @@ function BrewLogForm() {
             </IngredientList>
         </div>
 
+        {/* Yeast */}
+        <div className="form-section">
+          <h3>Yeast</h3>       
+          <ActivityList
+            formData={formData}
+            setFormData={setFormData}
+            topic="Yeast"
+            headerLabel=""
+            itemLabel="Yeast Details"
+            sectionInfoMessage="Wild or cultured, record your yeast here. No yeast additions recorded."
+            brewLogId={id}
+          >
+          </ActivityList>          
+        </div>
+
         {/* Gravity Readings */}
         <div className="form-section">
           <h3>Gravity Readings</h3>
@@ -759,26 +778,6 @@ function BrewLogForm() {
 
           <div className="form-row">
             <div className="form-group">
-              <label htmlFor="finalABV" className="form-label">
-                Final ABV (auto-calculated)
-              </label>
-              <div className="input-with-suffix">
-                <input
-                  type="number"
-                  step="0.01"
-                  id="finalABV"
-                  name="finalABV"
-                  className="form-input calculated-field"
-                  value={formData.finalABV}
-                  readOnly
-                  placeholder="12.5"
-                  title="This field is automatically calculated from Original and Final Gravity"
-                />
-                <span className="input-suffix">%</span>
-              </div>
-            </div>
-            
-            <div className="form-group">
               <label htmlFor="estimatedABV" className="form-label">
                 Estimated ABV (auto-calculated)
               </label>
@@ -796,7 +795,27 @@ function BrewLogForm() {
                 />
                 <span className="input-suffix">%</span>
               </div>
-            </div>
+                      </div>
+
+            <div className="form-group">
+              <label htmlFor="finalABV" className="form-label">
+                Final ABV (auto-calculated)
+              </label>
+              <div className="input-with-suffix">
+                <input
+                  type="number"
+                  step="0.01"
+                  id="finalABV"
+                  name="finalABV"
+                  className="form-input calculated-field"
+                  value={formData.finalABV}
+                  readOnly
+                  placeholder="12.5"
+                  title="This field is automatically calculated from Original and Final Gravity"
+                />
+                <span className="input-suffix">%</span>
+              </div>
+            </div>            
           </div>
 
           <ActivityList
@@ -809,22 +828,6 @@ function BrewLogForm() {
             brewLogId={id}
           >
           </ActivityList>       
-        </div>
-
-        {/* Yeast */}
-        <div className="form-section">
-          <h3>Yeast</h3>       
-          <ActivityList
-            formData={formData}
-            setFormData={setFormData}
-            topic="Yeast"
-            headerLabel="Yeast Additions"
-            itemLabel="Yeast Details"
-            sectionInfoMessage="Wild or cultured, record your yeast here.
-No yeast additions recorded."
-            brewLogId={id}
-          >
-          </ActivityList>          
         </div>
 
         {/* Nutrients */}
@@ -888,18 +891,18 @@ No yeast additions recorded."
             </div>
           </div>
 
-          <div className="compact-list">
             {getNutrientSchedule().map((activity) => (
                 <Activity
                     key={activity.id}
-                    formData={formData}
-                    setFormData={setFormData}
-                    item={activity}
-                    itemLabel={activity.description}
+                    activity={activity}
+                    itemLabel="Nutrient Details"
                     brewLogId={formData.id}
+                    onUpdate={(activityId, field, value) => {
+                      updateActivity(activityId, { [field]: value });
+                    }}
+                    onRemove={removeActivity}
                 />
             ))}
-          </div>
         </div>
 
         {/* Pectic Enzyme */}
@@ -1035,12 +1038,12 @@ No yeast additions recorded."
                 onChange={(e) => {
                   addActivity(
                     createActivity(
-                      "Racked",
-                      null,
                       e.target.value,
+                      getActivityDisplayName('Racked'),
                       "Brew moved to secondary",
-                      "Brew Racked",
-                      "Complete"
+                      "Racked",
+                      formData.id,
+                      null
                     )
                   )
                 }}
@@ -1152,25 +1155,14 @@ No yeast additions recorded."
             />
           </div>          
         </div>
-
-        <div className="form-actions">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => handleNavigation('/brewlogs')}
-          >
-            <X size={16} />
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            variant="primary"
-          >
-            <Save size={16} />
-            {isEditing ? 'Update' : 'Create'} Brew Log
-          </Button>
-        </div>
       </form>
+
+      <FormFooter 
+        isEditing={isEditing}
+        entityName="Brew Log"
+        onCancel={() => handleNavigation('/brewlogs')}
+        showDelete={false}
+      />
 
       {/* Activity Timeline */}
       <ActivityTimeline

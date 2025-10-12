@@ -1,65 +1,124 @@
-import React, { useEffect, useRef } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Trash2, Bell, BellPlus } from 'lucide-react';
+import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
-import AlertButton from '../Alerts/AlertButton';
 import '../../Styles/Activity.css';
 
-const topics = [
-    'Acid', 'Base', 'Gravity', 'GravityFinal',
-    'Nutrient', 'PecticEnzyme', 'Racked', 'Tannin', 'Yeast', 'Other'
-];
-
-const activityStatus = [ "Pending", "Complete"]
-
 function Activity({
-    formData,
-    setFormData,
-    item,
+    activity,
     itemLabel,
-    brewLogId })
-{
-    const [editActivity, setActivity] = React.useState(null);
+    brewLogId,
+    onUpdate,
+    onRemove
+}) {
+    const { state, dispatch } = useApp();
+    const navigate = useNavigate();
+    const [activityData, setActivityData] = useState({
+        id: activity.id || generateId(),
+        date: activity.date || getDate(),
+        description: activity.description || '',
+        topic: activity.topic || 'Other',
+        brewLogId: activity.brewLogId || brewLogId || '',
+        alertId: activity.alertId || null,
+    });
 
-    const nameInputRef = useRef(null);
+    const descriptionInputRef = useRef(null);
+
+    // Sync local state with prop changes
     useEffect(() => {
-        if (nameInputRef.current) {
-            nameInputRef.current.focus();
+        setActivityData({
+            id: activity.id || generateId(),
+            date: activity.date || getDate(),
+            description: activity.description || '',
+            topic: activity.topic || 'Other',
+            brewLogId: activity.brewLogId || brewLogId || '',
+            alertId: activity.alertId || null,
+        });
+    }, [activity, brewLogId]);
+
+    const alertExists = activityData.alertId && state.alerts.some(alert => alert.id === activityData.alertId);
+
+    const handleFieldChange = (field, value) => {
+        const updatedData = { ...activityData, [field]: value };
+        setActivityData(updatedData);
+        if (onUpdate) {
+            onUpdate(activityData.id, field, value);
         }
-    }, []);
-
-    let buttonSize = 14;
-
-    const updateActivity = (id, field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            activity: prev.activity.map(item =>
-                item.id === id ? { ...item, [field]: value } : item
-            )
-        }));
     };
 
-    const removeActivity = (id) => {
-        setFormData(prev => ({
-            ...prev,
-            activity: prev.activity.filter(item => item.id !== id)
-        }));
+    const isDateInFuture = (dateString) => {
+        const activityDate = new Date(dateString);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return activityDate > today;
     };
 
-    const handleAlertCreated = (activityId, alertId) => {
-        updateActivity(activityId, 'alertId', alertId);
+    const handleAlertButtonClick = () => {
+        const activityDate = new Date(activityData.date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        // Only allow alerts for future dates
+        if (activityDate <= today) {
+            return;
+        }
+
+        // If alert already exists, navigate to it
+        if (activityData.alertId && alertExists) {
+            const confirmNavigate = window.confirm(
+                'This activity already has an alert. Would you like to go to that alert?\n\nClick OK to navigate to the alert, or Cancel to stay here.'
+            );
+            
+            if (confirmNavigate) {
+                navigate(`/alerts/${activityData.alertId}`);
+            }
+        }
+        else {
+            // Create new alert
+            const newAlertId = generateId();
+            const newAlert = {
+                id: newAlertId,
+                name: activity.name || activityData.description || `${activityData.topic} Alert`,
+                description: activityData.description || '',
+                date: new Date(activityData.date).toISOString(),
+                brewLogId: activityData.brewLogId || brewLogId || '',
+                topic: activityData.topic,
+                alertGroupId: '',
+                isRecurring: false,
+                recurringType: 'daily',
+                recurringInterval: 1,
+                endDate: '',
+                isCompleted: false,
+                priority: 'medium'
+            };
+
+            // Dispatch to create alert in global state
+            dispatch({
+                type: ActionTypes.ADD_ALERT,
+                payload: newAlert
+            });
+
+            // Update activity with alert ID
+            handleFieldChange('alertId', newAlertId);
+        }
     };
+
+    const buttonSize = 14;
+    const showAlertButton = isDateInFuture(activityData.date);
 
     return (        
-        <div key={item.id} className="compact-item">
+        <div className="activity">
             <div className="form-group">
                 <label className="form-label">{itemLabel}</label>
                 <input
-                    type={(item.topic == "Gravity") ? "number" : "text"}
+                    ref={descriptionInputRef}
+                    type={(activity.topic === "Gravity" || activity.topic === "GravityFinal") ? "number" : "text"}
                     step="0.001"
                     className="form-input"
                     placeholder="Item details"
-                    value={item.description ?? ''}
-                    onChange={(e) => updateActivity(item.id, 'description', e.target.value)}
+                    value={activityData.description}
+                    onChange={(e) => handleFieldChange('description', e.target.value)}
                 />
             </div>
             <div className="form-group">
@@ -67,27 +126,88 @@ function Activity({
                 <input
                     type="datetime-local"
                     className="form-input"
-                    value={item.date}
-                    onChange={(e) => updateActivity(item.id, 'date', e.target.value)}
+                    value={activityData.date}
+                    onChange={(e) => handleFieldChange('date', e.target.value)}
                 />
             </div>
             <div className="activity-editor-actions">
-                <AlertButton
-                    activity={item}
-                    brewLogId={brewLogId}
-                    onAlertCreated={handleAlertCreated}
-                />
+                {showAlertButton && (
+                    <Button
+                        type="button"
+                        variant={alertExists ? "primary" : "ghost"}
+                        size="small"
+                        onClick={handleAlertButtonClick}
+                        title={alertExists ? "Alert exists - click to view" : "Create alert for this activity"}
+                    >
+                        {alertExists ? <Bell size={buttonSize} /> : <BellPlus size={buttonSize} />}
+                    </Button>
+                )}
                 <Button
                     type="button"
                     variant="ghost"
                     size="small"
-                    onClick={() => removeActivity(item.id)}
+                    onClick={() => onRemove && onRemove(activityData.id)}
                 >
                     <Trash2 size={buttonSize} />
                 </Button>
             </div>
         </div>        
     );
-};
+}
+
+export function createActivity(date, name, description, topic, brewLogId, alertId) {
+//export function createActivity(topic, alertId = null, date, description, name, statusOfActivity = "Complete") {
+    return {
+        id: generateId(),
+        date: date ? date : getDate(),
+        name: name || getActivityDisplayName(topic),
+        description: description,
+        topic: topic,
+        brewLogId: brewLogId,
+        alertId: alertId
+    };
+}
+
+export function getActivityDisplayName(topic) {
+    switch (topic) {
+        case "Gravity":
+            return "Gravity Reading";
+        case "GravityFinal":
+            return "Final Gravity Reading";
+        case "PecticEnzyme":
+            return "Pectic Enzyme Added";
+        case "Racked":
+            return "Brew Racked";
+        case "DateBottled":
+            return "Brew Bottled";
+        case "DateCreated":
+            return "Date Created";
+        case "Stabilize":
+            return "Stabilization";
+        case "Nutrient":
+            return "Nutrients Added";
+        case "Acid":
+            return "Acid Added";
+        case "Base":
+            return "Base Added";
+        case "Tannin":
+            return "Tannin Added";
+        case "Yeast":
+            return "Yeast Added";
+        case "PH":
+            return "pH Measured/Adjusted";
+        case "Other":
+            return "Activity";
+        default:
+            return `${topic} Added`;
+    }
+}
+
+export const ACTIVITY_TOPICS = [
+    'Acid', 'Base', 'DateBottled', 'DateCreated', 'Gravity', 'GravityFinal',
+    'Nutrient', 'PecticEnzyme', 'PH', 'Racked', 'Tannin', 'Yeast', 'Other'
+];
+
+export const ACTIVITY_STATUSES = ["Pending", "Complete"];
 
 export default Activity;
