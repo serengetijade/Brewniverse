@@ -54,6 +54,22 @@ function BrewLogForm() {
   });
   const [showActivityTimeline, setShowActivityTimeline] = useState(false);
 
+    useEffect(() => {
+        if (isEditing) {
+            const brewLog = state.brewLogs.find(log => log.id === id);
+            if (brewLog) {
+                const loadedData = {
+                    ...brewLog,
+                    id: brewLog.id, // Ensure ID is preserved
+                    activity: brewLog.activity || []
+                };
+
+                setFormData(loadedData);
+                initialFormData.current = JSON.stringify(loadedData);
+            }
+        }
+    }, [id, isEditing, state.brewLogs]);
+
   // Track form changes
   useEffect(() => {
     if (initialFormData.current) {
@@ -110,7 +126,7 @@ function BrewLogForm() {
     navigate('/brewlogs');
   };
 
-    const updateActivityDateByTopic = (e) => {
+  const updateActivityDateByTopic = (e) => {
         const { name, value } = e.target;
         const topic = name;
 
@@ -123,14 +139,6 @@ function BrewLogForm() {
             date: value
         };
 
-        //setFormData(prev => ({
-        //    ...prev,
-        //    [name]: value,
-        //    activity: prev.activity.map(item =>
-        //        item.id === existingItem.id ? { ...item, ...updates } : item
-        //    )
-        //}));
-        //return true;
         updateForm(name, value);
         updateActivity(setFormData, existingItem.id, "date", value);
     }
@@ -627,7 +635,7 @@ function BrewLogForm() {
             />
           </div>
 
-          {/* Nutrient Schedule */}
+          {/* Nutrient Schedule Option Buttons*/}
           <div className="form-group">
             <label htmlFor="nutrients" className="form-label">
                 Nutrient Schedule
@@ -669,15 +677,15 @@ function BrewLogForm() {
             </div>
           </div>
 
-            {getActivitiesByTopic("Nutrient").map((activity) => (
-                <Activity
-                    key={activity.id}
-                    activity={activity}
-                    itemLabel="Nutrient Details"
-                    brewLogId={formData.id}
-                    setFormData={setFormData}
-                />
-            ))}
+          {getActivitiesByTopic("Nutrient").map((activity) => (
+            <Activity
+                key={activity.id}
+                activity={activity}
+                itemLabel="Nutrient Details"
+                brewLogId={formData.id}
+                setFormData={setFormData}
+            />
+          ))}
         </div>
 
         {/* Pectic Enzyme */}
@@ -699,7 +707,6 @@ function BrewLogForm() {
             />
           </div>
 
-          {/* Pectic Enzyme Additions */}
           <ActivityList
             formData={formData}
             setFormData={setFormData}
@@ -871,7 +878,7 @@ function BrewLogForm() {
                     topic="Other"
                     headerLabel=""
                     itemLabel="Activity Details"
-                    sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, degassing, tastings, and more."
+                    sectionInfoMessage="Log any other activities you want to keep track of, such as pH measurements, filtering, backsweetening, degassing, tastings, and more."
                     brewLogId={id}
                 >
                 </ActivityList>
