@@ -203,36 +203,38 @@ export function updateActivity (setFormData, id, field, value) {
     }));
 };
 
-
 export function getActivityDisplayName(topic) {
-    switch (topic) {
-        case "Gravity":
+    if (!topic) return "Activity"
+    const activityTopic = (topic).toLowerCase();
+
+    switch (activityTopic) {
+        case "gravity":
             return "Gravity Reading";
-        case "GravityFinal":
+        case "gravityfinal":
             return "Final Gravity Reading";
-        case "PecticEnzyme":
+        case "pecticenzyme":
             return "Pectic Enzyme Added";
-        case "Racked":
-            return "Brew Racked";
-        case "DateBottled":
+        case "datebottled":
             return "Brew Bottled";
-        case "DateCreated":
+        case "datecreated":
             return "Date Created";
-        case "Stabilize":
+        case "dateracked":
+            return "Brew Racked";
+        case "datestabilized":
             return "Stabilization";
-        case "Nutrient":
+        case "nutrient":
             return "Nutrients Added";
-        case "Acid":
+        case "acid":
             return "Acid Added";
-        case "Base":
+        case "base":
             return "Base Added";
-        case "Tannin":
+        case "tannin":
             return "Tannin Added";
-        case "Yeast":
+        case "yeast":
             return "Yeast Added";
-        case "PH":
+        case "ph":
             return "pH Measured/Adjusted";
-        case "Other":
+        case "other":
             return "Activity";
         default:
             return `${topic} Added`;

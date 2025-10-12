@@ -7,7 +7,7 @@ import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import ActivityList from '../Activity/ActivityList';
-import Activity, { createActivity, getActivityDisplayName, ACTIVITY_TOPICS } from '../Activity/Activity';
+import Activity, { addActivity, createActivity, getActivityDisplayName, updateActivity, ACTIVITY_TOPICS } from '../Activity/Activity';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
@@ -20,19 +20,27 @@ function BrewLogForm() {
   const initialFormData = useRef(null);
   let buttonSize = 14;
 
+  const newFormId = generateId();
+  const initialDateCreatedActivity = createActivity(
+    getDate(),
+    'Date Created',
+    'New brew started',
+    'DateCreated',
+    id
+  );
+
   const [formData, setFormData] = useState({
-    id: generateId(),
+    id: newFormId,
     acids: '',
-    activity: [],
+    activity: [ initialDateCreatedActivity],
     bases: '',
     dateBottled: '',
-    dateCreated: new Date().toISOString().split('T')[0],
-    dateStabilized: new Date().toISOString().split('T')[0],
+    dateCreated: initialDateCreatedActivity.date,
+    dateStabilized:'',
     description: '',
     ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
-    //finalABV: '',
     name: '',
     notes: '',
     nutrients: '',
@@ -53,15 +61,13 @@ function BrewLogForm() {
         const loadedData = {
           ...brewLog,
           id: brewLog.id, // Ensure ID is preserved
-          dateCreated: brewLog.dateCreated.split('T')[0],
           activity: brewLog.activity || []
         };
         
-        // Add initial Date Created activity
         if (!brewLog.activity || brewLog.activity.length === 0) {
-            const generatedActivities = [];    
-          
             // Create activity(s) from nutrientSchedule
+            const generatedActivities = [];    
+            
             if (loadedData.nutrientSchedule && loadedData.nutrientSchedule.length > 0) {
                 loadedData.nutrientSchedule.forEach(entry => {
                     generatedActivities.push(createActivity(
@@ -80,20 +86,6 @@ function BrewLogForm() {
         setFormData(loadedData);
         initialFormData.current = JSON.stringify(loadedData);
       }
-    } else {
-      // For new brew logs, create initial DateCreated event
-      const initialData = {
-        ...formData,
-        activity: [createActivity(
-          getDate(),
-          'Date Created',
-          'New brew started',
-          'Other',
-          formData.id
-        )]
-      };
-      setFormData(initialData);
-      initialFormData.current = JSON.stringify(initialData);
     }
   }, [id, isEditing, state.brewLogs]);
 
@@ -118,12 +110,22 @@ function BrewLogForm() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
+  const handleNavigation = (path) => {
+    if (hasUnsavedChanges) {
+      if (window.confirm('You have unsaved changes. Are you sure you want to leave without saving?')) {
+        setHasUnsavedChanges(false);
+        navigate(path);
+      }
+    } else {
+      navigate(path);
+    }
+    };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     
     const brewLogData = {
       ...formData,
-      dateCreated: new Date(formData.dateCreated).toISOString(),
     };
 
     if (isEditing) {
@@ -131,7 +133,8 @@ function BrewLogForm() {
         type: ActionTypes.UPDATE_BREW_LOG,
         payload: { ...brewLogData, id }
       });
-    } else {
+    }
+    else {
       dispatch({
         type: ActionTypes.ADD_BREW_LOG,
         payload: brewLogData
@@ -142,136 +145,92 @@ function BrewLogForm() {
     navigate('/brewlogs');
   };
 
-  const handleNavigation = (path) => {
-    if (hasUnsavedChanges) {
-      if (window.confirm('You have unsaved changes. Are you sure you want to leave without saving?')) {
-        setHasUnsavedChanges(false);
-        navigate(path);
-      }
-    } else {
-      navigate(path);
+    const updateActivityDateByTopic = (e) => {
+        const { name, value } = e.target;
+        const topic = name;
+
+        const allActivitiesByTopic = getActivitiesByTopic(topic)
+        const existingItem = allActivitiesByTopic[0];
+        if (!existingItem) return false;
+
+        const updates = {
+            ...existingItem,
+            date: value
+        };
+
+        //setFormData(prev => ({
+        //    ...prev,
+        //    [name]: value,
+        //    activity: prev.activity.map(item =>
+        //        item.id === existingItem.id ? { ...item, ...updates } : item
+        //    )
+        //}));
+        //return true;
+        updateForm(name, value);
+        updateActivity(setFormData, existingItem.id, "date", value);
     }
-  };
+    
+    const updateForm = (fieldName, value) => {
+        setFormData(prev => ({
+            ...prev,
+            [fieldName]: value
+        }));
+    }
 
   const handleChange = (e) => {
       const { name, value } = e.target;
       //e.target is the input changed. input.name == the property name for this input
 
-    if (name === 'dateCreated') {
-      setFormData(prev => {
-        const newFormData = {
-          ...prev,
-          dateCreated: value
-        };
+      if (name === 'dateBottled') {
+          const updateSuccessful = updateActivityDateByTopic(e);
+          if (!updateSuccessful) {
+              addActivity(
+                  setFormData,
+                  value,
+                  getActivityDisplayName(name),
+                  'Brew bottled and ready for aging',
+                  'DateBottled',
+                  formData.id,
+                  null
+              );
 
-        const existingEventIndex = prev.activity.findIndex(item => item.topic === 'DateCreated');
-        let existingEvent = prev.activity.find(item => item.topic === 'DateCreated');
-        existingEvent.date = value;
-        const dateCreatedActivity = existingEvent;
-
-        if (existingEventIndex >= 0) {
-          newFormData.activity = prev.activity.map((item, index) =>
-            index === existingEventIndex ? { ...item, date: value } : item
-          );
-        } else {
-          newFormData.activity = [...prev.activity, dateCreatedActivity];
-          //updateActivity(existingEvent.id, { date: value });
-        }
-
-        return newFormData;
-      });
-      return;
-    }
-    else if (name === 'dateBottled') {
-      setFormData(prev => {
-        const newFormData = {
-          ...prev,
-          dateBottled: value
-        };
-        
-        const existingEventIndex = prev.activity.findIndex(event => event.topic === 'DateBottled');
-        const dateBottledEvent = createActivity(
-          value,
-          getActivityDisplayName('DateBottled'),
-          'Brew bottled and ready for aging',
-          'DateBottled',
-          prev.id,
-          null
-        );
-
-        if (value) {
-          if (existingEventIndex >= 0) {
-            newFormData.activity = prev.activity.map((event, index) =>
-              index === existingEventIndex ? { ...event, date: value } : event
-            );
-          } else {
-            newFormData.activity = [...prev.activity, dateBottledEvent];
+              updateForm(name, value);
           }
-        } else {
-          // Remove event if date is cleared
-          newFormData.activity = prev.activity.filter(event => event.topic !== 'DateBottled');
-        }
+      }
+      else if (name === 'dateCreated') {
+          updateActivityDateByTopic(e);
+      }
+      else if (name === 'dateStabilized') {
+          const updateSuccessful = updateActivityDateByTopic(e);
+          if (!updateSuccessful) {
+              addActivity(
+                  setFormData,
+                  value,
+                  getActivityDisplayName(name),
+                  'Brew stabilized',
+                  'DateStabilized',
+                  formData.id,
+                  null
+              );
 
-        return newFormData;
-      });
-      return;
-    }
-    else if (name === 'stabilize' || name === 'stabilizeDate') {
-      // Handle stabilize field and create/update event
-      setFormData(prev => {
-        const newFormData = {
-          ...prev,
-          [name]: value
-        };
-
-        // Create/update Stabilize event when either field changes
-        const stabilizeText = name === 'stabilize' ? value : prev.stabilize;
-        const stabilizeDate = name === 'stabilizeDate' ? value : prev.dateStabilized;
-        
-        if (stabilizeText.trim()) {
-          const existingEventIndex = prev.activity.findIndex(event => event.topic === 'Stabilize');
-          const stabilizeEvent = createActivity(
-            stabilizeDate,
-            getActivityDisplayName('Stabilize'),
-            stabilizeText,
-            'Stabilize',
-            prev.id,
-            null
-          );
-
-          if (existingEventIndex >= 0) {
-            newFormData.activity = prev.activity.map((event, index) =>
-              index === existingEventIndex ? { ...event, description: stabilizeText, date: stabilizeDate } : event
-            );
-          } else {
-            newFormData.activity = [...prev.activity, stabilizeEvent];
+              updateForm(name, value);
           }
-        } else {
-          // Remove event if stabilize text is empty
-          newFormData.activity = prev.activity.filter(event => event.topic !== 'Stabilize');
-        }
+      }
+      else {
+          updateForm(name, value);
+      }
 
-        return newFormData;
-      });
       return;
-    }
-    else {
-      // Handle all other regular fields: recipe, name, volume, nutrients, recipeId
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
     };
 
-    // Gravity: Recalculate estimated ABV & 1/3 Break
+    // Gravity
     var gravityActivities = formData.activity
         .filter(event => event.topic === 'Gravity')
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const getGravityOriginal = () => {
         return gravityActivities.length > 0 ? gravityActivities[0].description : '';
-    };
+};
 
     const getGravityFinal = () => {
         if (gravityActivities.length <= 1) return '';
@@ -298,6 +257,7 @@ function BrewLogForm() {
         return ((originalGravity - 1) * 131.25).toFixed(2)
     }
 
+    //Keep this note: 
     //useEffect(() => {
     //  const gravityActivities = formData.activity
     //    .filter(event => event.topic === 'Gravity')
@@ -316,7 +276,8 @@ function BrewLogForm() {
     //}, [formData.activity]);
 
   // Nutrients
-  const addNutrientScheduleEntry = () => {
+
+    const addNutrientScheduleEntry = () => {
     const nutrientEvent = createActivity(
       getDate(),
       getActivityDisplayName('Nutrient'),
@@ -393,59 +354,9 @@ function BrewLogForm() {
   const addSplitSchedule = () => addScheduleEntries('split');
   const addStaggered3Schedule = () => addScheduleEntries('staggered2');
   const addStaggered4Schedule = () => addScheduleEntries('staggered3');
-  
-  const getNutrientSchedule = () => {
-    return getActivitiesByTopic('Nutrient');
-  };
 
-  // Activity management functions
   const getActivitiesByTopic = (topic) => {
-    return formData.activity.filter(event => event.topic === topic);
-    };
-
-  const addActivity = (activity) => {
-    setFormData(prev => ({
-      ...prev,
-      activity: [...prev.activity, activity]
-    }));
-  };
-
-  const updateActivity = (eventId, updates) => {
-    setFormData(prev => ({
-      ...prev,
-      activity: prev.activity.map(item =>
-        item.id === eventId ? { ...item, ...updates } : item
-      )
-    }));
-  };
-
-  const updateActivityItem = (date, name, description, topic) => { 
-    const eventDate = date || getDate();
-    const existingEvent = formData.activity.find(event => event.topic === topic);
-    
-    if (existingEvent) {
-      updateActivity(existingEvent.id, { name, description, date: eventDate });
-    } else {
-      const newActivity = createActivity(
-        eventDate,
-        name,
-        description,
-        topic,
-        formData.id,
-        null
-      );
-      addActivity(newActivity);
-    }
-  };
-
-
-  // Recipe functions
-  const goToRecipe = () => {
-    if (!formData.recipeId) {
-      alert('Please select a recipe first.');
-      return;
-    }
-    handleNavigation(`/recipes/${formData.recipeId}`);
+        return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
   };
 
   const importIngredientsFromRecipe = () => {
@@ -535,12 +446,12 @@ function BrewLogForm() {
               Date Created *
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="dateCreated"
               name="dateCreated"
               className="form-input"
               value={formData.dateCreated}
-              onChange={handleChange}
+              onChange={(e) => {handleChange(e)}}
               required
             />
           </div>
@@ -588,7 +499,7 @@ function BrewLogForm() {
                     type="button"
                     variant="outline"
                     size="small"
-                    onClick={goToRecipe}
+                    onClick={() => { handleNavigation(`/recipes/${formData.recipeId}`);}}
                     disabled={!formData.recipeId}
                 >
                     Go to Recipe
@@ -674,8 +585,6 @@ function BrewLogForm() {
               </label>
               <input
                 step="0.001"
-                id="gravity.original"
-                name="gravity.original"
                 value={getGravityOriginal()}
                 className="form-input  calculated-field"
                 placeholder="1.050"
@@ -689,7 +598,6 @@ function BrewLogForm() {
               </label>
               <input
                 step="0.001"
-                id="gravity13Break"
                 name="gravity13Break"
                 className="form-input calculated-field"
                 value={getGravity13Break()}
@@ -706,8 +614,6 @@ function BrewLogForm() {
                 <input
                 type="number"
                 step="0.001"
-                id="gravityFinal"
-                name="gravityFinal"
                 className="form-input  calculated-field"
                 value={getGravityFinal()}
                 readOnly
@@ -725,10 +631,7 @@ function BrewLogForm() {
                 <input
                   type="number"
                   step="0.01"
-                  id="estimatedABV"
-                  name="estimatedABV"
                   className="form-input calculated-field"
-                  //value={formData.currentABV}
                   value={getCurrentAbv()}
                   readOnly
                   placeholder="12.5"
@@ -746,8 +649,8 @@ function BrewLogForm() {
                 <input
                   type="number"
                   step="0.01"
-                  id="finalABV"
-                  name="finalABV"
+                  //id="finalABV"
+                  //name="finalABV"
                   className="form-input calculated-field"
                   value={getPotentialAbv()}
                   readOnly
@@ -832,7 +735,7 @@ function BrewLogForm() {
             </div>
           </div>
 
-            {getNutrientSchedule().map((activity) => (
+            {getActivitiesByTopic("Nutrient").map((activity) => (
                 <Activity
                     key={activity.id}
                     activity={activity}
@@ -850,6 +753,7 @@ function BrewLogForm() {
             <label htmlFor="pecticEnzyme" className="form-label">
               Pectic Enzyme
             </label>
+
             <textarea
               id="pecticEnzyme"
               name="pecticEnzyme"
@@ -883,6 +787,7 @@ function BrewLogForm() {
             <label htmlFor="acids" className="form-label">
               Acids
             </label>
+
             <textarea
               id="acids"
               name="acids"
@@ -893,6 +798,7 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
+
           <ActivityList
             formData={formData}
             setFormData={setFormData}
@@ -909,6 +815,7 @@ function BrewLogForm() {
             <label htmlFor="bases" className="form-label">
               Bases
             </label>
+
             <textarea
               id="bases"
               name="bases"
@@ -919,6 +826,7 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
+
           <ActivityList
             formData={formData}
             setFormData={setFormData}
@@ -949,6 +857,7 @@ function BrewLogForm() {
               rows={3}
             />
           </div>
+
           <ActivityList
             formData={formData}
             setFormData={setFormData}
@@ -964,35 +873,12 @@ function BrewLogForm() {
         {/* Important Dates */}
         <div className="form-section">
           <h3>Important Dates</h3>     
-            <div className="form-group">
-              <label htmlFor="dateRacked" className="form-label">
-                Date Racked
-              </label>
-              <input
-                type="date"
-                id="dateRacked"
-                name="dateRacked"
-                className="form-input"
-                onChange={(e) => {
-                  addActivity(
-                    createActivity(
-                      e.target.value,
-                      getActivityDisplayName('Racked'),
-                      "Brew moved to secondary",
-                      "Racked",
-                      formData.id,
-                      null
-                    )
-                  )
-                }}
-                      />
-              </div>
               <div className="form-group">
                   <ActivityList
                     formData={formData}
                     setFormData={setFormData}
-                    topic="Racked"
-                    headerLabel=""
+                    topic="dateRacked"
+                    headerLabel="Date Racked"
                     itemLabel="Racking Details"
                     sectionInfoMessage=""
                     brewLogId={id}
@@ -1001,16 +887,15 @@ function BrewLogForm() {
             </div>
  
             <div className="form-group">
-              <label htmlFor="stabilizeDate" className="form-label">
+              <label htmlFor="datestabilized" className="form-label">
                 Date Stabilized
               </label>
               <input
-                type="date"
-                id="stabilizeDate"
-                name="stabilizeDate"
+                type="datetime-local"
+                name="dateStabilized"
                 className="form-input"
                 value={formData.dateStabilized}
-                onChange={handleChange}
+                onChange={(e) => { handleChange(e);}}
               />
             </div>
             
@@ -1019,7 +904,6 @@ function BrewLogForm() {
                 Stabilization Notes
               </label>
               <textarea
-                id="stabilize"
                 name="stabilize"
                 className="form-textarea"
                 value={formData.stabilize}
@@ -1034,8 +918,7 @@ function BrewLogForm() {
                 Date Bottled
               </label>
               <input
-                type="date"
-                id="dateBottled"
+                type="datetime-local"
                 name="dateBottled"
                 className="form-input"
                 value={formData.dateBottled}
@@ -1045,21 +928,21 @@ function BrewLogForm() {
         </div>
 
         {/*Other Activities*/ }
-              <div className="form-section">
-                  <div className="form-group">
-                      <h3>Other Activities</h3>
-                      <ActivityList
-                          formData={formData}
-                          setFormData={setFormData}
-                          topic="Other"
-                          headerLabel=""
-                          itemLabel="Activity Details"
-                          sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, degassing, tastings, and more."
-                          brewLogId={id}
-                      >
-                      </ActivityList>
-                  </div>
-              </div>
+        <div className="form-section">
+            <div className="form-group">
+                <h3>Other Activities</h3>
+                <ActivityList
+                    formData={formData}
+                    setFormData={setFormData}
+                    topic="Other"
+                    headerLabel=""
+                    itemLabel="Activity Details"
+                    sectionInfoMessage="Log any other activities you want to keep track of, such as filtering, backsweetening, degassing, tastings, and more."
+                    brewLogId={id}
+                >
+                </ActivityList>
+            </div>
+        </div>
 
         {/* Description & Notes */}
         <div className="form-section">
