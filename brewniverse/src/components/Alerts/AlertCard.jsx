@@ -6,7 +6,8 @@ import Button from '../UI/Button';
 
 function AlertCard({ alert, editUrl }) {
   const navigate = useNavigate();
-  const { dispatch } = useApp();
+    const { state, dispatch } = useApp();
+    const brewLog = state.brewLogs.find(x => x.id === alert.brewLogId);
 
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${alert.name}"?`)) {
@@ -37,7 +38,10 @@ function AlertCard({ alert, editUrl }) {
     <div className="item-card">
       <div className="item-content">
         <h3>{alert.name}</h3>
-        <p className="item-description">{alert.description}</p>
+        {alert.description && 
+            <p className="item-description">{alert.description}</p>
+        }
+        <p className="item-name"> Brew: {brewLog.name} </p>
         <p className="item-date">
           {new Date(alert.date).toLocaleDateString()} at {new Date(alert.date).toLocaleTimeString()}
         </p>

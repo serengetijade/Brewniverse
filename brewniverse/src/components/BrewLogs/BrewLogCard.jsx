@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar } from 'lucide-react';
+import { Calendar} from 'lucide-react';
 import Button from '../UI/Button';
 
 function BrewLogCard({ brewLog }) {
@@ -10,6 +10,8 @@ function BrewLogCard({ brewLog }) {
     switch (type) {
       case 'Beer':
         return '🍺';
+      case 'Cider':
+        return '🍏';
       case 'Mead':
         return '🍯';
       case 'Kombucha':

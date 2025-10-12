@@ -121,7 +121,8 @@ function AlertsList() {
                             Create Your First Alert
                         </Button>
                     </div>
-                ) : (
+                ) 
+                : (
                     <div className="items-container">
                         {sortBy === 'date' ? (
                             // Simple list view for date sorting
@@ -134,7 +135,8 @@ function AlertsList() {
                                     />
                                 ))}
                             </div>
-                        ) : sortBy === 'brewlog' ? (
+                        ) 
+                        : sortBy === 'brewlog' ? (
                             // Grouped by BrewLog
                             <div className="items-grouped">
                                 {Object.entries(processedAlerts).map(([brewLogId, alerts]) => {
@@ -154,7 +156,8 @@ function AlertsList() {
                                     );
                                 })}
                             </div>
-                        ) : sortBy === 'recipe' ? (
+                        ) 
+                        : sortBy === 'recipe' ? (
                             // Grouped by Recipe
                             <div className="items-grouped">
                                 {Object.entries(processedAlerts).map(([recipeId, alerts]) => {
@@ -174,7 +177,8 @@ function AlertsList() {
                                     );
                                 })}
                             </div>
-                        ) : null}
+                        ) 
+                        : null}
 
                         {searchTerm && processedAlerts.length === 0 && (
                             <div className="empty-state">

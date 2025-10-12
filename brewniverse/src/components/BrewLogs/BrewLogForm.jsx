@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
@@ -26,7 +26,7 @@ function BrewLogForm() {
     'Date Created',
     'New brew started',
     'DateCreated',
-    id
+    newFormId
   );
 
   const [formData, setFormData] = useState({
@@ -52,9 +52,10 @@ function BrewLogForm() {
     volume: '',
     yeast: '' 
   });
+
   const [showActivityTimeline, setShowActivityTimeline] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
             if (brewLog) {
@@ -143,7 +144,7 @@ function BrewLogForm() {
         updateActivity(setFormData, existingItem.id, "date", value);
     }
     
-    const updateForm = (fieldName, value) => {
+  const updateForm = (fieldName, value) => {
         setFormData(prev => ({
             ...prev,
             [fieldName]: value
@@ -376,10 +377,12 @@ function BrewLogForm() {
               onChange={handleChange}
               required
             >
-              <option value="Beer">Beer</option>
-              <option value="Wine">Wine</option>
-              <option value="Mead">Mead</option>
-              <option value="Kombucha">Kombucha</option>
+              <option value="Beer">🍺 Beer</option>
+              <option value="Cider">🍏 Cider</option>
+              <option value="Kombucha">🫖 Kombucha</option>
+              <option value="Mead">🍯 Mead</option>
+              <option value="Wine">🍷 Wine</option>
+              <option value="Other">🧪 Other</option>
             </select>
           </div>
 
