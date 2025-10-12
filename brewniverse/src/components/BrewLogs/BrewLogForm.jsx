@@ -241,21 +241,17 @@ function BrewLogForm() {
     //}, [formData.activity]);
 
     // Nutrients
-    const addNutrientScheduleEntry = () => {
+    const addNutrientScheduleEntry = (date, description) => {
         addActivity(
             setFormData,
-            getDate(),
-            "Nutrient Added",
-            "",
+            date ? date : getDate(),
+            getActivityDisplayName('Nutrient'),
+            description ? description : "",
             "Nutrient",
-            id
-        );
+            id);
     };
-    const add2DayNutrientSchedule = () => getNutrientActivitiesByOption('2days');
-    const add3DayNutrientSchedule = () => getNutrientActivitiesByOption('3days');
-    const add4DayNutrientSchedule = () => getNutrientActivitiesByOption('4days');
 
-    const getNutrientActivitiesByOption = (scheduleOption) => {
+    const addNutrientActivitiesByOption = (scheduleOption) => {
         const today = new Date();
         let nutrientActivities = [];
 
@@ -288,15 +284,8 @@ function BrewLogForm() {
             break;
         }
 
-        nutrientActivities.map(entry => 
-            addActivity( 
-                setFormData,
-                entry.date,
-                getActivityDisplayName('Nutrient'),
-                entry.description,
-                'Nutrient',
-                formData.id
-            )
+        nutrientActivities.map(entry =>
+            addNutrientScheduleEntry(entry.date, entry.description)
         );
   };
 
@@ -648,7 +637,7 @@ function BrewLogForm() {
                 type="button"
                 variant="outline"
                 size="small"
-                onClick={add2DayNutrientSchedule}
+                onClick={() => {addNutrientActivitiesByOption('2days')}}
               >
                 Split Schedule (2 days)
               </Button>
@@ -656,7 +645,7 @@ function BrewLogForm() {
                 type="button"
                 variant="outline"
                 size="small"
-                onClick={add3DayNutrientSchedule}
+                onClick={() => {addNutrientActivitiesByOption('3days')}}
               >
                 Staggered (3 days)
               </Button>
@@ -664,7 +653,7 @@ function BrewLogForm() {
                 type="button"
                 variant="outline"
                 size="small"
-                onClick={add4DayNutrientSchedule}
+                onClick={() => {addNutrientActivitiesByOption('4days')}}
               >
                 Staggered (4 days)
               </Button>
