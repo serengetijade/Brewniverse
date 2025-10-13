@@ -1,6 +1,6 @@
 @import './Shared/forms.css';
 @import './Shared/ingredients.css';
-@import './Shared/instructionForm.css';
+@import './Shared/instructions.css';
 
 .empty-message {
   color: var(--color-textLight);

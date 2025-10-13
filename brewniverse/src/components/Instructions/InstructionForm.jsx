@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import Button from '../UI/Button';
-import '../../Styles/Shared/InstructionForm.css';
+import '../../Styles/Shared/instructions.css';
 
 function InstructionForm({ instructions = [''], onInstructionsChange, showControls = true }) {
   const [showEditButtons, setShowEditButtons] = useState({});

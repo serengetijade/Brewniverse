@@ -1,0 +1,264 @@
+@import './Shared/instructions.css';
+@import './Shared/ingredients.css';
+
+.recipe-detail {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  padding-bottom: 6rem;
+}
+
+.recipe-detail-card {
+  background: var(--color-cardBackground);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.recipe-hero {
+  background: linear-gradient(135deg, var(--color-secondary), var(--color-highlight));
+  color: var(--color-surface);
+  padding: 2.5rem 2rem;
+  text-align: center;
+}
+
+.recipe-hero h1 {
+  color: var(--color-surface);
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(1, 1, 0, 0.2);
+}
+
+.recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  opacity: 0.95;
+}
+
+.recipe-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recipe-content {
+  padding: 2rem;
+}
+
+.recipe-section {
+  margin-bottom: 2.5rem;
+}
+
+.recipe-section:last-child {
+  margin-bottom: 0;
+}
+
+.recipe-section-title {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin: 0 0 1rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.recipe-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-secondary);
+  border-right: 4px solid var(--color-highlight);
+}
+
+/* Recipe Notes */
+.recipe-notes {
+  background-color: #FFF3E0;
+  border-left: 4px solid #FF9800;
+  padding: 1.25rem;
+  border-radius: 4px;
+  color: #E65100;
+}
+
+.recipe-notes h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #E65100;
+}
+
+.recipe-notes p {
+  margin: 0;
+  line-height: 1.6;
+  color: #5D4037;
+}
+
+/* Connected Brew Logs */
+.connected-brews {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.connected-brew-card {
+  background-color: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.connected-brew-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.brew-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.5rem;
+}
+
+.brew-card-title {
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.brew-card-status {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.brew-card-info {
+  color: var(--color-textLight);
+  font-size: 0.9rem;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: var(--color-background);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.progress-label {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.progress-percentage {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 1.1rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  transition: width 0.4s ease;
+  border-radius: 6px;
+}
+
+.reset-progress-btn {
+  margin-top: 0.5rem;
+}
+
+/* Empty State */
+.empty-message {
+  text-align: center;
+  color: var(--color-textLight);
+  padding: 2rem;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .recipe-detail {
+    padding: 1rem 0.5rem;
+    padding-bottom: 6rem;
+  }
+
+  .recipe-hero {
+    padding: 2rem 1rem;
+  }
+
+  .recipe-hero h1 {
+    font-size: 2rem;
+  }
+
+  .recipe-meta {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .recipe-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: auto;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .recipe-section-title {
+    font-size: 1.3rem;
+  }
+
+  .recipe-step {
+    padding: 1rem;
+  }
+
+  .connected-brews {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .recipe-hero h1 {
+    font-size: 1.75rem;
+  }
+
+  .recipe-section-title {
+    font-size: 1.2rem;
+  }
+
+  .step-content p {
+    font-size: 0.95rem;
+  }
+}

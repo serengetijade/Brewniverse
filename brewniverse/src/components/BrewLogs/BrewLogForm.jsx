@@ -11,6 +11,44 @@ import Activity, { addActivity, createActivity, getActivityDisplayName, updateAc
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
+export const BrewTypes = {
+    beer: {
+        id: 1,
+        name: 'Beer',
+        icon: '🍺'
+    },
+    cider: {
+        id: 2,
+        name: 'Cider',
+        icon: '🍏'
+    },
+    name: {
+        id: 3,
+        name: 'Kombucha',
+        icon: '🫖'
+    },
+    name: {
+        id: 7,
+        name: 'Mead',
+        icon: '🍯'
+    },
+    name: {
+        id: 7,
+        name: 'Sake',
+        icon: '🍶'
+    },
+    name: {
+        id: 7,
+        name: 'Wine',
+        icon: '🍷'
+    },
+    name: {
+        id: 7,
+        name: 'Other',
+        icon: '🧪'
+    }
+}
+
 function BrewLogForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -69,7 +107,7 @@ function BrewLogForm() {
                 initialFormData.current = JSON.stringify(loadedData);
             }
         }
-    }, [id, isEditing, state.brewLogs]);
+  }, [id, isEditing, state.brewLogs]);
 
   // Track form changes
   useEffect(() => {
@@ -91,6 +129,24 @@ function BrewLogForm() {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges]);
+
+    //Keep this note:
+    //useEffect(() => {
+    //  const gravityActivities = formData.activity
+    //    .filter(event => event.topic === 'Gravity')
+    //    .sort((a, b) => new Date(a.date) - new Date(b.date));
+    //  if (gravityActivities.length < 1) return;
+
+    //  const originalGravity = parseFloat(gravityActivities[0].description);
+    //  const finalAbv = ((originalGravity - 1) * 131.25).toFixed(2)
+
+    //  if (originalGravity > 1) {
+    //    setFormData(prev => ({
+    //          ...prev,
+    //          finalABV: finalAbv,
+    //    }));
+    //  }
+    //}, [formData.activity]);
 
   const handleNavigation = (path) => {
     if (hasUnsavedChanges) {
@@ -125,6 +181,10 @@ function BrewLogForm() {
 
     setHasUnsavedChanges(false);
     navigate('/brewlogs');
+  };
+
+  const getActivitiesByTopic = (topic) => {
+    return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
   };
 
   const updateActivityDateByTopic = (e) => {
@@ -197,7 +257,7 @@ function BrewLogForm() {
       return;
     };
 
-    // Gravity
+  // Gravity
     var gravityActivities = formData.activity
         .filter(event => event.topic === 'Gravity')
         .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -231,25 +291,7 @@ function BrewLogForm() {
         return ((originalGravity - 1) * 131.25).toFixed(2)
     }
 
-    //Keep this note:
-    //useEffect(() => {
-    //  const gravityActivities = formData.activity
-    //    .filter(event => event.topic === 'Gravity')
-    //    .sort((a, b) => new Date(a.date) - new Date(b.date));
-    //  if (gravityActivities.length < 1) return;
-
-    //  const originalGravity = parseFloat(gravityActivities[0].description);
-    //  const finalAbv = ((originalGravity - 1) * 131.25).toFixed(2)
-
-    //  if (originalGravity > 1) {
-    //    setFormData(prev => ({
-    //          ...prev,
-    //          finalABV: finalAbv,
-    //    }));
-    //  }
-    //}, [formData.activity]);
-
-    // Nutrients
+  // Nutrients
     const addNutrientScheduleEntry = (date, description) => {
         addActivity(
             setFormData,
@@ -299,7 +341,7 @@ function BrewLogForm() {
   };
 
   // Recipe
-  const importIngredientsFromRecipe = () => {
+    const importIngredientsFromRecipe = () => {
     if (!formData.recipeId) {
       alert('Please select a recipe to import ingredients from.');
       return;
@@ -330,10 +372,6 @@ function BrewLogForm() {
       ingredientsPrimary: [...prev.ingredientsPrimary, ...primary],
       ingredientsSecondary: [...prev.ingredientsSecondary, ...secondary]
     }));
-    };
-
-    const getActivitiesByTopic = (topic) => {
-        return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
     };
 
   return (

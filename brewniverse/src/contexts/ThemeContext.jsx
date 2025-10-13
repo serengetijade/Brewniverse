@@ -1,5 +1,6 @@
 import React, { createContext, useContext } from 'react';
 
+//ToDo: remove any unused variables
 // Theme definitions
 export const themes = {
   default: {
@@ -10,6 +11,7 @@ export const themes = {
       accent: '#6E1593',
       highlight: '#8D17A2',
       background: '#ffffff',
+      cardBackground: '#ffffff',
       text: '#170e3f',
       textLight: '#6E1593',
       surface: '#f8f9fa',
@@ -28,6 +30,7 @@ export const themes = {
       accent: '#310B78',
       highlight: '#170e3f',
       background: '#1a1a1a',
+      cardBackground: '#2d2d2d',
       text: '#ffffff',
       textLight: '#cccccc',
       surface: '#2d2d2d',
@@ -46,6 +49,7 @@ export const themes = {
       accent: '#f1927d',
       highlight: '#FF4C8B',
       background: '#DA6C6C',
+      cardBackground: '#f5d5d5',
       text: '#3E0703',
       textLight: '#3E0703',
       surface: '#A3485A',
@@ -64,6 +68,7 @@ export const themes = {
       accent: '#cd853f',
       highlight: '#daa520',
       background: '#FFFDE7',
+      cardBackground: '#ffffff',
       text: '#8b4513',
       textLight: '#a0522d',
       surface: '#EED899',
@@ -82,6 +87,7 @@ export const themes = {
       accent: '#F4FFC3',
       highlight: '#D2E3C8',
       background: '#A9C46C',
+      cardBackground: '#D2E3C8',
       text: '#5A4200',
       textLight: '#2d5a3d',
       surface: '#809D3C',
@@ -100,6 +106,7 @@ export const themes = {
       accent: '#0096c7',
       highlight: '#00b4d8',
       background: '#C4FFF1',
+      cardBackground: '#ffffff',
       text: '#003049',
       textLight: '#0077b6',
       surface: '#80CBC4',

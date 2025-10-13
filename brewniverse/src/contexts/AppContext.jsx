@@ -7,6 +7,7 @@ const initialState = {
   alerts: [],
   alertGroups: [],
   instructions: [],
+  recipeProgress: {},
   settings: {
     theme: 'default',
     defaultView: 'dashboard',
@@ -24,6 +25,8 @@ export const ActionTypes = {
   ADD_RECIPE: 'ADD_RECIPE',
   UPDATE_RECIPE: 'UPDATE_RECIPE',
   DELETE_RECIPE: 'DELETE_RECIPE',
+  TOGGLE_RECIPE_STEP: 'TOGGLE_RECIPE_STEP',
+  RESET_RECIPE_PROGRESS: 'RESET_RECIPE_PROGRESS',
   
   // Alerts
   ADD_ALERT: 'ADD_ALERT',
@@ -84,9 +87,36 @@ function appReducer(state, action) {
       };
     
     case ActionTypes.DELETE_RECIPE:
+      // Also clean up recipe progress when recipe is deleted
+      const { [action.payload]: _, ...remainingProgress } = state.recipeProgress;
       return {
         ...state,
         recipes: state.recipes.filter(recipe => recipe.id !== action.payload),
+        recipeProgress: remainingProgress,
+      };
+    
+    case ActionTypes.TOGGLE_RECIPE_STEP:
+      const { recipeId, stepIndex } = action.payload;
+      const currentProgress = state.recipeProgress[recipeId] || { completedSteps: [] };
+      const completedSteps = currentProgress.completedSteps.includes(stepIndex)
+        ? currentProgress.completedSteps.filter(step => step !== stepIndex)
+        : [...currentProgress.completedSteps, stepIndex];
+      
+      return {
+        ...state,
+        recipeProgress: {
+          ...state.recipeProgress,
+          [recipeId]: { completedSteps },
+        },
+      };
+    
+    case ActionTypes.RESET_RECIPE_PROGRESS:
+      return {
+        ...state,
+        recipeProgress: {
+          ...state.recipeProgress,
+          [action.payload]: { completedSteps: [] },
+        },
       };
     
     case ActionTypes.ADD_ALERT:
