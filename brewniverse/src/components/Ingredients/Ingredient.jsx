@@ -87,21 +87,21 @@ function Ingredient({
                 <div className="ingredient-editor-actions">
                     <Button
                         type="button"
-                        variant="primary"
-                        size="small"
-                        onClick={handleSave}
-                    >
-                        <Save size={16} />
-                        Save
-                    </Button>
-                    <Button
-                        type="button"
                         variant="ghost"
                         size="small"
                         onClick={onCancel}
                     >
                         <X size={16} />
                         Cancel
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="primary"
+                        size="small"
+                        onClick={handleSave}
+                    >
+                        <Save size={16} />
+                        Save
                     </Button>
                 </div>
             </div>

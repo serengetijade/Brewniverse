@@ -16,12 +16,12 @@ function RecipeCard({ recipe }) {
     <div className="item-card">
       <div className="item-content">
         <h3 className="recipe-name">{recipe.name}</h3>
-        <p className="item-date">
-          Created {new Date(recipe.dateCreated).toLocaleDateString()}
-        </p>
         {recipe.description && (
           <p className="item-description">{recipe.description}</p>
         )}
+        <p className="item-date">
+          Created {new Date(recipe.dateCreated).toLocaleDateString()}
+        </p>
         <p className="recipe-ingredients">
           {getIngredientCount()} ingredient{getIngredientCount() !== 1 ? 's' : ''}
         </p>

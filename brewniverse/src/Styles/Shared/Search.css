@@ -196,11 +196,12 @@
   
   .sort-buttons {
     width: 100%;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: center;
   }
   
   .sort-button {
-    width: 100%;
+    width: fit-content;
     justify-content: center;
   }
   

@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText, Calendar, Search, Beaker } from 'lucide-react';
+import { Plus, FileText, Calendar, Search, Beaker, ListTree} from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
 import SearchSortControls from '../UI/SearchSortControls';
 import RecipeCard from './RecipeCard';
+import BrewTypes from '../BrewType';
 import '../../Styles/BrewLogsList.css';
 import '../../Styles/Shared/search.css';
 
@@ -30,23 +31,24 @@ function RecipesList() {
         const dateB = new Date(b.dateCreated);
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
-    } else if (sortBy === 'name') {
+    }
+    else if (sortBy === 'name') {
       filteredRecipes.sort((a, b) => {
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
         return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
       });
-    } else if (sortBy === 'brewlog') {
-      // Group by brew logs that use this recipe, then sort by date within each group
-      const grouped = {};
-      filteredRecipes.forEach(recipe => {
-        const brewLogsUsingRecipe = state.brewLogs.filter(bl => bl.recipeId === recipe.id);
-        const groupKey = brewLogsUsingRecipe.length > 0 ? 'used' : 'unused';
-        if (!grouped[groupKey]) {
-          grouped[groupKey] = [];
+    }
+    else if (sortBy === 'brewlog') {
+        const grouped = {};
+        filteredRecipes.forEach(recipe => {
+            const brewLogsUsingRecipe = state.brewLogs.filter(bl => bl.recipeId === recipe.id);
+            const groupKey = brewLogsUsingRecipe.length > 0 ? 'used' : 'unused';
+            if (!grouped[groupKey]) {
+              grouped[groupKey] = [];
         }
         grouped[groupKey].push(recipe);
-      });
+      })
       
       // Sort recipes within each group by date
       Object.keys(grouped).forEach(groupKey => {
@@ -59,6 +61,29 @@ function RecipesList() {
       
       return grouped;
     }
+    else if (sortBy === 'type') {
+        const grouped = {};
+
+        // Group recipes using recipe.type as the grouping key  
+        filteredRecipes.forEach(recipe => {
+            const groupKey = recipe.type;
+            if (!grouped[groupKey]) {
+                grouped[groupKey] = [];
+            }
+            grouped[groupKey].push(recipe);
+        });
+
+        // Sort recipes within each type group by date  
+        Object.keys(grouped).forEach(groupKey => {
+            grouped[groupKey].sort((a, b) => {
+                const dateA = new Date(a.dateCreated);
+                const dateB = new Date(b.dateCreated);
+                return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+            });
+        });
+
+        return grouped;
+    }  
 
     return filteredRecipes;
   }, [state.recipes, state.brewLogs, searchTerm, sortBy, sortOrder]);
@@ -85,6 +110,7 @@ function RecipesList() {
           sortOptions={[
             { key: 'date', label: 'Date', icon: Calendar },
             { key: 'name', label: 'Name', icon: FileText },
+            { key: 'type', label: 'Type', icon: ListTree },
             { key: 'brewlog', label: 'Usage', icon: Beaker }
           ]}
           searchPlaceholder="Search recipes by name or description..."
@@ -118,7 +144,8 @@ function RecipesList() {
                 />
               ))}
             </div>
-          ) : sortBy === 'brewlog' ? (
+          ) 
+          : sortBy === 'brewlog' ? (
             // Grouped by Usage (Used vs Unused)
             <div className="items-grouped">
               {Object.entries(processedRecipes).map(([groupKey, recipes]) => {
@@ -145,7 +172,30 @@ function RecipesList() {
                 );
               })}
             </div>
-          ) : null}
+            ) 
+            : sortBy === 'type' ? (
+                // Grouped by Recipe Type  
+                <div className="items-grouped">
+                    {Object.entries(processedRecipes).map(([type, recipes]) => {
+                        let brewType = BrewTypes.find(x => x.name === type);
+                        return (
+                            <div key={type} className="item-group">
+                                <div className="group-header">
+                                    <h3 className="group-title">
+                                        {brewType.icon} {brewType.name}
+                                    </h3>
+                                </div>
+                                <div className="items-grid">
+                                    {recipes.map((recipe) => (
+                                        <RecipeCard key={recipe.id} recipe={recipe} />
+                                    ))}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            )    
+          : null}
           
           {searchTerm && processedRecipes.length === 0 && (
             <div className="empty-state">

@@ -89,7 +89,6 @@
   font-style: italic;
 }
 
-/* Mobile optimizations */
 @media (max-width: 768px) {    
   .nutrient-schedule-entry {
     grid-template-columns: 1fr;
@@ -97,7 +96,6 @@
   }
 }
 
-/* Enhanced mobile touch targets */
 @media (max-width: 480px) {
   .nutrient-schedule-entry {
     padding: 1.25rem;

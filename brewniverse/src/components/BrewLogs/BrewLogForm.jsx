@@ -7,47 +7,10 @@ import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import ActivityList from '../Activity/ActivityList';
+import BrewTypes from '../BrewType';
 import Activity, { addActivity, createActivity, getActivityDisplayName, updateActivity, ACTIVITY_TOPICS } from '../Activity/Activity';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
-
-export const BrewTypes = {
-    beer: {
-        id: 1,
-        name: 'Beer',
-        icon: '🍺'
-    },
-    cider: {
-        id: 2,
-        name: 'Cider',
-        icon: '🍏'
-    },
-    name: {
-        id: 3,
-        name: 'Kombucha',
-        icon: '🫖'
-    },
-    name: {
-        id: 7,
-        name: 'Mead',
-        icon: '🍯'
-    },
-    name: {
-        id: 7,
-        name: 'Sake',
-        icon: '🍶'
-    },
-    name: {
-        id: 7,
-        name: 'Wine',
-        icon: '🍷'
-    },
-    name: {
-        id: 7,
-        name: 'Other',
-        icon: '🧪'
-    }
-}
 
 function BrewLogForm() {
   const { id } = useParams();
@@ -414,13 +377,12 @@ function BrewLogForm() {
               value={formData.type}
               onChange={handleChange}
               required
-            >
-              <option value="Beer">🍺 Beer</option>
-              <option value="Cider">🍏 Cider</option>
-              <option value="Kombucha">🫖 Kombucha</option>
-              <option value="Mead">🍯 Mead</option>
-              <option value="Wine">🍷 Wine</option>
-              <option value="Other">🧪 Other</option>
+             >
+            {BrewTypes.map((type) => (
+                <option key={type.name} value={type.name}>
+                    {type.icon} {type.name}
+                </option>
+            ))}
             </select>
           </div>
 

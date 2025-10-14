@@ -103,12 +103,12 @@ export default function IngredientList({
       )} 
       </div>
 
-      <div className="form-group">
+      <div className="form-group ingredient-add-container">
         <Button  
           type="button"  
           variant="outline"  
-              size="small"
-              onClick={() => addIngredient(ingredientType
+          size="small"
+          onClick={() => addIngredient(ingredientType
           )}  
         >  
           <Plus size={16} />  

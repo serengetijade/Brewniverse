@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
+import { ActionTypes, getDate, useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
 import '../../Styles/RecipeForm.css';
+import BrewTypes from '../BrewType';
 
 function RecipeForm() {
   const { id } = useParams();
@@ -16,16 +17,17 @@ function RecipeForm() {
 
   const [formData, setFormData] = useState({
     name: '',
-    dateCreated: new Date().toISOString().split('T')[0],
+    dateCreated: getDate(),
     ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
+    instructions: [''],
     description: '',
     notes: '',
     estimatedABV: '',
     difficulty: 'Beginner',
+    type: 'Mead',
     volume: '',
-    instructions: [''],
   });
 
   useEffect(() => {
@@ -46,7 +48,7 @@ function RecipeForm() {
     
     const recipeData = {
       ...formData,
-      dateCreated: new Date(formData.dateCreated).toISOString(),
+      dateCreated: getDate(),
     };
 
     if (isEditing) {
@@ -54,7 +56,8 @@ function RecipeForm() {
         type: ActionTypes.UPDATE_RECIPE,
         payload: { ...recipeData, id }
       });
-    } else {
+    }
+    else {
       dispatch({
         type: ActionTypes.ADD_RECIPE,
         payload: recipeData
@@ -117,7 +120,7 @@ function RecipeForm() {
               Date Created *
             </label>
             <input
-              type="date"
+              type="datetime-local"
               id="dateCreated"
               name="dateCreated"
               className="form-input"
@@ -125,6 +128,26 @@ function RecipeForm() {
               onChange={handleChange}
               required
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="type" className="form-label">
+              Type *
+            </label>
+            <select
+              id="type"
+              name="type"
+              className="form-select"
+              value={formData.type}
+              onChange={handleChange}
+              required
+             >
+            {BrewTypes.map((type) => (
+                <option key={type.name} value={type.name}>
+                    {type.icon} {type.name}
+                </option>
+            ))}
+            </select>
           </div>
 
           <div className="form-row">

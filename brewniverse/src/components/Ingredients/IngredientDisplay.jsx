@@ -6,8 +6,8 @@ function IngredientDisplay({ ingredients, title }) {
   }
 
   return (
-    <div className="ingredient-section">
-      <h3 className="ingredient-section-title">{title}</h3>
+    <div className="ingredient-container">
+      <h3 className="ingredient-container-title">{title}</h3>
       <ul className="ingredient-list-display">
         {ingredients.map((ingredient) => (
           <li key={ingredient.id} className="ingredient-item-display">
