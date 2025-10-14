@@ -18,13 +18,12 @@ function RecipesList() {
   const [sortOrder, setSortOrder] = useState('desc');
 
   // Process and filter recipes based on search and sort criteria
-  const processedRecipes = useMemo(() => {
+  const sortedRecipes = useMemo(() => {
     let filteredRecipes = state.recipes.filter(recipe => 
       (recipe.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       (recipe.description || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Sort recipes based on selected criteria
     if (sortBy === 'date') {
       filteredRecipes.sort((a, b) => {
         const dateA = new Date(a.dateCreated);
@@ -50,7 +49,6 @@ function RecipesList() {
         grouped[groupKey].push(recipe);
       })
       
-      // Sort recipes within each group by date
       Object.keys(grouped).forEach(groupKey => {
         grouped[groupKey].sort((a, b) => {
           const dateA = new Date(a.dateCreated);
@@ -63,8 +61,6 @@ function RecipesList() {
     }
     else if (sortBy === 'type') {
         const grouped = {};
-
-        // Group recipes using recipe.type as the grouping key  
         filteredRecipes.forEach(recipe => {
             const groupKey = recipe.type;
             if (!grouped[groupKey]) {
@@ -73,7 +69,6 @@ function RecipesList() {
             grouped[groupKey].push(recipe);
         });
 
-        // Sort recipes within each type group by date  
         Object.keys(grouped).forEach(groupKey => {
             grouped[groupKey].sort((a, b) => {
                 const dateA = new Date(a.dateCreated);
@@ -135,9 +130,9 @@ function RecipesList() {
       ) : (
         <div className="items-container">
           {sortBy === 'date' || sortBy === 'name' ? (
-            // Simple list view for date and name sorting
+            // Sort by date or name
             <div className="items-grid">
-              {processedRecipes.map((recipe) => (
+              {sortedRecipes.map((recipe) => (
                 <RecipeCard
                   key={recipe.id}
                   recipe={recipe}
@@ -146,9 +141,9 @@ function RecipesList() {
             </div>
           ) 
           : sortBy === 'brewlog' ? (
-            // Grouped by Usage (Used vs Unused)
+            // Sort/Grouped by Usage (Used vs Unused)
             <div className="items-grouped">
-              {Object.entries(processedRecipes).map(([groupKey, recipes]) => {
+              {Object.entries(sortedRecipes).map(([groupKey, recipes]) => {
                 const groupName = groupKey === 'used' ? 'Used in Brew Logs' : 'Not Yet Used';
                 const groupIcon = groupKey === 'used' ? <Beaker size={20} /> : <FileText size={20} />;
                 
@@ -174,9 +169,9 @@ function RecipesList() {
             </div>
             ) 
             : sortBy === 'type' ? (
-                // Grouped by Recipe Type  
+                // Sort/Grouped by Recipe Type  
                 <div className="items-grouped">
-                    {Object.entries(processedRecipes).map(([type, recipes]) => {
+                    {Object.entries(sortedRecipes).map(([type, recipes]) => {
                         let brewType = BrewTypes.find(x => x.name === type);
                         return (
                             <div key={type} className="item-group">
@@ -197,7 +192,7 @@ function RecipesList() {
             )    
           : null}
           
-          {searchTerm && processedRecipes.length === 0 && (
+          {searchTerm && sortedRecipes.length === 0 && (
             <div className="empty-state">
               <div className="empty-icon">
                 <Search size={64} />

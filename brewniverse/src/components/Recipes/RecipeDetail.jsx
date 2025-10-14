@@ -234,7 +234,7 @@ function RecipeDetail() {
         onCancel={() => navigate('/recipes')}
         onDelete={handleDelete}
         onSubmit={() => navigate(`/recipes/${id}/edit`)}
-        showDelete={true}
+        showDelete={false}
         collapsible={true}
         defaultExpanded={false}
         submitLabel="Edit Recipe"

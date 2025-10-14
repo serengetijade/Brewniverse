@@ -82,7 +82,6 @@ function RecipeForm() {
     }));
   };
 
-  // Get brew logs that use this recipe
   const getConnectedBrewLogs = () => {
     return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
   };
@@ -317,6 +316,7 @@ function RecipeForm() {
         entityName="Recipe"
         onCancel={() => navigate('/recipes')}
         showDelete={false}
+        showDelete={true}
       />
     </div>
   );
