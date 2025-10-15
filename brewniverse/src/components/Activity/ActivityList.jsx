@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import React from 'react';
 import { getDate } from '../../contexts/AppContext';
-import Activity, { addActivity, getActivityDisplayName } from './Activity';
+import Activity, { addActivity, getActivitiesByTopic, getActivityDisplayName } from './Activity';
 import Button from '../UI/Button';
 import '../../Styles/Activity.css';
 
@@ -15,10 +15,6 @@ export function ActivityList({
     brewLogId
 }) {
     const buttonSize = 14;
-
-    const getActivitiesByTopic = () => {
-        return formData.activity.filter(x => x.topic === topic);
-    };
 
     return (
         <div className="form-group">
@@ -43,13 +39,13 @@ export function ActivityList({
                 </Button>
             </div>
 
-            {getActivitiesByTopic().length === 0
+            {getActivitiesByTopic(formData, topic).length === 0
                 ? (sectionInfoMessage
                     ? (<p className="empty-message">{sectionInfoMessage}</p>)
                     : null)
                 : (
                     <div>
-                        {getActivitiesByTopic().map((item) => (
+                        {getActivitiesByTopic(formData, topic).map((item) => (
                             <Activity
                                 key={item.id}
                                 activity={item}

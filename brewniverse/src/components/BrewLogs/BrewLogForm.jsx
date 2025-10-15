@@ -2,14 +2,14 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
+import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic, getActivityDisplayName, updateActivity,  } from '../Activity/Activity';
+import ActivityList from '../Activity/ActivityList';
+import ActivityTimeline from '../Activity/ActivityTimeline';
+import BrewTypes from '../BrewType';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
-import ActivityList from '../Activity/ActivityList';
-import BrewTypes from '../BrewType';
-import Activity, { addActivity, createActivity, getActivityDisplayName, updateActivity, ACTIVITY_TOPICS } from '../Activity/Activity';
-import ActivityTimeline from '../Activity/ActivityTimeline';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -51,7 +51,13 @@ function BrewLogForm() {
     tannins: '',
     type: 'Mead',
     volume: '',
-    yeast: '' 
+    yeast: '',
+    //Calculated properties
+    getGravity13Break: '',
+    gravityFinal: '',
+    gravityOriginal: '',
+    currentAbv: '',
+    potentialAbv: '',
   });
 
   const [showActivityTimeline, setShowActivityTimeline] = useState(false);
@@ -128,28 +134,19 @@ function BrewLogForm() {
     navigate('/brewlogs');
   };
 
-  const getActivitiesByTopic = (topic) => {
-    return formData.activity.filter(event => event.topic.toLowerCase() === topic.toLowerCase());
-  };
-
   const updateActivityDateByTopic = (e) => {
         const { name, value } = e.target;
         const topic = name;
 
-        const allActivitiesByTopic = getActivitiesByTopic(topic)
+        const allActivitiesByTopic = getActivitiesByTopic(formData, topic)
         const existingItem = allActivitiesByTopic[0];
         if (!existingItem) return false;
 
-        const updates = {
-            ...existingItem,
-            date: value
-        };
-
-        updateForm(name, value);
+        updateBrewLog(name, value);
         updateActivity(setFormData, existingItem.id, "date", value);
     }
     
-  const updateForm = (fieldName, value) => {
+  const updateBrewLog = (fieldName, value) => {
         setFormData(prev => ({
             ...prev,
             [fieldName]: value
@@ -168,12 +165,12 @@ function BrewLogForm() {
                   value,
                   getActivityDisplayName(name),
                   'Brew bottled and ready for aging',
-                  'DateBottled',
+                  ActivityTopicEnum.DateBottled,
                   formData.id,
                   null
               );
 
-              updateForm(name, value);
+              updateBrewLog(name, value);
           }
       }
       else if (name === 'dateCreated') {
@@ -187,22 +184,22 @@ function BrewLogForm() {
                   value,
                   getActivityDisplayName(name),
                   'Brew stabilized',
-                  'DateStabilized',
+                  ActivityTopicEnum.DateStabilized,
                   formData.id,
                   null
               );
 
-              updateForm(name, value);
+              updateBrewLog(name, value);
           }
       }
       else {
-          updateForm(name, value);
+          updateBrewLog(name, value);
       }
 
       return;
     };
 
-  // Gravity
+    // Gravity
     var gravityActivities = formData.activity
         .filter(event => event.topic === 'Gravity')
         .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -214,26 +211,34 @@ function BrewLogForm() {
     const getGravityFinal = () => {
         if (gravityActivities.length <= 1) return '';
         const latestGravity = gravityActivities[gravityActivities.length - 1];
-        return latestGravity && latestGravity.description ? latestGravity.description : '';
+        const result = latestGravity.description;
+        updateBrewLog('gravityFinal', result);
+        return latestGravity && latestGravity.description ? result : '';
     };
 
     const getGravity13Break = () => {
         if (gravityActivities.length < 1) return '';
         const originalGravity = getGravityOriginal();
-        return ((parseFloat(originalGravity - 1) * 2 / 3) + 1).toFixed(3);
+        const result = ((parseFloat(originalGravity - 1) * 2 / 3) + 1).toFixed(3)
+        updateBrewLog('gravity13Break', result);
+        return result;
     }
 
     const getCurrentAbv = () => {
         if (gravityActivities.length < 1) return '';
         const originalGravity = getGravityOriginal();
         const latestGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description);
-        return ((originalGravity - latestGravity) * 131.25).toFixed(2)
+        const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
+        updateBrewLog('currentAbv', result);
+        return result;
     }
 
     const getPotentialAbv = () => {
         if (gravityActivities.length < 1) return '';
         const originalGravity = parseFloat(gravityActivities[0].description);
-        return ((originalGravity - 1) * 131.25).toFixed(2)
+        const result = ((originalGravity - 1) * 131.25).toFixed(2);
+        updateBrewLog('potentialAbv', result);
+        return result;
     }
 
   // Nutrients
@@ -241,9 +246,9 @@ function BrewLogForm() {
         addActivity(
             setFormData,
             date ? date : getDate(),
-            getActivityDisplayName('Nutrient'),
+            getActivityDisplayName(ActivityTopicEnum.nutrients),
             description ? description : "",
-            "Nutrient",
+            ActivityTopicEnum.Nutrient,
             id);
     };
 
@@ -492,7 +497,7 @@ function BrewLogForm() {
           <ActivityList
             formData={formData}
             setFormData={setFormData}
-            topic="Yeast"
+            topic={ActivityTopicEnum.Yeast}
             headerLabel=""
             itemLabel="Yeast Details"
             sectionInfoMessage="Wild or cultured, record your yeast here. No yeast additions recorded."
@@ -508,7 +513,7 @@ function BrewLogForm() {
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="gravity.original" className="form-label">
-                Original Gravity {getActivitiesByTopic("Gravity").length === 0 ? " (please add entry)" : null}
+                Original Gravity {getActivitiesByTopic(formData, ActivityTopicEnum.Gravity).length === 0 ? " (please add entry)" : null}
               </label>
               <input
                 step="0.001"
@@ -535,7 +540,7 @@ function BrewLogForm() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="gravityFinal" className="form-label">
+              <label className="form-label">
                 Final Gravity
               </label>
                 <input
@@ -592,7 +597,7 @@ function BrewLogForm() {
           <ActivityList
             formData={formData}
             setFormData={setFormData}
-            topic="Gravity"
+            topic={ActivityTopicEnum.Gravity}
             headerLabel="Gravity Readings"
             itemLabel="Gravity Reading"
             sectionInfoMessage=""
@@ -662,7 +667,7 @@ function BrewLogForm() {
             </div>
           </div>
 
-          {getActivitiesByTopic("Nutrient").map((activity) => (
+          {getActivitiesByTopic(ActivityTopicEnum.Nutrient).map((activity) => (
             <Activity
                 key={activity.id}
                 activity={activity}
@@ -695,7 +700,7 @@ function BrewLogForm() {
           <ActivityList
             formData={formData}
             setFormData={setFormData}
-            topic="PecticEnzyme"
+            topic={ActivityTopicEnum.PecticEnzyme}
             headerLabel="Pectic Enzyme Additions"
             itemLabel="Enzyme Details"
             sectionInfoMessage=""
@@ -725,10 +730,10 @@ function BrewLogForm() {
             />
           </div>
 
-          <ActivityList
+        <ActivityList
             formData={formData}
             setFormData={setFormData}
-            topic="Acid"
+            topic={ActivityTopicEnum.Acid}
             headerLabel="Acid Additions"
             itemLabel="Acid Details"
             sectionInfoMessage=""
@@ -756,7 +761,7 @@ function BrewLogForm() {
           <ActivityList
             formData={formData}
             setFormData={setFormData}
-            topic="Base"
+            topic={ActivityTopicEnum.Base}
             headerLabel="Base Additions"
             itemLabel="Base Details"
             sectionInfoMessage=""

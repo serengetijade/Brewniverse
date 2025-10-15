@@ -112,7 +112,7 @@ function Activity({
                 <label className="form-label">{itemLabel}</label>
                 <input
                     ref={descriptionInputRef}
-                    type={(activity.topic === "Gravity" || activity.topic === "GravityFinal") ? "number" : "text"}
+                    type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
                     step="0.001"
                     className="form-input"
                     placeholder="Item details"
@@ -184,6 +184,19 @@ export function createActivity(date, name, description, topic, brewLogId, alertI
     };
 }
 
+//export const getActivitiesByTopic = (formData, topic) => {
+//    const data = { ...formData };
+//    return data.activity.filter(x => x.topic === topic);
+//};
+
+export const getActivitiesByTopic = (formData, topic) => {
+    if (!formData || !topic) return [];
+    const data = typeof formData === 'string' ? JSON.parse(formData) : formData;
+    const activities = Array.isArray(data.activity) ? data.activity : [];
+    const target = String(topic).toLowerCase();
+    return activities.filter(a => a && String(a.topic).toLowerCase() === target);
+};
+
 export function deleteActivity (setFormData, id) {
     setFormData(prev => ({
         ...prev,
@@ -210,8 +223,6 @@ export function getActivityDisplayName(topic) {
     switch (activityTopic) {
         case "gravity":
             return "Gravity Reading";
-        case "gravityfinal":
-            return "Final Gravity Reading";
         case "pecticenzyme":
             return "Pectic Enzyme Added";
         case "datebottled":
@@ -241,10 +252,21 @@ export function getActivityDisplayName(topic) {
     }
 }
 
-export const ACTIVITY_TOPICS = [
-    'Acid', 'Base', 'DateBottled', 'DateCreated', 'DateSTabilized', 'Gravity', 'GravityFinal',
-    'Nutrient', 'PecticEnzyme', 'PH', 'Racked', 'Tannin', 'Yeast', 'Other'
-];
+export const ActivityTopicEnum = {
+    'Acid': 'acid',
+    'Base': 'base',
+    'DateBottled': 'datebottled',
+    'DateCreated': 'datecreated',
+    'DateStabilized' : 'datestabilized',
+    'Gravity': 'gravity',
+    'Nutrient': 'nutrient',
+    'PecticEnzyme': 'pecticenzyme',
+    'PH': 'ph',
+    'Racked': 'racked',
+    'Tannin': 'tannin',
+    'Yeast': 'yeast',
+    'Other': 'other'
+}
 
 export const ACTIVITY_STATUSES = ["Pending", "Complete"];
 

@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar} from 'lucide-react';
 import Button from '../UI/Button';
-
-function BrewLogCard({ brewLog }) {
+import { ActivityTopicEnum } from '../Activity/Activity';
+function BrewLogCard({ brewLog })
+{
   const navigate = useNavigate();
 
+  //ToDo: replace with enum
   const getTypeIcon = (type) => {
     switch (type) {
       case 'Beer':
@@ -23,7 +25,9 @@ function BrewLogCard({ brewLog }) {
       default:
         return '🧪';
     }
-  };
+    };
+
+  const gravityFinal = getActivitiesByTopic(brewLog, ActivityTopicEnum.Gravity)
 
   return (
     <div className="item-card">

@@ -30,10 +30,8 @@ function ActivityTimeline({ formData, showActivityTimeline, setShowActivityTimel
                             <div className="activity-date">{formatDate(item.date)}</div>
                             <div className="activity-content">
                                 <strong>{item.name}</strong>
-                                <span className="activity-topic">({item.topic})</span>
                                 {item.description && <div className="activity-description">{item.description}</div>}
                                 <div className="activity-status">
-                                    {/*{item.statusOfActivity == "Complete" ? '✅ Completed' : '⏳ Pending'}*/}
                                     {new Date(item.date) < Date.now() ? '' : '⏳ Pending'}
                                     {item.alert && ' 🔔 Has Alert'}
                                 </div>
