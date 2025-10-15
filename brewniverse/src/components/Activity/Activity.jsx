@@ -242,7 +242,7 @@ export function getActivityDisplayName(topic) {
 }
 
 export const ACTIVITY_TOPICS = [
-    'Acid', 'Base', 'DateBottled', 'DateCreated', 'Gravity', 'GravityFinal',
+    'Acid', 'Base', 'DateBottled', 'DateCreated', 'DateSTabilized', 'Gravity', 'GravityFinal',
     'Nutrient', 'PecticEnzyme', 'PH', 'Racked', 'Tannin', 'Yeast', 'Other'
 ];
 

@@ -1,9 +1,9 @@
 import { Plus } from 'lucide-react';
 import React from 'react';
-import '../../Styles/Activity.css';
-import { generateId, getDate } from '../../contexts/AppContext';
+import { getDate } from '../../contexts/AppContext';
+import Activity, { addActivity, getActivityDisplayName } from './Activity';
 import Button from '../UI/Button';
-import Activity, { addActivity, getActivityDisplayName, deleteActivity, updateActivity } from './Activity';
+import '../../Styles/Activity.css';
 
 export function ActivityList({
     formData,

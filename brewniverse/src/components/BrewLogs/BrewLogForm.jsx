@@ -93,24 +93,6 @@ function BrewLogForm() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
-    //Keep this note:
-    //useEffect(() => {
-    //  const gravityActivities = formData.activity
-    //    .filter(event => event.topic === 'Gravity')
-    //    .sort((a, b) => new Date(a.date) - new Date(b.date));
-    //  if (gravityActivities.length < 1) return;
-
-    //  const originalGravity = parseFloat(gravityActivities[0].description);
-    //  const finalAbv = ((originalGravity - 1) * 131.25).toFixed(2)
-
-    //  if (originalGravity > 1) {
-    //    setFormData(prev => ({
-    //          ...prev,
-    //          finalABV: finalAbv,
-    //    }));
-    //  }
-    //}, [formData.activity]);
-
   const handleNavigation = (path) => {
     if (hasUnsavedChanges) {
       if (window.confirm('You have unsaved changes. Are you sure you want to leave without saving?')) {

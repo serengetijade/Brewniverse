@@ -1,3 +1,4 @@
+//Note: ingredient is not a stand alone component. It can be, but is designed to work with IngredientList <See for handling methods. 
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, X, Trash2 } from 'lucide-react';
 import '../../Styles/Shared/ingredients.css';
