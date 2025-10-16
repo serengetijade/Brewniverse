@@ -2,7 +2,8 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
-import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic, getActivityDisplayName, updateActivity,  } from '../Activity/Activity';
+import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic,
+    getActivityDisplayName, updateActivity } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import BrewTypes from '../BrewType';
@@ -10,6 +11,9 @@ import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
+import GravityChart from './GravityChart';
+import { getGravityActivities, getGravityOriginal, getGravityFinal, getGravity13Break,
+    getCurrentAbv, getPotentialAbv } from '../../utils/GravityCalculations';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -199,47 +203,10 @@ function BrewLogForm() {
       return;
     };
 
-    // Gravity
-    var gravityActivities = formData.activity
-        .filter(event => event.topic === 'Gravity')
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    const getGravityOriginal = () => {
-        return gravityActivities.length > 0 ? gravityActivities[0].description : '';
-};
-
-    const getGravityFinal = () => {
-        if (gravityActivities.length <= 1) return '';
-        const latestGravity = gravityActivities[gravityActivities.length - 1];
-        const result = latestGravity.description;
-        updateBrewLog('gravityFinal', result);
-        return latestGravity && latestGravity.description ? result : '';
-    };
-
-    const getGravity13Break = () => {
-        if (gravityActivities.length < 1) return '';
-        const originalGravity = getGravityOriginal();
-        const result = ((parseFloat(originalGravity - 1) * 2 / 3) + 1).toFixed(3)
-        updateBrewLog('gravity13Break', result);
-        return result;
-    }
-
-    const getCurrentAbv = () => {
-        if (gravityActivities.length < 1) return '';
-        const originalGravity = getGravityOriginal();
-        const latestGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description);
-        const result = ((originalGravity - latestGravity) * 131.25).toFixed(2);
-        updateBrewLog('currentAbv', result);
-        return result;
-    }
-
-    const getPotentialAbv = () => {
-        if (gravityActivities.length < 1) return '';
-        const originalGravity = parseFloat(gravityActivities[0].description);
-        const result = ((originalGravity - 1) * 131.25).toFixed(2);
-        updateBrewLog('potentialAbv', result);
-        return result;
-    }
+    // Gravity - memoize to prevent unnecessary recalculations
+    const gravityActivities = React.useMemo(() => {
+        return getGravityActivities(formData.activity, ActivityTopicEnum.Gravity);
+    }, [formData.activity]);
 
   // Nutrients
     const addNutrientScheduleEntry = (date, description) => {
@@ -517,7 +484,7 @@ function BrewLogForm() {
               </label>
               <input
                 step="0.001"
-                value={getGravityOriginal()}
+                value={getGravityOriginal(gravityActivities)}
                 className="form-input  calculated-field"
                 placeholder="1.050"
                 readOnly
@@ -532,7 +499,7 @@ function BrewLogForm() {
                 step="0.001"
                 name="gravity13Break"
                 className="form-input calculated-field"
-                value={getGravity13Break()}
+                value={getGravity13Break(gravityActivities)}
                 readOnly
                 placeholder="1.030"
                 title="This field is automatically calculated from Original Gravity"
@@ -547,7 +514,7 @@ function BrewLogForm() {
                 type="number"
                 step="0.001"
                 className="form-input  calculated-field"
-                value={getGravityFinal()}
+                value={getGravityFinal(gravityActivities)}
                 readOnly
                 placeholder="1.000"
               />
@@ -564,7 +531,7 @@ function BrewLogForm() {
                   type="number"
                   step="0.01"
                   className="form-input calculated-field"
-                  value={getCurrentAbv()}
+                  value={getCurrentAbv(gravityActivities)}
                   readOnly
                   placeholder="12.5"
                   title="This field is automatically calculated from Original Gravity"
@@ -584,7 +551,7 @@ function BrewLogForm() {
                   //id="finalABV"
                   //name="finalABV"
                   className="form-input calculated-field"
-                  value={getPotentialAbv()}
+                  value={getPotentialAbv(gravityActivities)}
                   readOnly
                   placeholder="12.5"
                   title="This field is automatically calculated from Original and Final Gravity"
@@ -604,6 +571,8 @@ function BrewLogForm() {
             brewLogId={id}
           >
           </ActivityList>       
+
+          <GravityChart gravityActivities={gravityActivities} />
         </div>
 
         {/* Nutrients */}

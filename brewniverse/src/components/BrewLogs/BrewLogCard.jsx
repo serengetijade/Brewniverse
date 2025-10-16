@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Calendar} from 'lucide-react';
 import Button from '../UI/Button';
-import { ActivityTopicEnum } from '../Activity/Activity';
+import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 function BrewLogCard({ brewLog })
 {
   const navigate = useNavigate();
@@ -26,8 +26,6 @@ function BrewLogCard({ brewLog })
         return '🧪';
     }
     };
-
-  const gravityFinal = getActivitiesByTopic(brewLog, ActivityTopicEnum.Gravity)
 
   return (
     <div className="item-card">
