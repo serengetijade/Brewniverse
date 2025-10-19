@@ -82,6 +82,7 @@ function Activity({
                 description: activityData.description || '',
                 date: new Date(activityData.date).toISOString(),
                 brewLogId: activityData.brewLogId || brewLogId || '',
+                activityId: activityData.id,
                 topic: activityData.topic,
                 alertGroupId: '',
                 isRecurring: false,
@@ -99,7 +100,7 @@ function Activity({
             });
 
             // Update activity with alert ID
-            handleChange('alertId', newAlertId);
+            handleChange(activityData.id, 'alertId', newAlertId);
         }
     };
 

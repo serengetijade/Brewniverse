@@ -67,9 +67,11 @@ function appReducer(state, action) {
       };
     
     case ActionTypes.DELETE_BREW_LOG:
+      // Cascade delete alerts associated with the brew log
       return {
         ...state,
         brewLogs: state.brewLogs.filter(log => log.id !== action.payload),
+        alerts: state.alerts.filter(alert => alert.brewLogId !== action.payload),
       };
     
     case ActionTypes.ADD_RECIPE:
@@ -134,13 +136,22 @@ function appReducer(state, action) {
       };
     
     case ActionTypes.DELETE_ALERT:
-      // When deleting an alert, also remove the alertId from any brew log activities
-      const updatedBrewLogs = state.brewLogs.map(brewLog => ({
-        ...brewLog,
-        activity: brewLog.activity ? brewLog.activity.map(activity => 
-          activity.alertId === action.payload ? { ...activity, alertId: null } : activity
-        ) : []
-      }));
+      // When deleting an alert, find the alert to get its activityId, then remove alertId from that specific activity
+      const alertToDelete = state.alerts.find(alert => alert.id === action.payload);
+      
+      const updatedBrewLogs = alertToDelete && alertToDelete.activityId
+        ? state.brewLogs.map(brewLog => ({
+            ...brewLog,
+            activity: brewLog.activity ? brewLog.activity.map(activity => 
+              activity.id === alertToDelete.activityId ? { ...activity, alertId: null } : activity
+            ) : []
+          }))
+        : state.brewLogs.map(brewLog => ({
+            ...brewLog,
+            activity: brewLog.activity ? brewLog.activity.map(activity => 
+              activity.alertId === action.payload ? { ...activity, alertId: null } : activity
+            ) : []
+          }));
       
       return {
         ...state,

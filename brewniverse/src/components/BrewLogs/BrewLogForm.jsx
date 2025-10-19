@@ -13,7 +13,7 @@ import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import GravityChart from './GravityChart';
 import { getGravityActivities, getGravityOriginal, getGravityFinal, getGravity13Break,
-    getCurrentAbv, getPotentialAbv } from '../../utils/GravityCalculations';
+    getCurrentAbv, getPotentialAbv } from '../../utils/gravityCalculations';
 import '../../Styles/BrewLogForm.css';
 
 function BrewLogForm() {
@@ -213,7 +213,7 @@ function BrewLogForm() {
         addActivity(
             setFormData,
             date ? date : getDate(),
-            getActivityDisplayName(ActivityTopicEnum.nutrients),
+            getActivityDisplayName(ActivityTopicEnum.Nutrient),
             description ? description : "",
             ActivityTopicEnum.Nutrient,
             id);
@@ -636,7 +636,7 @@ function BrewLogForm() {
             </div>
           </div>
 
-          {getActivitiesByTopic(ActivityTopicEnum.Nutrient).map((activity) => (
+          {getActivitiesByTopic(formData, ActivityTopicEnum.Nutrient).map((activity) => (
             <Activity
                 key={activity.id}
                 activity={activity}

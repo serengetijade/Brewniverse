@@ -16,6 +16,7 @@ function AlertForm() {
     description: '',
     date: getDate(),
     brewLogId: '',
+    activityId: '',
     isRecurring: false,
     recurringType: 'daily',
     recurringInterval: 1,
@@ -236,8 +237,9 @@ function AlertForm() {
           </div>
         </div>
 
-        {/* Brew Logs */}
+        {/* Related Items */}
         <div className="form-section">
+          <h3>Related Items</h3>
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="brewLogId" className="form-label">
@@ -259,6 +261,21 @@ function AlertForm() {
               </select>
             </div>
           </div>
+          
+          {formData.activityId && (
+            <div className="form-group">
+              <label className="form-label">
+                Linked Activity
+              </label>
+              <input
+                type="text"
+                className="form-input calculated-field"
+                value={`Activity ID: ${formData.activityId}`}
+                readOnly
+                title="This alert is linked to a specific activity in the brew log"
+              />
+            </div>
+          )}
         </div>
       </form>
 
