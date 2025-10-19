@@ -1,46 +1,187 @@
-/* Activity Timeline styles */
+/* Timeline Header */
+.timeline-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.timeline-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Sort Toggle Button */
+.sort-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid ;
+    border-radius: var(--border-radius-med);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(10px);
+}
+
+.sort-toggle-btn:hover {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* Timeline Container */
+.activity-timeline-container {
+    padding: 1.5rem 1rem;
+}
+
 .activity-timeline {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    position: relative;
 }
 
+/* Timeline Item */
 .activity-timeline-item {
     display: flex;
     gap: 1rem;
-    padding: 1rem;
-    background-color: var(--color-surface);
-    border-radius: var(--border-radius-sm);
-    border: 1px solid var(--color-border);
-    align-items: flex-start;
+    position: relative;
+    padding-bottom: 1.5rem;
 }
 
-.activity-date {
+.activity-timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+/* Timeline Line Section */
+.timeline-line-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
     flex-shrink: 0;
-    font-weight: 600;
-    color: var(--color-primary);
-    font-size: 0.875rem;
-    min-width: 80px;
+    position: relative;
 }
 
-.activity-content {
+.timeline-icon-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.timeline-line {
+    width: 2px;
+    flex: 1;
+    background-color: var(--color-border);
+    margin-top: 0.5rem;
+    position: absolute;
+    top: 40px;
+    bottom: -24px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Activity Card */
+.activity-card {
+    flex: 1;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    position: relative;
+}
+
+.activity-info {
     flex: 1;
 }
 
-.activity-topic {
+.activity-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.25rem;
+}
+
+.activity-date {
+    font-size: 0.8125rem;
     color: var(--color-textLight);
-    font-size: 0.75rem;
-    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .activity-description {
-    color: var(--color-text);
     font-size: 0.875rem;
-    margin: 0.25rem 0;
+    color: var(--color-text);
+    margin-top: 0.5rem;
+    line-height: 1.5;
 }
 
-.activity-status {
-    color: var(--color-textLight);
+
+/* Activity Badges */
+.activity-badges {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
     font-size: 0.75rem;
-    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.badge-pending {
+    background-color: rgba(var(--color-accent-rgb, 234, 179, 8), 0.1);
+    color: var(--color-accent);
+    border: 1px solid var(--color-accent);
+}
+
+.badge-alert {
+    background-color: rgba(var(--color-primary-rgb, 59, 130, 246), 0.1);
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+/* Empty State */
+.empty-message {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--color-textLight);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+    .timeline-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sort-toggle-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .activity-card {
+        padding: 0.875rem;
+    }
+
+    .activity-icon-wrapper {
+        width: 36px;
+        height: 36px;
+    }
 }
