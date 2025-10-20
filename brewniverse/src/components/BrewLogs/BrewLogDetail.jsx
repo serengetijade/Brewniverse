@@ -1,8 +1,16 @@
+import { Beaker, Calendar, Edit, FileText } from 'lucide-react';
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Edit, Trash2, Calendar, Beaker } from 'lucide-react';
-import { useApp, ActionTypes } from '../../contexts/AppContext';
+import { useNavigate, useParams } from 'react-router-dom';
+import '../../Styles/Shared/brewLogDetail.css';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
+import { getGravityActivities } from '../../utils/gravityCalculations';
+import FormFooter from '../Layout/FormFooter';
 import Button from '../UI/Button';
+import AlcoholConversionChart from './AlcoholConversionChart';
+import BrewLogStats from './BrewLogStats';
+import ActivityTimeline from '../Activity/ActivityTimeline';
+import GravityChart from './GravityChart';
+import SugarProgressChart from './SugarProgressChart';
 
 function BrewLogDetail() {
   const { id } = useParams();
@@ -14,7 +22,8 @@ function BrewLogDetail() {
   if (!brewLog) {
     return (
       <div className="brewlog-detail">
-        <div className="empty-state">
+        <div className="brewlog-empty-state">
+          <Beaker size={64} />
           <h3>Brew Log Not Found</h3>
           <p>The brew log you're looking for doesn't exist.</p>
           <Button variant="primary" onClick={() => navigate('/brewlogs')}>
@@ -35,20 +44,34 @@ function BrewLogDetail() {
     }
   };
 
+  const handleCancel = () => {
+    navigate('/brewlogs');
+  };
+
+  const gravityActivities = getGravityActivities(brewLog.activity || []);
+
   return (
     <div className="brewlog-detail">
-      <div className="detail-header">
-        <div className="header-content">
+      {/* Header Section */}
+      <div className="brewlog-detail-header">
+        <div className="brewlog-header-content">
           <h1>{brewLog.name}</h1>
-          <div className="brew-meta">
-            <span className="brew-type">{brewLog.type}</span>
-            <span className="brew-date">
+          <div className="brewlog-meta">
+            <span className="brewlog-type-badge">
+              <Beaker size={18} />
+              {brewLog.type}
+            </span>
+            <span className="brewlog-date-info">
               <Calendar size={16} />
-              Created {new Date(brewLog.dateCreated).toLocaleDateString()}
+              Started {new Date(brewLog.dateCreated).toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric',
+                year: 'numeric'
+              })}
             </span>
           </div>
         </div>
-        <div className="header-actions">
+        <div className="brewlog-header-actions">
           <Button
             variant="secondary"
             onClick={() => navigate(`/brewlogs/${id}/edit`)}
@@ -56,29 +79,69 @@ function BrewLogDetail() {
             <Edit size={16} />
             Edit
           </Button>
-          <Button
-            variant="error"
-            onClick={handleDelete}
-          >
-            <Trash2 size={16} />
-            Delete
-          </Button>
         </div>
       </div>
 
-      <div className="detail-content">
-        <div className="card">
-          <h2>Brew Log Details</h2>
-          <p>Full brew log detail view coming soon! This will include all the properties like ingredients, gravity readings, notes, and more.</p>
-          
-          {brewLog.description && (
-            <div className="detail-section">
-              <h3>Description</h3>
-              <p>{brewLog.description}</p>
-            </div>
-          )}
+      {/* Description Section */}
+      {brewLog.description && (
+        <div className="brewlog-description">
+          {brewLog.description}
         </div>
+      )}
+
+      {/* Statistics Section */}
+      <div className="brewlog-content-section">
+        <BrewLogStats brewLog={brewLog} />
       </div>
+
+      {/* Gravity Chart Section */}
+      <div className="brewlog-content-section">
+        <GravityChart gravityActivities={gravityActivities} />
+      </div>
+
+      {/* Alcohol & Sugar Charts Row */}
+      <div className="brewlog-charts-row">
+        <AlcoholConversionChart gravityActivities={gravityActivities} />
+        <SugarProgressChart gravityActivities={gravityActivities} />
+      </div>
+
+      {/* Ingredients Section */}
+      <div className="brewlog-content-section">
+          {/*Add a component for Ingredients Summary here.*/}
+      </div>
+
+      {/* Notes Section */}
+      {brewLog.notes && (
+        <div className="brewlog-notes">
+          <h3>
+            <FileText size={20} />
+            Notes
+          </h3>
+          <div className="brewlog-notes-content">
+            {brewLog.notes}
+          </div>
+        </div>
+      )}
+
+      {/* Activity Timeline Section */}
+      <div className="brewlog-content-section">
+        <ActivityTimeline activity={brewLog.activity || []} />
+      </div>
+
+      {/* Footer */}
+      <FormFooter
+        isEditing={true}
+        entityName="Brew Log"
+        onCancel={handleCancel}
+        onDelete={handleDelete}
+        showDelete={false}
+        collapsible={true}
+        defaultExpanded={false}
+        submitLabel="Edit Brew Log"
+        submitIcon={<Edit size={16} />}
+        cancelLabel="Back to List"
+        onSubmit={() => navigate(`/brewlogs/${id}/edit`)}
+      />
     </div>
   );
 }

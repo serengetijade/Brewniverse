@@ -64,8 +64,6 @@ function BrewLogForm() {
     potentialAbv: '',
   });
 
-  const [showActivityTimeline, setShowActivityTimeline] = useState(false);
-
   useEffect(() => {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
@@ -886,12 +884,7 @@ function BrewLogForm() {
       />
 
       {/* Activity Timeline */}
-      <ActivityTimeline
-        formData={formData}
-        showActivityTimeline={showActivityTimeline}
-        setShowActivityTimeline={setShowActivityTimeline}
-      >
-      </ActivityTimeline>
+      <ActivityTimeline activity={formData.activity || []} />
     </div>
   );
 }

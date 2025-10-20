@@ -1,0 +1,202 @@
+.sugar-chart-container {
+  background: var(--color-cardBackground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-med);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.sugar-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.sugar-chart-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.sugar-chart-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.sugar-chart-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sugar-chart-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+}
+
+.sugar-chart-stats .stat-label {
+  font-size: 0.8rem;
+  color: var(--color-textLight);
+  font-weight: 500;
+}
+
+.sugar-chart-stats .stat-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.sugar-chart-stats .stat-value.primary {
+  color: var(--color-primary);
+}
+
+.sugar-chart-stats .stat-value.secondary {
+  color: var(--color-accent);
+}
+
+.sugar-chart-stats .stat-value.success {
+  color: var(--color-success);
+}
+
+.sugar-chart-stats .stat-value.warning {
+  color: var(--color-warning);
+}
+
+.sugar-chart-stats .stat-subtext {
+  font-size: 0.75rem;
+  color: var(--color-textLight);
+  font-weight: 500;
+}
+
+.sugar-chart-tooltip {
+  background: var(--color-cardBackground);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sugar-chart-tooltip .tooltip-label {
+  color: var(--color-textLight);
+  font-size: 0.85rem;
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
+}
+
+.sugar-chart-tooltip .tooltip-value {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sugar-chart-visual {
+  margin: 1.5rem 0 1rem;
+}
+
+.sugar-bar {
+  display: flex;
+  width: 100%;
+  height: 60px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sugar-bar .consumed-section {
+  background: linear-gradient(90deg, var(--color-success), #4ade80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.8s ease;
+}
+
+.sugar-bar .residual-section {
+  background: linear-gradient(90deg, #fbbf24, var(--color-warning));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.8s ease;
+}
+
+.sugar-bar .section-label {
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.sugar-chart-hint {
+  text-align: center;
+  color: var(--color-textLight);
+  font-size: 0.9rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.sugar-chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius-med);
+  color: var(--color-textLight);
+  gap: 1rem;
+}
+
+.sugar-chart-empty p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sugar-chart-container {
+    padding: 1rem;
+  }
+
+  .sugar-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sugar-chart-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .sugar-chart-stats .stat-value {
+    font-size: 1.2rem;
+  }
+
+  .sugar-bar {
+    height: 50px;
+  }
+
+  .sugar-bar .section-label {
+    font-size: 0.8rem;
+  }
+}
+

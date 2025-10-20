@@ -1,0 +1,164 @@
+.alcohol-chart-container {
+  background: var(--color-cardBackground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-med);
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.alcohol-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.alcohol-chart-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: var(--color-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.alcohol-chart-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.alcohol-chart-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.alcohol-chart-stats .stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background: var(--color-surface);
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+}
+
+.alcohol-chart-stats .stat-label {
+  font-size: 0.85rem;
+  color: var(--color-textLight);
+  font-weight: 500;
+}
+
+.alcohol-chart-stats .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.alcohol-chart-stats .stat-value.primary {
+  color: var(--color-primary);
+}
+
+.alcohol-chart-stats .stat-value.secondary {
+  color: var(--color-accent);
+}
+
+.alcohol-chart-stats .stat-value.tertiary {
+  color: var(--color-textLight);
+}
+
+.alcohol-chart-tooltip {
+  background: var(--color-cardBackground);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.alcohol-chart-tooltip .tooltip-label {
+  color: var(--color-textLight);
+  font-size: 0.85rem;
+  margin: 0 0 0.25rem 0;
+  font-weight: 500;
+}
+
+.alcohol-chart-tooltip .tooltip-value {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.alcohol-chart-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--color-surface);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.alcohol-chart-progress-bar .progress-fill {
+  height: 100%;
+  transition: width 0.8s ease;
+  border-radius: 4px;
+}
+
+.alcohol-chart-hint {
+  text-align: center;
+  color: var(--color-textLight);
+  font-size: 0.9rem;
+  margin: 0;
+  font-style: italic;
+}
+
+.alcohol-chart-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: var(--color-surface);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--border-radius-med);
+  color: var(--color-textLight);
+  gap: 1rem;
+}
+
+.alcohol-chart-empty p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .alcohol-chart-container {
+    padding: 1rem;
+  }
+
+  .alcohol-chart-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .alcohol-chart-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .alcohol-chart-stats .stat-value {
+    font-size: 1.25rem;
+  }
+}
+
