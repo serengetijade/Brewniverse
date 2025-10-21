@@ -113,13 +113,15 @@ function BrewLogDetail() {
 
       {/* Notes Section */}
       {brewLog.notes && (
-        <div className="brewlog-notes">
-          <h3>
-            <FileText size={20} />
-            Notes
-          </h3>
-          <div className="brewlog-notes-content">
-            {brewLog.notes}
+        <div className="brewlog-content-section">
+          <div className="brewlog-notes">
+            <h3>
+              <FileText size={20} />
+              Notes
+            </h3>
+            <div className="brewlog-notes-content">
+              {brewLog.notes}
+            </div>
           </div>
         </div>
       )}
