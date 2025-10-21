@@ -4,6 +4,9 @@ import {
   ArrowDown,
   Clock, 
   CircleEllipsis,
+  FlaskConical,
+  FlaskRound,
+  Cylinder, 
   Bell, 
   Scale,
   Droplet,
@@ -14,7 +17,9 @@ import {
   MoveVertical,
   Shield,
   Pill,
+  Leaf,
   Activity as ActivityIcon,
+  TestTubeDiagonal,
   ListOrdered
 } from 'lucide-react';
 import '../../Styles/Shared/activityTimeline.css';
@@ -51,17 +56,17 @@ function BrewLogTimeline({ activity = [] }) {
       case 'gravity':
         return <Scale size={size} />;
       case 'yeast':
-        return <CircleEllipsis size={size} />;
+        return <Sparkles size={size} />;
       case 'nutrient':
         return <Pill size={size} />;
       case 'pecticenzyme':
-        return <Grape size={size} />;
+        return <TestTubeDiagonal size={size} />;
       case 'acid':
-        return <Droplet size={size} />;
+        return <FlaskConical size={size} />;
       case 'base':
-        return <Droplet size={size} />;
+        return <FlaskRound size={size} />;
       case 'tannin':
-        return <Sparkles size={size} />;
+        return <Leaf size={size} />;
       case 'ph':
         return <ActivityIcon size={size} />;
       case 'datebottled':

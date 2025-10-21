@@ -11,6 +11,7 @@ import BrewLogStats from './BrewLogStats';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import GravityChart from './GravityChart';
 import SugarProgressChart from './SugarProgressChart';
+import IngredientsSummary from './IngredientsSummary';
 
 function BrewLogDetail() {
   const { id } = useParams();
@@ -107,7 +108,7 @@ function BrewLogDetail() {
 
       {/* Ingredients Section */}
       <div className="brewlog-content-section">
-          {/*Add a component for Ingredients Summary here.*/}
+          <IngredientsSummary brewLog={brewLog} />
       </div>
 
       {/* Notes Section */}

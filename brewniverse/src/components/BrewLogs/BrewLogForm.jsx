@@ -43,7 +43,6 @@ function BrewLogForm() {
     dateCreated: initialDateCreatedActivity.date,
     dateStabilized:'',
     description: '',
-    ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     name: '',
@@ -417,18 +416,6 @@ function BrewLogForm() {
           </div>
         </div>
 
-        {/* Adjunct Ingredients */}
-        <div className="form-section">
-            <IngredientList
-                formData={formData}
-                setFormData={setFormData}
-                ingredientType="ingredientsAdjunct"
-                sectionName="Adjuncts"
-                sectionDescription=""
-                sectionInfoMessage= "Adjuncts are fermentable ingredients that are not malted grains. Examples include sugar, honey, molasses, fruit, and other fermentable additives. Adjuncts can contribute to the flavor, color, and alcohol content of the brew. No adjuncts added yet."
-            >
-            </IngredientList>
-        </div>
 
         {/* Primary Ingredients */}
         <div className="form-section">
@@ -438,7 +425,7 @@ function BrewLogForm() {
                 ingredientType="ingredientsPrimary"
                 sectionName="Primary Ingredients"
                 sectionDescription=""
-                sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
+                sectionInfoMessage="Primary ingredients contribute to the flavor, color, and alcohol content of the brew. These are things such as malted grains, sugar, honey, molasses, agave, fruit, and other fermentables. No primary ingredients added yet."
             >
             </IngredientList>
         </div>
@@ -451,7 +438,7 @@ function BrewLogForm() {
                 ingredientType="ingredientsSecondary"
                 sectionName="Secondary Ingredients"
                 sectionDescription=""
-                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
+                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. These are optional additions added after primary fermentation has finished. No secondary ingredients added yet."
             >
             </IngredientList>
         </div>
