@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Trash2, Bell, BellPlus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } from '../../constants/ActivityTopics.jsx';
 import '../../Styles/Activity.css';
 
 function Activity({
@@ -78,7 +79,7 @@ function Activity({
             const newAlertId = generateId();
             const newAlert = {
                 id: newAlertId,
-                name: activity.name || activityData.description || `${activityData.topic} Alert`,
+                name: getTopicDisplayNameForAlerts(activity.topic) || `${activityData.topic} Alert`,
                 description: activityData.description || '',
                 date: new Date(activityData.date).toISOString(),
                 brewLogId: activityData.brewLogId || brewLogId || '',
@@ -158,7 +159,7 @@ function Activity({
 export function addActivity (setFormData, date, name, description, topic, brewLogId, alertId){
     const newActivity = createActivity(
         date ? date : getDate(),
-        name ? name : getActivityDisplayName(topic),
+        name ? name : getTopicDisplayName(topic),
         description,
         topic,
         brewLogId,
@@ -177,18 +178,13 @@ export function createActivity(date, name, description, topic, brewLogId, alertI
     return {
         id: generateId(),
         date: date ? date : getDate(),
-        name: name || getActivityDisplayName(topic),
+        name: name || getTopicDisplayName(topic),
         description: description,
         topic: topic,
         brewLogId: brewLogId,
         alertId: alertId
     };
 }
-
-//export const getActivitiesByTopic = (formData, topic) => {
-//    const data = { ...formData };
-//    return data.activity.filter(x => x.topic === topic);
-//};
 
 export const getActivitiesByTopic = (formData, topic) => {
     if (!formData || !topic) return [];
@@ -217,57 +213,7 @@ export function updateActivity (setFormData, id, field, value) {
     }));
 };
 
-export function getActivityDisplayName(topic) {
-    if (!topic) return "Activity"
-    const activityTopic = (topic).toLowerCase();
-
-    switch (activityTopic) {
-        case "gravity":
-            return "Gravity Reading";
-        case "pecticenzyme":
-            return "Pectic Enzyme Added";
-        case "datebottled":
-            return "Brew Bottled";
-        case "datecreated":
-            return "Date Created";
-        case "dateracked":
-            return "Brew Racked";
-        case "datestabilized":
-            return "Stabilization";
-        case "nutrient":
-            return "Nutrients Added";
-        case "acid":
-            return "Acid Added";
-        case "base":
-            return "Base Added";
-        case "tannin":
-            return "Tannin Added";
-        case "yeast":
-            return "Yeast Added";
-        case "ph":
-            return "pH Measured/Adjusted";
-        case "other":
-            return "Activity";
-        default:
-            return `${topic} Added`;
-    }
-}
-
-export const ActivityTopicEnum = {
-    'Acid': 'acid',
-    'Base': 'base',
-    'DateBottled': 'datebottled',
-    'DateCreated': 'datecreated',
-    'DateStabilized' : 'datestabilized',
-    'Gravity': 'gravity',
-    'Nutrient': 'nutrient',
-    'PecticEnzyme': 'pecticenzyme',
-    'PH': 'ph',
-    'Racked': 'racked',
-    'Tannin': 'tannin',
-    'Yeast': 'yeast',
-    'Other': 'other'
-}
+export { getTopicDisplayName, ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
 
 export const ACTIVITY_STATUSES = ["Pending", "Complete"];
 

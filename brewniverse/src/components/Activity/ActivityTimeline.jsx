@@ -3,25 +3,10 @@ import {
   ArrowUp,
   ArrowDown,
   Clock, 
-  CircleEllipsis,
-  FlaskConical,
-  FlaskRound,
-  Cylinder, 
   Bell, 
-  Scale,
-  Droplet,
-  Grape,
-  Sparkles,
-  BottleWine,
-  PlayCircle,
-  MoveVertical,
-  Shield,
-  Pill,
-  Leaf,
-  Activity as ActivityIcon,
-  TestTubeDiagonal,
   ListOrdered
 } from 'lucide-react';
+import { getTopicIcon, getTopicColor } from '../../constants/ActivityTopics.jsx';
 import '../../Styles/Shared/activityTimeline.css';
 
 function BrewLogTimeline({ activity = [] }) {
@@ -48,70 +33,6 @@ function BrewLogTimeline({ activity = [] }) {
       hour12: true 
     });
     return { date: datePart, time: timePart };
-  };
-
-  const getTopicIcon = (topic, size = 18) => {
-    const topicLower = topic?.toLowerCase() || '';
-    switch (topicLower) {
-      case 'gravity':
-        return <Scale size={size} />;
-      case 'yeast':
-        return <Sparkles size={size} />;
-      case 'nutrient':
-        return <Pill size={size} />;
-      case 'pecticenzyme':
-        return <TestTubeDiagonal size={size} />;
-      case 'acid':
-        return <FlaskConical size={size} />;
-      case 'base':
-        return <FlaskRound size={size} />;
-      case 'tannin':
-        return <Leaf size={size} />;
-      case 'ph':
-        return <ActivityIcon size={size} />;
-      case 'datebottled':
-        return <BottleWine size={size} />;
-      case 'datecreated':
-        return <PlayCircle size={size} />;
-      case 'dateracked':
-        return <MoveVertical size={size} />;
-      case 'datestabilized':
-        return <Shield size={size} />;
-      default:
-        return <ActivityIcon size={size} />;
-    }
-  };
-
-  const getIconColor = (topic) => {
-    const topicLower = topic?.toLowerCase() || '';
-    switch (topicLower) {
-      case 'gravity':
-        return '#3b82f6';
-      case 'yeast':
-        return '#8b5cf6';
-      case 'nutrient':
-        return '#10b981';
-      case 'pecticenzyme':
-        return '#a855f7';
-      case 'acid':
-        return '#eab308';
-      case 'base':
-        return '#06b6d4';
-      case 'tannin':
-        return '#f59e0b';
-      case 'ph':
-        return '#ec4899';
-      case 'datebottled':
-        return '#14b8a6';
-      case 'datecreated':
-        return '#22c55e';
-      case 'dateracked':
-        return '#6366f1';
-      case 'datestabilized':
-        return '#84cc16';
-      default:
-        return '#6b7280';
-    }
   };
 
   const toggleSortOrder = () => {
@@ -161,7 +82,7 @@ function BrewLogTimeline({ activity = [] }) {
         <div className="timeline-line-container">
           {sortedActivities.map((item, index) => {
             const isFuture = isDateInFuture(item.date);
-            const iconColor = getIconColor(item.topic);
+            const iconColor = getTopicColor(item.topic);
             const formattedDate = formatDate(item.date);
             
             return (
@@ -205,10 +126,6 @@ function BrewLogTimeline({ activity = [] }) {
                   {item.description && (
                     <div className="event-description">{item.description}</div>
                   )}
-                  
-                  {/*<div className="event-topic-tag" style={{ backgroundColor: iconColor }}>*/}
-                  {/*  {item.topic}*/}
-                  {/*</div>*/}
                 </div>
               </div>
             );

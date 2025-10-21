@@ -3,10 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
 import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic,
-    getActivityDisplayName, updateActivity } from '../Activity/Activity';
+    getTopicDisplayName, updateActivity } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import ActivityTimeline from '../Activity/ActivityTimeline';
-import BrewTypes from '../BrewType';
+import BrewTypes from '../../constants/BrewTypes';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
@@ -164,7 +164,7 @@ function BrewLogForm() {
               addActivity(
                   setFormData,
                   value,
-                  getActivityDisplayName(name),
+                  getTopicDisplayName(name),
                   'Brew bottled and ready for aging',
                   ActivityTopicEnum.DateBottled,
                   formData.id,
@@ -183,7 +183,7 @@ function BrewLogForm() {
               addActivity(
                   setFormData,
                   value,
-                  getActivityDisplayName(name),
+                  getTopicDisplayName(name),
                   'Brew stabilized',
                   ActivityTopicEnum.DateStabilized,
                   formData.id,
@@ -210,7 +210,7 @@ function BrewLogForm() {
         addActivity(
             setFormData,
             date ? date : getDate(),
-            getActivityDisplayName(ActivityTopicEnum.Nutrient),
+            getTopicDisplayName(ActivityTopicEnum.Nutrient),
             description ? description : "",
             ActivityTopicEnum.Nutrient,
             id);

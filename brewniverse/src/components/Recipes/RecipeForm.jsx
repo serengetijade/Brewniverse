@@ -7,7 +7,7 @@ import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
 import '../../Styles/RecipeForm.css';
-import BrewTypes from '../BrewType';
+import BrewTypes from '../../constants/BrewTypes';
 
 function RecipeForm() {
   const { id } = useParams();

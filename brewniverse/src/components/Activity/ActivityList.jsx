@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import React from 'react';
 import { getDate } from '../../contexts/AppContext';
-import Activity, { addActivity, getActivitiesByTopic, getActivityDisplayName } from './Activity';
+import Activity, { addActivity, getActivitiesByTopic, getTopicDisplayName } from './Activity';
 import Button from '../UI/Button';
 import '../../Styles/Activity.css';
 
@@ -27,7 +27,7 @@ export function ActivityList({
                     onClick={() => addActivity(
                         setFormData,
                         getDate(),
-                        getActivityDisplayName(topic),
+                        getTopicDisplayName(topic),
                         null,
                         topic,
                         formData.id,

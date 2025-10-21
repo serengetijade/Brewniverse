@@ -1,21 +1,16 @@
 import React from 'react';
 import { 
-    Apple,
   Atom,
-  Droplet, 
-  Grape, 
-    CircleEllipsis, 
-    Barrel,
-  Candy,
+  Barrel,
   Pill, 
   Sparkles,
-    Cylinder,
   TestTubeDiagonal,
-    FlaskConical,
-    FlaskRound,
-  Leaf, Orbit
+  FlaskConical,
+  FlaskRound,
+  Leaf
 } from 'lucide-react';
-import { getActivitiesByTopic, ActivityTopicEnum } from '../Activity/Activity';
+import { getActivitiesByTopic } from '../Activity/Activity';
+import { ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
 import '../../Styles/Shared/ingredientsSummary.css';
 
 function IngredientsSummary({ brewLog }) {
