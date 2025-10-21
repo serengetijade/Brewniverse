@@ -5,7 +5,6 @@ import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppCont
 import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic,
     getTopicDisplayName, updateActivity } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
-import ActivityTimeline from '../Activity/ActivityTimeline';
 import BrewTypes from '../../constants/BrewTypes';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
@@ -200,6 +199,15 @@ function BrewLogForm() {
       return;
     };
 
+    const onDelete = (e) => {
+        e.preventDefault();
+
+        if (!window.confirm('Are you sure you want to delete this Brew Log?')) return;
+
+        dispatch({ type: ActionTypes.DELETE_BREW_LOG, payload: id });
+        navigate('/recipes');
+    }
+
     // Gravity - memoize to prevent unnecessary recalculations
     const gravityActivities = React.useMemo(() => {
         return getGravityActivities(formData.activity, ActivityTopicEnum.Gravity);
@@ -276,13 +284,11 @@ function BrewLogForm() {
       }));
     };
 
-    const adjuncts = copyWithNewIds(recipe.ingredientsAdjunct);
     const primary = copyWithNewIds(recipe.ingredientsPrimary);
     const secondary = copyWithNewIds(recipe.ingredientsSecondary);
 
     setFormData(prev => ({
       ...prev,
-      ingredientsAdjunct: [...prev.ingredientsAdjunct, ...adjuncts],
       ingredientsPrimary: [...prev.ingredientsPrimary, ...primary],
       ingredientsSecondary: [...prev.ingredientsSecondary, ...secondary]
     }));
@@ -867,11 +873,9 @@ function BrewLogForm() {
         isEditing={isEditing}
         entityName="Brew Log"
         onCancel={() => handleNavigation('/brewlogs')}
-        showDelete={false}
+        showDelete={true}
+        onDelete={onDelete}
       />
-
-      {/* Activity Timeline */}
-      <ActivityTimeline activity={formData.activity || []} />
     </div>
   );
 }

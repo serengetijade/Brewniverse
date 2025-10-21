@@ -18,7 +18,6 @@ function RecipeForm() {
   const [formData, setFormData] = useState({
     name: '',
     dateCreated: getDate(),
-    ingredientsAdjunct: [],
     ingredientsPrimary: [],
     ingredientsSecondary: [],
     instructions: [''],
@@ -35,13 +34,34 @@ function RecipeForm() {
       const recipe = state.recipes.find(r => r.id === id);
       if (recipe) {
         setFormData({
-          ...recipe,
-          dateCreated: recipe.dateCreated.split('T')[0],
+            ...recipe,
+          id: recipe.id,
           instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
         });
       }
     }
   }, [id, isEditing, state.recipes]);
+
+    const onDelete = (e) => {
+        e.preventDefault();
+
+        const brewLogs = state.brewLogs.filter(b => b.recipeId === id);
+        if (brewLogs.length > 0) {
+            // Delete from connected brew logs
+            brewLogs.forEach(brewLog => {
+                dispatch({
+                    type: ActionTypes.UPDATE_BREW_LOG,
+                    payload: { ...brewLog, recipeId: '' }
+                });
+            });
+        }
+        else {
+            if (!window.confirm('Are you sure you want to delete this recipe?')) return;
+        }
+
+        dispatch({ type: ActionTypes.DELETE_RECIPE, payload: id });
+        navigate('/recipes');
+    }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -216,19 +236,6 @@ function RecipeForm() {
           </div>
         </div>
 
-        {/* Adjunct Ingredients */}
-        <div className="form-section">
-            <IngredientList
-                formData={formData}
-                setFormData={setFormData}
-                ingredientType="ingredientsAdjunct"
-                sectionName="Adjuncts"
-                sectionDescription=""
-                sectionInfoMessage= "Adjuncts are fermentable ingredients that are not malted grains. Examples include sugar, honey, molasses, fruit, and other fermentable additives. Adjuncts can contribute to the flavor, color, and alcohol content of the brew. No adjuncts added yet."
-            >
-            </IngredientList>
-        </div>
-
         {/* Primary Ingredients */}
         <div className="form-section">
             <IngredientList
@@ -317,6 +324,7 @@ function RecipeForm() {
         onCancel={() => navigate('/recipes')}
         showDelete={false}
         showDelete={true}
+        onDelete={onDelete}
       />
     </div>
   );

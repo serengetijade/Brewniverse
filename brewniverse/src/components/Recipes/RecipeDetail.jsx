@@ -131,10 +131,6 @@ function RecipeDetail() {
               </h2>
               <div className="ingredients-grid">
                 <IngredientDisplay
-                  ingredients={recipe.ingredientsAdjunct}
-                  title="Adjuncts"
-                />
-                <IngredientDisplay
                   ingredients={recipe.ingredientsPrimary}
                   title="Primary Ingredients"
                 />

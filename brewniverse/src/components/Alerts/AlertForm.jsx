@@ -260,22 +260,7 @@ function AlertForm() {
                 ))}
               </select>
             </div>
-          </div>
-          
-          {formData.activityId && (
-            <div className="form-group">
-              <label className="form-label">
-                Linked Activity
-              </label>
-              <input
-                type="text"
-                className="form-input calculated-field"
-                value={`Activity ID: ${formData.activityId}`}
-                readOnly
-                title="This alert is linked to a specific activity in the brew log"
-              />
-            </div>
-          )}
+          </div>      
         </div>
       </form>
 
