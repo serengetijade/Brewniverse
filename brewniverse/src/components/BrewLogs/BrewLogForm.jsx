@@ -356,6 +356,21 @@ function BrewLogForm() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="name" className="form-label">
+                Description
+            </label>
+            <textarea
+                id="description"
+                name="description"
+                className="form-textarea"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Brief description of your brew"
+                rows={3}
+            />
+          </div> 
+
+          <div className="form-group">
             <label htmlFor="recipeId" className="form-label">
               Recipe
             </label>
@@ -817,23 +832,8 @@ function BrewLogForm() {
             </div>
         </div>
 
-        {/* Description & Notes */}
-        <div className="form-section">
-          <div className="form-group">
-            <h3>
-              Description
-            </h3>
-            <textarea
-              id="description"
-              name="description"
-              className="form-textarea"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Brief description of your brew"
-              rows={3}
-            />
-          </div>
-
+        {/* Notes */}
+        <div className="form-section">  
           <div className="form-group">
             <h3>
               Notes
