@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useRef } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
@@ -20,8 +20,6 @@ function BrewLogForm() {
   const navigate = useNavigate();
   const { state, dispatch } = useApp();
   const isEditing = Boolean(id);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const initialFormData = useRef(null);
   let buttonSize = 14;
 
   const newFormId = generateId();
@@ -66,49 +64,14 @@ function BrewLogForm() {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
             if (brewLog) {
-                const loadedData = {
+                setFormData({
                     ...brewLog,
                     id: brewLog.id, // Ensure ID is preserved
                     activity: brewLog.activity || []
-                };
-
-                setFormData(loadedData);
-                initialFormData.current = JSON.stringify(loadedData);
+                });
             }
         }
   }, [id, isEditing, state.brewLogs]);
-
-  // Track form changes
-  useEffect(() => {
-    if (initialFormData.current) {
-      const currentData = JSON.stringify(formData);
-      setHasUnsavedChanges(currentData !== initialFormData.current);
-    }
-  }, [formData]);
-
-  // Handle browser navigation/refresh
-  useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [hasUnsavedChanges]);
-
-  const handleNavigation = (path) => {
-    if (hasUnsavedChanges) {
-      if (window.confirm('You have unsaved changes. Are you sure you want to leave without saving?')) {
-        setHasUnsavedChanges(false);
-        navigate(path);
-      }
-    } else {
-      navigate(path);
-    }
-    };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -130,28 +93,36 @@ function BrewLogForm() {
       });
     }
 
-    setHasUnsavedChanges(false);
     navigate('/brewlogs');
   };
 
-  const updateActivityDateByTopic = (e) => {
-        const { name, value } = e.target;
-        const topic = name;
-
-        const allActivitiesByTopic = getActivitiesByTopic(formData, topic)
-        const existingItem = allActivitiesByTopic[0];
-        if (!existingItem) return false;
-
-        updateBrewLog(name, value);
-        updateActivity(setFormData, existingItem.id, "date", value);
+  const updateFormData = (updates) => {
+    const updatedData = { ...formData, ...updates };
+    setFormData(updatedData);
+    
+    if (isEditing) {
+      dispatch({
+        type: ActionTypes.UPDATE_BREW_LOG,
+        payload: { ...updatedData, id }
+      });
     }
+  };
+
+  const updateActivityDateByTopic = (e) => {
+    const { name, value } = e.target;
+    const topic = name;
+
+    const allActivitiesByTopic = getActivitiesByTopic(formData, topic);
+    const existingItem = allActivitiesByTopic[0];
+    if (!existingItem) return false;
+
+    updateFormData({ [name]: value });
+    updateActivity(setFormData, existingItem.id, "date", value);
+  };
     
   const updateBrewLog = (fieldName, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [fieldName]: value
-        }));
-    }
+    updateFormData({ [fieldName]: value });
+  };
 
   const handleChange = (e) => {
       const { name, value } = e.target;
@@ -205,7 +176,7 @@ function BrewLogForm() {
         if (!window.confirm('Are you sure you want to delete this Brew Log?')) return;
 
         dispatch({ type: ActionTypes.DELETE_BREW_LOG, payload: id });
-        navigate('/recipes');
+        navigate('/brewlogs');
     }
 
     // Gravity - memoize to prevent unnecessary recalculations
@@ -298,8 +269,7 @@ function BrewLogForm() {
     <div className="form-container form-with-footer">
       <FormHeader 
         isEditing={isEditing} 
-        entityName="Brew Log" 
-        hasUnsavedChanges={hasUnsavedChanges}
+        entityName="Brew Log"
       />
 
       <form onSubmit={handleSubmit} className="card">
@@ -401,7 +371,7 @@ function BrewLogForm() {
                     type="button"
                     variant="outline"
                     size="small"
-                    onClick={() => { handleNavigation(`/recipes/${formData.recipeId}`);}}
+                    onClick={() => navigate(`/recipes/${formData.recipeId}`)}
                     disabled={!formData.recipeId}
                 >
                     Go to Recipe
@@ -872,7 +842,8 @@ function BrewLogForm() {
       <FormFooter 
         isEditing={isEditing}
         entityName="Brew Log"
-        onCancel={() => handleNavigation('/brewlogs')}
+        onCancel={() => navigate('/brewlogs')}
+        showCancel={false}
         showDelete={true}
         onDelete={onDelete}
       />

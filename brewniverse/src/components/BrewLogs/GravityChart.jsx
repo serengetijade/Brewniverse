@@ -67,7 +67,8 @@ function GravityChart({ gravityActivities }) {
   // Don't render if no data
   if (chartData.length === 0) {
     return (
-      <div className="gravity-chart-empty">
+        <div className="gravity-chart-empty">
+        <Zap size={32} />
         <p>Add gravity readings to see the fermentation chart</p>
       </div>
     );

@@ -61,12 +61,25 @@ function AlertForm() {
     navigate('/alerts');
   };
 
+  const updateFormData = (updates) => {
+    const updatedData = { ...formData, ...updates };
+    setFormData(updatedData);
+    
+    if (isEditing) {
+      dispatch({
+        type: ActionTypes.UPDATE_ALERT,
+        payload: { 
+          ...updatedData, 
+          id,
+          date: new Date(updatedData.date).toISOString()
+        }
+      });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    updateFormData({ [name]: value });
   };
 
   const handleDelete = () => {
@@ -129,7 +142,7 @@ function AlertForm() {
                 type="checkbox"
                 name="isRecurring"
                 checked={formData.isRecurring}
-                onChange={(e) => setFormData(prev => ({ ...prev, isRecurring: e.target.checked }))}
+                onChange={(e) => updateFormData({ isRecurring: e.target.checked })}
               />
               Make this a recurring alert
             </label>
@@ -229,7 +242,7 @@ function AlertForm() {
                   type="checkbox"
                   name="isCompleted"
                   checked={formData.isCompleted}
-                  onChange={(e) => setFormData(prev => ({ ...prev, isCompleted: e.target.checked }))}
+                  onChange={(e) => updateFormData({ isCompleted: e.target.checked })}
                 />
                 Mark as completed
               </label>
@@ -268,6 +281,7 @@ function AlertForm() {
         isEditing={isEditing}
         entityName="Alert"
         onCancel={() => navigate('/alerts')}
+        showCancel={false}
         onDelete={handleDelete}
       />
     </div>

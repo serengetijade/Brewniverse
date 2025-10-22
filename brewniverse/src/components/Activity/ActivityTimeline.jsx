@@ -70,7 +70,6 @@ function BrewLogTimeline({ activity = [] }) {
           <button 
             className="sort-toggle-btn"
             onClick={toggleSortOrder}
-            title={sortOrder === 'asc' ? 'Sort newest first' : 'Sort oldest first'}
           >
             {sortOrder === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
             <span>{sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}</span>

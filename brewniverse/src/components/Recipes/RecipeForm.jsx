@@ -34,7 +34,7 @@ function RecipeForm() {
       const recipe = state.recipes.find(r => r.id === id);
       if (recipe) {
         setFormData({
-            ...recipe,
+          ...recipe,
           id: recipe.id,
           instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
         });
@@ -87,20 +87,25 @@ function RecipeForm() {
     navigate('/recipes');
   };
 
-  // Helper to update form data and auto-save
+  const updateFormData = (updates) => {
+    const updatedData = { ...formData, ...updates };
+    setFormData(updatedData);
+    
+    if (isEditing) {
+      dispatch({
+        type: ActionTypes.UPDATE_RECIPE,
+        payload: { ...updatedData, id }
+      });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    updateFormData({ [name]: value });
   };
 
   const handleInstructionsChange = (instructions) => {
-    setFormData(prev => ({
-      ...prev,
-      instructions: instructions
-    }));
+    updateFormData({ instructions });
   };
 
   const getConnectedBrewLogs = () => {
@@ -323,7 +328,7 @@ function RecipeForm() {
         isEditing={isEditing}
         entityName="Recipe"
         onCancel={() => navigate('/recipes')}
-        showDelete={false}
+        showCancel={false}
         showDelete={true}
         onDelete={onDelete}
       />
