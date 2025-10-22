@@ -9,6 +9,7 @@ import RecipeCard from './RecipeCard';
 import BrewTypes from '../../constants/BrewTypes';
 import '../../Styles/Shared/list.css';
 import '../../Styles/Shared/search.css';
+import '../../Styles/RecipesList.css';
 
 function RecipesList() {
   const navigate = useNavigate();

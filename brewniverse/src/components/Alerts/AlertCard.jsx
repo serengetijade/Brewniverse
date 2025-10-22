@@ -1,13 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, BookOpen } from 'lucide-react';
+import { Trash2, BookOpen, Calendar, Clock, CheckCircle2 } from 'lucide-react';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
+import { getTopicConfig } from '../../constants/ActivityTopics';
 
 function AlertCard({ alert, editUrl }) {
   const navigate = useNavigate();
-    const { state, dispatch } = useApp();
-    const brewLog = state.brewLogs.find(x => x.id === alert.brewLogId);
+  const { state, dispatch } = useApp();
+  const brewLog = state.brewLogs.find(x => x.id === alert.brewLogId);
+  const topicConfig = getTopicConfig(alert.topic);
+  const TopicIcon = topicConfig.icon;
 
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete "${alert.name}"?`)) {
@@ -35,20 +38,64 @@ function AlertCard({ alert, editUrl }) {
   };
 
   return (
-    <div className="item-card">
-      <div className="item-content">
-        <h3>{alert.name}</h3>
-        {alert.description && 
+    <div className={`item-card alert-card ${alert.isCompleted ? 'alert-completed-card' : ''}`} 
+         style={{'--item-color': topicConfig.color}}>
+      <div className="alert-card-accent"></div>
+      <div className="alert-header">
+        <div className="alert-header-left">
+          <div className="alert-title-row">
+            <div className="alert-topic-badge" style={{backgroundColor: `${topicConfig.color}15`, color: topicConfig.color}}>
+              <TopicIcon size={16} />
+            </div>
+            <h3 className="alert-name">{alert.name}</h3>
+          </div>
+          {alert.description && 
             <p className="item-description">{alert.description}</p>
-        }
-        <p className="item-name"> Brew: {brewLog.name} </p>
-        <p className="item-date">
-          {new Date(alert.date).toLocaleDateString()} at {new Date(alert.date).toLocaleTimeString()}
-        </p>
+          }
+        </div>
         {alert.isCompleted && (
-          <p className="alert-completed">✓ Completed</p>
+          <div className="alert-completed-badge">
+            <CheckCircle2 size={14} />
+            <span>Completed</span>
+          </div>
         )}
       </div>
+
+      <div className="item-content">
+        <div className="alert-datetime-display">
+          <div className="alert-date-section">
+            <div className="alert-datetime-label">
+              <Calendar size={14} />
+              <span>Date</span>
+            </div>
+            <div className="alert-datetime-value">
+              {new Date(alert.date).toLocaleDateString([], { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric' 
+              })}
+            </div>
+          </div>
+          <div className="alert-time-section">
+            <div className="alert-datetime-label">
+              <Clock size={14} />
+              <span>Time</span>
+            </div>
+            <div className="alert-datetime-value">
+              {new Date(alert.date).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+              })}
+            </div>
+          </div>
+        </div>
+        
+        <div className="alert-brewlog-reference">
+          <BookOpen size={14} />
+          <span>Brew: <span className="alert-brewlog-name">{brewLog?.name || 'Unknown Brew'}</span></span>
+        </div>
+      </div>
+
       <div className="item-actions">
         <Button
           variant="outline"
@@ -69,17 +116,8 @@ function AlertCard({ alert, editUrl }) {
           size="small"
           onClick={handleComplete}
         >
-          {alert.isCompleted ? "Delete" : "Complete"}
+        {alert.isCompleted ? <Trash2 size={16} /> : "Complete"}
         </Button>
-        {!alert.isCompleted && (
-          <Button
-            variant="ghost"
-            size="small"
-            onClick={handleDelete}
-          >
-            <Trash2 size={16} />
-          </Button>
-        )}
       </div>
     </div>
   );

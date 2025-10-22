@@ -448,7 +448,7 @@ function BrewLogForm() {
 
         {/* Yeast */}
         <div className="form-section">
-          <h3>Yeast</h3>       
+          <h3>Pitch Yeast</h3>       
           <ActivityList
             formData={formData}
             setFormData={updateFormDataCallback}

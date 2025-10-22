@@ -9,6 +9,7 @@ import AlertCard from './AlertCard';
 import AlertGroup from './AlertGroup';
 import "../../Styles/Shared/list.css";
 import "../../Styles/Shared/search.css";
+import "../../Styles/AlertsList.css";
 
 function AlertsList() {
     const navigate = useNavigate();

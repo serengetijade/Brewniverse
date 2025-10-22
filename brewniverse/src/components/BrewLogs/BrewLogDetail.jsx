@@ -1,17 +1,17 @@
 import { Beaker, Calendar, Edit, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../../Styles/Shared/brewLogDetail.css';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import { getGravityActivities } from '../../utils/gravityCalculations';
+import ActivityTimeline from '../Activity/ActivityTimeline';
 import FormFooter from '../Layout/FormFooter';
 import Button from '../UI/Button';
 import AlcoholConversionChart from './AlcoholConversionChart';
 import BrewLogStats from './BrewLogStats';
-import ActivityTimeline from '../Activity/ActivityTimeline';
 import GravityChart from './GravityChart';
-import SugarProgressChart from './SugarProgressChart';
 import IngredientsSummary from './IngredientsSummary';
+import SugarProgressChart from './SugarProgressChart';
+import '../../Styles/Shared/brewLogDetail.css';
 
 function BrewLogDetail() {
   const { id } = useParams();

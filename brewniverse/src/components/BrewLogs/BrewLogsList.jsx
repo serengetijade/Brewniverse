@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Beaker, Search, FileText } from 'lucide-react';
+import { Plus, Calendar, Beaker, BookOpen, Search, FileText } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
@@ -16,7 +16,6 @@ function BrewLogsList() {
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
 
-  // Process and filter brew logs based on search and sort criteria
   const processedBrewLogs = useMemo(() => {
     let filteredBrewLogs = state.brewLogs.filter(brewLog => 
       (brewLog.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -24,7 +23,6 @@ function BrewLogsList() {
       (brewLog.type || '').toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    // Sort brew logs based on selected criteria
     if (sortBy === 'date') {
       filteredBrewLogs.sort((a, b) => {
         const dateA = new Date(a.dateCreated);
@@ -36,7 +34,7 @@ function BrewLogsList() {
         const typeA = a.type.toLowerCase();
         const typeB = b.type.toLowerCase();
         if (typeA === typeB) {
-          // If types are the same, sort by date
+          // ThenBy date
           const dateA = new Date(a.dateCreated);
           const dateB = new Date(b.dateCreated);
           return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
@@ -44,7 +42,7 @@ function BrewLogsList() {
         return sortOrder === 'asc' ? typeA.localeCompare(typeB) : typeB.localeCompare(typeA);
       });
     } else if (sortBy === 'recipe') {
-      // Group by recipe, then sort by date within each group
+      // Group by recipe, ThenBy date 
       const grouped = {};
       filteredBrewLogs.forEach(brewLog => {
         const recipeId = brewLog.recipeId || 'no-recipe';
@@ -54,7 +52,7 @@ function BrewLogsList() {
         grouped[recipeId].push(brewLog);
       });
       
-      // Sort brew logs within each group by date
+      // Sort by date
       Object.keys(grouped).forEach(recipeId => {
         grouped[recipeId].sort((a, b) => {
           const dateA = new Date(a.dateCreated);
@@ -99,7 +97,7 @@ function BrewLogsList() {
       {state.brewLogs.length === 0 ? (
         <div className="empty-state">
           <div className="empty-icon">
-            <Beaker size={64} />
+            <BookOpen size={64} />
           </div>
           <h3>No Brew Logs Yet</h3>
           <p>Start tracking your brewing journey by creating your first brew log.</p>
