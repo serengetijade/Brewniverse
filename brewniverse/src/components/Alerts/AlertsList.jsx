@@ -7,7 +7,7 @@ import ListHeader from '../Layout/ListHeader';
 import SearchSortControls from '../UI/SearchSortControls';
 import AlertCard from './AlertCard';
 import AlertGroup from './AlertGroup';
-import "../../Styles/BrewLogsList.css";
+import "../../Styles/Shared/list.css";
 import "../../Styles/Shared/search.css";
 
 function AlertsList() {

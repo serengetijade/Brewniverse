@@ -7,7 +7,7 @@ import ListHeader from '../Layout/ListHeader';
 import SearchSortControls from '../UI/SearchSortControls';
 import RecipeCard from './RecipeCard';
 import BrewTypes from '../../constants/BrewTypes';
-import '../../Styles/BrewLogsList.css';
+import '../../Styles/Shared/list.css';
 import '../../Styles/Shared/search.css';
 
 function RecipesList() {

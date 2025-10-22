@@ -7,6 +7,7 @@ import ListHeader from '../Layout/ListHeader';
 import SearchSortControls from '../UI/SearchSortControls';
 import BrewLogCard from './BrewLogCard';
 import '../../Styles/BrewLogsList.css';
+import '../../Styles/Shared/list.css';
 import '../../Styles/Shared/search.css';
 function BrewLogsList() {
   const navigate = useNavigate();
