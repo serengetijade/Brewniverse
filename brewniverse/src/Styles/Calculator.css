@@ -29,85 +29,11 @@
   margin-bottom: 2rem;
 }
 
-.calculator-card {
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--border-radius-med);
-  padding: 2rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
+/* Calculator-specific card layout adjustments */
+.calculators-grid .interactive-card {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 1rem;
-}
-
-.calculator-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
-.calculator-card.calculator-primary {
-  border-color: var(--color-primary);
-}
-
-.calculator-card.calculator-primary:hover {
-  background: linear-gradient(135deg, var(--color-primary) 0%, rgba(var(--color-primary-rgb), 0.1) 100%);
-  border-color: var(--color-primary);
-}
-
-.calculator-card.calculator-secondary {
-  border-color: var(--color-secondary);
-}
-
-.calculator-card.calculator-secondary:hover {
-  background: linear-gradient(135deg, var(--color-secondary) 0%, rgba(var(--color-secondary-rgb), 0.1) 100%);
-  border-color: var(--color-secondary);
-}
-
-.calculator-card.calculator-accent {
-  border-color: var(--color-accent);
-}
-
-.calculator-card.calculator-accent:hover {
-  background: linear-gradient(135deg, var(--color-accent) 0%, rgba(var(--color-accent-rgb), 0.1) 100%);
-  border-color: var(--color-accent);
-}
-
-.calculator-card.calculator-highlight {
-  border-color: var(--color-highlight);
-}
-
-.calculator-card.calculator-highlight:hover {
-  background: linear-gradient(135deg, var(--color-highlight) 0%, rgba(var(--color-highlight-rgb), 0.1) 100%);
-  border-color: var(--color-highlight);
-}
-
-.calculator-icon {
-  color: var(--color-primary);
-  padding: 1rem;
-  background: var(--color-background);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.calculator-content {
-  flex: 1;
-}
-
-.calculator-content h3 {
-  color: var(--color-text);
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-.calculator-content p {
-  color: var(--color-textLight);
-  font-size: 0.875rem;
-  line-height: 1.5;
 }
 
 /* Individual Calculator Container */
@@ -426,28 +352,6 @@
   .calculator-info {
     padding: 1.5rem;
   }
-}
-
-/* Fun animations and effects */
-.calculator-card {
-  position: relative;
-  overflow: hidden;
-}
-
-.calculator-card::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  transform: scale(0);
-  transition: transform 0.6s ease;
-}
-
-.calculator-card:hover::before {
-  transform: scale(1);
 }
 
 /* Pulse animation for primary result */

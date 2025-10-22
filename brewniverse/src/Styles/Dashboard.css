@@ -28,86 +28,6 @@
   margin-bottom: 3rem;
 }
 
-.shortcut-card {
-  background: var(--color-surface);
-  border-radius: var(--border-radius-lg);
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: 2px solid transparent;
-}
-
-.shortcut-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-.shortcut-primary {
-  border-color: var(--color-primary);
-}
-
-.shortcut-secondary {
-  border-color: var(--color-secondary);
-}
-
-.shortcut-accent {
-  border-color: var(--color-accent);
-}
-
-.shortcut-highlight {
-  border-color: var(--color-highlight);
-}
-
-.shortcut-icon {
-  flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  border-radius: var(--border-radius-med);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.shortcut-primary .shortcut-icon {
-  background-color: var(--color-primary);
-}
-
-.shortcut-secondary .shortcut-icon {
-  background-color: var(--color-secondary);
-}
-
-.shortcut-accent .shortcut-icon {
-  background-color: var(--color-accent);
-}
-
-.shortcut-highlight .shortcut-icon {
-  background-color: var(--color-highlight);
-}
-
-.shortcut-content {
-  flex: 1;
-}
-
-.shortcut-content h3 {
-  margin: 0 0 0.25rem 0;
-  color: var(--color-text);
-  font-size: 1.25rem;
-}
-
-.shortcut-count {
-  margin: 0;
-  color: var(--color-textLight);
-  font-size: 0.875rem;
-}
-
-.shortcut-button {
-  flex-shrink: 0;
-}
-
 .dashboard-sections {
   display: flex;
   flex-direction: column;
@@ -225,19 +145,6 @@
     grid-template-columns: 1fr;
     gap: 1rem;
     margin-bottom: 2rem;
-  }
-  
-  .shortcut-card {
-    padding: 1.25rem;
-  }
-  
-  .shortcut-icon {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .shortcut-content h3 {
-    font-size: 1.125rem;
   }
   
   .dashboard-section {

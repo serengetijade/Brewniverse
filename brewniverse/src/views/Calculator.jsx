@@ -55,13 +55,13 @@ function CalculatorList() {
           return (
             <div 
               key={calc.path} 
-              className={`calculator-card calculator-${calc.color}`}
+              className={`interactive-card interactive-card-${calc.color}`}
               onClick={() => navigate(calc.path)}
             >
-              <div className="calculator-icon">
+              <div className="card-icon">
                 <Icon size={40} />
               </div>
-              <div className="calculator-content">
+              <div className="card-content">
                 <h3>{calc.title}</h3>
                 <p>{calc.description}</p>
               </div>

@@ -64,16 +64,15 @@ function Dashboard() {
           return (
             <div 
               key={shortcut.path} 
-              className={`shortcut-card shortcut-${shortcut.color}`}
+              className={`interactive-card interactive-card-${shortcut.color}`}
               onClick={() => navigate(shortcut.path)}
-              style={{ cursor: 'pointer' }}
             >
-              <div className="shortcut-icon">
+              <div className="card-icon">
                 <Icon size={32} />
               </div>
-              <div className="shortcut-content">
+              <div className="card-content">
                 <h3>{shortcut.title}</h3>
-                  <p className="shortcut-count">{ shortcut.count ? `${shortcut.count} items` : ''}</p>
+                  <p>{ shortcut.count ? `${shortcut.count} items` : ''}</p>
               </div>
             </div>
           );
