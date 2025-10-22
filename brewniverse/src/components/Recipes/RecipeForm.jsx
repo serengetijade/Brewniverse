@@ -87,6 +87,7 @@ function RecipeForm() {
     navigate('/recipes');
   };
 
+  // Helper to update form data and auto-save
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
