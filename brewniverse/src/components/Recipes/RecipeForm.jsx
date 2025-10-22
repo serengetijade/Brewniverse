@@ -99,6 +99,18 @@ function RecipeForm() {
     }
   };
 
+  const updateFormDataCallback = (updaterFn) => {
+    const updatedData = typeof updaterFn === 'function' ? updaterFn(formData) : updaterFn;
+    setFormData(updatedData);
+    
+    if (isEditing) {
+      dispatch({
+        type: ActionTypes.UPDATE_RECIPE,
+        payload: { ...updatedData, id }
+      });
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     updateFormData({ [name]: value });
@@ -246,7 +258,7 @@ function RecipeForm() {
         <div className="form-section">
             <IngredientList
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={updateFormDataCallback}
                 ingredientType="ingredientsPrimary"
                 sectionName="Primary Ingredients"
                 sectionDescription=""
@@ -259,7 +271,7 @@ function RecipeForm() {
         <div className="form-section">
             <IngredientList
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={updateFormDataCallback}
                 ingredientType="ingredientsSecondary"
                 sectionName="Secondary Ingredients"
                 sectionDescription=""

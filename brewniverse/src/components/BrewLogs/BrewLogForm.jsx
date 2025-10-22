@@ -108,6 +108,18 @@ function BrewLogForm() {
     }
   };
 
+  const updateFormDataCallback = (updaterFn) => {
+    const updatedData = typeof updaterFn === 'function' ? updaterFn(formData) : updaterFn;
+    setFormData(updatedData);
+    
+    if (isEditing) {
+      dispatch({
+        type: ActionTypes.UPDATE_BREW_LOG,
+        payload: { ...updatedData, id }
+      });
+    }
+  };
+
   const updateActivityDateByTopic = (e) => {
     const { name, value } = e.target;
     const topic = name;
@@ -258,7 +270,7 @@ function BrewLogForm() {
     const primary = copyWithNewIds(recipe.ingredientsPrimary);
     const secondary = copyWithNewIds(recipe.ingredientsSecondary);
 
-    setFormData(prev => ({
+    updateFormDataCallback(prev => ({
       ...prev,
       ingredientsPrimary: [...prev.ingredientsPrimary, ...primary],
       ingredientsSecondary: [...prev.ingredientsSecondary, ...secondary]
@@ -397,7 +409,7 @@ function BrewLogForm() {
         <div className="form-section">
             <IngredientList
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={updateFormDataCallback}
                 ingredientType="ingredientsPrimary"
                 sectionName="Primary Ingredients"
                 sectionDescription=""
@@ -410,7 +422,7 @@ function BrewLogForm() {
         <div className="form-section">
             <IngredientList
                 formData={formData}
-                setFormData={setFormData}
+                setFormData={updateFormDataCallback}
                 ingredientType="ingredientsSecondary"
                 sectionName="Secondary Ingredients"
                 sectionDescription=""
@@ -424,7 +436,7 @@ function BrewLogForm() {
           <h3>Yeast</h3>       
           <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic={ActivityTopicEnum.Yeast}
             headerLabel=""
             itemLabel="Yeast Details"
@@ -524,7 +536,7 @@ function BrewLogForm() {
 
           <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic={ActivityTopicEnum.Gravity}
             headerLabel="Gravity Readings"
             itemLabel="Gravity Reading"
@@ -629,7 +641,7 @@ function BrewLogForm() {
 
           <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic={ActivityTopicEnum.PecticEnzyme}
             headerLabel="Pectic Enzyme Additions"
             itemLabel="Enzyme Details"
@@ -662,7 +674,7 @@ function BrewLogForm() {
 
         <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic={ActivityTopicEnum.Acid}
             headerLabel="Acid Additions"
             itemLabel="Acid Details"
@@ -690,7 +702,7 @@ function BrewLogForm() {
 
           <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic={ActivityTopicEnum.Base}
             headerLabel="Base Additions"
             itemLabel="Base Details"
@@ -721,7 +733,7 @@ function BrewLogForm() {
 
           <ActivityList
             formData={formData}
-            setFormData={setFormData}
+            setFormData={updateFormDataCallback}
             topic="Tannin"
             headerLabel="Tannin Additions"
             itemLabel="Tannin Details"
@@ -737,7 +749,7 @@ function BrewLogForm() {
               <div className="form-group">
                   <ActivityList
                     formData={formData}
-                    setFormData={setFormData}
+                    setFormData={updateFormDataCallback}
                     topic="dateRacked"
                     headerLabel="Date Racked"
                     itemLabel="Racking Details"
@@ -794,7 +806,7 @@ function BrewLogForm() {
                 <h3>Other Activities</h3>
                 <ActivityList
                     formData={formData}
-                    setFormData={setFormData}
+                    setFormData={updateFormDataCallback}
                     topic="Other"
                     headerLabel=""
                     itemLabel="Activity Details"
