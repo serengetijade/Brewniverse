@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, X, Trash2 } from 'lucide-react';
+import { Validation } from '../../constants/ValidationConstants';
 import IngredientModel from '../../models/Ingredient';
 import '../../Styles/Shared/ingredients.css';
 import Button from '../UI/Button';
@@ -37,6 +38,19 @@ function Ingredient({
         }
     };
 
+    const handleAmountChange = (e) => {
+        const value = e.target.value;
+        // Allow empty string to clear
+        if (value === '') {
+            setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: '' }));
+            return;
+        }
+        const numValue = parseFloat(value);
+        if (!isNaN(numValue) && numValue >= 0) {
+            setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: value }));
+        }
+    };
+
     // If editing, show editor
     if (isEditing) {
         return (
@@ -50,16 +64,18 @@ function Ingredient({
                         value={editData.name}
                         onChange={(x) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), name: x.target.value }))}
                         onKeyDown={handleKeyPress}
+                        maxLength={Validation.InputMaxLength}
                     />
                 </div>
                 <div className="form-group">
                     <input
                         type="number"
-                        step="0.01"
+                        step="0.5"
+                        min={Validation.NumberMin}
                         className="form-input"
                         placeholder="Amount"
                         value={editData.amount}
-                        onChange={(e) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: e.target.value }))}
+                        onChange={handleAmountChange}
                         onKeyDown={handleKeyPress}
                     />
                 </div>

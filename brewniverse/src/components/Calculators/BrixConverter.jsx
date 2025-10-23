@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calculator } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Calculator.css';
 
@@ -116,6 +117,7 @@ function BrixConverter() {
                 type="number"
                 id="brix"
                 step="0.1"
+                min={Validation.NumberMin}
                 className="form-input"
                 value={brix}
                 onChange={(e) => {
@@ -149,6 +151,7 @@ function BrixConverter() {
                 type="number"
                 id="sg"
                 step="0.001"
+                min={Validation.NumberMin}
                 className="form-input"
                 value={specificGravity}
                 onChange={(e) => {

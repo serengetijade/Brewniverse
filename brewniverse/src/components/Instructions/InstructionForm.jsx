@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Shared/instructions.css';
 
@@ -78,6 +79,7 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
               value={step}
               onChange={(e) => handleStepChange(index, e.target.value)}
               placeholder={`Enter step ${index + 1}`}
+              maxLength={Validation.TextareaMaxLength}
               rows={2}
             />
             <div className="step-controls">

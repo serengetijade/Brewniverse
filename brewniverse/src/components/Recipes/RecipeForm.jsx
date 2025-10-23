@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
@@ -135,6 +136,7 @@ function RecipeForm() {
               value={formData.name}
               onChange={handleChange}
               required
+              maxLength={Validation.InputMaxLength}
               placeholder="Enter recipe name"
             />
           </div>
@@ -204,6 +206,7 @@ function RecipeForm() {
                 className="form-input"
                 value={formData.volume}
                 onChange={handleChange}
+                maxLength={Validation.InputMaxLength}
                 placeholder="e.g., 5 gallons, 1 gallon"
               />
             </div>
@@ -220,6 +223,7 @@ function RecipeForm() {
                 className="form-input"
                 value={formData.estimatedABV}
                 onChange={handleChange}
+                min={Validation.NumberMin}
                 placeholder="12.5"
               />
             </div>
@@ -235,6 +239,7 @@ function RecipeForm() {
               className="form-textarea"
               value={formData.description}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="Brief description of this recipe"
               rows={3}
             />
@@ -287,6 +292,7 @@ function RecipeForm() {
               className="form-textarea"
               value={formData.notes}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="Additional notes, tips, and observations for this recipe"
               rows={4}
             />

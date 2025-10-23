@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText, Calendar, Search, Beaker, ListTree} from 'lucide-react';
+import { Plus, FileText, Calendar, Search, BookOpen, ListTree} from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
@@ -107,7 +107,7 @@ function RecipesList() {
             { key: 'date', label: 'Date', icon: Calendar },
             { key: 'name', label: 'Name', icon: FileText },
             { key: 'type', label: 'Type', icon: ListTree },
-            { key: 'brewlog', label: 'Usage', icon: Beaker }
+            { key: 'brewlog', label: 'Usage', icon: BookOpen }
           ]}
           searchPlaceholder="Search recipes by name or description..."
         />
@@ -146,7 +146,7 @@ function RecipesList() {
             <div className="items-grouped">
               {Object.entries(sortedRecipes).map(([groupKey, recipes]) => {
                 const groupName = groupKey === 'used' ? 'Used in Brew Logs' : 'Not Yet Used';
-                const groupIcon = groupKey === 'used' ? <Beaker size={20} /> : <FileText size={20} />;
+                const groupIcon = groupKey === 'used' ? <BookOpen size={20} /> : <FileText size={20} />;
                 
                 return (
                   <div key={groupKey} className="item-group">

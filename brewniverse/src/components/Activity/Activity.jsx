@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trash2, Bell, BellPlus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } from '../../constants/ActivityTopics.jsx';
 import ActivityModel from '../../models/Activity';
@@ -38,6 +39,25 @@ function Activity({
         setActivityData(updatedData);
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
+        }
+    };
+
+    const handleDescriptionChange = (e) => {
+        const value = e.target.value;
+        // For gravity readings (numeric), validate positive numbers
+        if (activity.topic === ActivityTopicEnum.Gravity) {
+            // Allow empty string to clear
+            if (value === '') {
+                handleChange(activityData.id, 'description', '');
+                return;
+            }
+            const numValue = parseFloat(value);
+            if (!isNaN(numValue) && numValue >= 0) {
+                handleChange(activityData.id, 'description', value);
+            }
+        } else {
+            // For text fields, update directly
+            handleChange(activityData.id, 'description', value);
         }
     };
 
@@ -110,10 +130,12 @@ function Activity({
                     ref={descriptionInputRef}
                     type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
                     step="0.001"
+                    min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
                     className="form-input"
                     placeholder="Item details"
                     value={activityData.description}
-                    onChange={(e) => handleChange(activityData.id, 'description', e.target.value)}
+                    onChange={handleDescriptionChange}
+                    maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
                 />
             </div>
             <div className="form-group">

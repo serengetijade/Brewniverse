@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Calculator } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Calculator.css';
 
@@ -63,8 +64,8 @@ function AbvCalculator() {
       return;
     }
 
-    if (targetAbv < 0 || targetAbv > 20) {
-      alert('Target ABV should be between 0 and 20%');
+    if (targetAbv < 0 || targetAbv > 40) {
+      alert('Target ABV should be between 0 and 40%');
       return;
     }
 
@@ -72,7 +73,7 @@ function AbvCalculator() {
     // Therefore: FG = OG - (ABV / 131.25)
     const targetFG = og - (targetAbv / 131.25);
 
-    if (targetFG < 0.990) {
+    if (targetFG < 0.850) {
       alert('Target FG is unrealistically low. Consider reducing target ABV or increasing OG.');
       return;
     }
@@ -224,6 +225,7 @@ function AbvCalculator() {
               type="number"
               id="reverseOG"
               step="0.001"
+              min={Validation.NumberMin}
               className="form-input"
               value={reverseOG}
               onChange={(e) => setReverseOG(e.target.value)}
@@ -240,6 +242,7 @@ function AbvCalculator() {
               type="number"
               id="reverseTargetAbv"
               step="0.1"
+              min={Validation.NumberMin}
               className="form-input"
               value={reverseTargetAbv}
               onChange={(e) => setReverseTargetAbv(e.target.value)}

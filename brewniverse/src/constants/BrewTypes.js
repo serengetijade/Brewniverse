@@ -15,7 +15,7 @@ export const BrewTypeConfiguration = {
     name: 'Beer',
     icon: '🍺',
     description: 'Fermented beverage made from grains, typically barley',
-    color: '#F59E0B' // amber
+    color: '#dd8e0a' // amber
   },
   [BrewTypeEnum.Cider]: {
     id: 2,
@@ -31,7 +31,7 @@ export const BrewTypeConfiguration = {
     name: 'Kombucha',
     icon: '🫖', //teapot
     description: 'Fermented tea with SCOBY',
-    color: '#22C55E' // green
+    color: '#fc5a84' // magenta
   },
   [BrewTypeEnum.Mead]: {
     id: 4,
@@ -47,7 +47,7 @@ export const BrewTypeConfiguration = {
     name: 'Sake',
     icon: '🍶',
     description: 'Japanese rice wine',
-    color: '#F3F4F6' // gray
+    color: '#3994f2' // blue
   },
   [BrewTypeEnum.Wine]: {
     id: 6,
@@ -63,7 +63,7 @@ export const BrewTypeConfiguration = {
     name: 'Other',
     icon: '🧪',
     description: 'Other fermented beverages',
-    color: '#6B7280' // gray
+      color: '#9c3af2' // purple
   }
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Beaker } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Calculator.css';
 
@@ -142,6 +143,7 @@ function ChaptalizationCalculator() {
               type="number"
               id="currentGravity"
               step="0.001"
+              min={Validation.NumberMin}
               className="form-input"
               value={currentGravity}
               onChange={(e) => setCurrentGravity(e.target.value)}
@@ -158,6 +160,7 @@ function ChaptalizationCalculator() {
               type="number"
               id="desiredAbv"
               step="0.1"
+              min={Validation.NumberMin}
               className="form-input"
               value={desiredAbv}
               onChange={(e) => setDesiredAbv(e.target.value)}
@@ -174,6 +177,7 @@ function ChaptalizationCalculator() {
               type="number"
               id="volume"
               step="0.1"
+              min={Validation.NumberMin}
               className="form-input"
               value={volume}
               onChange={(e) => setVolume(e.target.value)}

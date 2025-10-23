@@ -6,6 +6,7 @@ import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivities
     getTopicDisplayName, updateActivity } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import BrewTypes from '../../constants/BrewTypes';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
@@ -278,6 +279,7 @@ function BrewLogForm() {
               value={formData.name}
               onChange={handleChange}
               required
+              maxLength={Validation.InputMaxLength}
               placeholder="Enter brew name"
             />
           </div>
@@ -328,6 +330,7 @@ function BrewLogForm() {
               className="form-input"
               value={formData.volume}
               onChange={handleChange}
+              maxLength={Validation.InputMaxLength}
               placeholder="e.g., 5 gallons, 1 gallon"
             />
           </div>
@@ -342,6 +345,7 @@ function BrewLogForm() {
                 className="form-textarea"
                 value={formData.description}
                 onChange={handleChange}
+                maxLength={Validation.TextareaMaxLength}
                 placeholder="Brief description of your brew"
                 rows={3}
             />
@@ -554,6 +558,7 @@ function BrewLogForm() {
               className="form-input"
               value={formData.nutrients}
               onChange={handleChange}
+              maxLength={Validation.InputMaxLength}
               placeholder="Nutrient details"
             />
           </div>
@@ -625,6 +630,7 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.pecticEnzyme}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="General pectic enzyme information and notes"
               rows={3}
             />
@@ -658,6 +664,7 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.acids}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="General acid information and notes"
               rows={3}
             />
@@ -686,6 +693,7 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.bases}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="General base information and notes"
               rows={3}
             />
@@ -717,6 +725,7 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.tannins}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="General tannin information and notes"
               rows={3}
             />
@@ -772,6 +781,7 @@ function BrewLogForm() {
                 className="form-textarea"
                 value={formData.stabilize}
                 onChange={handleChange}
+                maxLength={Validation.TextareaMaxLength}
                 placeholder="Stabilization process and details"
                 rows={3}
               />
@@ -820,6 +830,7 @@ function BrewLogForm() {
               className="form-textarea"
               value={formData.notes}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="Additional notes about this brew"
               rows={4}
             />

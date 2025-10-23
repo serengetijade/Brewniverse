@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Droplet } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Calculator.css';
 
@@ -166,6 +167,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="currentAbv"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={currentAbv}
                   onChange={(e) => setCurrentAbv(e.target.value)}
@@ -181,6 +183,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="currentVolume"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={currentVolume}
                   onChange={(e) => setCurrentVolume(e.target.value)}
@@ -202,6 +205,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="addedAbv"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={addedAbv}
                   onChange={(e) => setAddedAbv(e.target.value)}
@@ -217,6 +221,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="addedVolume"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={addedVolume}
                   onChange={(e) => setAddedVolume(e.target.value)}
@@ -305,6 +310,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="reverseCurrentAbv"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={reverseCurrentAbv}
                   onChange={(e) => setReverseCurrentAbv(e.target.value)}
@@ -320,6 +326,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="reverseCurrentVolume"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={reverseCurrentVolume}
                   onChange={(e) => setReverseCurrentVolume(e.target.value)}
@@ -341,6 +348,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="reverseTargetAbv"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={reverseTargetAbv}
                   onChange={(e) => setReverseTargetAbv(e.target.value)}
@@ -357,6 +365,7 @@ function AbvDilutionCalculator() {
                   type="number"
                   id="reverseSolutionAbv"
                   step="0.1"
+                  min={Validation.NumberMin}
                   className="form-input"
                   value={reverseSolutionAbv}
                   onChange={(e) => setReverseSolutionAbv(e.target.value)}

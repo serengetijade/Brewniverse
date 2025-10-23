@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useApp, ActionTypes } from '../../contexts/AppContext';
+import { Validation } from '../../constants/ValidationConstants';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import Alert from '../../models/Alert';
@@ -105,6 +106,7 @@ function AlertForm() {
               value={formData.name}
               onChange={handleChange}
               required
+              maxLength={Validation.InputMaxLength}
               placeholder="Enter alert name"
             />
                   </div>
@@ -170,6 +172,7 @@ function AlertForm() {
                     value={formData.recurringInterval}
                     onChange={handleChange}
                     min="1"
+                    step="1"
                     placeholder="1"
                   />
                 </div>
@@ -201,6 +204,7 @@ function AlertForm() {
               className="form-textarea"
               value={formData.description}
               onChange={handleChange}
+              maxLength={Validation.TextareaMaxLength}
               placeholder="Optional description"
               rows={3}
             />
