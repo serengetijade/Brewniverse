@@ -4,6 +4,7 @@ import { Trash2, Bell, BellPlus } from 'lucide-react';
 import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } from '../../constants/ActivityTopics.jsx';
+import ActivityModel from '../../models/Activity';
 import '../../Styles/Activity.css';
 
 function Activity({
@@ -14,33 +15,26 @@ function Activity({
 }) {
     const { state, dispatch } = useApp();
     const navigate = useNavigate();
-    const [activityData, setActivityData] = useState({
-        id: activity.id || generateId(),
-        date: activity.date || getDate(),
-        description: activity.description || '',
-        topic: activity.topic || 'Other',
-        brewLogId: activity.brewLogId || brewLogId || '',
-        alertId: activity.alertId || null,
-    });
+    const [activityData, setActivityData] = useState(() => 
+        ActivityModel.fromJSON({
+            ...activity,
+            brewLogId: activity.brewLogId || brewLogId || '',
+        })
+    );
 
     const descriptionInputRef = useRef(null);
 
-    // Sync local state with prop changes
     useEffect(() => {
-        setActivityData({
-            id: activity.id || generateId(),
-            date: activity.date || getDate(),
-            description: activity.description || '',
-            topic: activity.topic || 'Other',
+        setActivityData(ActivityModel.fromJSON({
+            ...activity,
             brewLogId: activity.brewLogId || brewLogId || '',
-            alertId: activity.alertId || null,
-        });
+        }));
     }, [activity, brewLogId]);
 
     const alertExists = activityData.alertId && state.alerts.some(alert => alert.id === activityData.alertId);
 
     const handleChange = (id, field, value) => {
-        const updatedData = { ...activityData, [field]: value };
+        const updatedData = ActivityModel.fromJSON({ ...activityData.toJSON(), [field]: value });
         setActivityData(updatedData);
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
@@ -175,15 +169,15 @@ export function addActivity (setFormData, date, name, description, topic, brewLo
 };
 
 export function createActivity(date, name, description, topic, brewLogId, alertId) {
-    return {
-        id: generateId(),
-        date: date ? date : getDate(),
+    const activity = new ActivityModel({
+        date: date || getDate(),
         name: name || getTopicDisplayName(topic),
         description: description,
         topic: topic,
         brewLogId: brewLogId,
         alertId: alertId
-    };
+    });
+    return activity.toJSON();
 }
 
 export const getActivitiesByTopic = (formData, topic) => {

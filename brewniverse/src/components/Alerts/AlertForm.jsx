@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getDate, useApp, ActionTypes } from '../../contexts/AppContext';
+import { useApp, ActionTypes } from '../../contexts/AppContext';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
+import Alert from '../../models/Alert';
 import '../../Styles/AlertForm.css';
 
 function AlertForm() {
@@ -11,28 +12,16 @@ function AlertForm() {
   const { state, dispatch } = useApp();
   const isEditing = Boolean(id);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    date: getDate(),
-    brewLogId: '',
-    activityId: '',
-    isRecurring: false,
-    recurringType: 'daily',
-    recurringInterval: 1,
-    endDate: '',
-    isCompleted: false,
-    priority: 'medium'
-  });
+  const [formData, setFormData] = useState(() => new Alert({ id }));
 
   useEffect(() => {
     if (isEditing) {
       const alert = state.alerts.find(a => a.id === id);
       if (alert) {
-        setFormData({
+        setFormData(Alert.fromJSON({
           ...alert,
           date: new Date(alert.date).toISOString().slice(0, 16)
-        });
+        }));
       }
     }
   }, [id, isEditing, state.alerts]);
@@ -41,7 +30,7 @@ function AlertForm() {
     e.preventDefault();
     
     const alertData = {
-      ...formData,
+      ...formData.toJSON(),
       date: new Date(formData.date).toISOString(),
     };
 
@@ -62,14 +51,14 @@ function AlertForm() {
   };
 
   const updateFormData = (updates) => {
-    const updatedData = { ...formData, ...updates };
+    const updatedData = Alert.fromJSON({ ...formData.toJSON(), ...updates });
     setFormData(updatedData);
     
     if (isEditing) {
       dispatch({
         type: ActionTypes.UPDATE_ALERT,
         payload: { 
-          ...updatedData, 
+          ...updatedData.toJSON(), 
           id,
           date: new Date(updatedData.date).toISOString()
         }

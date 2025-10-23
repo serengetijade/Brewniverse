@@ -2,8 +2,8 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import Button from '../UI/Button';
 import Ingredient from './Ingredient';
+import IngredientModel from '../../models/Ingredient';
 import '../../Styles/Shared/ingredients.css';
-import { generateId } from '../../contexts/AppContext';
   
 export default function IngredientList({  
   formData,  
@@ -16,17 +16,11 @@ export default function IngredientList({
     const [editingIngredient, setEditingIngredient] = React.useState(null);
 
     const addIngredient = (type) => {
-        const newIngredient = {
-            id: generateId(),
-            name: '',
-            amount: '',
-            unit: 'oz'
-        };
+        const newIngredient = new IngredientModel();
         setFormData(prev => ({
             ...prev,
-            [type]: [...prev[type], newIngredient]
+            [type]: [...prev[type], newIngredient.toJSON()]
         }));
-        // Immediately open the editor for the new ingredient
         setEditingIngredient({ type, id: newIngredient.id });
     };
 

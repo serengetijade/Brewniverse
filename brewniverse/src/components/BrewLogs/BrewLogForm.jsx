@@ -11,6 +11,7 @@ import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import GravityChart from './GravityChart';
+import BrewLog from '../../models/BrewLog';
 import { getGravityActivities, getGravityOriginal, getGravityFinal, getGravity13Break,
     getCurrentAbv, getPotentialAbv } from '../../utils/gravityCalculations';
 import '../../Styles/BrewLogForm.css';
@@ -31,44 +32,20 @@ function BrewLogForm() {
     newFormId
   );
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => new BrewLog({
     id: newFormId,
-    acids: '',
-    activity: [ initialDateCreatedActivity],
-    bases: '',
-    dateBottled: '',
+    activity: [initialDateCreatedActivity],
     dateCreated: initialDateCreatedActivity.date,
-    dateStabilized:'',
-    description: '',
-    ingredientsPrimary: [],
-    ingredientsSecondary: [],
-    name: '',
-    notes: '',
-    nutrients: '',
-    pecticEnzyme: '', 
-    recipeId: '',
-    stabilize: '',
-    tannins: '',
-    type: 'Mead',
-    volume: '',
-    yeast: '',
-    //Calculated properties
-    getGravity13Break: '',
-    gravityFinal: '',
-    gravityOriginal: '',
-    currentAbv: '',
-    potentialAbv: '',
-  });
+  }));
 
   useEffect(() => {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
             if (brewLog) {
-                setFormData({
+                setFormData(BrewLog.fromJSON({
                     ...brewLog,
-                    id: brewLog.id, // Ensure ID is preserved
                     activity: brewLog.activity || []
-                });
+                }));
             }
         }
   }, [id, isEditing, state.brewLogs]);
@@ -76,9 +53,7 @@ function BrewLogForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const brewLogData = {
-      ...formData,
-    };
+    const brewLogData = formData.toJSON();
 
     if (isEditing) {
       dispatch({
@@ -97,25 +72,27 @@ function BrewLogForm() {
   };
 
   const updateFormData = (updates) => {
-    const updatedData = { ...formData, ...updates };
+    const updatedData = BrewLog.fromJSON({ ...formData.toJSON(), ...updates });
     setFormData(updatedData);
     
     if (isEditing) {
       dispatch({
         type: ActionTypes.UPDATE_BREW_LOG,
-        payload: { ...updatedData, id }
+        payload: { ...updatedData.toJSON(), id }
       });
     }
   };
 
   const updateFormDataCallback = (updaterFn) => {
-    const updatedData = typeof updaterFn === 'function' ? updaterFn(formData) : updaterFn;
-    setFormData(updatedData);
+    const currentData = formData.toJSON();
+    const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
+    const newBrewLog = BrewLog.fromJSON(updatedData);
+    setFormData(newBrewLog);
     
     if (isEditing) {
       dispatch({
         type: ActionTypes.UPDATE_BREW_LOG,
-        payload: { ...updatedData, id }
+        payload: { ...newBrewLog.toJSON(), id }
       });
     }
   };
@@ -418,7 +395,6 @@ function BrewLogForm() {
           }
           </div>
         </div>
-
 
         {/* Primary Ingredients */}
         <div className="form-section">

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ActionTypes, getDate, useApp } from '../../contexts/AppContext';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
+import Recipe from '../../models/Recipe';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
 
@@ -15,29 +16,16 @@ function RecipeForm() {
   const { state, dispatch } = useApp();
   const isEditing = Boolean(id);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    dateCreated: getDate(),
-    ingredientsPrimary: [],
-    ingredientsSecondary: [],
-    instructions: [''],
-    description: '',
-    notes: '',
-    estimatedABV: '',
-    difficulty: 'Beginner',
-    type: 'Mead',
-    volume: '',
-  });
+  const [formData, setFormData] = useState(() => new Recipe({ id }));
 
   useEffect(() => {
     if (isEditing) {
       const recipe = state.recipes.find(r => r.id === id);
       if (recipe) {
-        setFormData({
+        setFormData(Recipe.fromJSON({
           ...recipe,
-          id: recipe.id,
           instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
-        });
+        }));
       }
     }
   }, [id, isEditing, state.recipes]);
@@ -66,10 +54,7 @@ function RecipeForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     
-    const recipeData = {
-      ...formData,
-      dateCreated: getDate(),
-    };
+    const recipeData = formData.toJSON();
 
     if (isEditing) {
       dispatch({
@@ -88,25 +73,27 @@ function RecipeForm() {
   };
 
   const updateFormData = (updates) => {
-    const updatedData = { ...formData, ...updates };
+    const updatedData = Recipe.fromJSON({ ...formData.toJSON(), ...updates });
     setFormData(updatedData);
     
     if (isEditing) {
       dispatch({
         type: ActionTypes.UPDATE_RECIPE,
-        payload: { ...updatedData, id }
+        payload: { ...updatedData.toJSON(), id }
       });
     }
   };
 
   const updateFormDataCallback = (updaterFn) => {
-    const updatedData = typeof updaterFn === 'function' ? updaterFn(formData) : updaterFn;
-    setFormData(updatedData);
+    const currentData = formData.toJSON();
+    const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
+    const newRecipe = Recipe.fromJSON(updatedData);
+    setFormData(newRecipe);
     
     if (isEditing) {
       dispatch({
         type: ActionTypes.UPDATE_RECIPE,
-        payload: { ...updatedData, id }
+        payload: { ...newRecipe.toJSON(), id }
       });
     }
   };

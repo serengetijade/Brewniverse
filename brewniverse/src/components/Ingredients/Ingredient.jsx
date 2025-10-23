@@ -1,6 +1,6 @@
-//Note: ingredient is not a stand alone component. It can be, but is designed to work with IngredientList <See for handling methods. 
 import React, { useState, useEffect, useRef } from 'react';
 import { Save, X, Trash2 } from 'lucide-react';
+import IngredientModel from '../../models/Ingredient';
 import '../../Styles/Shared/ingredients.css';
 import Button from '../UI/Button';
 
@@ -13,11 +13,9 @@ function Ingredient({
     onEdit,
     onRemove
 }){
-    const [editData, setEditData] = useState({
-        name: ingredient.name,
-        amount: ingredient.amount,
-        unit: ingredient.unit
-    });
+    const [editData, setEditData] = useState(() => 
+        IngredientModel.fromJSON(ingredient)
+    );
 
     const nameInputRef = useRef(null);
     useEffect(() => {
@@ -27,7 +25,7 @@ function Ingredient({
     }, [isEditing]);
 
     const handleSave = () => {
-        onSave(type, ingredient.id, editData);
+        onSave(type, ingredient.id, editData.toJSON());
     };
 
     const handleKeyPress = (e) => {
@@ -50,7 +48,7 @@ function Ingredient({
                         className="form-input"
                         placeholder="Ingredient name"
                         value={editData.name}
-                        onChange={(x) => setEditData(prev => ({ ...prev, name: x.target.value }))}
+                        onChange={(x) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), name: x.target.value }))}
                         onKeyDown={handleKeyPress}
                     />
                 </div>
@@ -61,7 +59,7 @@ function Ingredient({
                         className="form-input"
                         placeholder="Amount"
                         value={editData.amount}
-                        onChange={(e) => setEditData(prev => ({ ...prev, amount: e.target.value }))}
+                        onChange={(e) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: e.target.value }))}
                         onKeyDown={handleKeyPress}
                     />
                 </div>
@@ -69,7 +67,7 @@ function Ingredient({
                     <select
                         className="form-select"
                         value={editData.unit}
-                        onChange={(e) => setEditData(prev => ({ ...prev, unit: e.target.value }))}
+                        onChange={(e) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), unit: e.target.value }))}
                         onKeyDown={handleKeyPress}
                     >
                         <option value="oz">oz</option>
@@ -109,15 +107,10 @@ function Ingredient({
         );
     }
 
-    // If not editing, show display view
     return (
         <>
             <div className="ingredient-display">
-                {ingredient.name && ingredient.amount && ingredient.unit
-                    ? `${ingredient.name} - ${ingredient.amount} ${ingredient.unit}`
-                    : ingredient.name && !ingredient.amount
-                        ? `${ingredient.name}`
-                        : 'New ingredient'}
+                {IngredientModel.fromJSON(ingredient).getDisplayText()}
             </div>
             <div className="ingredient-actions">
                 <Button
