@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { BookOpen, FileText, Bell, Calculator } from 'lucide-react';
 import Button from '../components/UI/Button';
 import { useApp } from '../contexts/AppContext';
+import { getBrewTypeConfig } from '../constants/BrewTypes';
 import '../Styles/Dashboard.css';
 
 function Dashboard() {
@@ -93,22 +94,29 @@ function Dashboard() {
               </Button>
             </div>
             <div className="recent-items">
-              {recentBrewLogs.map((log) => (
-                <div key={log.id} className="recent-item">
-                  <div className="recent-item-content">
-                    <h4>{log.name}</h4>
-                    <p>{log.type}</p>
-                    <small>{new Date(log.dateCreated).toLocaleDateString()}</small>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="small"
-                    onClick={() => navigate(`/brewlogs/${log.id}`)}
+              {recentBrewLogs.map((log) => {
+                const brewConfig = getBrewTypeConfig(log.type);
+                return (
+                  <div 
+                    key={log.id} 
+                    className="recent-item"
+                    style={{ borderLeftColor: brewConfig.color }}
                   >
-                    View
-                  </Button>
-                </div>
-              ))}
+                    <div className="recent-item-content">
+                      <h4>{brewConfig.icon} {log.name}</h4>
+                      <p>{log.type}</p>
+                      <small>{new Date(log.dateCreated).toLocaleDateString()}</small>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="small"
+                      onClick={() => navigate(`/brewlogs/${log.id}`)}
+                    >
+                      View
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
