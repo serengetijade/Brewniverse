@@ -2,6 +2,7 @@ import React from 'react';
 import { useApp, ActionTypes } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
 import Button from '../components/UI/Button';
+import StorageService from '../utils/StorageService';
 import '../Styles/Settings.css';
 
 function Settings() {
@@ -136,15 +137,13 @@ function Settings() {
               <div className="data-actions">
                 <Button
                   variant="outline"
-                  onClick={() => {
-                    const dataStr = JSON.stringify(state, null, 2);
-                    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-                    const url = URL.createObjectURL(dataBlob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = `brewniverse-backup-${new Date().toISOString().split('T')[0]}.json`;
-                    link.click();
-                    URL.revokeObjectURL(url);
+                  onClick={async () => {
+                    try {
+                      await StorageService.exportToFile(state);
+                      alert('Data exported successfully!');
+                    } catch (error) {
+                      alert('Error exporting data: ' + error.message);
+                    }
                   }}
                 >
                   Export Data
@@ -156,31 +155,66 @@ function Settings() {
                     const input = document.createElement('input');
                     input.type = 'file';
                     input.accept = '.json';
-                    input.onchange = (e) => {
+                    input.onchange = async (e) => {
                       const file = e.target.files[0];
                       if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                          try {
-                            const importedData = JSON.parse(event.target.result);
-                            if (confirm('This will replace all your current data. Are you sure?')) {
-                              dispatch({
-                                type: ActionTypes.LOAD_DATA,
-                                payload: importedData
-                              });
-                              alert('Data imported successfully!');
-                            }
-                          } catch (error) {
-                            alert('Error importing data. Please check the file format.');
-                          }
-                        };
-                        reader.readAsText(file);
+                        try {
+                          const importedData = await StorageService.importFromFile(file);
+                          
+                          // MERGE: Add to existing data without removing anything
+                          const mergedData = StorageService.mergeData(state, importedData);
+                          
+                          dispatch({
+                            type: ActionTypes.LOAD_DATA,
+                            payload: mergedData
+                          });
+                          alert('Data imported successfully! New items added, duplicates skipped.');
+                        } catch (error) {
+                          alert('Error importing data: ' + error.message);
+                        }
                       }
                     };
                     input.click();
                   }}
                 >
                   Import Data
+                </Button>
+
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    input.onchange = async (e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        try {
+                          const importedData = await StorageService.importFromFile(file);
+                          
+                          // REPLACE: Warn user before overwriting all data
+                          const confirmReplace = confirm(
+                            '⚠️ WARNING: This will REPLACE ALL your current data!\n\n' +
+                            'All existing brew logs, recipes, alerts, and settings will be deleted and replaced with the imported data.\n\n' +
+                            'Are you sure you want to continue?'
+                          );
+                          
+                          if (confirmReplace) {
+                            dispatch({
+                              type: ActionTypes.LOAD_DATA,
+                              payload: importedData
+                            });
+                            alert('Data imported successfully!');
+                          }
+                        } catch (error) {
+                          alert('Error importing data: ' + error.message);
+                        }
+                      }
+                    };
+                    input.click();
+                  }}
+                >
+                  Replace All Data
                 </Button>
               </div>
             </div>

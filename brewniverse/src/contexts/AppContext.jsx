@@ -1,4 +1,5 @@
 ﻿import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import StorageService from '../utils/StorageService';
 
 // Initial state
 const initialState = {
@@ -235,22 +236,33 @@ const AppContext = createContext();
 export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  // Load data from localStorage on mount
+  // Load data from storage on mount
   useEffect(() => {
-    const savedData = localStorage.getItem('brewniverse-data');
-    if (savedData) {
+    const loadInitialData = async () => {
       try {
-        const parsedData = JSON.parse(savedData);
-        dispatch({ type: ActionTypes.LOAD_DATA, payload: parsedData });
+        const savedData = await StorageService.loadData();
+        if (savedData) {
+          dispatch({ type: ActionTypes.LOAD_DATA, payload: savedData });
+        }
       } catch (error) {
         console.error('Error loading saved data:', error);
       }
-    }
+    };
+    
+    loadInitialData();
   }, []);
 
-  // Save data to localStorage whenever state changes
+  // Save data to storage whenever state changes
   useEffect(() => {
-    localStorage.setItem('brewniverse-data', JSON.stringify(state));
+    const saveData = async () => {
+      try {
+        await StorageService.saveData(state);
+      } catch (error) {
+        console.error('Error saving data:', error);
+      }
+    };
+    
+    saveData();
   }, [state]);
 
   return (

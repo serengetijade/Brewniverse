@@ -1,4 +1,5 @@
 import React, { createContext, useContext } from 'react';
+import StorageService from '../utils/StorageService';
 
 //ToDo: remove any unused variables
 // Theme definitions
@@ -122,19 +123,23 @@ export const themes = {
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [currentTheme, setCurrentTheme] = React.useState(() => {
-    // Load theme from localStorage or default
-    const savedData = localStorage.getItem('brewniverse-data');
-    if (savedData) {
+  const [currentTheme, setCurrentTheme] = React.useState('default');
+
+  // Load theme from storage on mount
+  React.useEffect(() => {
+    const loadTheme = async () => {
       try {
-        const parsedData = JSON.parse(savedData);
-        return parsedData.settings?.theme || 'default';
+        const savedData = await StorageService.loadData();
+        if (savedData?.settings?.theme) {
+          setCurrentTheme(savedData.settings.theme);
+        }
       } catch (error) {
-        return 'default';
+        console.error('Error loading theme:', error);
       }
-    }
-    return 'default';
-  });
+    };
+    
+    loadTheme();
+  }, []);
   
   const theme = themes[currentTheme] || themes.default;
 
