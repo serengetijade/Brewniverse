@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Atom, Barrel, BookOpen, Calendar, Leaf } from 'lucide-react';
 import Button from '../UI/Button';
+import Rating from '../UI/Rating';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
 import { useApp } from '../../contexts/AppContext';
 
@@ -55,6 +56,8 @@ function RecipeCard({ recipe }) {
         {recipe.description && (
           <p className="item-description">{recipe.description}</p>
         )}
+        
+        <Rating value={recipe.rating || 0} isEditing={false} />
         
         <div className="recipe-ingredients-grid">
           {breakdown.primary > 0 && (

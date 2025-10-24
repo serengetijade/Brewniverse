@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
 import { getCurrentAbv, getGravityActivities, getGravityFinal } from '../../utils/gravityCalculations';
 import Button from '../UI/Button';
+import Rating from '../UI/Rating';
 
 function BrewLogCard({ brewLog }) {
   const navigate = useNavigate();
@@ -44,6 +45,8 @@ function BrewLogCard({ brewLog }) {
         {brewLog.description && (
           <p className="item-description">{brewLog.description}</p>
         )}
+        
+        <Rating value={brewLog.rating || 0} isEditing={false} />
         
         {(currentAbv || gravityFinal) && (
           <div className="brewlog-card-stats-grid">

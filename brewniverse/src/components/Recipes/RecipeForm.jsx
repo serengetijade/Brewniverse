@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
+import Rating from '../UI/Rating';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
@@ -242,6 +243,15 @@ function RecipeForm() {
               maxLength={Validation.TextareaMaxLength}
               placeholder="Brief description of this recipe"
               rows={3}
+            />
+          </div>
+
+          <div className="form-group">
+            <Rating
+              value={formData.rating}
+              onChange={(newRating) => updateFormData({ rating: newRating })}
+              isEditing={true}
+              label="Rating"
             />
           </div>
         </div>

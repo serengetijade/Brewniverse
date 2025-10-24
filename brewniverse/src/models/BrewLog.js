@@ -22,6 +22,7 @@ class BrewLog {
     this.nutrients = data.nutrients || '';
     this.pecticEnzyme = data.pecticEnzyme || '';
     this.potentialAbv = data.potentialAbv || '';
+    this.rating = data.rating || 0;
     this.recipeId = data.recipeId || '';
     this.stabilize = data.stabilize || '';
     this.tannins = data.tannins || '';
@@ -55,6 +56,7 @@ class BrewLog {
       nutrients: this.nutrients,
       pecticEnzyme: this.pecticEnzyme,
       potentialAbv: this.getPotentialAbv(),
+      rating: this.rating,
       recipeId: this.recipeId,
       stabilize: this.stabilize,
       tannins: this.tannins,

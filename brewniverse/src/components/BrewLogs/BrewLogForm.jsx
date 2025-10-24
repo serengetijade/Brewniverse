@@ -8,6 +8,7 @@ import ActivityList from '../Activity/ActivityList';
 import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
+import Rating from '../UI/Rating';
 import FormHeader from '../Layout/FormHeader';
 import FormFooter from '../Layout/FormFooter';
 import IngredientList from '../Ingredients/IngredientList';
@@ -348,6 +349,15 @@ function BrewLogForm() {
                 maxLength={Validation.TextareaMaxLength}
                 placeholder="Brief description of your brew"
                 rows={3}
+            />
+          </div>
+
+          <div className="form-group">
+            <Rating
+              value={formData.rating}
+              onChange={(newRating) => updateFormData({ rating: newRating })}
+              isEditing={true}
+              label="Rating"
             />
           </div> 
 

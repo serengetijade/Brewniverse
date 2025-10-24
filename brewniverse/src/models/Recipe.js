@@ -12,6 +12,7 @@ class Recipe {
     this.instructions = data.instructions || [''];
     this.name = data.name || '';
     this.notes = data.notes || '';
+    this.rating = data.rating || 0;
     this.type = data.type || 'Mead';
     this.volume = data.volume || '';
   }
@@ -32,6 +33,7 @@ class Recipe {
       instructions: this.instructions,
       name: this.name,
       notes: this.notes,
+      rating: this.rating,
       type: this.type,
       volume: this.volume,
     };
