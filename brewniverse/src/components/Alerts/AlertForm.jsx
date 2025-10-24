@@ -25,7 +25,7 @@ function AlertForm() {
         }));
       }
     }
-  }, [id, isEditing, state.alerts]);
+  }, [id, isEditing]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -271,6 +271,7 @@ function AlertForm() {
       <FormFooter 
         isEditing={isEditing}
         entityName="Alert"
+        cancelLabel="Back to Alerts"
         onCancel={() => navigate('/alerts')}
         showCancel={false}
         onDelete={handleDelete}
