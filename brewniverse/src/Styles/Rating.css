@@ -38,7 +38,8 @@
 
 .star-container {
   position: relative;
-  display: inline-flex;
+  display: inline-block;
+  line-height: 0;
 }
 
 /* Empty star - pale/outlined */
@@ -46,6 +47,7 @@
   color: var(--border-light, #e0e0e0);
   stroke: var(--border-medium, #bdbdbd);
   stroke-width: 1.5px;
+  display: block;
 }
 
 /* Filled star - yellow */
@@ -53,6 +55,7 @@
   color: #fbbf24;
   stroke: #f59e0b;
   stroke-width: 1px;
+  display: block;
 }
 
 /* Half star effect */
@@ -61,7 +64,9 @@
   top: 0;
   left: 0;
   width: 50%;
+  height: 100%;
   overflow: hidden;
+  line-height: 0;
 }
 
 /* Clear button */
