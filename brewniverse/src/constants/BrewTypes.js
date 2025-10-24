@@ -5,7 +5,8 @@ export const BrewTypeEnum = {
   Mead: 'Mead',
   Sake: 'Sake',
   Wine: 'Wine',
-  Other: 'Other'
+  Other: 'Other',
+  Vinegar: 'Vinegar'
 };
 
 export const BrewTypeConfiguration = {
@@ -63,7 +64,15 @@ export const BrewTypeConfiguration = {
     name: 'Other',
     icon: '🧪',
     description: 'Other fermented beverages',
-      color: '#9c3af2' // purple
+      color: '#267f6b' // teal
+  },
+  [BrewTypeEnum.Vinegar]: {
+    id: 7,
+    key: BrewTypeEnum.Vinegar,
+    name: 'Vinegar',
+    icon: '🏺',
+    description: 'Anything fermented + Acetobacter',
+    color: '#904194' // purple #9c3af2 //maroon #904194
   }
 };
 
