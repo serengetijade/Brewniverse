@@ -1,18 +1,83 @@
 @import './Shared/forms.css';
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.875rem;
+/* Toggle Button for isRecurring */
+.btn-toggle {
+  width: 100%;
+  background-color: var(--color-surface);
   color: var(--color-text);
+  border: 2px solid var(--color-border);
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: var(--border-radius-med);
   cursor: pointer;
-  margin-bottom: 0;
+  transition: all 0.3s ease;
 }
 
-.checkbox-label input[type="checkbox"] {
-  width: auto;
-  margin: 0;
+.btn-toggle:hover {
+  background-color: var(--color-surfaceActive);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-toggle-active {
+  background-color: var(--color-primary);
+  color: white;
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-toggle-active:hover {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Completed Button - Prominent Style */
+.form-group-completed {
+  margin-top: 1.5rem;
+}
+
+.btn-completed {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: var(--border-radius-lg);
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 2px solid var(--color-border);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-completed:hover {
+  background-color: var(--color-surfaceActive);
+  border-color: var(--color-success);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-completed-active {
+  background-color: var(--color-success);
+  color: white;
+  border-color: var(--color-success);
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.btn-completed-active:hover {
+  background-color: #218838;
+  border-color: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
 }
 
 .recurring-options {

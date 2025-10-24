@@ -93,6 +93,18 @@ function AlertForm() {
         {/* Basic Information */}
         <div className="form-section">
           <h3>Basic Information</h3>
+
+        {isEditing && (
+            <div className="form-group form-group-completed">
+                <button
+                    type="button"
+                    className={`btn btn-completed ${formData.isCompleted ? 'btn-completed-active' : ''}`}
+                    onClick={() => updateFormData({ isCompleted: !formData.isCompleted })}
+                >
+                    {formData.isCompleted ? '✓ Completed' : 'Mark as completed'}
+                </button>
+            </div>
+        )}  
           
           <div className="form-group">
             <label htmlFor="name" className="form-label">
@@ -128,15 +140,13 @@ function AlertForm() {
           </div>
 
           <div className="form-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                name="isRecurring"
-                checked={formData.isRecurring}
-                onChange={(e) => updateFormData({ isRecurring: e.target.checked })}
-              />
-              Make this a recurring alert
-            </label>
+            <button
+              type="button"
+              className={`btn btn-toggle ${formData.isRecurring ? 'btn-toggle-active' : ''}`}
+              onClick={() => updateFormData({ isRecurring: !formData.isRecurring })}
+            >
+              {formData.isRecurring ? '✓ Recurring Alert' : 'Make this a recurring alert'}
+            </button>
           </div>
 
           {formData.isRecurring && (
@@ -227,18 +237,6 @@ function AlertForm() {
                 <option value="high">High</option>
                 <option value="urgent">Urgent</option>
               </select>
-            </div>
-
-            <div className="form-group">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  name="isCompleted"
-                  checked={formData.isCompleted}
-                  onChange={(e) => updateFormData({ isCompleted: e.target.checked })}
-                />
-                Mark as completed
-              </label>
             </div>
           </div>
         </div>
