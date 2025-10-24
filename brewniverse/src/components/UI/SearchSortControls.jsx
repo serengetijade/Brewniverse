@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Calendar, Beaker, FileText } from 'lucide-react';
+import { Search, BookOpen, Calendar, FileText, Star } from 'lucide-react';
 import Button from './Button';
 
 function SearchSortControls({ 
@@ -10,7 +10,8 @@ function SearchSortControls({
   onSortChange,
   sortOptions = [
     { key: 'date', label: 'Date', icon: Calendar },
-    { key: 'brewlog', label: 'Brew Log', icon: Beaker },
+    { key: 'rating', label: 'Rating', icon: Star },
+    { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
     { key: 'recipe', label: 'Recipe', icon: FileText }
   ],
   searchPlaceholder = "Search items..."

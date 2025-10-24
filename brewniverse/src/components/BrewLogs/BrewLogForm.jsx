@@ -853,6 +853,7 @@ function BrewLogForm() {
         entityName="Brew Log"
         showCancel={!isEditing}
         onCancel={() => navigate('/brewlogs')}
+        showCancel={false}
         showDelete={true}
         onDelete={onDelete}
       />

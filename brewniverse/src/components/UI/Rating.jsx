@@ -2,13 +2,6 @@ import React, { useState } from 'react';
 import { Star } from 'lucide-react';
 import '../../Styles/Rating.css';
 
-/**
- * Rating component for displaying and editing star ratings
- * @param {number} value - Current rating value (0-5, in 0.5 increments)
- * @param {function} onChange - Callback when rating changes (only in edit mode)
- * @param {boolean} isEditing - Whether the rating can be edited
- * @param {string} label - Optional label for the rating
- */
 function Rating({ value = 0, onChange, isEditing = false, label = "Rating" }) {
   const [hoverValue, setHoverValue] = useState(null);
   const totalStars = 5;
@@ -20,7 +13,7 @@ function Rating({ value = 0, onChange, isEditing = false, label = "Rating" }) {
     if (!isEditing || !onChange) return;
 
     const now = Date.now();
-    const clickDelay = 300; // ms window for double-click detection
+    const clickDelay = 300; 
     
     // Check if this is a double-click on the same star
     if (
@@ -128,4 +121,3 @@ function Rating({ value = 0, onChange, isEditing = false, label = "Rating" }) {
 }
 
 export default Rating;
-

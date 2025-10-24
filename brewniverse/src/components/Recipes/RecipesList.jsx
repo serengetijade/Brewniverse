@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, FileText, Calendar, Search, BookOpen, ListTree} from 'lucide-react';
+import { Plus, FileText, Calendar, Search, BookOpen, ListTree, Star} from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
@@ -37,6 +37,19 @@ function RecipesList() {
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
         return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      });
+    }
+    else if (sortBy === 'rating') {
+      filteredRecipes.sort((a, b) => {
+        const ratingA = a.rating || 0;
+        const ratingB = b.rating || 0;
+        if (ratingA === ratingB) {
+          // ThenBy date
+          const dateA = new Date(a.dateCreated);
+          const dateB = new Date(b.dateCreated);
+          return dateB - dateA; // Most recent first
+        }
+        return sortOrder === 'asc' ? ratingA - ratingB : ratingB - ratingA;
       });
     }
     else if (sortBy === 'brewlog') {
@@ -106,6 +119,7 @@ function RecipesList() {
           sortOptions={[
             { key: 'date', label: 'Date', icon: Calendar },
             { key: 'name', label: 'Name', icon: FileText },
+            { key: 'rating', label: 'Rating', icon: Star },
             { key: 'type', label: 'Type', icon: ListTree },
             { key: 'brewlog', label: 'Usage', icon: BookOpen }
           ]}
@@ -130,8 +144,8 @@ function RecipesList() {
         </div>
       ) : (
         <div className="items-container">
-          {sortBy === 'date' || sortBy === 'name' ? (
-            // Sort by date or name
+          {sortBy === 'date' || sortBy === 'name' || sortBy === 'rating' ? (
+            // Sort by date, name, or rating
             <div className="items-grid">
               {sortedRecipes.map((recipe) => (
                 <RecipeCard

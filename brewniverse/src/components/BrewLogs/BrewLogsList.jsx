@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Calendar, Beaker, BookOpen, Search, FileText } from 'lucide-react';
+import { Plus, Calendar, BookOpen, Search, FileText, Star, Type } from 'lucide-react';
 import { useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
@@ -29,7 +29,8 @@ function BrewLogsList() {
         const dateB = new Date(b.dateCreated);
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
       });
-    } else if (sortBy === 'type') {
+    } 
+    else if (sortBy === 'type') {
       filteredBrewLogs.sort((a, b) => {
         const typeA = a.type.toLowerCase();
         const typeB = b.type.toLowerCase();
@@ -41,7 +42,21 @@ function BrewLogsList() {
         }
         return sortOrder === 'asc' ? typeA.localeCompare(typeB) : typeB.localeCompare(typeA);
       });
-    } else if (sortBy === 'recipe') {
+    } 
+    else if (sortBy === 'rating') {
+      filteredBrewLogs.sort((a, b) => {
+        const ratingA = a.rating || 0;
+        const ratingB = b.rating || 0;
+        if (ratingA === ratingB) {
+          // ThenBy date
+          const dateA = new Date(a.dateCreated);
+          const dateB = new Date(b.dateCreated);
+          return dateB - dateA;
+        }
+        return sortOrder === 'asc' ? ratingA - ratingB : ratingB - ratingA;
+      });
+    } 
+    else if (sortBy === 'recipe') {
       // Group by recipe, ThenBy date 
       const grouped = {};
       filteredBrewLogs.forEach(brewLog => {
@@ -88,8 +103,9 @@ function BrewLogsList() {
           }}
           sortOptions={[
             { key: 'date', label: 'Date', icon: Calendar },
-            { key: 'type', label: 'Type', icon: Beaker },
-            { key: 'recipe', label: 'Recipe', icon: FileText }
+            { key: 'type', label: 'Type', icon: Type },
+            { key: 'recipe', label: 'Recipe', icon: FileText },
+            { key: 'rating', label: 'Rating', icon: Star }
           ]}
           searchPlaceholder="Search brew logs by name, description, or type..."
         />
@@ -112,8 +128,7 @@ function BrewLogsList() {
         </div>
       ) : (
         <div className="items-container">
-          {sortBy === 'date' || sortBy === 'type' ? (
-            // Simple list view for date and type sorting
+          {sortBy === 'date' || sortBy === 'type' || sortBy === 'rating' ? (
             <div className="items-grid">
               {processedBrewLogs.map((brewLog) => (
                 <BrewLogCard
