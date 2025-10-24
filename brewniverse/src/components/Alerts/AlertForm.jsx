@@ -271,9 +271,8 @@ function AlertForm() {
       <FormFooter 
         isEditing={isEditing}
         entityName="Alert"
-        cancelLabel="Back to Alerts"
         onCancel={() => navigate('/alerts')}
-        showCancel={false}
+        showCancel={!isEditing}
         onDelete={handleDelete}
       />
     </div>

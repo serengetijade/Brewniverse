@@ -8,6 +8,7 @@ function FormFooter({
   onCancel, 
   onDelete, 
   onSubmit,
+  showCancel = false,
   showDelete = true,
   collapsible = true,
   defaultExpanded = false,
@@ -46,6 +47,7 @@ function FormFooter({
           </Button>
         )}
 
+        {!isEditing && showCancel &&
         <Button
           type="button"
           variant="ghost"
@@ -53,7 +55,7 @@ function FormFooter({
         >
           <X size={16} />
           {cancelLabel}
-        </Button>
+        </Button>}
 
         <Button
           type="submit"

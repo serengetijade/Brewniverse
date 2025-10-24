@@ -342,8 +342,8 @@ function RecipeForm() {
       <FormFooter 
         isEditing={isEditing}
         entityName="Recipe"
+        showCancel={!isEditing}
         onCancel={() => navigate('/recipes')}
-        showCancel={false}
         showDelete={true}
         onDelete={onDelete}
       />
