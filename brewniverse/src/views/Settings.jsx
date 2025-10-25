@@ -38,12 +38,12 @@ function Settings() {
         <div className="settings">
             <div className="settings-header">
                 <h1>Settings</h1>
+                <div className="settings-logo">
+                    <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
+                </div>
                 <p>Customize your Brewniverse experience</p>
             </div>
 
-            <div className="settings-logo">
-                <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
-            </div>
 
             {/* Themes */}
             <div className="settings-sections">

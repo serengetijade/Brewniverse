@@ -21,6 +21,13 @@
         font-size: 1.125rem;
     }
 
+.dashboard-logo {
+}
+
+    .dashboard-logo img {
+        width: 15rem;
+    }
+
 .shortcuts-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(280px, 1fr));

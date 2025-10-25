@@ -33,7 +33,7 @@ function Dashboard() {
             color: 'accent'
         },
         {
-            title: 'Calculator',
+            title: 'Calculators',
             icon: Calculator,
             path: '/calculator',
             count: null,
@@ -55,7 +55,9 @@ function Dashboard() {
     return (
         <div className="dashboard">
             <div className="dashboard-header">
-                <h1>Welcome to Brewniverse</h1>
+                <div className="dashboard-logo">
+                    <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
+                </div>
                 <p>Track your brewing journey</p>
             </div>
 
