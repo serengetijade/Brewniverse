@@ -1,0 +1,35 @@
+/* Journal List Styles */
+
+.entry-brand {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin: 0.25rem 0;
+}
+
+.entry-style {
+    font-style: italic;
+    color: var(--color-text-tertiary);
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.5rem 0;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.entry-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.entry-abv {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+

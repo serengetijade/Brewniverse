@@ -1,4 +1,4 @@
-import { Bell, BookOpen, Calculator, FileText } from 'lucide-react';
+import { Bell, Book, BookOpen, Calculator, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Dashboard.css';
@@ -24,6 +24,13 @@ function Dashboard() {
             path: '/recipes',
             count: state.recipes.length,
             color: 'secondary'
+        },
+        {
+            title: 'Journal',
+            icon: Book,
+            path: '/journal',
+            count: state.journalEntries.length,
+            color: 'highlight'
         },
         {
             title: 'Alerts',

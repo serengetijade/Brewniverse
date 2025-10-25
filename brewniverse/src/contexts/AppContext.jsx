@@ -8,6 +8,7 @@ const initialState = {
     alerts: [],
     alertGroups: [],
     instructions: [],
+    journalEntries: [],
     recipeProgress: {},
     settings: {
         theme: 'default',
@@ -42,6 +43,11 @@ export const ActionTypes = {
     UPDATE_INSTRUCTION: 'UPDATE_INSTRUCTION',
     DELETE_INSTRUCTION: 'DELETE_INSTRUCTION',
     CLONE_INSTRUCTION: 'CLONE_INSTRUCTION',
+
+    // Journal Entries
+    ADD_JOURNAL_ENTRY: 'ADD_JOURNAL_ENTRY',
+    UPDATE_JOURNAL_ENTRY: 'UPDATE_JOURNAL_ENTRY',
+    DELETE_JOURNAL_ENTRY: 'DELETE_JOURNAL_ENTRY',
 
     // Settings
     UPDATE_SETTINGS: 'UPDATE_SETTINGS',
@@ -214,6 +220,26 @@ function appReducer(state, action) {
                 };
             }
             return state;
+
+        case ActionTypes.ADD_JOURNAL_ENTRY:
+            return {
+                ...state,
+                journalEntries: [...state.journalEntries, { ...action.payload, id: action.payload.id || Date.now().toString() }],
+            };
+
+        case ActionTypes.UPDATE_JOURNAL_ENTRY:
+            return {
+                ...state,
+                journalEntries: state.journalEntries.map(entry =>
+                    entry.id === action.payload.id ? { ...entry, ...action.payload } : entry
+                ),
+            };
+
+        case ActionTypes.DELETE_JOURNAL_ENTRY:
+            return {
+                ...state,
+                journalEntries: state.journalEntries.filter(entry => entry.id !== action.payload),
+            };
 
         case ActionTypes.UPDATE_SETTINGS:
             return {
