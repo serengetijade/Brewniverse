@@ -1,4 +1,4 @@
-import { Beaker, Calendar, Edit, FileText } from 'lucide-react';
+import { BookOpen, Calendar, Edit, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/Shared/brewLogDetail.css';
@@ -25,7 +25,7 @@ function BrewLogDetail() {
         return (
             <div className="brewlog-detail">
                 <div className="brewlog-empty-state">
-                    <Beaker size={64} />
+                    <BookOpen size={64} />
                     <h3>Brew Log Not Found</h3>
                     <p>The brew log you're looking for doesn't exist.</p>
                     <Button variant="primary" onClick={() => navigate('/brewlogs')}>
@@ -60,7 +60,7 @@ function BrewLogDetail() {
                     <h1>{brewLog.name}</h1>
                     <div className="brewlog-meta">
                         <span className="brewlog-type-badge">
-                            <Beaker size={18} />
+                            <BookOpen size={18} />
                             {brewLog.type}
                         </span>
                         <span className="brewlog-date-info">
@@ -128,7 +128,11 @@ function BrewLogDetail() {
             )}
 
             {/* Journal Entries Section */}
-            <JournalEntryList brewLogId={id} />
+            <div className="brewlog-content-section">
+                <JournalEntryList
+                    brewLogId={id}
+                    showHeading={true} />
+            </div>
 
             {/* Activity Timeline Section */}
             <div className="brewlog-content-section">

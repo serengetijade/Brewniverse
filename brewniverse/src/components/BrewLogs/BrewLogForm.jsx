@@ -15,6 +15,7 @@ import FormHeader from '../Layout/FormHeader';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';
 import GravityChart from './GravityChart';
+import JournalEntryList from '../Journal/JournalEntryList';
 
 function BrewLogForm() {
     const { id } = useParams();
@@ -842,6 +843,32 @@ function BrewLogForm() {
                             placeholder="Additional notes about this brew"
                             rows={4}
                         />
+                    </div>
+                </div>
+
+                {/* Journal Entries */}
+                <div className="form-section brewlog-journal">
+                    <div className="form-group brewlog-journal-header">
+                        <h3>
+                            Journal
+                        </h3>
+                        <div className="brewlog-journal-action">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="small"
+                                onClick={() => navigate(`/journal/new?brewLogId=${formData.id}&type=${formData.type}&name=${encodeURIComponent(formData.name)}&abv=${getCurrentAbv(getGravityActivities(formData.activity))}`)}
+                            >
+                                <Plus size={16} />
+                                Add Journal Entry
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <JournalEntryList
+                            brewLogId={id}
+                            showHeading={false} />
                     </div>
                 </div>
             </form>

@@ -1,5 +1,3 @@
-/* Journal List Styles */
-
 .entry-brand {
     font-weight: 600;
     color: var(--color-text-secondary);
@@ -32,4 +30,3 @@
     font-weight: 600;
     color: var(--color-primary);
 }
-

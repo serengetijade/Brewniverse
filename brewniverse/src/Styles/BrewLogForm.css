@@ -76,6 +76,13 @@
     padding-right: 2.5rem;
 }
 
+/* Journal Entry */
+.brewlog-journal .form-group.brewlog-journal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}  
+
 /* Unsaved changes indicator */
 .unsaved-indicator {
     color: var(--color-warning);

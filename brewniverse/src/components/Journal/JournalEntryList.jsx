@@ -1,12 +1,9 @@
-import { Book, Plus } from 'lucide-react';
+import { Book } from 'lucide-react';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../contexts/AppContext';
-import Button from '../UI/Button';
 import JournalEntryCard from './JournalEntryCard';
 
-function JournalEntryList({ brewLogId }) {
-    const navigate = useNavigate();
+function JournalEntryList({ brewLogId, showHeading = false }) {
     const { state } = useApp();
 
     const journalEntries = state.journalEntries
@@ -14,21 +11,15 @@ function JournalEntryList({ brewLogId }) {
         .sort((a, b) => new Date(b.date) - new Date(a.date));
 
     return (
-        <div className="brewlog-content-section">
+        <div>
+            {showHeading &&
             <div className="section-header-with-action">
                 <h2>
                     <Book size={24} />
-                    Journal Entries
+                    Journal
                 </h2>
-                <Button
-                    variant="secondary"
-                    size="small"
-                    onClick={() => navigate(`/journal/new?brewLogId=${brewLogId}`)}
-                >
-                    <Plus size={16} />
-                    Add Entry
-                </Button>
             </div>
+            }
 
             {journalEntries.length === 0 ? (
                 <div className="empty-state-small">
@@ -46,4 +37,3 @@ function JournalEntryList({ brewLogId }) {
 }
 
 export default JournalEntryList;
-

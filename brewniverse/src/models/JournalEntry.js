@@ -6,12 +6,12 @@ class JournalEntry {
         this.abv = data.abv || '';
         this.brand = data.brand || '';
         this.brewLogId = data.brewLogId || '';
-        this.brewType = data.brewType || 'Beer';
         this.date = data.date || getDate();
         this.name = data.name || '';
         this.notes = data.notes || '';
         this.rating = data.rating || 0;
         this.style = data.style || '';
+        this.type = data.type || 'Beer';
         this.venue = data.venue || '';
     }
 
@@ -25,12 +25,12 @@ class JournalEntry {
             abv: this.abv,
             brand: this.brand,
             brewLogId: this.brewLogId,
-            brewType: this.brewType,
             date: this.date,
             name: this.name,
             notes: this.notes,
             rating: this.rating,
             style: this.style,
+            type: this.type,
             venue: this.venue,
         };
     }

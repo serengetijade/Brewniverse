@@ -19,7 +19,17 @@ function JournalEntryForm() {
 
     const [formData, setFormData] = useState(() => {
         const brewLogId = searchParams.get('brewLogId') || '';
-        return new JournalEntry({ id: generateId() || id, brewLogId });
+        const type = searchParams.get('type');
+        const name = searchParams.get('name');
+        const abv = searchParams.get('abv');
+
+        const initialData = { id: generateId() || id, brewLogId };
+        if (type) initialData.type = type;
+        if (name) initialData.name = name;
+        if (abv) initialData.abv = parseFloat(abv);
+        initialData.brand = "Brewniverse";
+
+        return new JournalEntry(initialData);
     });
 
     useEffect(() => {
@@ -30,8 +40,17 @@ function JournalEntryForm() {
             }
         } else {
             const brewLogId = searchParams.get('brewLogId');
-            if (brewLogId) {
-                setFormData(prev => new JournalEntry({ ...prev.toJSON(), brewLogId }));
+            const type = searchParams.get('type');
+            const name = searchParams.get('name');
+            const abv = searchParams.get('abv');
+
+            if (brewLogId || type || name || abv) {
+                const updates = { brewLogId };
+                if (type) updates.type = type;
+                if (name) updates.name = name;
+                if (abv) updates.abv = parseFloat(abv);
+
+                setFormData(prev => new JournalEntry({ ...prev.toJSON(), ...updates }));
             }
         }
     }, [id, isEditing, state.journalEntries, searchParams]);
@@ -71,15 +90,15 @@ function JournalEntryForm() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "brewLogId" && value != '') {
-            const selectedText = e.target.options[e.target.selectedIndex].text; 
+            const selectedText = e.target.options[e.target.selectedIndex].text;
             const selectedBrewLog = state.brewLogs.find(x => x.id === value);
             const currentAbv = getCurrentAbv(getGravityActivities(selectedBrewLog.activity));
             updateFormData({
                 [name]: value,
-                name: selectedText,
+                abv: currentAbv,
                 brand: "Brewniverse",
-                brewType: selectedBrewLog.type,
-                abv: currentAbv
+                name: selectedText,
+                type: selectedBrewLog.type
             });
         }
         else {
@@ -87,7 +106,7 @@ function JournalEntryForm() {
                 [name]: value
             });
         }
-    };  
+    };
 
     const handleRatingChange = (newRating) => {
         updateFormData({ rating: newRating });
@@ -149,101 +168,101 @@ function JournalEntryForm() {
                         </select>
                     </div>
 
-                    {formData.brewLogId == '' && 
+                    {formData.brewLogId == '' &&
                         <div>
-                    <div className="form-group">
-                        <label htmlFor="name" className="form-label">
-                            Name *
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            className="form-input"
-                            value={formData.name}
-                            onChange={handleChange}
-                            required
-                            maxLength={Validation.InputMaxLength}
-                            placeholder="Enter brew name"
-                        />
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="brand" className="form-label">
-                                Brand
-                            </label>
-                            <input
-                                type="text"
-                                id="brand"
-                                name="brand"
-                                className="form-input"
-                                value={formData.brand}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="Enter brand name"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="style" className="form-label">
-                                Style
-                            </label>
-                            <input
-                                type="text"
-                                id="style"
-                                name="style"
-                                className="form-input"
-                                value={formData.style}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., IPA, Pinot Noir, etc."
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="brewType" className="form-label">
-                                Type *
-                            </label>
-                            <select
-                                id="brewType"
-                                name="brewType"
-                                className="form-input"
-                                value={formData.brewType}
-                                onChange={handleChange}
-                                required
-                            >
-                                {BrewTypes.map((brewType) => (
-                                    <option key={brewType.key} value={brewType.key}>
-                                        {brewType.icon} {brewType.name}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="abv" className="form-label">
-                                ABV (%)
-                            </label>
-                            <input
-                                type="number"
-                                id="abv"
-                                name="abv"
-                                className="form-input"
-                                value={formData.abv}
-                                onChange={handleChange}
-                                step="0.1"
-                                min="0"
-                                max="100"
-                                placeholder="Alcohol by volume"
-                            />
-                        </div>
+                            <div className="form-group">
+                                <label htmlFor="name" className="form-label">
+                                    Name *
+                                </label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    className="form-input"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    required
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="Enter brew name"
+                                />
                             </div>
-                    </div>
-}
-                    
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="brand" className="form-label">
+                                        Brand
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="brand"
+                                        name="brand"
+                                        className="form-input"
+                                        value={formData.brand}
+                                        onChange={handleChange}
+                                        maxLength={Validation.InputMaxLength}
+                                        placeholder="Enter brand name"
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="style" className="form-label">
+                                        Style
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="style"
+                                        name="style"
+                                        className="form-input"
+                                        value={formData.style}
+                                        onChange={handleChange}
+                                        maxLength={Validation.InputMaxLength}
+                                        placeholder="e.g., IPA, Pinot Noir, etc."
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="type" className="form-label">
+                                        Type *
+                                    </label>
+                                    <select
+                                        id="type"
+                                        name="type"
+                                        className="form-input"
+                                        value={formData.type}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        {BrewTypes.map((brewType) => (
+                                            <option key={brewType.key} value={brewType.key}>
+                                                {brewType.icon} {brewType.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="abv" className="form-label">
+                                        ABV (%)
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="abv"
+                                        name="abv"
+                                        className="form-input"
+                                        value={formData.abv}
+                                        onChange={handleChange}
+                                        step="0.1"
+                                        min="0"
+                                        max="100"
+                                        placeholder="Alcohol by volume"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     <div className="form-group">
                         <label htmlFor="venue" className="form-label">
                             Venue
