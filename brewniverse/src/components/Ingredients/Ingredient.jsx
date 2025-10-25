@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Save, X, Trash2 } from 'lucide-react';
+import { Save, Trash2, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import '../../Styles/Shared/ingredients.css';
 import { Validation } from '../../constants/ValidationConstants';
 import IngredientModel from '../../models/Ingredient';
-import '../../Styles/Shared/ingredients.css';
 import Button from '../UI/Button';
 
 function Ingredient({
@@ -13,8 +13,8 @@ function Ingredient({
     onCancel,
     onEdit,
     onRemove
-}){
-    const [editData, setEditData] = useState(() => 
+}) {
+    const [editData, setEditData] = useState(() =>
         IngredientModel.fromJSON(ingredient)
     );
 

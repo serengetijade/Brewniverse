@@ -5,15 +5,14 @@ import BrewLogDetail from '../components/BrewLogs/BrewLogDetail';
 import BrewLogForm from '../components/BrewLogs/BrewLogForm';
 
 function BrewLogs() {
-  return (
-    <Routes>
-      <Route index element={<BrewLogsList />} />
-      <Route path="new" element={<BrewLogForm />} />
-      <Route path=":id" element={<BrewLogDetail />} />
-      <Route path=":id/edit" element={<BrewLogForm />} />
-    </Routes>
-  );
+    return (
+        <Routes>
+            <Route index element={<BrewLogsList />} />
+            <Route path="new" element={<BrewLogForm />} />
+            <Route path=":id" element={<BrewLogDetail />} />
+            <Route path=":id/edit" element={<BrewLogForm />} />
+        </Routes>
+    );
 }
 
 export default BrewLogs;
-

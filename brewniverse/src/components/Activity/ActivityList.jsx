@@ -1,9 +1,9 @@
 import { Plus } from 'lucide-react';
 import React from 'react';
-import { getDate } from '../../contexts/AppContext';
-import Activity, { addActivity, getActivitiesByTopic, getTopicDisplayName } from './Activity';
-import Button from '../UI/Button';
 import '../../Styles/Activity.css';
+import { getDate } from '../../contexts/AppContext';
+import Button from '../UI/Button';
+import Activity, { addActivity, getActivitiesByTopic, getTopicDisplayName } from './Activity';
 
 export function ActivityList({
     formData,
@@ -54,7 +54,7 @@ export function ActivityList({
                                 setFormData={setFormData}
                             />
                         ))}
-                    </div>         
+                    </div>
                 )
             }
         </div>

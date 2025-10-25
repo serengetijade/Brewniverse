@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ActionTypes, useApp } from '../../contexts/AppContext';
-import { Validation } from '../../constants/ValidationConstants';
-import Button from '../UI/Button';
-import Rating from '../UI/Rating';
-import FormHeader from '../Layout/FormHeader';
-import FormFooter from '../Layout/FormFooter';
-import IngredientList from '../Ingredients/IngredientList';
-import InstructionForm from '../Instructions/InstructionForm';
-import Recipe from '../../models/Recipe';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
+import { Validation } from '../../constants/ValidationConstants';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
+import Recipe from '../../models/Recipe';
+import IngredientList from '../Ingredients/IngredientList';
+import InstructionForm from '../Instructions/InstructionForm';
+import FormFooter from '../Layout/FormFooter';
+import FormHeader from '../Layout/FormHeader';
+import Button from '../UI/Button';
+import Rating from '../UI/Rating';
 
 function RecipeForm() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { state, dispatch } = useApp();
-  const isEditing = Boolean(id);
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { state, dispatch } = useApp();
+    const isEditing = Boolean(id);
 
-  const [formData, setFormData] = useState(() => new Recipe({ id }));
+    const [formData, setFormData] = useState(() => new Recipe({ id }));
 
-  useEffect(() => {
-    if (isEditing) {
-      const recipe = state.recipes.find(r => r.id === id);
-      if (recipe) {
-        setFormData(Recipe.fromJSON({
-          ...recipe,
-          instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
-        }));
-      }
-    }
-  }, [id, isEditing, state.recipes]);
+    useEffect(() => {
+        if (isEditing) {
+            const recipe = state.recipes.find(r => r.id === id);
+            if (recipe) {
+                setFormData(Recipe.fromJSON({
+                    ...recipe,
+                    instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
+                }));
+            }
+        }
+    }, [id, isEditing, state.recipes]);
 
     const onDelete = (e) => {
         e.preventDefault();
@@ -53,302 +53,302 @@ function RecipeForm() {
         navigate('/recipes');
     }
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    const recipeData = formData.toJSON();
+    const handleSubmit = (e) => {
+        e.preventDefault();
 
-    if (isEditing) {
-      dispatch({
-        type: ActionTypes.UPDATE_RECIPE,
-        payload: { ...recipeData, id }
-      });
-    }
-    else {
-      dispatch({
-        type: ActionTypes.ADD_RECIPE,
-        payload: recipeData
-      });
-    }
+        const recipeData = formData.toJSON();
 
-    navigate('/recipes');
-  };
+        if (isEditing) {
+            dispatch({
+                type: ActionTypes.UPDATE_RECIPE,
+                payload: { ...recipeData, id }
+            });
+        }
+        else {
+            dispatch({
+                type: ActionTypes.ADD_RECIPE,
+                payload: recipeData
+            });
+        }
 
-  const updateFormData = (updates) => {
-    const updatedData = Recipe.fromJSON({ ...formData.toJSON(), ...updates });
-    setFormData(updatedData);
-    
-    if (isEditing) {
-      dispatch({
-        type: ActionTypes.UPDATE_RECIPE,
-        payload: { ...updatedData.toJSON(), id }
-      });
-    }
-  };
+        navigate('/recipes');
+    };
 
-  const updateFormDataCallback = (updaterFn) => {
-    const currentData = formData.toJSON();
-    const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
-    const newRecipe = Recipe.fromJSON(updatedData);
-    setFormData(newRecipe);
-    
-    if (isEditing) {
-      dispatch({
-        type: ActionTypes.UPDATE_RECIPE,
-        payload: { ...newRecipe.toJSON(), id }
-      });
-    }
-  };
+    const updateFormData = (updates) => {
+        const updatedData = Recipe.fromJSON({ ...formData.toJSON(), ...updates });
+        setFormData(updatedData);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    updateFormData({ [name]: value });
-  };
+        if (isEditing) {
+            dispatch({
+                type: ActionTypes.UPDATE_RECIPE,
+                payload: { ...updatedData.toJSON(), id }
+            });
+        }
+    };
 
-  const handleInstructionsChange = (instructions) => {
-    updateFormData({ instructions });
-  };
+    const updateFormDataCallback = (updaterFn) => {
+        const currentData = formData.toJSON();
+        const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
+        const newRecipe = Recipe.fromJSON(updatedData);
+        setFormData(newRecipe);
 
-  const getConnectedBrewLogs = () => {
-    return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
-  };
+        if (isEditing) {
+            dispatch({
+                type: ActionTypes.UPDATE_RECIPE,
+                payload: { ...newRecipe.toJSON(), id }
+            });
+        }
+    };
 
-  return (
-    <div className="form-container form-with-footer">
-      <FormHeader 
-        isEditing={isEditing} 
-        entityName="Recipe" 
-      />
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        updateFormData({ [name]: value });
+    };
 
-      <form onSubmit={handleSubmit} className="card">
-        {/* Basic Information */}
-        <div className="form-section">
-          <h3>Basic Information</h3>
-          
-          <div className="form-group">
-            <label htmlFor="name" className="form-label">
-              Recipe Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              className="form-input"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              maxLength={Validation.InputMaxLength}
-              placeholder="Enter recipe name"
+    const handleInstructionsChange = (instructions) => {
+        updateFormData({ instructions });
+    };
+
+    const getConnectedBrewLogs = () => {
+        return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
+    };
+
+    return (
+        <div className="form-container form-with-footer">
+            <FormHeader
+                isEditing={isEditing}
+                entityName="Recipe"
             />
-          </div>
 
-          <div className="form-group">
-            <label htmlFor="dateCreated" className="form-label">
-              Date Created *
-            </label>
-            <input
-              type="datetime-local"
-              id="dateCreated"
-              name="dateCreated"
-              className="form-input"
-              value={formData.dateCreated}
-              onChange={handleChange}
-              required
-            />
-          </div>
+            <form onSubmit={handleSubmit} className="card">
+                {/* Basic Information */}
+                <div className="form-section">
+                    <h3>Basic Information</h3>
 
-          <div className="form-group">
-            <label htmlFor="type" className="form-label">
-              Type *
-            </label>
-            <select
-              id="type"
-              name="type"
-              className="form-select"
-              value={formData.type}
-              onChange={handleChange}
-              required
-             >
-            {BrewTypes.map((type) => (
-                <option key={type.name} value={type.name}>
-                    {type.icon} {type.name}
-                </option>
-            ))}
-            </select>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="difficulty" className="form-label">
-                Difficulty Level
-              </label>
-              <select
-                id="difficulty"
-                name="difficulty"
-                className="form-select"
-                value={formData.difficulty}
-                onChange={handleChange}
-              >
-                <option value="Beginner">Beginner</option>
-                <option value="Intermediate">Intermediate</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Expert">Expert</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="volume" className="form-label">
-                Estimated Yield
-              </label>
-              <input
-                type="text"
-                id="volume"
-                name="volume"
-                className="form-input"
-                value={formData.volume}
-                onChange={handleChange}
-                maxLength={Validation.InputMaxLength}
-                placeholder="e.g., 5 gallons, 1 gallon"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="estimatedABV" className="form-label">
-                Estimated ABV (%)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                id="estimatedABV"
-                name="estimatedABV"
-                className="form-input"
-                value={formData.estimatedABV}
-                onChange={handleChange}
-                min={Validation.NumberMin}
-                placeholder="12.5"
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="description" className="form-label">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              className="form-textarea"
-              value={formData.description}
-              onChange={handleChange}
-              maxLength={Validation.TextareaMaxLength}
-              placeholder="Brief description of this recipe"
-              rows={3}
-            />
-          </div>
-
-          <div className="form-group">
-            <Rating
-              value={formData.rating}
-              onChange={(newRating) => updateFormData({ rating: newRating })}
-              isEditing={true}
-              label="Rating"
-            />
-          </div>
-        </div>
-
-        {/* Primary Ingredients */}
-        <div className="form-section">
-            <IngredientList
-                formData={formData}
-                setFormData={updateFormDataCallback}
-                ingredientType="ingredientsPrimary"
-                sectionName="Primary Ingredients"
-                sectionDescription=""
-                sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
-            >
-            </IngredientList>
-        </div>
-
-        {/* Secondary Ingredients */}
-        <div className="form-section">
-            <IngredientList
-                formData={formData}
-                setFormData={updateFormDataCallback}
-                ingredientType="ingredientsSecondary"
-                sectionName="Secondary Ingredients"
-                sectionDescription=""
-                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
-            >
-            </IngredientList>
-        </div>
-
-        {/* Instructions */}
-        <div className="form-section">
-          <InstructionForm
-            instructions={formData.instructions}
-            onInstructionsChange={handleInstructionsChange}
-          />
-        </div>
-
-        {/* Notes */}
-        <div className="form-section">
-          <div className="form-group">
-            <label htmlFor="notes" className="form-label">
-              Notes & Tips
-            </label>
-            <textarea
-              id="notes"
-              name="notes"
-              className="form-textarea"
-              value={formData.notes}
-              onChange={handleChange}
-              maxLength={Validation.TextareaMaxLength}
-              placeholder="Additional notes, tips, and observations for this recipe"
-              rows={4}
-            />
-          </div>
-        </div>
-
-        {/* Connected Brew Logs (only show when editing) */}
-        {isEditing && (
-          <div className="form-section">
-            <h3>Connected Brew Logs</h3>
-            {getConnectedBrewLogs().length === 0 ? (
-              <p className="empty-message">No brew logs are using this recipe yet.</p>
-            ) : (
-              <div className="connected-brews">
-                {getConnectedBrewLogs().map((brewLog) => (
-                  <div key={brewLog.id} className="connected-brew-item">
-                    <div className="brew-info">
-                      <h4>{brewLog.name}</h4>
-                      <p>{brewLog.type} • Created {new Date(brewLog.dateCreated).toLocaleDateString()}</p>
+                    <div className="form-group">
+                        <label htmlFor="name" className="form-label">
+                            Recipe Name *
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            className="form-input"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            maxLength={Validation.InputMaxLength}
+                            placeholder="Enter recipe name"
+                        />
                     </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="small"
-                      onClick={() => navigate(`/brewlogs/${brewLog.id}`)}
-                    >
-                      View Brew Log
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </form>
 
-      <FormFooter 
-        isEditing={isEditing}
-        entityName="Recipe"
-        showCancel={!isEditing}
-        onCancel={() => navigate('/recipes')}
-        showDelete={true}
-        onDelete={onDelete}
-      />
-    </div>
-  );
+                    <div className="form-group">
+                        <label htmlFor="dateCreated" className="form-label">
+                            Date Created *
+                        </label>
+                        <input
+                            type="datetime-local"
+                            id="dateCreated"
+                            name="dateCreated"
+                            className="form-input"
+                            value={formData.dateCreated}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="type" className="form-label">
+                            Type *
+                        </label>
+                        <select
+                            id="type"
+                            name="type"
+                            className="form-select"
+                            value={formData.type}
+                            onChange={handleChange}
+                            required
+                        >
+                            {BrewTypes.map((type) => (
+                                <option key={type.name} value={type.name}>
+                                    {type.icon} {type.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="difficulty" className="form-label">
+                                Difficulty Level
+                            </label>
+                            <select
+                                id="difficulty"
+                                name="difficulty"
+                                className="form-select"
+                                value={formData.difficulty}
+                                onChange={handleChange}
+                            >
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                                <option value="Expert">Expert</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="volume" className="form-label">
+                                Estimated Yield
+                            </label>
+                            <input
+                                type="text"
+                                id="volume"
+                                name="volume"
+                                className="form-input"
+                                value={formData.volume}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="e.g., 5 gallons, 1 gallon"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="estimatedABV" className="form-label">
+                                Estimated ABV (%)
+                            </label>
+                            <input
+                                type="number"
+                                step="0.1"
+                                id="estimatedABV"
+                                name="estimatedABV"
+                                className="form-input"
+                                value={formData.estimatedABV}
+                                onChange={handleChange}
+                                min={Validation.NumberMin}
+                                placeholder="12.5"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="description" className="form-label">
+                            Description
+                        </label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            className="form-textarea"
+                            value={formData.description}
+                            onChange={handleChange}
+                            maxLength={Validation.TextareaMaxLength}
+                            placeholder="Brief description of this recipe"
+                            rows={3}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <Rating
+                            value={formData.rating}
+                            onChange={(newRating) => updateFormData({ rating: newRating })}
+                            isEditing={true}
+                            label="Rating"
+                        />
+                    </div>
+                </div>
+
+                {/* Primary Ingredients */}
+                <div className="form-section">
+                    <IngredientList
+                        formData={formData}
+                        setFormData={updateFormDataCallback}
+                        ingredientType="ingredientsPrimary"
+                        sectionName="Primary Ingredients"
+                        sectionDescription=""
+                        sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
+                    >
+                    </IngredientList>
+                </div>
+
+                {/* Secondary Ingredients */}
+                <div className="form-section">
+                    <IngredientList
+                        formData={formData}
+                        setFormData={updateFormDataCallback}
+                        ingredientType="ingredientsSecondary"
+                        sectionName="Secondary Ingredients"
+                        sectionDescription=""
+                        sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
+                    >
+                    </IngredientList>
+                </div>
+
+                {/* Instructions */}
+                <div className="form-section">
+                    <InstructionForm
+                        instructions={formData.instructions}
+                        onInstructionsChange={handleInstructionsChange}
+                    />
+                </div>
+
+                {/* Notes */}
+                <div className="form-section">
+                    <div className="form-group">
+                        <label htmlFor="notes" className="form-label">
+                            Notes & Tips
+                        </label>
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            className="form-textarea"
+                            value={formData.notes}
+                            onChange={handleChange}
+                            maxLength={Validation.TextareaMaxLength}
+                            placeholder="Additional notes, tips, and observations for this recipe"
+                            rows={4}
+                        />
+                    </div>
+                </div>
+
+                {/* Connected Brew Logs (only show when editing) */}
+                {isEditing && (
+                    <div className="form-section">
+                        <h3>Connected Brew Logs</h3>
+                        {getConnectedBrewLogs().length === 0 ? (
+                            <p className="empty-message">No brew logs are using this recipe yet.</p>
+                        ) : (
+                            <div className="connected-brews">
+                                {getConnectedBrewLogs().map((brewLog) => (
+                                    <div key={brewLog.id} className="connected-brew-item">
+                                        <div className="brew-info">
+                                            <h4>{brewLog.name}</h4>
+                                            <p>{brewLog.type} • Created {new Date(brewLog.dateCreated).toLocaleDateString()}</p>
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="small"
+                                            onClick={() => navigate(`/brewlogs/${brewLog.id}`)}
+                                        >
+                                            View Brew Log
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
+            </form>
+
+            <FormFooter
+                isEditing={isEditing}
+                entityName="Recipe"
+                showCancel={!isEditing}
+                onCancel={() => navigate('/recipes')}
+                showDelete={true}
+                onDelete={onDelete}
+            />
+        </div>
+    );
 }
 
 export default RecipeForm;

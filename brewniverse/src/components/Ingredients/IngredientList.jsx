@@ -1,17 +1,17 @@
-import React from 'react';
 import { Plus } from 'lucide-react';
+import React from 'react';
+import '../../Styles/Shared/ingredients.css';
+import IngredientModel from '../../models/Ingredient';
 import Button from '../UI/Button';
 import Ingredient from './Ingredient';
-import IngredientModel from '../../models/Ingredient';
-import '../../Styles/Shared/ingredients.css';
-  
-export default function IngredientList({  
-  formData,  
-  setFormData,  
-  ingredientType,  
-  sectionName,  
-  sectionDescription,  
-  sectionInfoMessage,  
+
+export default function IngredientList({
+    formData,
+    setFormData,
+    ingredientType,
+    sectionName,
+    sectionDescription,
+    sectionInfoMessage,
 }) {
     const [editingIngredient, setEditingIngredient] = React.useState(null);
 
@@ -71,56 +71,56 @@ export default function IngredientList({
                 )
             };
         });
-        
+
         setEditingIngredient(null);
-    };  
-  
-  const description = sectionDescription 
-    ? (<span className="section-description"> {sectionDescription}</span>) 
-    : null;  
-  
-  const formDataObj = formData.toJSON ? formData.toJSON() : formData;
-  
-  return (  
-    <div>  
-      <div className="section-header">  
-        <h3>{sectionName}{description}</h3>            
-      </div>  
+    };
 
-      <div className="form-group">
-      {formDataObj[ingredientType].length === 0 
-      ? (<p className="empty-message">{sectionInfoMessage}</p>) 
-      : (  
-        <div className="ingredients-list">  
-          {formDataObj[ingredientType].map((ingredient) => (  
-            <div key={ingredient.id} className="ingredient-item">  
-              <Ingredient
-                ingredient={ingredient}
-                type={ingredientType}
-                isEditing={editingIngredient && editingIngredient.type === ingredientType && editingIngredient.id === ingredient.id}
-                onSave={saveEditIngredient}
-                onCancel={cancelEditIngredient}
-                onEdit={editIngredient}
-                onRemove={removeIngredient}
-              />
-            </div>  
-          ))}  
-        </div>  
-      )} 
-      </div>
+    const description = sectionDescription
+        ? (<span className="section-description"> {sectionDescription}</span>)
+        : null;
 
-      <div className="form-group ingredient-add-container">
-        <Button  
-          type="button"  
-          variant="outline"  
-          size="small"
-          onClick={() => addIngredient(ingredientType
-          )}  
-        >  
-          <Plus size={16} />  
-          Add Ingredient  
-        </Button> 
-      </div>
-    </div>  
-  );  
+    const formDataObj = formData.toJSON ? formData.toJSON() : formData;
+
+    return (
+        <div>
+            <div className="section-header">
+                <h3>{sectionName}{description}</h3>
+            </div>
+
+            <div className="form-group">
+                {formDataObj[ingredientType].length === 0
+                    ? (<p className="empty-message">{sectionInfoMessage}</p>)
+                    : (
+                        <div className="ingredients-list">
+                            {formDataObj[ingredientType].map((ingredient) => (
+                                <div key={ingredient.id} className="ingredient-item">
+                                    <Ingredient
+                                        ingredient={ingredient}
+                                        type={ingredientType}
+                                        isEditing={editingIngredient && editingIngredient.type === ingredientType && editingIngredient.id === ingredient.id}
+                                        onSave={saveEditIngredient}
+                                        onCancel={cancelEditIngredient}
+                                        onEdit={editIngredient}
+                                        onRemove={removeIngredient}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+            </div>
+
+            <div className="form-group ingredient-add-container">
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="small"
+                    onClick={() => addIngredient(ingredientType
+                    )}
+                >
+                    <Plus size={16} />
+                    Add Ingredient
+                </Button>
+            </div>
+        </div>
+    );
 }  

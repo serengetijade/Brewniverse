@@ -1,12 +1,12 @@
+import { Bell, BellPlus, Trash2 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, Bell, BellPlus } from 'lucide-react';
-import { generateId, getDate, useApp, ActionTypes } from '../../contexts/AppContext';
-import { Validation } from '../../constants/ValidationConstants';
-import Button from '../UI/Button';
-import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } from '../../constants/ActivityTopics.jsx';
-import ActivityModel from '../../models/Activity';
 import '../../Styles/Activity.css';
+import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } from '../../constants/ActivityTopics.jsx';
+import { Validation } from '../../constants/ValidationConstants';
+import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
+import ActivityModel from '../../models/Activity';
+import Button from '../UI/Button';
 
 function Activity({
     activity,
@@ -16,7 +16,7 @@ function Activity({
 }) {
     const { state, dispatch } = useApp();
     const navigate = useNavigate();
-    const [activityData, setActivityData] = useState(() => 
+    const [activityData, setActivityData] = useState(() =>
         ActivityModel.fromJSON({
             ...activity,
             brewLogId: activity.brewLogId || brewLogId || '',
@@ -72,7 +72,7 @@ function Activity({
         const activityDate = new Date(activityData.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
+
         // Only allow alerts for future dates
         if (activityDate <= today) {
             return;
@@ -83,7 +83,7 @@ function Activity({
             const confirmNavigate = window.confirm(
                 'This activity already has an alert. Would you like to go to that alert?\n\nClick OK to navigate to the alert, or Cancel to stay here.'
             );
-            
+
             if (confirmNavigate) {
                 navigate(`/alerts/${activityData.alertId}`);
             }
@@ -122,7 +122,7 @@ function Activity({
     const buttonSize = 14;
     const showAlertButton = isDateInFuture(activityData.date);
 
-    return (        
+    return (
         <div className="activity">
             <div className="form-group">
                 <label className="form-label">{itemLabel}</label>
@@ -168,11 +168,11 @@ function Activity({
                     <Trash2 size={buttonSize} />
                 </Button>
             </div>
-        </div>        
+        </div>
     );
 }
 
-export function addActivity (setFormData, date, name, description, topic, brewLogId, alertId){
+export function addActivity(setFormData, date, name, description, topic, brewLogId, alertId) {
     const newActivity = createActivity(
         date ? date : getDate(),
         name ? name : getTopicDisplayName(topic),
@@ -213,7 +213,7 @@ export const getActivitiesByTopic = (formData, topic) => {
     return activities.filter(a => a && String(a.topic).toLowerCase() === target);
 };
 
-export function deleteActivity (setFormData, id) {
+export function deleteActivity(setFormData, id) {
     setFormData(prev => {
         // Handle both BrewLog instances and plain objects
         const prevData = prev.toJSON ? prev.toJSON() : prev;
@@ -227,7 +227,7 @@ export function deleteActivity (setFormData, id) {
 
 };
 
-export function updateActivity (setFormData, id, field, value) {
+export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
         // Handle both BrewLog instances and plain objects
         const prevData = prev.toJSON ? prev.toJSON() : prev;
@@ -240,7 +240,7 @@ export function updateActivity (setFormData, id, field, value) {
     });
 };
 
-export { getTopicDisplayName, ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
+export { ActivityTopicEnum, getTopicDisplayName } from '../../constants/ActivityTopics.jsx';
 
 export const ACTIVITY_STATUSES = ["Pending", "Complete"];
 

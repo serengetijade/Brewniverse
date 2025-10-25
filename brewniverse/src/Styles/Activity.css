@@ -10,9 +10,9 @@
     margin: .5rem 0rem;
 }
 
-.activity .form-group {
-    /*margin-bottom: 0rem;*/
-}
+    .activity .form-group {
+        /*margin-bottom: 0rem;*/
+    }
 
 .activity-editor-actions {
     display: grid;
@@ -38,50 +38,50 @@
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-  .activity {
-    gap: 0.5rem;
-    padding: 0.75rem 0.5rem;
-  }
-    
-  .activity .btn {
-    padding: 0.5rem 0.2rem;
-    min-width: 40px;
-  }
-  
-  .activity .form-input {
-    padding: 0.5rem;
-    min-height: 36px;
-    font-size: 0.8rem;
-  }
-  
-  .activity .form-label {
-    font-size: 0.7rem;
-  }
+    .activity {
+        gap: 0.5rem;
+        padding: 0.75rem 0.5rem;
+    }
+
+        .activity .btn {
+            padding: 0.5rem 0.2rem;
+            min-width: 40px;
+        }
+
+        .activity .form-input {
+            padding: 0.5rem;
+            min-height: 36px;
+            font-size: 0.8rem;
+        }
+
+        .activity .form-label {
+            font-size: 0.7rem;
+        }
 }
 
-@media (max-width: 480px) { 
-  .activity {
-    grid-template-columns: auto;
-    padding: 0.75rem 0.75rem;
-  }
-    
-  .activity .form-group {
-    margin-bottom: .5rem;
-  }
+@media (max-width: 480px) {
+    .activity {
+        grid-template-columns: auto;
+        padding: 0.75rem 0.75rem;
+    }
 
-  .activity-editor-actions{
-    grid-template-columns: auto auto;
-    justify-content: center;
-  }
-  
-  .activity .btn {
-    padding: 0.4rem 0.15rem;
-    min-width: 36px;
-  }
-  
-  .activity .form-input {
-    padding: 0.4rem;
-    min-height: 32px;
-    font-size: 0.75rem;
-  }
+        .activity .form-group {
+            margin-bottom: .5rem;
+        }
+
+    .activity-editor-actions {
+        grid-template-columns: auto auto;
+        justify-content: center;
+    }
+
+    .activity .btn {
+        padding: 0.4rem 0.15rem;
+        min-width: 36px;
+    }
+
+    .activity .form-input {
+        padding: 0.4rem;
+        min-height: 32px;
+        font-size: 0.75rem;
+    }
 }

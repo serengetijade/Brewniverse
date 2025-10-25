@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import { Bell, Plus, Search } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Bell, Search } from 'lucide-react';
+import "../../Styles/AlertsList.css";
+import "../../Styles/Shared/list.css";
+import "../../Styles/Shared/search.css";
 import { useApp } from '../../contexts/AppContext';
-import Button from '../UI/Button';
 import ListHeader from '../Layout/ListHeader';
+import Button from '../UI/Button';
 import SearchSortControls from '../UI/SearchSortControls';
 import AlertCard from './AlertCard';
 import AlertGroup from './AlertGroup';
-import "../../Styles/Shared/list.css";
-import "../../Styles/Shared/search.css";
-import "../../Styles/AlertsList.css";
 
 function AlertsList() {
     const navigate = useNavigate();
@@ -122,76 +122,76 @@ function AlertsList() {
                             Create Your First Alert
                         </Button>
                     </div>
-                ) 
-                : (
-                    <div className="items-container">
-                        {sortBy === 'date' ? (
-                            // Simple list view for date sorting
-                            <div className="items-grid">
-                                {processedAlerts.map((alert) => (
-                                    <AlertCard
-                                        key={alert.id}
-                                        alert={alert}
-                                        editUrl={`/alerts/${alert.id}/edit`}
-                                    />
-                                ))}
-                            </div>
-                        ) 
-                        : sortBy === 'brewlog' ? (
-                            // Grouped by BrewLog
-                            <div className="items-grouped">
-                                {Object.entries(processedAlerts).map(([brewLogId, alerts]) => {
-                                    const brewLog = state.brewLogs.find(bl => bl.id === brewLogId);
-                                    const brewLogName = brewLog ? brewLog.name : 'No Brew Log';
-
-                                    return (
-                                        <AlertGroup
-                                            key={brewLogId}
-                                            groupKey={brewLogId}
-                                            alerts={alerts}
-                                            groupType="brewlog"
-                                            groupName={brewLogName}
-                                            navigateUrl={brewLog ? `/brewlogs/${brewLogId}` : null}
-                                            editUrlTemplate="/alerts/:id/edit"
+                )
+                    : (
+                        <div className="items-container">
+                            {sortBy === 'date' ? (
+                                // Simple list view for date sorting
+                                <div className="items-grid">
+                                    {processedAlerts.map((alert) => (
+                                        <AlertCard
+                                            key={alert.id}
+                                            alert={alert}
+                                            editUrl={`/alerts/${alert.id}/edit`}
                                         />
-                                    );
-                                })}
-                            </div>
-                        ) 
-                        : sortBy === 'recipe' ? (
-                            // Grouped by Recipe
-                            <div className="items-grouped">
-                                {Object.entries(processedAlerts).map(([recipeId, alerts]) => {
-                                    const recipe = state.recipes.find(r => r.id === recipeId);
-                                    const recipeName = recipe ? recipe.name : 'No Recipe';
-
-                                    return (
-                                        <AlertGroup
-                                            key={recipeId}
-                                            groupKey={recipeId}
-                                            alerts={alerts}
-                                            groupType="recipe"
-                                            groupName={recipeName}
-                                            navigateUrl={recipe ? `/recipes/${recipeId}` : null}
-                                            editUrlTemplate="/alerts/:id/edit"
-                                        />
-                                    );
-                                })}
-                            </div>
-                        ) 
-                        : null}
-
-                        {searchTerm && processedAlerts.length === 0 && (
-                            <div className="empty-state">
-                                <div className="empty-icon">
-                                    <Search size={64} />
+                                    ))}
                                 </div>
-                                <h3>No Results Found</h3>
-                                <p>No alerts match your search criteria. Try adjusting your search terms.</p>
-                            </div>
-                        )}
-                    </div>
-                )}
+                            )
+                                : sortBy === 'brewlog' ? (
+                                    // Grouped by BrewLog
+                                    <div className="items-grouped">
+                                        {Object.entries(processedAlerts).map(([brewLogId, alerts]) => {
+                                            const brewLog = state.brewLogs.find(bl => bl.id === brewLogId);
+                                            const brewLogName = brewLog ? brewLog.name : 'No Brew Log';
+
+                                            return (
+                                                <AlertGroup
+                                                    key={brewLogId}
+                                                    groupKey={brewLogId}
+                                                    alerts={alerts}
+                                                    groupType="brewlog"
+                                                    groupName={brewLogName}
+                                                    navigateUrl={brewLog ? `/brewlogs/${brewLogId}` : null}
+                                                    editUrlTemplate="/alerts/:id/edit"
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                )
+                                    : sortBy === 'recipe' ? (
+                                        // Grouped by Recipe
+                                        <div className="items-grouped">
+                                            {Object.entries(processedAlerts).map(([recipeId, alerts]) => {
+                                                const recipe = state.recipes.find(r => r.id === recipeId);
+                                                const recipeName = recipe ? recipe.name : 'No Recipe';
+
+                                                return (
+                                                    <AlertGroup
+                                                        key={recipeId}
+                                                        groupKey={recipeId}
+                                                        alerts={alerts}
+                                                        groupType="recipe"
+                                                        groupName={recipeName}
+                                                        navigateUrl={recipe ? `/recipes/${recipeId}` : null}
+                                                        editUrlTemplate="/alerts/:id/edit"
+                                                    />
+                                                );
+                                            })}
+                                        </div>
+                                    )
+                                        : null}
+
+                            {searchTerm && processedAlerts.length === 0 && (
+                                <div className="empty-state">
+                                    <div className="empty-icon">
+                                        <Search size={64} />
+                                    </div>
+                                    <h3>No Results Found</h3>
+                                    <p>No alerts match your search criteria. Try adjusting your search terms.</p>
+                                </div>
+                            )}
+                        </div>
+                    )}
             </div>
         </div>
     );
