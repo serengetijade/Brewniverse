@@ -5,8 +5,8 @@ export const BrewTypeEnum = {
   Mead: 'Mead',
   Sake: 'Sake',
   Wine: 'Wine',
-  Other: 'Other',
-  Vinegar: 'Vinegar'
+  Vinegar: 'Vinegar',
+  Other: 'Other'
 };
 
 export const BrewTypeConfiguration = {
