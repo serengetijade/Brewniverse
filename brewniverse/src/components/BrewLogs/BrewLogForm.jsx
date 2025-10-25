@@ -108,7 +108,7 @@ function BrewLogForm() {
     if (!existingItem) return false;
 
     updateFormData({ [name]: value });
-    updateActivity(setFormData, existingItem.id, "date", value);
+    updateActivity(updateFormDataCallback, existingItem.id, "date", value);
   };
     
   const updateBrewLog = (fieldName, value) => {
@@ -123,7 +123,7 @@ function BrewLogForm() {
           const updateSuccessful = updateActivityDateByTopic(e);
           if (!updateSuccessful) {
               addActivity(
-                  setFormData,
+                  updateFormDataCallback,
                   value,
                   getTopicDisplayName(name),
                   'Brew bottled and ready for aging',
@@ -142,7 +142,7 @@ function BrewLogForm() {
           const updateSuccessful = updateActivityDateByTopic(e);
           if (!updateSuccessful) {
               addActivity(
-                  setFormData,
+                  updateFormDataCallback,
                   value,
                   getTopicDisplayName(name),
                   'Brew stabilized',
@@ -178,7 +178,7 @@ function BrewLogForm() {
   // Nutrients
     const addNutrientScheduleEntry = (date, description) => {
         addActivity(
-            setFormData,
+            updateFormDataCallback,
             date ? date : getDate(),
             getTopicDisplayName(ActivityTopicEnum.Nutrient),
             description ? description : "",
@@ -621,7 +621,7 @@ function BrewLogForm() {
                 activity={activity}
                 itemLabel="Nutrient Details"
                 brewLogId={formData.id}
-                setFormData={setFormData}
+                setFormData={updateFormDataCallback}
             />
           ))}
         </div>
@@ -853,7 +853,6 @@ function BrewLogForm() {
         entityName="Brew Log"
         showCancel={!isEditing}
         onCancel={() => navigate('/brewlogs')}
-        showCancel={false}
         showDelete={true}
         onDelete={onDelete}
       />

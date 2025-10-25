@@ -17,18 +17,24 @@ export default function IngredientList({
 
     const addIngredient = (type) => {
         const newIngredient = new IngredientModel();
-        setFormData(prev => ({
-            ...prev,
-            [type]: [...prev[type], newIngredient.toJSON()]
-        }));
+        setFormData(prev => {
+            const prevData = prev.toJSON ? prev.toJSON() : prev;
+            return {
+                ...prevData,
+                [type]: [...prevData[type], newIngredient.toJSON()]
+            };
+        });
         setEditingIngredient({ type, id: newIngredient.id });
     };
 
     const removeIngredient = (type, id) => {
-        setFormData(prev => ({
-            ...prev,
-            [type]: prev[type].filter(item => item.id !== id)
-        }));
+        setFormData(prev => {
+            const prevData = prev.toJSON ? prev.toJSON() : prev;
+            return {
+                ...prevData,
+                [type]: prevData[type].filter(item => item.id !== id)
+            };
+        });
     };
 
     const editIngredient = (type, id) => {
@@ -39,7 +45,8 @@ export default function IngredientList({
         // If canceling an ingredient that has no data, remove it
         if (editingIngredient) {
             const { type, id } = editingIngredient;
-            const ingredient = formData[type].find(ing => ing.id === id);
+            const formDataObj = formData.toJSON ? formData.toJSON() : formData;
+            const ingredient = formDataObj[type].find(ing => ing.id === id);
             if (ingredient && !ingredient.name && !ingredient.amount) {
                 removeIngredient(type, id);
             }
@@ -55,12 +62,15 @@ export default function IngredientList({
         }
 
         // Update the ingredient in formData
-        setFormData(prev => ({
-            ...prev,
-            [type]: prev[type].map(item =>
-                item.id === id ? { ...item, ...updatedIngredient } : item
-            )
-        }));
+        setFormData(prev => {
+            const prevData = prev.toJSON ? prev.toJSON() : prev;
+            return {
+                ...prevData,
+                [type]: prevData[type].map(item =>
+                    item.id === id ? { ...item, ...updatedIngredient } : item
+                )
+            };
+        });
         
         setEditingIngredient(null);
     };  
@@ -69,6 +79,8 @@ export default function IngredientList({
     ? (<span className="section-description"> {sectionDescription}</span>) 
     : null;  
   
+  const formDataObj = formData.toJSON ? formData.toJSON() : formData;
+  
   return (  
     <div>  
       <div className="section-header">  
@@ -76,11 +88,11 @@ export default function IngredientList({
       </div>  
 
       <div className="form-group">
-      {formData[ingredientType].length === 0 
+      {formDataObj[ingredientType].length === 0 
       ? (<p className="empty-message">{sectionInfoMessage}</p>) 
       : (  
         <div className="ingredients-list">  
-          {formData[ingredientType].map((ingredient) => (  
+          {formDataObj[ingredientType].map((ingredient) => (  
             <div key={ingredient.id} className="ingredient-item">  
               <Ingredient
                 ingredient={ingredient}

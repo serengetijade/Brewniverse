@@ -182,10 +182,13 @@ export function addActivity (setFormData, date, name, description, topic, brewLo
         alertId
     );
 
-    setFormData(prev => ({
-        ...prev,
-        activity: [...prev.activity, newActivity]
-    }));
+    setFormData(prev => {
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+        return {
+            ...prevData,
+            activity: [...prevData.activity, newActivity]
+        };
+    });
 
     return newActivity;
 };
@@ -211,22 +214,30 @@ export const getActivitiesByTopic = (formData, topic) => {
 };
 
 export function deleteActivity (setFormData, id) {
-    setFormData(prev => ({
-        ...prev,
-        activity: prev.activity.filter(item => item.id !== id)
-    }));
+    setFormData(prev => {
+        // Handle both BrewLog instances and plain objects
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+        return {
+            ...prevData,
+            activity: prevData.activity.filter(item => item.id !== id)
+        };
+    });
 
     //ToDo: delete any associated alerts: 
 
 };
 
 export function updateActivity (setFormData, id, field, value) {
-    setFormData(prev => ({
-        ...prev,
-        activity: prev.activity.map(item =>
-            item.id === id ? { ...item, [field]: value } : item
-        )
-    }));
+    setFormData(prev => {
+        // Handle both BrewLog instances and plain objects
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+        return {
+            ...prevData,
+            activity: prevData.activity.map(item =>
+                item.id === id ? { ...item, [field]: value } : item
+            )
+        };
+    });
 };
 
 export { getTopicDisplayName, ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
