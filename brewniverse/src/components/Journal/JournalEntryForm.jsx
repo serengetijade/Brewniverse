@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import '../../Styles/JournalEntryForm.css';
 import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
-import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
+import { getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations'
+import { ActionTypes, generateId, useApp } from '../../contexts/AppContext';
 import JournalEntry from '../../models/JournalEntry';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
@@ -13,9 +14,13 @@ function JournalEntryForm() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { state, dispatch } = useApp();
+    const [searchParams] = useSearchParams();
     const isEditing = Boolean(id);
 
-    const [formData, setFormData] = useState(() => new JournalEntry({ id: generateId() || id }));
+    const [formData, setFormData] = useState(() => {
+        const brewLogId = searchParams.get('brewLogId') || '';
+        return new JournalEntry({ id: generateId() || id, brewLogId });
+    });
 
     useEffect(() => {
         if (isEditing) {
@@ -23,8 +28,13 @@ function JournalEntryForm() {
             if (entry) {
                 setFormData(JournalEntry.fromJSON(entry));
             }
+        } else {
+            const brewLogId = searchParams.get('brewLogId');
+            if (brewLogId) {
+                setFormData(prev => new JournalEntry({ ...prev.toJSON(), brewLogId }));
+            }
         }
-    }, [id, isEditing, state.journalEntries]);
+    }, [id, isEditing, state.journalEntries, searchParams]);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
@@ -60,8 +70,24 @@ function JournalEntryForm() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        updateFormData({ [name]: value });
-    };
+        if (name === "brewLogId" && value != '') {
+            const selectedText = e.target.options[e.target.selectedIndex].text; 
+            const selectedBrewLog = state.brewLogs.find(x => x.id === value);
+            const currentAbv = getCurrentAbv(getGravityActivities(selectedBrewLog.activity));
+            updateFormData({
+                [name]: value,
+                name: selectedText,
+                brand: "Brewniverse",
+                brewType: selectedBrewLog.type,
+                abv: currentAbv
+            });
+        }
+        else {
+            updateFormData({
+                [name]: value
+            });
+        }
+    };  
 
     const handleRatingChange = (newRating) => {
         updateFormData({ rating: newRating });
@@ -103,6 +129,28 @@ function JournalEntryForm() {
                         />
                     </div>
 
+                    <div className="form-group">
+                        <label htmlFor="brewLogId" className="form-label">
+                            Related Brew Log
+                        </label>
+                        <select
+                            id="brewLogId"
+                            name="brewLogId"
+                            className="form-input"
+                            value={formData.brewLogId}
+                            onChange={handleChange}
+                        >
+                            <option value="">No brew log</option>
+                            {state.brewLogs.map(brewLog => (
+                                <option key={brewLog.id} value={brewLog.id}>
+                                    {brewLog.name} ({brewLog.type})
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {formData.brewLogId == '' && 
+                        <div>
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
                             Name *
@@ -192,8 +240,10 @@ function JournalEntryForm() {
                                 placeholder="Alcohol by volume"
                             />
                         </div>
+                            </div>
                     </div>
-
+}
+                    
                     <div className="form-group">
                         <label htmlFor="venue" className="form-label">
                             Venue

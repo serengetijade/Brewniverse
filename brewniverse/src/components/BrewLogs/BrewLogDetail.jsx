@@ -5,6 +5,7 @@ import '../../Styles/Shared/brewLogDetail.css';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import { getGravityActivities } from '../../utils/gravityCalculations';
 import ActivityTimeline from '../Activity/ActivityTimeline';
+import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
 import Button from '../UI/Button';
 import AlcoholConversionChart from './AlcoholConversionChart';
@@ -125,6 +126,9 @@ function BrewLogDetail() {
                     </div>
                 </div>
             )}
+
+            {/* Journal Entries Section */}
+            <JournalEntryList brewLogId={id} />
 
             {/* Activity Timeline Section */}
             <div className="brewlog-content-section">

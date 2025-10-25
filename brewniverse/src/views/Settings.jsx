@@ -129,8 +129,8 @@ function Settings() {
                                     <span className="stat-value">{state.alerts.length}</span>
                                 </div>
                                 <div className="stat-item">
-                                    <span className="stat-label">Instructions:</span>
-                                    <span className="stat-value">{state.instructions.length}</span>
+                                    <span className="stat-label">Journal:</span>
+                                    <span className="stat-value">{state.journalEntries.length}</span>
                                 </div>
                             </div>
 

@@ -5,6 +5,7 @@ class JournalEntry {
         this.id = data.id || generateId();
         this.abv = data.abv || '';
         this.brand = data.brand || '';
+        this.brewLogId = data.brewLogId || '';
         this.brewType = data.brewType || 'Beer';
         this.date = data.date || getDate();
         this.name = data.name || '';
@@ -23,6 +24,7 @@ class JournalEntry {
             id: this.id,
             abv: this.abv,
             brand: this.brand,
+            brewLogId: this.brewLogId,
             brewType: this.brewType,
             date: this.date,
             name: this.name,
@@ -38,6 +40,10 @@ class JournalEntry {
         if (!this.name || this.name.trim() === '') errors.push('Name is required');
         if (!this.date) errors.push('Date is required');
         return { isValid: errors.length === 0, errors };
+    }
+
+    hasBrewLog() {
+        return Boolean(this.brewLogId);
     }
 }
 

@@ -74,11 +74,12 @@ function appReducer(state, action) {
             };
 
         case ActionTypes.DELETE_BREW_LOG:
-            // Cascade delete alerts associated with the brew log
+            // Cascade delete
             return {
                 ...state,
                 brewLogs: state.brewLogs.filter(log => log.id !== action.payload),
                 alerts: state.alerts.filter(alert => alert.brewLogId !== action.payload),
+                //journalEntries: state.journalEntries.filter(entry => entry.brewLogId !== action.payload),
             };
 
         case ActionTypes.ADD_RECIPE:
