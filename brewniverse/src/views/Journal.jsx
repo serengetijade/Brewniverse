@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import JournalList from './JournalList';
+import JournalList from '../components/Journal/JournalList';
 import JournalEntryForm from '../components/Journal/JournalEntryForm';
 
 function Journal() {

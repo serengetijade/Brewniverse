@@ -1,15 +1,15 @@
 import { BookOpen, Calendar, ListTree, Plus, Search, Star, Tag } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../Styles/JournalList.css';
-import '../Styles/Shared/list.css';
-import '../Styles/Shared/search.css';
-import JournalEntryCard from '../components/Journal/JournalEntryCard';
-import ListHeader from '../components/Layout/ListHeader';
-import Button from '../components/UI/Button';
-import SearchSortControls from '../components/UI/SearchSortControls';
-import BrewTypes from '../constants/BrewTypes';
-import { useApp } from '../contexts/AppContext';
+import '../../Styles/JournalList.css';
+import '../../Styles/Shared/list.css';
+import '../../Styles/Shared/search.css';
+import JournalEntryCard from './JournalEntryCard';
+import ListHeader from '../Layout/ListHeader';
+import Button from '../UI/Button';
+import SearchSortControls from '../UI/SearchSortControls';
+import BrewTypes from '../../constants/BrewTypes';
+import { useApp } from '../../contexts/AppContext';
 
 function JournalList() {
     const navigate = useNavigate();
@@ -89,7 +89,7 @@ function JournalList() {
         else if (sortBy === 'type') {
             const grouped = {};
             filteredEntries.forEach(entry => {
-                const groupKey = entry.brewType;
+                const groupKey = entry.type;
                 if (!grouped[groupKey]) {
                     grouped[groupKey] = [];
                 }
