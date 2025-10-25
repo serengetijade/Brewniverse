@@ -98,7 +98,17 @@
   .remove-step-btn {
     align-self: flex-end;
     margin-top: 0;
-  }  
+  }
+
+  .step-controls {
+      margin-left: auto;
+      margin-right: auto;
+  }
+  .reorder-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
 }
 
 /* Instruction Checkbox ~ Steps Styling */

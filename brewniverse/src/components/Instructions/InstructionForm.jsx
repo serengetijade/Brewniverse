@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Plus, Trash2, ChevronUp, ChevronDown } from 'lucide-react';
 import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Shared/instructions.css';
 
-function InstructionForm({ instructions = [''], onInstructionsChange, showControls = true }) {
-  const [showEditButtons, setShowEditButtons] = useState({});
-
+function InstructionForm({ instructions = [''], onInstructionsChange }) {
   const handleStepChange = (index, value) => {
     const newSteps = [...instructions];
     newSteps[index] = value;
@@ -39,13 +37,6 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
       [newSteps[index], newSteps[index + 1]] = [newSteps[index + 1], newSteps[index]];
       onInstructionsChange(newSteps);
     }
-  };
-
-  const toggleEditButtons = (index) => {
-    setShowEditButtons(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
   };
 
   return (
@@ -83,7 +74,6 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
               rows={2}
             />
             <div className="step-controls">
-              {showEditButtons[index] && (
                 <div className="reorder-buttons">
                   <Button
                     type="button"
@@ -118,7 +108,6 @@ function InstructionForm({ instructions = [''], onInstructionsChange, showContro
                         </Button>
                     )}
                 </div>
-              )}
             </div>
           </div>
         ))}
