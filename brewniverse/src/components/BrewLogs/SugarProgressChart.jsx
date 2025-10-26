@@ -15,17 +15,10 @@ function SugarProgressChart({ gravityActivities }) {
         const og = parseFloat(gravityActivities[0].description);
         const currentGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description);
 
-        // Calculate gravity points (SG - 1) * 1000
         const ogPoints = (og - 1) * 1000;
         const currentPoints = (currentGravity - 1) * 1000;
-
-        // Sugar consumed (in gravity points)
         const sugarConsumed = ogPoints - currentPoints;
-
-        // Residual Sugar (RS) - remaining gravity points
         const residualSugar = currentPoints;
-
-        // Percentage consumed
         const percentConsumed = ogPoints > 0 ? ((sugarConsumed / ogPoints) * 100).toFixed(1) : 0;
 
         return {

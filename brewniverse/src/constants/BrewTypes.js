@@ -72,7 +72,7 @@ export const BrewTypeConfiguration = {
         name: 'Vinegar',
         icon: '🏺',
         description: 'Anything fermented + Acetobacter',
-        color: '#904194' // purple #9c3af2 //maroon #904194
+        color: '#904194'
     }
 };
 

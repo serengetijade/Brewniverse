@@ -18,10 +18,26 @@ export const ActivityTopicEnum = {
     Other: 'other'
 };
 
+var colors = {
+    DateCreated: '#ff0066',
+    Yeast: '#FFA347',
+    Gravity: '#29C329',
+    Nutrient: '#ff66ff',
+    PecticEnzyme: '#c79fea',
+    Acid: '#33ff00',
+    Base: '#06b6d4',
+    Tannin: '#a16707',
+    PH: '#ec4899',
+    DateStabilized: '#69c3ff',
+    DateRacked: '#0066ff',
+    DateBottled: '#0000cc',
+    Other: '#6b7280'
+};
+
 export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Gravity]: {
         key: ActivityTopicEnum.Gravity,
-        color: '#3b82f6', // blue-500
+        color: '#7cce29',
         description: 'Specific gravity measurements for tracking fermentation progress',
         displayName: 'Gravity Reading',
         displayName_Alert: 'Take Gravity Reading',
@@ -30,7 +46,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Yeast]: {
         key: ActivityTopicEnum.Yeast,
-        color: '#8b5cf6', // violet-500
+        color: '#FFA347',
         description: 'Yeast pitching and additions',
         displayName: 'Yeast Added',
         displayName_Alert: 'Add Yeast',
@@ -39,7 +55,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Nutrient]: {
         key: ActivityTopicEnum.Nutrient,
-        color: '#10b981', // emerald-500
+        color: '#ff66ff',
         description: 'Yeast nutrient additions',
         displayName: 'Nutrients Added',
         displayName_Alert: 'Add Nutrients',
@@ -48,7 +64,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.PecticEnzyme]: {
         key: ActivityTopicEnum.PecticEnzyme,
-        color: '#a855f7', // purple-500
+        color: '#c79fea',
         description: 'Pectic enzyme additions for clarity',
         displayName: 'Pectic Enzyme Added',
         displayName_Alert: 'Add Pectic Enzyme',
@@ -57,7 +73,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Acid]: {
         key: ActivityTopicEnum.Acid,
-        color: '#eab308', // yellow-500
+        color: '#b6e62b',
         description: 'Acid additions for pH adjustment',
         displayName: 'Acid Added',
         displayName_Alert: 'Add Acid',
@@ -66,7 +82,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Base]: {
         key: ActivityTopicEnum.Base,
-        color: '#06b6d4', // cyan-500
+        color: '#06b6d4',
         description: 'Base additions for pH adjustment',
         displayName: 'Base Added',
         displayName_Alert: 'Add Base',
@@ -75,7 +91,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Tannin]: {
         key: ActivityTopicEnum.Tannin,
-        color: '#f59e0b', // amber-500
+        color: '#a16707',
         description: 'Tannin additions for body and mouthfeel',
         displayName: 'Tannin Added',
         displayName_Alert: 'Add Tannin',
@@ -84,25 +100,16 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.PH]: {
         key: ActivityTopicEnum.PH,
-        color: '#ec4899', // pink-500
+        color: '#ec4899',
         description: 'pH measurements and adjustments',
         displayName: 'pH Measured/Adjusted',
         displayName_Alert: 'Take pH Reading and/or Adjust pH',
         icon: ActivityIcon,
         label: 'pH'
     },
-    [ActivityTopicEnum.DateBottled]: {
-        key: ActivityTopicEnum.DateBottled,
-        color: '#14b8a6', // teal-500
-        description: 'Date when brew was bottled',
-        displayName: 'Brew Bottled',
-        displayName_Alert: 'Time to Bottle',
-        icon: BottleWine,
-        label: 'Bottled'
-    },
     [ActivityTopicEnum.DateCreated]: {
         key: ActivityTopicEnum.DateCreated,
-        color: '#22c55e', // green-500
+        color: '#ff0066',
         description: 'Date when brew was started',
         displayName: 'Date Created',
         displayName_Alert: 'Start a new brew',
@@ -111,7 +118,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.DateRacked]: {
         key: ActivityTopicEnum.DateRacked,
-        color: '#6366f1', // indigo-500
+        color: '#0066ff',
         description: 'Date when brew was transferred to secondary',
         displayName: 'Brew Racked',
         displayName_Alert: 'Time to Rack Your Brew',
@@ -120,16 +127,25 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.DateStabilized]: {
         key: ActivityTopicEnum.DateStabilized,
-        color: '#84cc16', // lime-500
+        color: '#69c3ff',
         description: 'Date when stabilizers were added',
         displayName: 'Stabilization',
         displayName_Alert: 'Stabilize your brew',
         icon: Shield,
         label: 'Stabilized'
     },
+    [ActivityTopicEnum.DateBottled]: {
+        key: ActivityTopicEnum.DateBottled,
+        color: '#0000cc',
+        description: 'Date when brew was bottled',
+        displayName: 'Brew Bottled',
+        displayName_Alert: 'Time to Bottle',
+        icon: BottleWine,
+        label: 'Bottled'
+    },
     [ActivityTopicEnum.Other]: {
         key: ActivityTopicEnum.Other,
-        color: '#6b7280', // gray-500
+        color: '#6b7280',
         description: 'Other miscellaneous activities',
         displayName: 'Activity',
         displayName_Alert: 'Time for action!',
