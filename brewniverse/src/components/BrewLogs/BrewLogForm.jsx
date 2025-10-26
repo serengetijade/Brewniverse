@@ -187,11 +187,11 @@ function BrewLogForm() {
 
     const addNutrientActivitiesByOption = (scheduleOption) => {
         const today = new Date();
-        let nutrientActivities = [];
+        let nutrientEntries = [];
 
         switch (scheduleOption) {
             case '2days':
-                nutrientActivities = [{
+                nutrientEntries = [{
                     date: getDate(),
                     description: 'Half now & half at 1/3 Break'
                 }];
@@ -201,7 +201,7 @@ function BrewLogForm() {
             case '4days':
                 const days = scheduleOption === '3days' ? 2 : 3;
                 // Add initial entry for today
-                nutrientActivities = [{
+                nutrientEntries = [{
                     date: getDate(),
                     description: 'Staggered nutrient - yeast added'
                 }];
@@ -214,13 +214,27 @@ function BrewLogForm() {
                         description: `Staggered nutrient - ${(index + 1) * 24} hours later`
                     };
                 });
-                nutrientActivities = [...nutrientActivities, ...futureEntries];
+                nutrientEntries = [...nutrientEntries, ...futureEntries];
                 break;
         }
 
-        nutrientActivities.map(entry =>
-            addNutrientScheduleEntry(entry.date, entry.description)
+        // Create all activities at once
+        const newActivities = nutrientEntries.map(entry =>
+            createActivity(
+                entry.date,
+                getTopicDisplayName(ActivityTopicEnum.Nutrient),
+                entry.description,
+                ActivityTopicEnum.Nutrient,
+                id,
+                null
+            )
         );
+
+        // Add all activities in a single state update
+        updateFormDataCallback(prev => ({
+            ...prev,
+            activity: [...prev.activity, ...newActivities]
+        }));
     };
 
     // Recipe
@@ -614,15 +628,17 @@ function BrewLogForm() {
                         </div>
                     </div>
 
-                    {getActivitiesByTopic(formData, ActivityTopicEnum.Nutrient).map((activity) => (
-                        <Activity
-                            key={activity.id}
-                            activity={activity}
-                            itemLabel="Nutrient Details"
-                            brewLogId={formData.id}
-                            setFormData={updateFormDataCallback}
-                        />
-                    ))}
+                    <div>
+                        {getActivitiesByTopic(formData, ActivityTopicEnum.Nutrient).map((activity) => (
+                            <Activity
+                                key={activity.id}
+                                activity={activity}
+                                itemLabel="Nutrient Details"
+                                brewLogId={formData.id}
+                                setFormData={updateFormDataCallback}
+                            />
+                        ))}
+                    </div>
                 </div>
 
                 {/* Pectic Enzyme */}
