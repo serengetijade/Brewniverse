@@ -14,7 +14,7 @@ function Ingredient({
     onEdit,
     onRemove
 }) {
-    const [editData, setEditData] = useState(() =>
+    const [formState, setFormState] = useState(() =>
         IngredientModel.fromJSON(ingredient)
     );
 
@@ -26,7 +26,7 @@ function Ingredient({
     }, [isEditing]);
 
     const handleSave = () => {
-        onSave(type, ingredient.id, editData.toJSON());
+        onSave(type, ingredient.id, formState.toJSON());
     };
 
     const handleKeyPress = (e) => {
@@ -42,12 +42,12 @@ function Ingredient({
         const value = e.target.value;
         // Allow empty string to clear
         if (value === '') {
-            setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: '' }));
+            setFormState(IngredientModel.fromJSON({ ...formState.toJSON(), amount: '' }));
             return;
         }
         const numValue = parseFloat(value);
         if (!isNaN(numValue) && numValue >= 0) {
-            setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), amount: value }));
+            setFormState(IngredientModel.fromJSON({ ...formState.toJSON(), amount: value }));
         }
     };
 
@@ -61,8 +61,8 @@ function Ingredient({
                         type="text"
                         className="form-input"
                         placeholder="Ingredient name"
-                        value={editData.name}
-                        onChange={(x) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), name: x.target.value }))}
+                        value={formState.name}
+                        onChange={(x) => setFormState(IngredientModel.fromJSON({ ...formState.toJSON(), name: x.target.value }))}
                         onKeyDown={handleKeyPress}
                         maxLength={Validation.InputMaxLength}
                     />
@@ -74,7 +74,7 @@ function Ingredient({
                         min={Validation.NumberMin}
                         className="form-input"
                         placeholder="Amount"
-                        value={editData.amount}
+                        value={formState.amount}
                         onChange={handleAmountChange}
                         onKeyDown={handleKeyPress}
                     />
@@ -82,8 +82,8 @@ function Ingredient({
                 <div className="form-group">
                     <select
                         className="form-select"
-                        value={editData.unit}
-                        onChange={(e) => setEditData(IngredientModel.fromJSON({ ...editData.toJSON(), unit: e.target.value }))}
+                        value={formState.unit}
+                        onChange={(e) => setFormState(IngredientModel.fromJSON({ ...formState.toJSON(), unit: e.target.value }))}
                         onKeyDown={handleKeyPress}
                     >
                         <option value="oz">oz</option>

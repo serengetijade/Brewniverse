@@ -18,13 +18,13 @@ function RecipeForm() {
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
 
-    const [formData, setFormData] = useState(() => new Recipe({ id }));
+    const [formState, setFormState] = useState(() => new Recipe({ id }));
 
     useEffect(() => {
         if (isEditing) {
             const recipe = state.recipes.find(r => r.id === id);
             if (recipe) {
-                setFormData(Recipe.fromJSON({
+                setFormState(Recipe.fromJSON({
                     ...recipe,
                     instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
                 }));
@@ -56,7 +56,7 @@ function RecipeForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const recipeData = formData.toJSON();
+        const recipeData = formState.toJSON();
 
         if (isEditing) {
             dispatch({
@@ -75,8 +75,8 @@ function RecipeForm() {
     };
 
     const updateFormData = (updates) => {
-        const updatedData = Recipe.fromJSON({ ...formData.toJSON(), ...updates });
-        setFormData(updatedData);
+        const updatedData = Recipe.fromJSON({ ...formState.toJSON(), ...updates });
+        setFormState(updatedData);
 
         if (isEditing) {
             dispatch({
@@ -87,10 +87,10 @@ function RecipeForm() {
     };
 
     const updateFormDataCallback = (updaterFn) => {
-        const currentData = formData.toJSON();
+        const currentData = formState.toJSON();
         const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
         const newRecipe = Recipe.fromJSON(updatedData);
-        setFormData(newRecipe);
+        setFormState(newRecipe);
 
         if (isEditing) {
             dispatch({
@@ -134,7 +134,7 @@ function RecipeForm() {
                             id="name"
                             name="name"
                             className="form-input"
-                            value={formData.name}
+                            value={formState.name}
                             onChange={handleChange}
                             required
                             maxLength={Validation.InputMaxLength}
@@ -151,7 +151,7 @@ function RecipeForm() {
                             id="dateCreated"
                             name="dateCreated"
                             className="form-input"
-                            value={formData.dateCreated}
+                            value={formState.dateCreated}
                             onChange={handleChange}
                             required
                         />
@@ -165,7 +165,7 @@ function RecipeForm() {
                             id="type"
                             name="type"
                             className="form-select"
-                            value={formData.type}
+                            value={formState.type}
                             onChange={handleChange}
                             required
                         >
@@ -186,7 +186,7 @@ function RecipeForm() {
                                 id="difficulty"
                                 name="difficulty"
                                 className="form-select"
-                                value={formData.difficulty}
+                                value={formState.difficulty}
                                 onChange={handleChange}
                             >
                                 <option value="Beginner">Beginner</option>
@@ -205,7 +205,7 @@ function RecipeForm() {
                                 id="volume"
                                 name="volume"
                                 className="form-input"
-                                value={formData.volume}
+                                value={formState.volume}
                                 onChange={handleChange}
                                 maxLength={Validation.InputMaxLength}
                                 placeholder="e.g., 5 gallons, 1 gallon"
@@ -222,7 +222,7 @@ function RecipeForm() {
                                 id="estimatedABV"
                                 name="estimatedABV"
                                 className="form-input"
-                                value={formData.estimatedABV}
+                                value={formState.estimatedABV}
                                 onChange={handleChange}
                                 min={Validation.NumberMin}
                                 placeholder="12.5"
@@ -238,7 +238,7 @@ function RecipeForm() {
                             id="description"
                             name="description"
                             className="form-textarea"
-                            value={formData.description}
+                            value={formState.description}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Brief description of this recipe"
@@ -248,7 +248,7 @@ function RecipeForm() {
 
                     <div className="form-group">
                         <Rating
-                            value={formData.rating}
+                            value={formState.rating}
                             onChange={(newRating) => updateFormData({ rating: newRating })}
                             isEditing={true}
                             label="Rating"
@@ -259,7 +259,7 @@ function RecipeForm() {
                 {/* Primary Ingredients */}
                 <div className="form-section">
                     <IngredientList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         ingredientType="ingredientsPrimary"
                         sectionName="Primary Ingredients"
@@ -272,7 +272,7 @@ function RecipeForm() {
                 {/* Secondary Ingredients */}
                 <div className="form-section">
                     <IngredientList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         ingredientType="ingredientsSecondary"
                         sectionName="Secondary Ingredients"
@@ -285,7 +285,7 @@ function RecipeForm() {
                 {/* Instructions */}
                 <div className="form-section">
                     <InstructionForm
-                        instructions={formData.instructions}
+                        instructions={formState.instructions}
                         onInstructionsChange={handleInstructionsChange}
                     />
                 </div>
@@ -300,7 +300,7 @@ function RecipeForm() {
                             id="notes"
                             name="notes"
                             className="form-textarea"
-                            value={formData.notes}
+                            value={formState.notes}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Additional notes, tips, and observations for this recipe"

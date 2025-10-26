@@ -33,7 +33,7 @@ function BrewLogForm() {
         newFormId
     );
 
-    const [formData, setFormData] = useState(() => new BrewLog({
+    const [formState, setFormState] = useState(() => new BrewLog({
         id: newFormId,
         activity: [initialDateCreatedActivity],
         dateCreated: initialDateCreatedActivity.date,
@@ -43,7 +43,7 @@ function BrewLogForm() {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
             if (brewLog) {
-                setFormData(BrewLog.fromJSON({
+                setFormState(BrewLog.fromJSON({
                     ...brewLog,
                     activity: brewLog.activity || []
                 }));
@@ -54,7 +54,7 @@ function BrewLogForm() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const brewLogData = formData.toJSON();
+        const brewLogData = formState.toJSON();
 
         if (isEditing) {
             dispatch({
@@ -73,8 +73,8 @@ function BrewLogForm() {
     };
 
     const updateFormData = (updates) => {
-        const updatedData = BrewLog.fromJSON({ ...formData.toJSON(), ...updates });
-        setFormData(updatedData);
+        const updatedData = BrewLog.fromJSON({ ...formState.toJSON(), ...updates });
+        setFormState(updatedData);
 
         if (isEditing) {
             dispatch({
@@ -85,10 +85,10 @@ function BrewLogForm() {
     };
 
     const updateFormDataCallback = (updaterFn) => {
-        const currentData = formData.toJSON();
+        const currentData = formState.toJSON();
         const updatedData = typeof updaterFn === 'function' ? updaterFn(currentData) : updaterFn;
         const newBrewLog = BrewLog.fromJSON(updatedData);
-        setFormData(newBrewLog);
+        setFormState(newBrewLog);
 
         if (isEditing) {
             dispatch({
@@ -102,7 +102,7 @@ function BrewLogForm() {
         const { name, value } = e.target;
         const topic = name;
 
-        const allActivitiesByTopic = getActivitiesByTopic(formData, topic);
+        const allActivitiesByTopic = getActivitiesByTopic(formState, topic);
         const existingItem = allActivitiesByTopic[0];
         if (!existingItem) return false;
 
@@ -127,7 +127,7 @@ function BrewLogForm() {
                     getTopicDisplayName(name),
                     'Brew bottled and ready for aging',
                     ActivityTopicEnum.DateBottled,
-                    formData.id,
+                    formState.id,
                     null
                 );
 
@@ -146,7 +146,7 @@ function BrewLogForm() {
                     getTopicDisplayName(name),
                     'Brew stabilized',
                     ActivityTopicEnum.DateStabilized,
-                    formData.id,
+                    formState.id,
                     null
                 );
 
@@ -171,8 +171,8 @@ function BrewLogForm() {
 
     // Gravity - memoize to prevent unnecessary recalculations
     const gravityActivities = React.useMemo(() => {
-        return getGravityActivities(formData.activity, ActivityTopicEnum.Gravity);
-    }, [formData.activity]);
+        return getGravityActivities(formState.activity, ActivityTopicEnum.Gravity);
+    }, [formState.activity]);
 
     // Nutrients
     const addNutrientScheduleEntry = (date, description) => {
@@ -239,12 +239,12 @@ function BrewLogForm() {
 
     // Recipe
     const importIngredientsFromRecipe = () => {
-        if (!formData.recipeId) {
+        if (!formState.recipeId) {
             alert('Please select a recipe to import ingredients from.');
             return;
         }
 
-        const recipe = state.recipes.find(r => r.id === formData.recipeId);
+        const recipe = state.recipes.find(r => r.id === formState.recipeId);
         if (!recipe) {
             alert('Selected recipe not found.');
             return;
@@ -290,7 +290,7 @@ function BrewLogForm() {
                             id="name"
                             name="name"
                             className="form-input"
-                            value={formData.name}
+                            value={formState.name}
                             onChange={handleChange}
                             required
                             maxLength={Validation.InputMaxLength}
@@ -306,7 +306,7 @@ function BrewLogForm() {
                             id="type"
                             name="type"
                             className="form-select"
-                            value={formData.type}
+                            value={formState.type}
                             onChange={handleChange}
                             required
                         >
@@ -327,7 +327,7 @@ function BrewLogForm() {
                             id="dateCreated"
                             name="dateCreated"
                             className="form-input"
-                            value={formData.dateCreated}
+                            value={formState.dateCreated}
                             onChange={(e) => { handleChange(e) }}
                             required
                         />
@@ -342,7 +342,7 @@ function BrewLogForm() {
                             id="name"
                             name="volume"
                             className="form-input"
-                            value={formData.volume}
+                            value={formState.volume}
                             onChange={handleChange}
                             maxLength={Validation.InputMaxLength}
                             placeholder="e.g., 5 gallons, 1 gallon"
@@ -357,7 +357,7 @@ function BrewLogForm() {
                             id="description"
                             name="description"
                             className="form-textarea"
-                            value={formData.description}
+                            value={formState.description}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Brief description of your brew"
@@ -367,7 +367,7 @@ function BrewLogForm() {
 
                     <div className="form-group">
                         <Rating
-                            value={formData.rating}
+                            value={formState.rating}
                             onChange={(newRating) => updateFormData({ rating: newRating })}
                             isEditing={true}
                             label="Rating"
@@ -383,7 +383,7 @@ function BrewLogForm() {
                                 id="recipeId"
                                 name="recipeId"
                                 className="form-select"
-                                value={formData.recipeId}
+                                value={formState.recipeId}
                                 onChange={handleChange}
                                 style={{ flex: 1 }}
                             >
@@ -396,14 +396,14 @@ function BrewLogForm() {
                             </select>
                         </div>
 
-                        {(formData.recipeId) ? (
+                        {(formState.recipeId) ? (
                             <div className="recipe-buttons">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     size="small"
-                                    onClick={() => navigate(`/recipes/${formData.recipeId}`)}
-                                    disabled={!formData.recipeId}
+                                    onClick={() => navigate(`/recipes/${formState.recipeId}`)}
+                                    disabled={!formState.recipeId}
                                 >
                                     Go to Recipe
                                 </Button>
@@ -412,7 +412,7 @@ function BrewLogForm() {
                                     variant="outline"
                                     size="small"
                                     onClick={importIngredientsFromRecipe}
-                                    disabled={!formData.recipeId}
+                                    disabled={!formState.recipeId}
                                 >
                                     <Plus size={buttonSize} />
                                     Import Ingredients
@@ -426,7 +426,7 @@ function BrewLogForm() {
                 {/* Primary Ingredients */}
                 <div className="form-section">
                     <IngredientList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         ingredientType="ingredientsPrimary"
                         sectionName="Primary Ingredients"
@@ -439,7 +439,7 @@ function BrewLogForm() {
                 {/* Secondary Ingredients */}
                 <div className="form-section">
                     <IngredientList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         ingredientType="ingredientsSecondary"
                         sectionName="Secondary Ingredients"
@@ -453,7 +453,7 @@ function BrewLogForm() {
                 <div className="form-section">
                     <h3>Pitch Yeast</h3>
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic={ActivityTopicEnum.Yeast}
                         headerLabel=""
@@ -471,7 +471,7 @@ function BrewLogForm() {
                     <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="gravity.original" className="form-label">
-                                Original Gravity {getActivitiesByTopic(formData, ActivityTopicEnum.Gravity).length === 0 ? " (please add entry)" : null}
+                                Original Gravity {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 ? " (please add entry)" : null}
                             </label>
                             <input
                                 step="0.001"
@@ -553,7 +553,7 @@ function BrewLogForm() {
                     </div>
 
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic={ActivityTopicEnum.Gravity}
                         headerLabel="Gravity Readings"
@@ -579,7 +579,7 @@ function BrewLogForm() {
                             id="nutrients"
                             name="nutrients"
                             className="form-input"
-                            value={formData.nutrients}
+                            value={formState.nutrients}
                             onChange={handleChange}
                             maxLength={Validation.InputMaxLength}
                             placeholder="Nutrient details"
@@ -629,12 +629,12 @@ function BrewLogForm() {
                     </div>
 
                     <div>
-                        {getActivitiesByTopic(formData, ActivityTopicEnum.Nutrient).map((activity) => (
+                        {getActivitiesByTopic(formState, ActivityTopicEnum.Nutrient).map((activity) => (
                             <Activity
                                 key={activity.id}
                                 activity={activity}
                                 itemLabel="Nutrient Details"
-                                brewLogId={formData.id}
+                                brewLogId={formState.id}
                                 setFormData={updateFormDataCallback}
                             />
                         ))}
@@ -653,7 +653,7 @@ function BrewLogForm() {
                             id="pecticEnzyme"
                             name="pecticEnzyme"
                             className="form-textarea"
-                            value={formData.pecticEnzyme}
+                            value={formState.pecticEnzyme}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="General pectic enzyme information and notes"
@@ -662,7 +662,7 @@ function BrewLogForm() {
                     </div>
 
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic={ActivityTopicEnum.PecticEnzyme}
                         headerLabel="Pectic Enzyme Additions"
@@ -687,7 +687,7 @@ function BrewLogForm() {
                             id="acids"
                             name="acids"
                             className="form-textarea"
-                            value={formData.acids}
+                            value={formState.acids}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="General acid information and notes"
@@ -696,7 +696,7 @@ function BrewLogForm() {
                     </div>
 
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic={ActivityTopicEnum.Acid}
                         headerLabel="Acid Additions"
@@ -716,7 +716,7 @@ function BrewLogForm() {
                             id="bases"
                             name="bases"
                             className="form-textarea"
-                            value={formData.bases}
+                            value={formState.bases}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="General base information and notes"
@@ -725,7 +725,7 @@ function BrewLogForm() {
                     </div>
 
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic={ActivityTopicEnum.Base}
                         headerLabel="Base Additions"
@@ -748,7 +748,7 @@ function BrewLogForm() {
                             id="tannins"
                             name="tannins"
                             className="form-textarea"
-                            value={formData.tannins}
+                            value={formState.tannins}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="General tannin information and notes"
@@ -757,7 +757,7 @@ function BrewLogForm() {
                     </div>
 
                     <ActivityList
-                        formData={formData}
+                        formData={formState}
                         setFormData={updateFormDataCallback}
                         topic="Tannin"
                         headerLabel="Tannin Additions"
@@ -773,7 +773,7 @@ function BrewLogForm() {
                     <h3>Important Dates</h3>
                     <div className="form-group">
                         <ActivityList
-                            formData={formData}
+                            formData={formState}
                             setFormData={updateFormDataCallback}
                             topic="dateRacked"
                             headerLabel="Date Racked"
@@ -792,7 +792,7 @@ function BrewLogForm() {
                             type="datetime-local"
                             name="dateStabilized"
                             className="form-input"
-                            value={formData.dateStabilized}
+                            value={formState.dateStabilized}
                             onChange={(e) => { handleChange(e); }}
                         />
                     </div>
@@ -804,7 +804,7 @@ function BrewLogForm() {
                         <textarea
                             name="stabilize"
                             className="form-textarea"
-                            value={formData.stabilize}
+                            value={formState.stabilize}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Stabilization process and details"
@@ -820,7 +820,7 @@ function BrewLogForm() {
                             type="datetime-local"
                             name="dateBottled"
                             className="form-input"
-                            value={formData.dateBottled}
+                            value={formState.dateBottled}
                             onChange={handleChange}
                         />
                     </div>
@@ -831,7 +831,7 @@ function BrewLogForm() {
                     <div className="form-group">
                         <h3>Other Activities</h3>
                         <ActivityList
-                            formData={formData}
+                            formData={formState}
                             setFormData={updateFormDataCallback}
                             topic="Other"
                             headerLabel=""
@@ -853,7 +853,7 @@ function BrewLogForm() {
                             id="notes"
                             name="notes"
                             className="form-textarea"
-                            value={formData.notes}
+                            value={formState.notes}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Additional notes about this brew"
@@ -873,7 +873,7 @@ function BrewLogForm() {
                                 type="button"
                                 variant="outline"
                                 size="small"
-                                onClick={() => navigate(`/journal/new?brewLogId=${formData.id}&type=${formData.type}&name=${encodeURIComponent(formData.name)}&abv=${getCurrentAbv(getGravityActivities(formData.activity))}`)}
+                                onClick={() => navigate(`/journal/new?brewLogId=${formState.id}&type=${formState.type}&name=${encodeURIComponent(formState.name)}&abv=${getCurrentAbv(getGravityActivities(formState.activity))}`)}
                             >
                                 <Plus size={16} />
                                 Add Journal Entry

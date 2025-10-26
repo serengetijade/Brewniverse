@@ -13,13 +13,13 @@ function AlertForm() {
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
 
-    const [formData, setFormData] = useState(() => new Alert({ id }));
+    const [formState, setFormState] = useState(() => new Alert({ id }));
 
     useEffect(() => {
         if (isEditing) {
             const alert = state.alerts.find(a => a.id === id);
             if (alert) {
-                setFormData(Alert.fromJSON({
+                setFormState(Alert.fromJSON({
                     ...alert,
                     date: new Date(alert.date).toISOString().slice(0, 16)
                 }));
@@ -31,8 +31,8 @@ function AlertForm() {
         e.preventDefault();
 
         const alertData = {
-            ...formData.toJSON(),
-            date: new Date(formData.date).toISOString(),
+            ...formState.toJSON(),
+            date: new Date(formState.date).toISOString(),
         };
 
         if (isEditing) {
@@ -52,8 +52,8 @@ function AlertForm() {
     };
 
     const updateFormData = (updates) => {
-        const updatedData = Alert.fromJSON({ ...formData.toJSON(), ...updates });
-        setFormData(updatedData);
+        const updatedData = Alert.fromJSON({ ...formState.toJSON(), ...updates });
+        setFormState(updatedData);
 
         if (isEditing) {
             dispatch({
@@ -73,7 +73,7 @@ function AlertForm() {
     };
 
     const handleDelete = () => {
-        if (window.confirm(`Are you sure you want to delete "${formData.name}"?`)) {
+        if (window.confirm(`Are you sure you want to delete "${formState.name}"?`)) {
             dispatch({
                 type: ActionTypes.DELETE_ALERT,
                 payload: id
@@ -98,10 +98,10 @@ function AlertForm() {
                         <div className="form-group form-group-completed">
                             <button
                                 type="button"
-                                className={`btn btn-completed ${formData.isCompleted ? 'btn-completed-active' : ''}`}
-                                onClick={() => updateFormData({ isCompleted: !formData.isCompleted })}
+                                className={`btn btn-completed ${formState.isCompleted ? 'btn-completed-active' : ''}`}
+                                onClick={() => updateFormData({ isCompleted: !formState.isCompleted })}
                             >
-                                {formData.isCompleted ? '✓ Completed' : 'Mark as completed'}
+                                {formState.isCompleted ? '✓ Completed' : 'Mark as completed'}
                             </button>
                         </div>
                     )}
@@ -115,7 +115,7 @@ function AlertForm() {
                             id="name"
                             name="name"
                             className="form-input"
-                            value={formData.name}
+                            value={formState.name}
                             onChange={handleChange}
                             required
                             maxLength={Validation.InputMaxLength}
@@ -133,7 +133,7 @@ function AlertForm() {
                             id="date"
                             name="date"
                             className="form-input"
-                            value={formData.date}
+                            value={formState.date}
                             onChange={handleChange}
                             required
                         />
@@ -142,14 +142,14 @@ function AlertForm() {
                     <div className="form-group">
                         <button
                             type="button"
-                            className={`btn btn-toggle ${formData.isRecurring ? 'btn-toggle-active' : ''}`}
-                            onClick={() => updateFormData({ isRecurring: !formData.isRecurring })}
+                            className={`btn btn-toggle ${formState.isRecurring ? 'btn-toggle-active' : ''}`}
+                            onClick={() => updateFormData({ isRecurring: !formState.isRecurring })}
                         >
-                            {formData.isRecurring ? '✓ Recurring Alert' : 'Make this a recurring alert'}
+                            {formState.isRecurring ? '✓ Recurring Alert' : 'Make this a recurring alert'}
                         </button>
                     </div>
 
-                    {formData.isRecurring && (
+                    {formState.isRecurring && (
                         <div className="recurring-options">
                             <div className="form-row">
                                 <div className="form-group">
@@ -160,7 +160,7 @@ function AlertForm() {
                                         id="recurringType"
                                         name="recurringType"
                                         className="form-select"
-                                        value={formData.recurringType}
+                                        value={formState.recurringType}
                                         onChange={handleChange}
                                     >
                                         <option value="daily">Daily</option>
@@ -179,7 +179,7 @@ function AlertForm() {
                                         id="recurringInterval"
                                         name="recurringInterval"
                                         className="form-input"
-                                        value={formData.recurringInterval}
+                                        value={formState.recurringInterval}
                                         onChange={handleChange}
                                         min="1"
                                         step="1"
@@ -197,7 +197,7 @@ function AlertForm() {
                                     id="endDate"
                                     name="endDate"
                                     className="form-input"
-                                    value={formData.endDate}
+                                    value={formState.endDate}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -212,7 +212,7 @@ function AlertForm() {
                             id="description"
                             name="description"
                             className="form-textarea"
-                            value={formData.description}
+                            value={formState.description}
                             onChange={handleChange}
                             maxLength={Validation.TextareaMaxLength}
                             placeholder="Optional description"
@@ -229,7 +229,7 @@ function AlertForm() {
                                 id="priority"
                                 name="priority"
                                 className="form-select"
-                                value={formData.priority}
+                                value={formState.priority}
                                 onChange={handleChange}
                             >
                                 <option value="low">Low</option>
@@ -253,7 +253,7 @@ function AlertForm() {
                                 id="brewLogId"
                                 name="brewLogId"
                                 className="form-select"
-                                value={formData.brewLogId}
+                                value={formState.brewLogId}
                                 onChange={handleChange}
                             >
                                 <option value="">No brew log</option>

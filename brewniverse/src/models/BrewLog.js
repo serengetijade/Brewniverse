@@ -3,6 +3,7 @@ import { getCurrentAbv, getGravity13Break, getGravityFinal, getGravityOriginal, 
 
 class BrewLog {
     constructor(data = {}) {
+        this.id = data.id || generateId();
         this.acids = data.acids || '';
         this.activity = data.activity || [];
         this.bases = data.bases || '';
@@ -14,7 +15,6 @@ class BrewLog {
         this.gravity13Break = data.gravity13Break || '';
         this.gravityFinal = data.gravityFinal || '';
         this.gravityOriginal = data.gravityOriginal || '';
-        this.id = data.id || generateId();
         this.ingredientsPrimary = data.ingredientsPrimary || [];
         this.ingredientsSecondary = data.ingredientsSecondary || [];
         this.name = data.name || '';

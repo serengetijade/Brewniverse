@@ -17,7 +17,7 @@ function JournalEntryForm() {
     const [searchParams] = useSearchParams();
     const isEditing = Boolean(id);
 
-    const [formData, setFormData] = useState(() => {
+    const [formState, setFormState] = useState(() => {
         const brewLogId = searchParams.get('brewLogId') || '';
         const type = searchParams.get('type');
         const name = searchParams.get('name');
@@ -36,7 +36,7 @@ function JournalEntryForm() {
         if (isEditing) {
             const entry = state.journalEntries.find(e => e.id === id);
             if (entry) {
-                setFormData(JournalEntry.fromJSON(entry));
+                setFormState(JournalEntry.fromJSON(entry));
             }
         } else {
             const brewLogId = searchParams.get('brewLogId');
@@ -50,7 +50,7 @@ function JournalEntryForm() {
                 if (name) updates.name = name;
                 if (abv) updates.abv = parseFloat(abv);
 
-                setFormData(prev => new JournalEntry({ ...prev.toJSON(), ...updates }));
+                setFormState(prev => new JournalEntry({ ...prev.toJSON(), ...updates }));
             }
         }
     }, [id, isEditing, state.journalEntries, searchParams]);
@@ -58,7 +58,7 @@ function JournalEntryForm() {
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
 
-        const entryData = formData.toJSON();
+        const entryData = formState.toJSON();
 
         if (isEditing) {
             dispatch({
@@ -76,8 +76,8 @@ function JournalEntryForm() {
     };
 
     const updateFormData = (updates) => {
-        const updatedData = JournalEntry.fromJSON({ ...formData.toJSON(), ...updates });
-        setFormData(updatedData);
+        const updatedData = JournalEntry.fromJSON({ ...formState.toJSON(), ...updates });
+        setFormState(updatedData);
 
         if (isEditing) {
             dispatch({
@@ -142,7 +142,7 @@ function JournalEntryForm() {
                             id="date"
                             name="date"
                             className="form-input"
-                            value={formData.date}
+                            value={formState.date}
                             onChange={handleChange}
                             required
                         />
@@ -156,7 +156,7 @@ function JournalEntryForm() {
                             id="brewLogId"
                             name="brewLogId"
                             className="form-input"
-                            value={formData.brewLogId}
+                            value={formState.brewLogId}
                             onChange={handleChange}
                         >
                             <option value="">No brew log</option>
@@ -168,7 +168,7 @@ function JournalEntryForm() {
                         </select>
                     </div>
 
-                    {formData.brewLogId == '' &&
+                    {formState.brewLogId == '' &&
                         <div>
                             <div className="form-group">
                                 <label htmlFor="name" className="form-label">
@@ -179,7 +179,7 @@ function JournalEntryForm() {
                                     id="name"
                                     name="name"
                                     className="form-input"
-                                    value={formData.name}
+                                    value={formState.name}
                                     onChange={handleChange}
                                     required
                                     maxLength={Validation.InputMaxLength}
@@ -197,7 +197,7 @@ function JournalEntryForm() {
                                         id="brand"
                                         name="brand"
                                         className="form-input"
-                                        value={formData.brand}
+                                        value={formState.brand}
                                         onChange={handleChange}
                                         maxLength={Validation.InputMaxLength}
                                         placeholder="Enter brand name"
@@ -213,7 +213,7 @@ function JournalEntryForm() {
                                         id="style"
                                         name="style"
                                         className="form-input"
-                                        value={formData.style}
+                                        value={formState.style}
                                         onChange={handleChange}
                                         maxLength={Validation.InputMaxLength}
                                         placeholder="e.g., IPA, Pinot Noir, etc."
@@ -230,7 +230,7 @@ function JournalEntryForm() {
                                         id="type"
                                         name="type"
                                         className="form-input"
-                                        value={formData.type}
+                                        value={formState.type}
                                         onChange={handleChange}
                                         required
                                     >
@@ -251,7 +251,7 @@ function JournalEntryForm() {
                                         id="abv"
                                         name="abv"
                                         className="form-input"
-                                        value={formData.abv}
+                                        value={formState.abv}
                                         onChange={handleChange}
                                         step="0.1"
                                         min="0"
@@ -272,7 +272,7 @@ function JournalEntryForm() {
                             id="venue"
                             name="venue"
                             className="form-input"
-                            value={formData.venue}
+                            value={formState.venue}
                             onChange={handleChange}
                             maxLength={Validation.InputMaxLength}
                             placeholder="Where did you try it?"
@@ -284,7 +284,7 @@ function JournalEntryForm() {
                 <div className="form-section">
                     <h3>Rating</h3>
                     <Rating
-                        value={formData.rating}
+                        value={formState.rating}
                         onChange={handleRatingChange}
                         isEditing={true}
                         label="Your Rating"
@@ -302,7 +302,7 @@ function JournalEntryForm() {
                             id="notes"
                             name="notes"
                             className="form-textarea"
-                            value={formData.notes}
+                            value={formState.notes}
                             onChange={handleChange}
                             maxLength={Validation.TextAreaMaxLength}
                             rows="6"

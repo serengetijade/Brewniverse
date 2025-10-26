@@ -16,7 +16,7 @@ function Activity({
 }) {
     const { state, dispatch } = useApp();
     const navigate = useNavigate();
-    const [activityData, setActivityData] = useState(() =>
+    const [activityState, setActivityState] = useState(() =>
         ActivityModel.fromJSON({
             ...activity,
             brewLogId: activity.brewLogId || brewLogId || '',
@@ -26,17 +26,17 @@ function Activity({
     const descriptionInputRef = useRef(null);
 
     useEffect(() => {
-        setActivityData(ActivityModel.fromJSON({
+        setActivityState(ActivityModel.fromJSON({
             ...activity,
             brewLogId: activity.brewLogId || brewLogId || '',
         }));
     }, [activity, brewLogId]);
 
-    const alertExists = activityData.alertId && state.alerts.some(alert => alert.id === activityData.alertId);
+    const alertExists = activityState.alertId && state.alerts.some(alert => alert.id === activityState.alertId);
 
     const handleChange = (id, field, value) => {
-        const updatedData = ActivityModel.fromJSON({ ...activityData.toJSON(), [field]: value });
-        setActivityData(updatedData);
+        const updatedData = ActivityModel.fromJSON({ ...activityState.toJSON(), [field]: value });
+        setActivityState(updatedData);
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
         }
@@ -48,16 +48,16 @@ function Activity({
         if (activity.topic === ActivityTopicEnum.Gravity) {
             // Allow empty string to clear
             if (value === '') {
-                handleChange(activityData.id, 'description', '');
+                handleChange(activityState.id, 'description', '');
                 return;
             }
             const numValue = parseFloat(value);
             if (!isNaN(numValue) && numValue >= 0) {
-                handleChange(activityData.id, 'description', value);
+                handleChange(activityState.id, 'description', value);
             }
         } else {
             // For text fields, update directly
-            handleChange(activityData.id, 'description', value);
+            handleChange(activityState.id, 'description', value);
         }
     };
 
@@ -69,7 +69,7 @@ function Activity({
     };
 
     const handleAlertButtonClick = () => {
-        const activityDate = new Date(activityData.date);
+        const activityDate = new Date(activityState.date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -79,13 +79,13 @@ function Activity({
         }
 
         // If alert already exists, navigate to it
-        if (activityData.alertId && alertExists) {
+        if (activityState.alertId && alertExists) {
             const confirmNavigate = window.confirm(
                 'This activity already has an alert. Would you like to go to that alert?\n\nClick OK to navigate to the alert, or Cancel to stay here.'
             );
 
             if (confirmNavigate) {
-                navigate(`/alerts/${activityData.alertId}`);
+                navigate(`/alerts/${activityState.alertId}`);
             }
         }
         else {
@@ -93,12 +93,12 @@ function Activity({
             const newAlertId = generateId();
             const newAlert = {
                 id: newAlertId,
-                name: getTopicDisplayNameForAlerts(activity.topic) || `${activityData.topic} Alert`,
-                description: activityData.description || '',
-                date: new Date(activityData.date).toISOString(),
-                brewLogId: activityData.brewLogId || brewLogId || '',
-                activityId: activityData.id,
-                topic: activityData.topic,
+                name: getTopicDisplayNameForAlerts(activity.topic) || `${activityState.topic} Alert`,
+                description: activityState.description || '',
+                date: new Date(activityState.date).toISOString(),
+                brewLogId: activityState.brewLogId || brewLogId || '',
+                activityId: activityState.id,
+                topic: activityState.topic,
                 alertGroupId: '',
                 isRecurring: false,
                 recurringType: 'daily',
@@ -115,12 +115,12 @@ function Activity({
             });
 
             // Update activity with alert ID
-            handleChange(activityData.id, 'alertId', newAlertId);
+            handleChange(activityState.id, 'alertId', newAlertId);
         }
     };
 
     const buttonSize = 14;
-    const showAlertButton = isDateInFuture(activityData.date);
+    const showAlertButton = isDateInFuture(activityState.date);
 
     return (
         <div className="activity">
@@ -133,7 +133,7 @@ function Activity({
                     min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
                     className="form-input"
                     placeholder="Item details"
-                    value={activityData.description}
+                    value={activityState.description}
                     onChange={handleDescriptionChange}
                     maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
                 />
@@ -143,8 +143,8 @@ function Activity({
                 <input
                     type="datetime-local"
                     className="form-input"
-                    value={activityData.date}
-                    onChange={(e) => handleChange(activityData.id, 'date', e.target.value)}
+                    value={activityState.date}
+                    onChange={(e) => handleChange(activityState.id, 'date', e.target.value)}
                 />
             </div>
             <div className="activity-editor-actions">
@@ -163,7 +163,7 @@ function Activity({
                     type="button"
                     variant="ghost"
                     size="small"
-                    onClick={() => deleteActivity(setFormData, activityData.id)}
+                    onClick={() => deleteActivity(setFormData, activityState.id)}
                 >
                     <Trash2 size={buttonSize} />
                 </Button>
