@@ -40,7 +40,7 @@ function RecipeForm() {
             // Delete from connected brew logs
             brewLogs.forEach(brewLog => {
                 dispatch({
-                    type: ActionTypes.UPDATE_BREW_LOG,
+                    type: ActionTypes.updateBrewLog,
                     payload: { ...brewLog, recipeId: '' }
                 });
             });
@@ -49,7 +49,7 @@ function RecipeForm() {
             if (!window.confirm('Are you sure you want to delete this recipe?')) return;
         }
 
-        dispatch({ type: ActionTypes.DELETE_RECIPE, payload: id });
+        dispatch({ type: ActionTypes.deleteRecipe, payload: id });
         navigate('/recipes');
     }
 
@@ -60,13 +60,13 @@ function RecipeForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_RECIPE,
+                type: ActionTypes.updateRecipe,
                 payload: { ...recipeData, id }
             });
         }
         else {
             dispatch({
-                type: ActionTypes.ADD_RECIPE,
+                type: ActionTypes.addRecipe,
                 payload: recipeData
             });
         }
@@ -80,7 +80,7 @@ function RecipeForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_RECIPE,
+                type: ActionTypes.updateRecipe,
                 payload: { ...updatedData.toJSON(), id }
             });
         }
@@ -94,7 +94,7 @@ function RecipeForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_RECIPE,
+                type: ActionTypes.updateRecipe,
                 payload: { ...newRecipe.toJSON(), id }
             });
         }

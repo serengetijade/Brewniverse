@@ -37,13 +37,13 @@ function AlertForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_ALERT,
+                type: ActionTypes.updateAlert,
                 payload: { ...alertData, id }
             });
         }
         else {
             dispatch({
-                type: ActionTypes.ADD_ALERT,
+                type: ActionTypes.addAlert,
                 payload: alertData
             });
         }
@@ -57,7 +57,7 @@ function AlertForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_ALERT,
+                type: ActionTypes.updateAlert,
                 payload: {
                     ...updatedData.toJSON(),
                     id,
@@ -75,7 +75,7 @@ function AlertForm() {
     const handleDelete = () => {
         if (window.confirm(`Are you sure you want to delete "${formState.name}"?`)) {
             dispatch({
-                type: ActionTypes.DELETE_ALERT,
+                type: ActionTypes.deleteAlert,
                 payload: id
             });
             navigate('/alerts');

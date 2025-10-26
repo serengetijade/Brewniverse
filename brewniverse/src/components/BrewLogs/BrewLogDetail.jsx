@@ -39,7 +39,7 @@ function BrewLogDetail() {
     const handleDelete = () => {
         if (confirm(`Are you sure you want to delete "${brewLog.name}"?`)) {
             dispatch({
-                type: ActionTypes.DELETE_BREW_LOG,
+                type: ActionTypes.deleteBrewLog,
                 payload: id
             });
             navigate('/brewlogs');

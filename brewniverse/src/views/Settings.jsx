@@ -11,7 +11,7 @@ function Settings() {
 
     const handleSettingChange = (setting, value) => {
         dispatch({
-            type: ActionTypes.UPDATE_SETTINGS,
+            type: ActionTypes.updateSettings,
             payload: { [setting]: value }
         });
     };
@@ -165,7 +165,7 @@ function Settings() {
                                                     const mergedData = StorageService.mergeData(state, importedData);
 
                                                     dispatch({
-                                                        type: ActionTypes.LOAD_DATA,
+                                                        type: ActionTypes.loadData,
                                                         payload: mergedData
                                                     });
                                                     alert('Data imported successfully! New items added, duplicates skipped.');
@@ -201,7 +201,7 @@ function Settings() {
 
                                                     if (confirmReplace) {
                                                         dispatch({
-                                                            type: ActionTypes.LOAD_DATA,
+                                                            type: ActionTypes.loadData,
                                                             payload: importedData
                                                         });
                                                         alert('Data imported successfully!');

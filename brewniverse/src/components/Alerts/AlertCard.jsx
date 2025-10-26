@@ -15,7 +15,7 @@ function AlertCard({ alert, editUrl }) {
     const handleDelete = () => {
         if (window.confirm(`Are you sure you want to delete "${alert.name}"?`)) {
             dispatch({
-                type: ActionTypes.DELETE_ALERT,
+                type: ActionTypes.deleteAlert,
                 payload: alert.id
             });
         }
@@ -25,13 +25,13 @@ function AlertCard({ alert, editUrl }) {
         if (alert.isCompleted) {
             if (window.confirm(`Are you sure you want to delete "${alert.name}"?`)) {
                 dispatch({
-                    type: ActionTypes.DELETE_ALERT,
+                    type: ActionTypes.deleteAlert,
                     payload: alert.id
                 });
             }
         } else {
             dispatch({
-                type: ActionTypes.UPDATE_ALERT,
+                type: ActionTypes.updateAlert,
                 payload: { ...alert, isCompleted: true }
             });
         }

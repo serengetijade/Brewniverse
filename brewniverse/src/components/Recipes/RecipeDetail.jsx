@@ -33,7 +33,7 @@ function RecipeDetail() {
     const handleDelete = () => {
         if (confirm(`Are you sure you want to delete "${recipe.name}"?`)) {
             dispatch({
-                type: ActionTypes.DELETE_RECIPE,
+                type: ActionTypes.deleteRecipe,
                 payload: id
             });
             navigate('/recipes');
@@ -42,7 +42,7 @@ function RecipeDetail() {
 
     const handleToggleStep = (stepIndex) => {
         dispatch({
-            type: ActionTypes.TOGGLE_RECIPE_STEP,
+            type: ActionTypes.toggleRecipeStep,
             payload: { recipeId: id, stepIndex }
         });
     };
@@ -50,7 +50,7 @@ function RecipeDetail() {
     const handleResetProgress = () => {
         if (confirm('Reset your progress on this recipe?')) {
             dispatch({
-                type: ActionTypes.RESET_RECIPE_PROGRESS,
+                type: ActionTypes.resetRecipeProgress,
                 payload: id
             });
         }

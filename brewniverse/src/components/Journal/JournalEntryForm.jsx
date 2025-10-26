@@ -62,12 +62,12 @@ function JournalEntryForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_JOURNAL_ENTRY,
+                type: ActionTypes.updateJournalEntry,
                 payload: { ...entryData, id }
             });
         } else {
             dispatch({
-                type: ActionTypes.ADD_JOURNAL_ENTRY,
+                type: ActionTypes.addJournalEntry,
                 payload: entryData
             });
         }
@@ -81,7 +81,7 @@ function JournalEntryForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_JOURNAL_ENTRY,
+                type: ActionTypes.updateJournalEntry,
                 payload: { ...updatedData.toJSON(), id }
             });
         }
@@ -117,7 +117,7 @@ function JournalEntryForm() {
 
         if (!window.confirm('Are you sure you want to delete this journal entry?')) return;
 
-        dispatch({ type: ActionTypes.DELETE_JOURNAL_ENTRY, payload: id });
+        dispatch({ type: ActionTypes.deleteJournalEntry, payload: id });
         navigate('/journal');
     };
 

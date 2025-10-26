@@ -58,13 +58,13 @@ function BrewLogForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_BREW_LOG,
+                type: ActionTypes.updateBrewLog,
                 payload: { ...brewLogData, id }
             });
         }
         else {
             dispatch({
-                type: ActionTypes.ADD_BREW_LOG,
+                type: ActionTypes.addBrewLog,
                 payload: brewLogData
             });
         }
@@ -78,7 +78,7 @@ function BrewLogForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_BREW_LOG,
+                type: ActionTypes.updateBrewLog,
                 payload: { ...updatedData.toJSON(), id }
             });
         }
@@ -92,7 +92,7 @@ function BrewLogForm() {
 
         if (isEditing) {
             dispatch({
-                type: ActionTypes.UPDATE_BREW_LOG,
+                type: ActionTypes.updateBrewLog,
                 payload: { ...newBrewLog.toJSON(), id }
             });
         }
@@ -165,7 +165,7 @@ function BrewLogForm() {
 
         if (!window.confirm('Are you sure you want to delete this Brew Log?')) return;
 
-        dispatch({ type: ActionTypes.DELETE_BREW_LOG, payload: id });
+        dispatch({ type: ActionTypes.deleteBrewLog, payload: id });
         navigate('/brewlogs');
     }
 

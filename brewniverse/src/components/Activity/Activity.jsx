@@ -110,7 +110,7 @@ function Activity({
 
             // Dispatch to create alert in global state
             dispatch({
-                type: ActionTypes.ADD_ALERT,
+                type: ActionTypes.addAlert,
                 payload: newAlert
             });
 

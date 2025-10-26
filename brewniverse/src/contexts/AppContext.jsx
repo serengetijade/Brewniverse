@@ -19,53 +19,53 @@ const initialState = {
 // Action types
 export const ActionTypes = {
     // BrewLogs
-    ADD_BREW_LOG: 'ADD_BREW_LOG',
-    UPDATE_BREW_LOG: 'UPDATE_BREW_LOG',
-    DELETE_BREW_LOG: 'DELETE_BREW_LOG',
+    addBrewLog: 'addBrewLog',
+    updateBrewLog: 'updateBrewLog',
+    deleteBrewLog: 'deleteBrewLog',
 
     // Recipes
-    ADD_RECIPE: 'ADD_RECIPE',
-    UPDATE_RECIPE: 'UPDATE_RECIPE',
-    DELETE_RECIPE: 'DELETE_RECIPE',
-    TOGGLE_RECIPE_STEP: 'TOGGLE_RECIPE_STEP',
-    RESET_RECIPE_PROGRESS: 'RESET_RECIPE_PROGRESS',
+    addRecipe: 'addRecipe',
+    updateRecipe: 'updateRecipe',
+    deleteRecipe: 'deleteRecipe',
+    toggleRecipeStep: 'toggleRecipeStep',
+    resetRecipeProgress: 'resetRecipeProgress',
 
     // Alerts
-    ADD_ALERT: 'ADD_ALERT',
-    UPDATE_ALERT: 'UPDATE_ALERT',
-    DELETE_ALERT: 'DELETE_ALERT',
-    ADD_ALERT_GROUP: 'ADD_ALERT_GROUP',
-    UPDATE_ALERT_GROUP: 'UPDATE_ALERT_GROUP',
-    DELETE_ALERT_GROUP: 'DELETE_ALERT_GROUP',
+    addAlert: 'addAlert',
+    updateAlert: 'updateAlert',
+    deleteAlert: 'deleteAlert',
+    addAlertGroup: 'addAlertGroup',
+    updateAlertGroup: 'updateAlertGroup',
+    deleteAlertGroup: 'deleteAlertGroup',
 
     // Instructions
-    ADD_INSTRUCTION: 'ADD_INSTRUCTION',
-    UPDATE_INSTRUCTION: 'UPDATE_INSTRUCTION',
-    DELETE_INSTRUCTION: 'DELETE_INSTRUCTION',
-    CLONE_INSTRUCTION: 'CLONE_INSTRUCTION',
+    addInstruction: 'addInstruction',
+    updateInstruction: 'updateInstruction',
+    deleteInstruction: 'deleteInstruction',
+    cloneInstruction: 'cloneInstruction',
 
     // Journal Entries
-    ADD_JOURNAL_ENTRY: 'ADD_JOURNAL_ENTRY',
-    UPDATE_JOURNAL_ENTRY: 'UPDATE_JOURNAL_ENTRY',
-    DELETE_JOURNAL_ENTRY: 'DELETE_JOURNAL_ENTRY',
+    addJournalEntry: 'addJournalEntry',
+    updateJournalEntry: 'updateJournalEntry',
+    deleteJournalEntry: 'deleteJournalEntry',
 
     // Settings
-    UPDATE_SETTINGS: 'UPDATE_SETTINGS',
+    updateSettings: 'updateSettings',
 
     // Data persistence
-    LOAD_DATA: 'LOAD_DATA',
+    loadData: 'loadData',
 };
 
 // Reducer function
 function appReducer(state, action) {
     switch (action.type) {
-        case ActionTypes.ADD_BREW_LOG:
+        case ActionTypes.addBrewLog:
             return {
                 ...state,
                 brewLogs: [...state.brewLogs, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_BREW_LOG:
+        case ActionTypes.updateBrewLog:
             return {
                 ...state,
                 brewLogs: state.brewLogs.map(log =>
@@ -73,7 +73,7 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_BREW_LOG:
+        case ActionTypes.deleteBrewLog:
             // Cascade delete
             return {
                 ...state,
@@ -82,13 +82,13 @@ function appReducer(state, action) {
                 //journalEntries: state.journalEntries.filter(entry => entry.brewLogId !== action.payload),
             };
 
-        case ActionTypes.ADD_RECIPE:
+        case ActionTypes.addRecipe:
             return {
                 ...state,
                 recipes: [...state.recipes, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_RECIPE:
+        case ActionTypes.updateRecipe:
             return {
                 ...state,
                 recipes: state.recipes.map(recipe =>
@@ -96,7 +96,7 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_RECIPE:
+        case ActionTypes.deleteRecipe:
             // Also clean up recipe progress when recipe is deleted
             const { [action.payload]: _, ...remainingProgress } = state.recipeProgress;
             return {
@@ -105,7 +105,7 @@ function appReducer(state, action) {
                 recipeProgress: remainingProgress,
             };
 
-        case ActionTypes.TOGGLE_RECIPE_STEP:
+        case ActionTypes.toggleRecipeStep:
             const { recipeId, stepIndex } = action.payload;
             const currentProgress = state.recipeProgress[recipeId] || { completedSteps: [] };
             const completedSteps = currentProgress.completedSteps.includes(stepIndex)
@@ -120,7 +120,7 @@ function appReducer(state, action) {
                 },
             };
 
-        case ActionTypes.RESET_RECIPE_PROGRESS:
+        case ActionTypes.resetRecipeProgress:
             return {
                 ...state,
                 recipeProgress: {
@@ -129,13 +129,13 @@ function appReducer(state, action) {
                 },
             };
 
-        case ActionTypes.ADD_ALERT:
+        case ActionTypes.addAlert:
             return {
                 ...state,
                 alerts: [...state.alerts, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_ALERT:
+        case ActionTypes.updateAlert:
             return {
                 ...state,
                 alerts: state.alerts.map(alert =>
@@ -143,7 +143,7 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_ALERT:
+        case ActionTypes.deleteAlert:
             // When deleting an alert, find the alert to get its activityId, then remove alertId from that specific activity
             const alertToDelete = state.alerts.find(alert => alert.id === action.payload);
 
@@ -167,13 +167,13 @@ function appReducer(state, action) {
                 brewLogs: updatedBrewLogs,
             };
 
-        case ActionTypes.ADD_ALERT_GROUP:
+        case ActionTypes.addAlertGroup:
             return {
                 ...state,
                 alertGroups: [...state.alertGroups, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_ALERT_GROUP:
+        case ActionTypes.updateAlertGroup:
             return {
                 ...state,
                 alertGroups: state.alertGroups.map(group =>
@@ -181,19 +181,19 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_ALERT_GROUP:
+        case ActionTypes.deleteAlertGroup:
             return {
                 ...state,
                 alertGroups: state.alertGroups.filter(group => group.id !== action.payload),
             };
 
-        case ActionTypes.ADD_INSTRUCTION:
+        case ActionTypes.addInstruction:
             return {
                 ...state,
                 instructions: [...state.instructions, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_INSTRUCTION:
+        case ActionTypes.updateInstruction:
             return {
                 ...state,
                 instructions: state.instructions.map(instruction =>
@@ -201,13 +201,13 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_INSTRUCTION:
+        case ActionTypes.deleteInstruction:
             return {
                 ...state,
                 instructions: state.instructions.filter(instruction => instruction.id !== action.payload),
             };
 
-        case ActionTypes.CLONE_INSTRUCTION:
+        case ActionTypes.cloneInstruction:
             const originalInstruction = state.instructions.find(inst => inst.id === action.payload.id);
             if (originalInstruction) {
                 const clonedInstruction = {
@@ -222,13 +222,13 @@ function appReducer(state, action) {
             }
             return state;
 
-        case ActionTypes.ADD_JOURNAL_ENTRY:
+        case ActionTypes.addJournalEntry:
             return {
                 ...state,
                 journalEntries: [...state.journalEntries, { ...action.payload, id: action.payload.id || Date.now().toString() }],
             };
 
-        case ActionTypes.UPDATE_JOURNAL_ENTRY:
+        case ActionTypes.updateJournalEntry:
             return {
                 ...state,
                 journalEntries: state.journalEntries.map(entry =>
@@ -236,19 +236,19 @@ function appReducer(state, action) {
                 ),
             };
 
-        case ActionTypes.DELETE_JOURNAL_ENTRY:
+        case ActionTypes.deleteJournalEntry:
             return {
                 ...state,
                 journalEntries: state.journalEntries.filter(entry => entry.id !== action.payload),
             };
 
-        case ActionTypes.UPDATE_SETTINGS:
+        case ActionTypes.updateSettings:
             return {
                 ...state,
                 settings: { ...state.settings, ...action.payload },
             };
 
-        case ActionTypes.LOAD_DATA:
+        case ActionTypes.loadData:
             return { ...state, ...action.payload };
 
         default:
@@ -269,7 +269,7 @@ export function AppProvider({ children }) {
             try {
                 const savedData = await StorageService.loadData();
                 if (savedData) {
-                    dispatch({ type: ActionTypes.LOAD_DATA, payload: savedData });
+                    dispatch({ type: ActionTypes.loadData, payload: savedData });
                 }
             } catch (error) {
                 console.error('Error loading saved data:', error);
