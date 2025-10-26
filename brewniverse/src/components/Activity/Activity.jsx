@@ -34,6 +34,18 @@ function Activity({
 
     const alertExists = activityState.alertId && state.alerts.some(alert => alert.id === activityState.alertId);
 
+    const handleDelete = () => {
+        // Cascade delete alerts
+        if (activityState.alertId) {
+            dispatch({
+                type: ActionTypes.deleteAlert,
+                payload: activityState.alertId
+            });
+        }
+        
+        deleteActivity(setFormData, activityState.id);
+    };
+
     const handleChange = (id, field, value) => {
         const updatedData = ActivityModel.fromJSON({ ...activityState.toJSON(), [field]: value });
         setActivityState(updatedData);
@@ -126,17 +138,17 @@ function Activity({
         <div className="activity">
             <div className="form-group">
                 <label className="form-label">{itemLabel}</label>
-                <input
-                    ref={descriptionInputRef}
-                    type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
-                    step="0.001"
-                    min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
-                    className="form-input"
-                    placeholder="Item details"
-                    value={activityState.description}
-                    onChange={handleDescriptionChange}
-                    maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
-                />
+                    <input
+                        ref={descriptionInputRef}
+                        type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
+                        step="0.001"
+                        min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
+                        className="form-input"
+                        placeholder="Item details"
+                        value={activityState.description}
+                        onChange={handleDescriptionChange}
+                        maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
+                    />
             </div>
             <div className="form-group">
                 <label className="form-label">Date</label>
@@ -163,7 +175,7 @@ function Activity({
                     type="button"
                     variant="ghost"
                     size="small"
-                    onClick={() => deleteActivity(setFormData, activityState.id)}
+                    onClick={handleDelete}
                 >
                     <Trash2 size={buttonSize} />
                 </Button>
@@ -215,21 +227,17 @@ export const getActivitiesByTopic = (formData, topic) => {
 
 export function deleteActivity(setFormData, id) {
     setFormData(prev => {
-        // Handle both BrewLog instances and plain objects
+        // Handle both BrewLog instances and plain objects.
         const prevData = prev.toJSON ? prev.toJSON() : prev;
         return {
             ...prevData,
-            activity: prevData.activity.filter(item => item.id !== id)
+            activity: prevData.activity.filter(item => item.id !== id),
         };
     });
-
-    //ToDo: delete any associated alerts: 
-
 };
 
 export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
-        // Handle both BrewLog instances and plain objects
         const prevData = prev.toJSON ? prev.toJSON() : prev;
         return {
             ...prevData,

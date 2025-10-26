@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
 import { getCurrentAbv, getGravityActivities, getGravityFinal } from '../../utils/gravityCalculations';
+import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';
 
@@ -32,7 +33,7 @@ function BrewLogCard({ brewLog }) {
                 <div className="brewlog-status">
                     {brewLog.dateBottled ? (
                         <span className="status-badge status-completed">Bottled</span>
-                    ) : brewLog.dateRacked ? (
+                    ) : (getActivitiesByTopic(brewLog, ActivityTopicEnum.DateRacked)).length > 0 ? (
                         <span className="status-badge status-racked">Secondary</span>
                     ) : (
                         <span className="status-badge status-fermenting">Fermenting</span>

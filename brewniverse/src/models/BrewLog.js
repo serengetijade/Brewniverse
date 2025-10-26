@@ -10,7 +10,6 @@ class BrewLog {
         this.currentAbv = data.currentAbv || '';
         this.dateBottled = data.dateBottled || '';
         this.dateCreated = data.dateCreated || getDate();
-        this.dateStabilized = data.dateStabilized || '';
         this.description = data.description || '';
         this.gravity13Break = data.gravity13Break || '';
         this.gravityFinal = data.gravityFinal || '';
@@ -24,7 +23,6 @@ class BrewLog {
         this.potentialAbv = data.potentialAbv || '';
         this.rating = data.rating || 0;
         this.recipeId = data.recipeId || '';
-        this.stabilize = data.stabilize || '';
         this.tannins = data.tannins || '';
         this.type = data.type || 'Mead';
         this.volume = data.volume || '';
@@ -126,4 +124,3 @@ class BrewLog {
 }
 
 export default BrewLog;
-

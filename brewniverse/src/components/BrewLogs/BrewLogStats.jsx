@@ -2,9 +2,25 @@ import { BottleWine, Calendar, ChartLine, Clock, Droplets, MoveVertical, Shield,
 import React from 'react';
 import '../../Styles/BrewLogStats.css';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
+import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 
 function BrewLogStats({ brewLog }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);
+
+    const stabilizedActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateStabilized);
+    const dateStabilized = stabilizedActivities ?
+        stabilizedActivities[stabilizedActivities.length - 1]?.date
+        : undefined;
+
+    const dateRackedActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateRacked);
+    const dateRacked = dateRackedActivities ?
+        dateRackedActivities[dateRackedActivities.length - 1]?.date
+        : undefined;
+
+    const dateBottledActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateBottled);
+    const dateBottled = dateBottledActivities ?
+        dateBottledActivities[dateBottledActivities.length - 1]?.date
+        : undefined;
 
     const formatDate = (dateString) => {
         if (!dateString) return 'Not set';
@@ -70,35 +86,35 @@ function BrewLogStats({ brewLog }) {
             id: 'dateRacked',
             icon: <MoveVertical size={20} />,
             label: 'Racked',
-            value: formatDate(brewLog.dateRacked),
-            subtext: brewLog.dateRacked ? `${calculateDaysSince(brewLog.dateRacked)} days ago` : null,
+            value: formatDate( dateRacked),
+            subtext: dateRacked ? `${calculateDaysSince(dateRacked)} days ago` : null,
             color: 'highlight'
         },
         {
             id: 'dateStabilized',
             icon: <Shield size={20} />,
             label: 'Stabilized',
-            value: formatDate(brewLog.dateStabilized),
-            subtext: brewLog.dateStabilized ? `${calculateDaysSince(brewLog.dateStabilized)} days ago` : null,
+            value: formatDate(dateStabilized),
+            subtext: dateStabilized ? `${calculateDaysSince(dateStabilized)} days ago` : null,
             color: 'warning'
         },
         {
             id: 'dateBottled',
             icon: <BottleWine size={20} />,
             label: 'Bottled',
-            value: formatDate(brewLog.dateBottled),
-            subtext: brewLog.dateBottled ? `${calculateDaysSince(brewLog.dateBottled)} days ago` : null,
+            value: formatDate(dateBottled),
+            subtext: dateBottled ? `${calculateDaysSince(dateBottled)} days ago` : null,
             color: 'success'
         }
     ];
 
     // Calculate brew status
     const getBrewStatus = () => {
-        if (brewLog.dateBottled) {
+        if (dateBottledActivities.length > 0) {
             return { label: 'Bottled', color: 'success', icon: <BottleWine size={16} /> };
-        } else if (brewLog.dateStabilized) {
+        } else if (stabilizedActivities.length > 0) {
             return { label: 'Stabilized', color: 'warning', icon: <Shield size={16} /> };
-        } else if (brewLog.dateRacked) {
+        } else if (dateRackedActivities.length > 0) {
             return { label: 'Racked', color: 'info', icon: <MoveVertical size={16} /> };
         } else if (gravityActivities.length > 0) {
             return { label: 'Fermenting', color: 'primary', icon: <Clock size={16} /> };

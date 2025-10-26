@@ -104,10 +104,21 @@ function BrewLogForm() {
 
         const allActivitiesByTopic = getActivitiesByTopic(formState, topic);
         const existingItem = allActivitiesByTopic[0];
-        if (!existingItem) return false;
+        if (!existingItem) {
+            return false;
+        }
 
-        updateFormData({ [name]: value });
-        updateActivity(updateFormDataCallback, existingItem.id, "date", value);
+        updateFormDataCallback(prev => {
+            const prevData = prev.toJSON ? prev.toJSON() : prev;
+            return {
+                ...prevData,
+                [name]: value,
+                activity: prevData.activity.map(item =>
+                    item.id === existingItem.id ? { ...item, date: value } : item
+                )
+            };
+        });
+        return true;
     };
 
     const updateBrewLog = (fieldName, value) => {
@@ -118,39 +129,56 @@ function BrewLogForm() {
         const { name, value } = e.target;
         //e.target is the input changed. input.name == the property name for this input
 
-        if (name === 'dateBottled') {
-            const updateSuccessful = updateActivityDateByTopic(e);
-            if (!updateSuccessful) {
-                addActivity(
-                    updateFormDataCallback,
-                    value,
-                    getTopicDisplayName(name),
-                    'Brew bottled and ready for aging',
-                    ActivityTopicEnum.DateBottled,
-                    formState.id,
-                    null
-                );
-
-                updateBrewLog(name, value);
-            }
-        }
-        else if (name === 'dateCreated') {
+        if (name === 'dateCreated') {
             updateActivityDateByTopic(e);
         }
-        else if (name === 'dateStabilized') {
-            const updateSuccessful = updateActivityDateByTopic(e);
-            if (!updateSuccessful) {
-                addActivity(
-                    updateFormDataCallback,
-                    value,
-                    getTopicDisplayName(name),
-                    'Brew stabilized',
-                    ActivityTopicEnum.DateStabilized,
-                    formState.id,
-                    null
-                );
+        else if (name === 'dateBottled') {
+            if (!value) {
+                // Delete activities & alerts if date value was cleared
+                const activitiesToDelete = getActivitiesByTopic(formState, name);
+                const alertIdsToDelete = activitiesToDelete
+                    .filter(act => act.alertId)
+                    .map(act => act.alertId);
 
-                updateBrewLog(name, value);
+                alertIdsToDelete.forEach(alertId => {
+                    dispatch({
+                        type: ActionTypes.deleteAlert,
+                        payload: alertId
+                    });
+                });
+
+                updateFormDataCallback(prev => {
+                    const prevData = prev.toJSON ? prev.toJSON() : prev;
+                    return {
+                        ...prevData,
+                        dateBottled: value,
+                        activity: prevData.activity.filter(act => 
+                            act.topic.toLowerCase() !== ActivityTopicEnum.DateBottled.toLowerCase()
+                        )
+                    };
+                });
+            }
+            else {
+                const updateSuccessful = updateActivityDateByTopic(e);
+                if (!updateSuccessful) {
+                    const newActivity = createActivity(
+                        value,
+                        getTopicDisplayName(name),
+                        'Brew bottled and ready for aging',
+                        ActivityTopicEnum.DateBottled,
+                        formState.id,
+                        null
+                    );
+
+                    updateFormDataCallback(prev => {
+                        const prevData = prev.toJSON ? prev.toJSON() : prev;
+                        return {
+                            ...prevData,
+                            dateBottled: value,
+                            activity: [...prevData.activity, newActivity]
+                        };
+                    });
+                }
             }
         }
         else {
@@ -759,7 +787,7 @@ function BrewLogForm() {
                     <ActivityList
                         formData={formState}
                         setFormData={updateFormDataCallback}
-                        topic="Tannin"
+                        topic={ActivityTopicEnum.Tannin}
                         headerLabel="Tannin Additions"
                         itemLabel="Tannin Details"
                         sectionInfoMessage=""
@@ -775,7 +803,7 @@ function BrewLogForm() {
                         <ActivityList
                             formData={formState}
                             setFormData={updateFormDataCallback}
-                            topic="dateRacked"
+                            topic={ActivityTopicEnum.DateRacked}
                             headerLabel="Date Racked"
                             itemLabel="Racking Details"
                             sectionInfoMessage=""
@@ -785,31 +813,16 @@ function BrewLogForm() {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor="datestabilized" className="form-label">
-                            Date Stabilized
-                        </label>
-                        <input
-                            type="datetime-local"
-                            name="dateStabilized"
-                            className="form-input"
-                            value={formState.dateStabilized}
-                            onChange={(e) => { handleChange(e); }}
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="stabilize" className="form-label">
-                            Stabilization Notes
-                        </label>
-                        <textarea
-                            name="stabilize"
-                            className="form-textarea"
-                            value={formState.stabilize}
-                            onChange={handleChange}
-                            maxLength={Validation.TextareaMaxLength}
-                            placeholder="Stabilization process and details"
-                            rows={3}
-                        />
+                        <ActivityList
+                            formData={formState}
+                            setFormData={updateFormDataCallback}
+                            topic={ActivityTopicEnum.DateStabilized}
+                            headerLabel="Date Stabilized"
+                            itemLabel="Stabilization Details"
+                            sectionInfoMessage=""
+                            brewLogId={id}
+                        >
+                        </ActivityList>
                     </div>
 
                     <div className="form-group">
@@ -833,7 +846,7 @@ function BrewLogForm() {
                         <ActivityList
                             formData={formState}
                             setFormData={updateFormDataCallback}
-                            topic="Other"
+                            topic={ActivityTopicEnum.Other}
                             headerLabel=""
                             itemLabel="Activity Details"
                             sectionInfoMessage="Log any other activities you want to keep track of, such as pH measurements, filtering, backsweetening, degassing, tastings, and more."
