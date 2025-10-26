@@ -45,12 +45,12 @@ function SugarProgressChart({ gravityActivities }) {
         {
             name: 'Sugar Consumed',
             value: sugarData.sugarConsumed,
-            fill: theme.colors.success
+            fill: theme.colors.secondary
         },
         {
             name: 'Residual Sugar (RS)',
             value: sugarData.residualSugar,
-            fill: theme.colors.warning
+            fill: theme.colors.highlight
         }
     ];
 
@@ -83,22 +83,22 @@ function SugarProgressChart({ gravityActivities }) {
             <div className="sugar-chart-stats">
                 <div className="stat-item">
                     <span className="stat-label">Original Gravity</span>
-                    <span className="stat-value primary">{sugarData.og.toFixed(3)}</span>
+                    <span className="stat-value original">{sugarData.og.toFixed(3)}</span>
                     <span className="stat-subtext">{sugarData.ogPoints.toFixed(1)} pts</span>
                 </div>
                 <div className="stat-item">
                     <span className="stat-label">Current Gravity</span>
-                    <span className="stat-value secondary">{sugarData.currentGravity.toFixed(3)}</span>
+                    <span className="stat-value current">{sugarData.currentGravity.toFixed(3)}</span>
                     <span className="stat-subtext">{sugarData.currentPoints.toFixed(1)} pts</span>
                 </div>
                 <div className="stat-item">
                     <span className="stat-label">Sugar Consumed</span>
-                    <span className="stat-value success">{sugarData.sugarConsumed.toFixed(1)} pts</span>
+                    <span className="stat-value consumed">{sugarData.sugarConsumed.toFixed(1)} pts</span>
                     <span className="stat-subtext">{sugarData.percentConsumed}%</span>
                 </div>
                 <div className="stat-item">
                     <span className="stat-label">Residual Sugar (RS)</span>
-                    <span className="stat-value warning">{sugarData.residualSugar.toFixed(1)} pts</span>
+                    <span className="stat-value residual">{sugarData.residualSugar.toFixed(1)} pts</span>
                     <span className="stat-subtext">{(100 - sugarData.percentConsumed).toFixed(1)}%</span>
                 </div>
             </div>

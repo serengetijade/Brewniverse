@@ -50,7 +50,7 @@
     display: block;
 }
 
-/* Filled star - yellow */
+/* Filled star */
 .star.star-filled {
     color: #fbbf24;
     stroke: #f59e0b;
@@ -88,14 +88,12 @@
         border-color: var(--border-dark);
     }
 
-/* Rating value display */
 .rating-value {
     font-size: 0.875rem;
     color: var(--text-secondary);
     margin-top: 0.25rem;
 }
 
-/* Compact mode for cards (non-editing) */
 .rating-component:not(:has(.rating-label)) .stars-container {
     gap: 0.125rem;
 }
@@ -105,7 +103,6 @@
     height: 16px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .stars-container {
         gap: 0.2rem;

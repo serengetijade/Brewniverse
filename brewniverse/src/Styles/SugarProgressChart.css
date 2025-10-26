@@ -65,20 +65,18 @@
   font-weight: 700;
 }
 
-.sugar-chart-stats .stat-value.primary {
-  color: var(--color-primary);
+.sugar-chart-stats .stat-value.original {
 }
 
-.sugar-chart-stats .stat-value.secondary {
-  color: var(--color-accent);
+.sugar-chart-stats .stat-value.current {
 }
 
-.sugar-chart-stats .stat-value.success {
-  color: var(--color-success);
+.sugar-chart-stats .stat-value.consumed {
+  color: var(--color-secondary);
 }
 
-.sugar-chart-stats .stat-value.warning {
-  color: var(--color-warning);
+.sugar-chart-stats .stat-value.residual {
+  color: var(--color-highlight);
 }
 
 .sugar-chart-stats .stat-subtext {
@@ -123,7 +121,7 @@
 }
 
 .sugar-bar .consumed-section {
-  background: linear-gradient(90deg, var(--color-success), #4ade80);
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-secondary));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -131,7 +129,7 @@
 }
 
 .sugar-bar .residual-section {
-  background: linear-gradient(90deg, #fbbf24, var(--color-warning));
+  background: linear-gradient(90deg,var(--color-accent), var(--color-highlight));
   display: flex;
   align-items: center;
   justify-content: center;

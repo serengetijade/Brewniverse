@@ -61,20 +61,8 @@
 }
 
 .alcohol-chart-stats .stat-value {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
-}
-
-.alcohol-chart-stats .stat-value.primary {
-  color: var(--color-primary);
-}
-
-.alcohol-chart-stats .stat-value.secondary {
-  color: var(--color-accent);
-}
-
-.alcohol-chart-stats .stat-value.tertiary {
-  color: var(--color-textLight);
 }
 
 .alcohol-chart-tooltip {
