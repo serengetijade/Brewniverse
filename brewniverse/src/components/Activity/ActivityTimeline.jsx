@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, Bell, Clock, ListOrdered } from 'lucide-react';
 import React, { useState } from 'react';
-import '../../Styles/Shared/activityTimeline.css';
+import '../../Styles/ActivityTimeline.css';
 import { getTopicColor, getTopicIcon } from '../../constants/ActivityTopics.jsx';
 
 function BrewLogTimeline({ activity = [] }) {

@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Candy, Droplets } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
-import '../../Styles/Shared/sugarProgressChart.css';
+import '../../Styles/SugarProgressChart.css';
 
 function SugarProgressChart({ gravityActivities }) {
     const { theme } = useTheme();

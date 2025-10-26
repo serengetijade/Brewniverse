@@ -1,17 +1,7 @@
+import { Beaker, BottleWine, Calendar, Clock, Droplets, MoveVertical, Shield, TrendingDown, Zap } from 'lucide-react';
 import React from 'react';
-import {
-    Calendar,
-    Beaker,
-    Droplets,
-    BottleWine,
-    Shield,
-    MoveVertical,
-    Clock,
-    TrendingDown,
-    Zap
-} from 'lucide-react';
-import { getGravityActivities, getGravityOriginal, getGravityFinal, getGravity13Break, getCurrentAbv, getPotentialAbv } from '../../utils/gravityCalculations';
-import '../../Styles/Shared/brewLogStats.css';
+import '../../Styles/BrewLogStats.css';
+import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
 
 function BrewLogStats({ brewLog }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);

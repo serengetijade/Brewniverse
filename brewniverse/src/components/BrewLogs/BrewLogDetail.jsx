@@ -1,7 +1,7 @@
 import { BookOpen, Calendar, Edit, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import '../../Styles/Shared/brewLogDetail.css';
+import '../../Styles/BrewLogDetail.css';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import { getGravityActivities } from '../../utils/gravityCalculations';
 import ActivityTimeline from '../Activity/ActivityTimeline';
