@@ -1,4 +1,4 @@
-import { Book, BookOpen, Calendar, Edit, FileText } from 'lucide-react';
+import { BookOpen, Calendar, Edit, FileText, NotebookPen } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogDetail.css';
@@ -12,6 +12,7 @@ import AlcoholConversionChart from './AlcoholConversionChart';
 import BrewLogStats from './BrewLogStats';
 import GravityChart from './GravityChart';
 import IngredientsSummary from './IngredientsSummary';
+import RatingsChart from './RatingsChart';
 import SugarProgressChart from './SugarProgressChart';
 
 function BrewLogDetail() {
@@ -51,6 +52,7 @@ function BrewLogDetail() {
     };
 
     const gravityActivities = getGravityActivities(brewLog.activity || []);
+    const journalEntriesCount = state.journalEntries.filter(entry => entry.brewLogId === id).length;
 
     return (
         <div className="brewlog-detail">
@@ -127,15 +129,21 @@ function BrewLogDetail() {
                 </div>
             )}
 
-            {/* Journal Entries Section */}
-            <div className="brewlog-content-section">
-                <div className="brewlog-notes">
-                    <h3>
-                        <Book size={20} />
-                        Journal
-                    </h3>
-                    <JournalEntryList brewLogId={id}/>
+            {/* Journal Entries & Ratings */}
+            {journalEntriesCount > 0 &&
+                (<div className="brewlog-content-section">
+                    <div className="brewlog-notes">
+                        <h3>
+                            <NotebookPen size={20} />
+                            Journal
+                        </h3>
+                        <JournalEntryList brewLogId={id} />
+                    </div>
                 </div>
+            )}
+
+            <div className="brewlog-content-section">
+                <RatingsChart brewLogId={id} />
             </div>
 
             {/* Activity Timeline Section */}
