@@ -2,6 +2,7 @@ import { ArrowDown, ArrowUp, Bell, Clock, ListOrdered } from 'lucide-react';
 import React, { useState } from 'react';
 import '../../Styles/ActivityTimeline.css';
 import { getTopicColor, getTopicIcon } from '../../constants/ActivityTopics.jsx';
+import Button from '../UI/Button';
 
 function BrewLogTimeline({ activity = [] }) {
     const [sortOrder, setSortOrder] = useState('desc'); // Start with newest first for detail view
@@ -61,13 +62,15 @@ function BrewLogTimeline({ activity = [] }) {
                 </h3>
                 <div className="timeline-controls">
                     <span className="timeline-count">{activity.length} events</span>
-                    <button
+                    <Button
+
+                        variant="secondary"
                         className="sort-toggle-btn"
                         onClick={toggleSortOrder}
                     >
                         {sortOrder === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                         <span>{sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}</span>
-                    </button>
+                    </Button>
                 </div>
             </div>
 

@@ -7,15 +7,15 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
-import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic, getTopicDisplayName, updateActivity } from '../Activity/Activity';
+import Activity, { ActivityTopicEnum, addActivity, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import IngredientList from '../Ingredients/IngredientList';
+import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';
 import GravityChart from './GravityChart';
-import JournalEntryList from '../Journal/JournalEntryList';
 
 function BrewLogForm() {
     const { id } = useParams();

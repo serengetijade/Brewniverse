@@ -40,30 +40,6 @@
   font-size: 0.875rem;
 }
 
-.sort-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.875rem;
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-sm);
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
-}
-
-.sort-toggle-btn:hover {
-  background: var(--color-secondary);
-  transform: translateY(-1px);
-}
-
-.sort-toggle-btn:active {
-  transform: translateY(0);
-}
-
 .brewlog-timeline-content {
   position: relative;
 }

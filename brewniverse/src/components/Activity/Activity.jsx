@@ -52,6 +52,20 @@ function Activity({
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
         }
+        
+        // If the date field is changed and this activity has an alert, update the alert's date
+        if (field === 'date' && activityState.alertId) {
+            const alert = state.alerts.find(alert => alert.id === activityState.alertId);
+            if (alert) {
+                dispatch({
+                    type: ActionTypes.updateAlert,
+                    payload: {
+                        id: activityState.alertId,
+                        date: new Date(value).toISOString()
+                    }
+                });
+            }
+        }
     };
 
     const handleDescriptionChange = (e) => {

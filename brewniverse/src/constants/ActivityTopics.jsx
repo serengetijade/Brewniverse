@@ -18,22 +18,6 @@ export const ActivityTopicEnum = {
     Other: 'other'
 };
 
-var colors = {
-    DateCreated: '#ff0066',
-    Yeast: '#FFA347',
-    Gravity: '#29C329',
-    Nutrient: '#ff66ff',
-    PecticEnzyme: '#c79fea',
-    Acid: '#33ff00',
-    Base: '#06b6d4',
-    Tannin: '#a16707',
-    PH: '#ec4899',
-    DateStabilized: '#69c3ff',
-    DateRacked: '#0066ff',
-    DateBottled: '#0000cc',
-    Other: '#6b7280'
-};
-
 export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Gravity]: {
         key: ActivityTopicEnum.Gravity,
@@ -109,7 +93,7 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.DateCreated]: {
         key: ActivityTopicEnum.DateCreated,
-        color: '#ff0066',
+        color: '#006633',
         description: 'Date when brew was started',
         displayName: 'Date Created',
         displayName_Alert: 'Start a new brew',
