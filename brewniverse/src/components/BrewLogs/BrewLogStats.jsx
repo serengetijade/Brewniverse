@@ -1,4 +1,4 @@
-import { Beaker, BottleWine, Calendar, Clock, Droplets, MoveVertical, Shield, TrendingDown, Zap } from 'lucide-react';
+import { BottleWine, Calendar, ChartLine, Clock, Droplets, MoveVertical, Shield, TrendingDown, Type, Zap } from 'lucide-react';
 import React from 'react';
 import '../../Styles/BrewLogStats.css';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
@@ -36,7 +36,7 @@ function BrewLogStats({ brewLog }) {
         },
         {
             id: 'type',
-            icon: <Beaker size={20} />,
+            icon: <Type size={20} />,
             label: 'Type',
             value: brewLog.type || 'Not specified',
             subtext: brewLog.volume ? `${brewLog.volume} volume` : null,
@@ -111,7 +111,7 @@ function BrewLogStats({ brewLog }) {
     return (
         <div className="brewlog-stats-container">
             <div className="brewlog-stats-header">
-                <h3>Brew Statistics</h3>
+                <h3><ChartLine size={20} /> Brew Statistics</h3>
                 <div className={`brew-status-badge ${status.color}`}>
                     {status.icon}
                     {status.label}

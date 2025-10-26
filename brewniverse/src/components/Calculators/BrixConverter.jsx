@@ -133,7 +133,7 @@ function BrixConverter() {
                             size="medium"
                             onClick={convertFromBrix}
                         >
-                            Convert to SG
+                            <Calculator size={20}/> Convert to SG
                         </Button>
                     </div>
 
@@ -167,7 +167,7 @@ function BrixConverter() {
                             size="medium"
                             onClick={convertFromSG}
                         >
-                            Convert to Brix
+                            <Calculator size={20} /> Convert to Brix
                         </Button>
                     </div>
 

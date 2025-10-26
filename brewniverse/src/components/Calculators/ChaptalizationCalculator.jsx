@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Beaker } from 'lucide-react';
+import { ArrowLeft, Calculator, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
@@ -129,7 +129,7 @@ function ChaptalizationCalculator() {
 
             <div className="calculator-container">
                 <div className="calculator-title">
-                    <Beaker size={32} />
+                    <Plus size={32} />
                     <h1>Chaptalization Calculator</h1>
                     <p>Calculate how much sugar to add to reach your target ABV</p>
                 </div>
@@ -209,7 +209,7 @@ function ChaptalizationCalculator() {
                             size="large"
                             onClick={calculate}
                         >
-                            <Beaker size={16} />
+                            <Calculator size={16} />
                             Calculate
                         </Button>
                         <Button

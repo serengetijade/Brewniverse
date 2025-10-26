@@ -1,4 +1,4 @@
-import { Beaker, Calculator as CalcIcon, Droplet, Percent } from 'lucide-react';
+import { Calculator as CalcIcon, Droplet, Percent, Plus } from 'lucide-react';
 import React from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import '../Styles/Calculator.css';
@@ -28,7 +28,7 @@ function CalculatorList() {
         {
             title: 'Chaptalization Calculator',
             description: 'Calculate how much sugar to add to reach desired ABV',
-            icon: Beaker,
+            icon: Plus,
             path: '/calculator/chaptalization',
             color: 'accent'
         },

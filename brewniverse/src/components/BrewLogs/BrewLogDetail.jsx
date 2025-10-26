@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Edit, FileText } from 'lucide-react';
+import { Book, BookOpen, Calendar, Edit, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogDetail.css';
@@ -129,9 +129,13 @@ function BrewLogDetail() {
 
             {/* Journal Entries Section */}
             <div className="brewlog-content-section">
-                <JournalEntryList
-                    brewLogId={id}
-                    showHeading={true} />
+                <div className="brewlog-notes">
+                    <h3>
+                        <Book size={20} />
+                        Journal
+                    </h3>
+                    <JournalEntryList brewLogId={id}/>
+                </div>
             </div>
 
             {/* Activity Timeline Section */}

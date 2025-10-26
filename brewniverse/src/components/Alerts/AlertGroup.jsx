@@ -1,4 +1,4 @@
-import { Beaker, FileText } from 'lucide-react';
+import { BookOpen, FileText } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
@@ -10,7 +10,7 @@ function AlertGroup({ groupKey, alerts, groupType, groupName, navigateUrl, editU
     const getGroupIcon = () => {
         switch (groupType) {
             case 'brewlog':
-                return <Beaker size={20} />;
+                return <BookOpen size={20} />;
             case 'recipe':
                 return <FileText size={20} />;
             default:
