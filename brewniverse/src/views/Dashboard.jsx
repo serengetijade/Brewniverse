@@ -30,14 +30,14 @@ function Dashboard() {
             icon: Book,
             path: '/journal',
             count: state.journalEntries.length,
-            color: 'highlight'
+            color: 'accent'
         },
         {
             title: 'Alerts',
             icon: Bell,
             path: '/alerts',
             count: state.alerts.length,
-            color: 'accent'
+            color: 'highlight'
         },
         {
             title: 'Calculators',

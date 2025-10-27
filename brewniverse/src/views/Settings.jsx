@@ -1,19 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../Styles/Settings.css';
 import Button from '../components/UI/Button';
 import { ActionTypes, useApp } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
 import StorageService from '../utils/StorageService';
+import NotificationService from '../utils/NotificationService';
+import { Capacitor } from '@capacitor/core';
 
 function Settings() {
     const { state, dispatch } = useApp();
     const { themes, currentTheme, switchTheme } = useTheme();
+    const [testNotificationSent, setTestNotificationSent] = useState(false);
+    const isNative = Capacitor.isNativePlatform();
 
     const handleSettingChange = (setting, value) => {
         dispatch({
             type: ActionTypes.updateSettings,
             payload: { [setting]: value }
         });
+    };
+
+    const handleTestNotification = async () => {
+        try {
+            const success = await NotificationService.testNotification();
+            if (success) {
+                setTestNotificationSent(true);
+                alert('Test notification scheduled! You should receive it in 5 seconds.');
+                setTimeout(() => setTestNotificationSent(false), 10000);
+            } 
+            else {
+                alert('Unable to send test notification. Make sure notifications are enabled.');
+            }
+        } 
+        catch (error) {
+            alert('Error sending test notification: ' + error.message);
+        }
     };
 
     const handleThemeChange = (themeName) => {
@@ -107,6 +128,46 @@ function Settings() {
                         </div>
                     </div>
                 </div>
+
+                {/* Notifications */}
+                {isNative && (
+                    <div className="settings-section">
+                        <div className="card">
+                            <div className="card-header">
+                                <h2 className="card-title">Notifications</h2>
+                            </div>
+                            <div className="card-content">
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={state.settings.disableNotifications || false}
+                                            onChange={(e) => handleSettingChange('disableNotifications', e.target.checked)}
+                                            style={{ marginRight: '10px' }}
+                                        />
+                                        Disable Push Notifications
+                                    </label>
+                                    <p className="setting-description">
+                                        When enabled, you will not receive notifications for your alerts
+                                    </p>
+                                </div>
+
+                                <div className="form-group">
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleTestNotification}
+                                        disabled={state.settings.disableNotifications || testNotificationSent}
+                                    >
+                                        {testNotificationSent ? 'Test Sent!' : 'Send Test Notification'}
+                                    </Button>
+                                    <p className="setting-description">
+                                        Test your notification settings with a sample notification
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Data */}
                 <div className="settings-section">

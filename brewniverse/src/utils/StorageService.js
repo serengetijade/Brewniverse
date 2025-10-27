@@ -1,4 +1,8 @@
+import { Capacitor } from '@capacitor/core';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+
 const STORAGE_KEY = 'brewniverse-data';
+const STORAGE_FILE = 'brewniverse-data.json';
 const STORAGE_VERSION = '1.0';
 
 class StorageService {
@@ -7,11 +11,12 @@ class StorageService {
     }
 
     detectStorageType() {
+        if (Capacitor.isNativePlatform()) {
+            return 'capacitor';
+        }
         if (typeof window !== 'undefined' && window.localStorage) {
             return 'localStorage';
         }
-        // if (typeof Capacitor !== 'undefined') return 'capacitor';
-
         return 'memory';
     }
 
@@ -26,16 +31,18 @@ class StorageService {
             const serialized = JSON.stringify(dataToSave);
 
             switch (this.storageType) {
+                case 'capacitor':
+                    await Filesystem.writeFile({
+                        path: STORAGE_FILE,
+                        data: serialized,
+                        directory: Directory.Data,
+                        encoding: 'utf8'
+                    });
+                    break;
+
                 case 'localStorage':
                     localStorage.setItem(STORAGE_KEY, serialized);
                     break;
-                // case 'capacitor':
-                //   await Filesystem.writeFile({
-                //     path: 'brewniverse-data.json',
-                //     data: serialized,
-                //     directory: Directory.Data,
-                //   });
-                //   break;
 
                 case 'memory':
                     this.memoryStorage = serialized;
@@ -57,22 +64,24 @@ class StorageService {
             let serialized = null;
 
             switch (this.storageType) {
+                case 'capacitor':
+                    try {
+                        const result = await Filesystem.readFile({
+                            path: STORAGE_FILE,
+                            directory: Directory.Data,
+                            encoding: 'utf8'
+                        });
+                        serialized = result.data;
+                    } catch (fileError) {
+                        // File doesn't exist yet - this is normal on first run
+                        console.log('No saved data file found (first runtime).');
+                        return null;
+                    }
+                    break;
+
                 case 'localStorage':
                     serialized = localStorage.getItem(STORAGE_KEY);
                     break;
-
-                // case 'capacitor':
-                //   try {
-                //     const result = await Filesystem.readFile({
-                //       path: 'brewniverse-data.json',
-                //       directory: Directory.Data,
-                //     });
-                //     serialized = result.data;
-                //   } catch (fileError) {
-                //     // File doesn't exist yet
-                //     return null;
-                //   }
-                //   break;
 
                 case 'memory':
                     serialized = this.memoryStorage || null;
@@ -154,16 +163,20 @@ class StorageService {
     async clearData() {
         try {
             switch (this.storageType) {
+                case 'capacitor':
+                    try {
+                        await Filesystem.deleteFile({
+                            path: STORAGE_FILE,
+                            directory: Directory.Data,
+                        });
+                    } catch (deleteError) {
+                        console.log('No file to delete or already deleted');
+                    }
+                    break;
+
                 case 'localStorage':
                     localStorage.removeItem(STORAGE_KEY);
                     break;
-
-                // case 'capacitor':
-                //   await Filesystem.deleteFile({
-                //     path: 'brewniverse-data.json',
-                //     directory: Directory.Data,
-                //   });
-                //   break;
 
                 case 'memory':
                     this.memoryStorage = null;
