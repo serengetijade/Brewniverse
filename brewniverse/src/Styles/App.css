@@ -5,6 +5,7 @@
     color: var(--color-text);
     display: flex;
     flex-direction: column;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .main-content {

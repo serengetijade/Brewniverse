@@ -6,5 +6,10 @@ export default defineConfig({
     plugins: [plugin()],
     server: {
         port: 65083,
+    },
+    build: {
+        outDir: 'dist',
+        sourcemap: false,
+        minify: 'esbuild',
     }
 })

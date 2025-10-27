@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Brewniverse</string>
+    <string name="title_activity_main">Brewniverse</string>
+    <string name="package_name">com.brewniverse.app</string>
+    <string name="custom_url_scheme">com.brewniverse.app</string>
+</resources>

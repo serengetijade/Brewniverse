@@ -1,5 +1,6 @@
 ﻿import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import StorageService from '../utils/StorageService';
+import NotificationService from '../utils/NotificationService';
 
 // Initial state
 const initialState = {
@@ -13,6 +14,7 @@ const initialState = {
     settings: {
         theme: 'default',
         defaultView: 'dashboard',
+        disableNotifications: false,
     },
 };
 
@@ -130,42 +132,70 @@ function appReducer(state, action) {
             };
 
         case ActionTypes.addAlert:
-            return {
-                ...state,
-                alerts: [...state.alerts, { ...action.payload, id: action.payload.id || Date.now().toString() }],
-            };
+            {
+                const newAlert = { ...action.payload, id: action.payload.id || Date.now().toString() };
+                // Schedule notification for the new alert
+                NotificationService.scheduleAlert(newAlert, state.settings).catch(err => 
+                    console.error('Error scheduling notification:', err)
+                );
+                return {
+                    ...state,
+                    alerts: [...state.alerts, newAlert],
+                };
+            }
 
         case ActionTypes.updateAlert:
-            return {
-                ...state,
-                alerts: state.alerts.map(alert =>
-                    alert.id === action.payload.id ? { ...alert, ...action.payload } : alert
-                ),
-            };
+            {
+                const updatedAlert = action.payload;
+                // Cancel old notification and schedule new one
+                NotificationService.cancelAlert(updatedAlert.id).catch(err =>
+                    console.error('Error cancelling notification:', err)
+                );
+                if (!updatedAlert.isCompleted) {
+                    NotificationService.scheduleAlert(updatedAlert, state.settings).catch(err =>
+                        console.error('Error scheduling notification:', err)
+                    );
+                }
+                return {
+                    ...state,
+                    alerts: state.alerts.map(alert =>
+                        alert.id === action.payload.id ? { ...alert, ...action.payload } : alert
+                    ),
+                };
+            }
 
         case ActionTypes.deleteAlert:
-            // When deleting an alert, find the alert to get its activityId, then remove alertId from that specific activity
-            const alertToDelete = state.alerts.find(alert => alert.id === action.payload);
+            {
+                // When deleting an alert, find the alert to get its activityId, then remove alertId from that specific activity
+                const alertToDelete = state.alerts.find(alert => alert.id === action.payload);
 
-            const updatedBrewLogs = alertToDelete && alertToDelete.activityId
-                ? state.brewLogs.map(brewLog => ({
-                    ...brewLog,
-                    activity: brewLog.activity ? brewLog.activity.map(activity =>
-                        activity.id === alertToDelete.activityId ? { ...activity, alertId: null } : activity
-                    ) : []
-                }))
-                : state.brewLogs.map(brewLog => ({
-                    ...brewLog,
-                    activity: brewLog.activity ? brewLog.activity.map(activity =>
-                        activity.alertId === action.payload ? { ...activity, alertId: null } : activity
-                    ) : []
-                }));
+                // Cancel the notification
+                if (alertToDelete) {
+                    NotificationService.cancelAlert(alertToDelete.id).catch(err =>
+                        console.error('Error cancelling notification:', err)
+                    );
+                }
 
-            return {
-                ...state,
-                alerts: state.alerts.filter(alert => alert.id !== action.payload),
-                brewLogs: updatedBrewLogs,
-            };
+                const updatedBrewLogs = alertToDelete && alertToDelete.activityId
+                    ? state.brewLogs.map(brewLog => ({
+                        ...brewLog,
+                        activity: brewLog.activity ? brewLog.activity.map(activity =>
+                            activity.id === alertToDelete.activityId ? { ...activity, alertId: null } : activity
+                        ) : []
+                    }))
+                    : state.brewLogs.map(brewLog => ({
+                        ...brewLog,
+                        activity: brewLog.activity ? brewLog.activity.map(activity =>
+                            activity.alertId === action.payload ? { ...activity, alertId: null } : activity
+                        ) : []
+                    }));
+
+                return {
+                    ...state,
+                    alerts: state.alerts.filter(alert => alert.id !== action.payload),
+                    brewLogs: updatedBrewLogs,
+                };
+            }
 
         case ActionTypes.addAlertGroup:
             return {
@@ -243,10 +273,29 @@ function appReducer(state, action) {
             };
 
         case ActionTypes.updateSettings:
-            return {
-                ...state,
-                settings: { ...state.settings, ...action.payload },
-            };
+            {
+                const newSettings = { ...state.settings, ...action.payload };
+                
+                // If notifications were toggled, reschedule or cancel all
+                if ('disableNotifications' in action.payload) {
+                    if (action.payload.disableNotifications) {
+                        // Cancel all notifications
+                        NotificationService.cancelAllAlerts().catch(err =>
+                            console.error('Error cancelling all notifications:', err)
+                        );
+                    } else {
+                        // Reschedule all alerts
+                        NotificationService.rescheduleAllAlerts(state.alerts, newSettings).catch(err =>
+                            console.error('Error rescheduling alerts:', err)
+                        );
+                    }
+                }
+                
+                return {
+                    ...state,
+                    settings: newSettings,
+                };
+            }
 
         case ActionTypes.loadData:
             return { ...state, ...action.payload };
@@ -263,6 +312,19 @@ const AppContext = createContext();
 export function AppProvider({ children }) {
     const [state, dispatch] = useReducer(appReducer, initialState);
 
+    // Initialize notifications on mount
+    useEffect(() => {
+        const initNotifications = async () => {
+            try {
+                await NotificationService.initialize();
+            } catch (error) {
+                console.error('Error initializing notifications:', error);
+            }
+        };
+
+        initNotifications();
+    }, []);
+
     // Load data from storage on mount
     useEffect(() => {
         const loadInitialData = async () => {
@@ -278,6 +340,15 @@ export function AppProvider({ children }) {
 
         loadInitialData();
     }, []);
+
+    // Reschedule notifications when alerts or settings change
+    useEffect(() => {
+        if (state.alerts.length > 0) {
+            NotificationService.rescheduleAllAlerts(state.alerts, state.settings).catch(err =>
+                console.error('Error rescheduling alerts on load:', err)
+            );
+        }
+    }, [state.alerts.length > 0]); // Only trigger on initial load
 
     // Save data to storage whenever state changes
     useEffect(() => {
