@@ -13,7 +13,6 @@ const initialState = {
     recipeProgress: {},
     settings: {
         theme: 'default',
-        defaultView: 'dashboard',
         disableNotifications: false,
     },
 };

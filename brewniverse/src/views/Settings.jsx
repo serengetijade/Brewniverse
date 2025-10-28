@@ -42,14 +42,6 @@ function Settings() {
         handleSettingChange('theme', themeName);
     };
 
-    const defaultViewOptions = [
-        { value: 'dashboard', label: 'Dashboard' },
-        { value: 'brewlogs', label: 'Brew Logs' },
-        { value: 'recipes', label: 'Recipes' },
-        { value: 'alerts', label: 'Alerts' },
-        { value: 'calculator', label: 'Calculator' },
-    ];
-
     const themeOptions = Object.entries(themes).map(([key, theme]) => ({
         value: key,
         label: theme.name
@@ -97,77 +89,6 @@ function Settings() {
                         </div>
                     </div>
                 </div>
-
-                {/* Navigation */}
-                <div className="settings-section">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2 className="card-title">Navigation</h2>
-                        </div>
-                        <div className="card-content">
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="default-view-select">
-                                    Default View
-                                </label>
-                                <select
-                                    id="default-view-select"
-                                    className="form-select"
-                                    value={state.settings.defaultView}
-                                    onChange={(e) => handleSettingChange('defaultView', e.target.value)}
-                                >
-                                    {defaultViewOptions.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p className="setting-description">
-                                    Choose which view opens when you start the app
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Notifications */}
-                {isNative && (
-                    <div className="settings-section">
-                        <div className="card">
-                            <div className="card-header">
-                                <h2 className="card-title">Notifications</h2>
-                            </div>
-                            <div className="card-content">
-                                <div className="form-group">
-                                    <label className="form-label">
-                                        <input
-                                            type="checkbox"
-                                            checked={state.settings.disableNotifications || false}
-                                            onChange={(e) => handleSettingChange('disableNotifications', e.target.checked)}
-                                            style={{ marginRight: '10px' }}
-                                        />
-                                        Disable Push Notifications
-                                    </label>
-                                    <p className="setting-description">
-                                        When enabled, you will not receive notifications for your alerts
-                                    </p>
-                                </div>
-
-                                <div className="form-group">
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleTestNotification}
-                                        disabled={state.settings.disableNotifications || testNotificationSent}
-                                    >
-                                        {testNotificationSent ? 'Test Sent!' : 'Send Test Notification'}
-                                    </Button>
-                                    <p className="setting-description">
-                                        Test your notification settings with a sample notification
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
 
                 {/* Data */}
                 <div className="settings-section">
@@ -281,6 +202,46 @@ function Settings() {
                         </div>
                     </div>
                 </div>
+
+                {/* Notifications */}
+                {isNative && (
+                    <div className="settings-section">
+                        <div className="card">
+                            <div className="card-header">
+                                <h2 className="card-title">Notifications</h2>
+                            </div>
+                            <div className="card-content">
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        <input
+                                            type="checkbox"
+                                            checked={state.settings.disableNotifications || false}
+                                            onChange={(e) => handleSettingChange('disableNotifications', e.target.checked)}
+                                            style={{ marginRight: '10px' }}
+                                        />
+                                        Disable Push Notifications
+                                    </label>
+                                    <p className="setting-description">
+                                        When enabled, you will not receive notifications for your alerts
+                                    </p>
+                                </div>
+
+                                <div className="form-group">
+                                    <Button
+                                        variant="outline"
+                                        onClick={handleTestNotification}
+                                        disabled={state.settings.disableNotifications || testNotificationSent}
+                                    >
+                                        {testNotificationSent ? 'Test Sent!' : 'Send Test Notification'}
+                                    </Button>
+                                    <p className="setting-description">
+                                        Test your notification settings with a sample notification
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* About */}
                 <div className="settings-section">
