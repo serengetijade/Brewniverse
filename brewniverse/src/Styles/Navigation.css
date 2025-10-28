@@ -10,7 +10,7 @@
     z-index: 100;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     /* Add safe area padding for status bar on mobile */
-    padding-top: calc(1rem + env(safe-area-inset-top));
+    padding-top: max(1rem, env(safe-area-inset-top));
 }
 
 .nav-left,

@@ -311,6 +311,7 @@ const AppContext = createContext();
 // Provider component
 export function AppProvider({ children }) {
     const [state, dispatch] = useReducer(appReducer, initialState);
+    const [isDataLoaded, setIsDataLoaded] = React.useState(false);
 
     // Initialize notifications on mount
     useEffect(() => {
@@ -332,9 +333,16 @@ export function AppProvider({ children }) {
                 const savedData = await StorageService.loadData();
                 if (savedData) {
                     dispatch({ type: ActionTypes.loadData, payload: savedData });
+                } 
+                else {
+                    console.log('No saved data found, using initial state');
                 }
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error('Error loading saved data:', error);
+            } 
+            finally {
+                setIsDataLoaded(true);
             }
         };
 
@@ -350,8 +358,12 @@ export function AppProvider({ children }) {
         }
     }, [state.alerts.length > 0]); // Only trigger on initial load
 
-    // Save data to storage whenever state changes
+    // Save data to storage whenever state changes (but only AFTER initial load completes)
     useEffect(() => {
+        if (!isDataLoaded) {
+            return;
+        }
+
         const saveData = async () => {
             try {
                 await StorageService.saveData(state);
@@ -361,7 +373,7 @@ export function AppProvider({ children }) {
         };
 
         saveData();
-    }, [state]);
+    }, [state, isDataLoaded]);
 
     return (
         <AppContext.Provider value={{ state, dispatch }}>
