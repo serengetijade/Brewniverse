@@ -11,12 +11,23 @@ class StorageService {
     }
 
     detectStorageType() {
-        if (Capacitor.isNativePlatform()) {
+        const isNative = Capacitor.isNativePlatform();
+        const platform = Capacitor.getPlatform();
+        console.log('🔍 Storage Detection:', {
+            isNativePlatform: isNative,
+            platform: platform,
+            hasLocalStorage: typeof window !== 'undefined' && window.localStorage
+        });
+        
+        if (isNative) {
+            console.log('✅ Using Capacitor Filesystem storage');
             return 'capacitor';
         }
         if (typeof window !== 'undefined' && window.localStorage) {
+            console.log('⚠️ Using localStorage (fallback)');
             return 'localStorage';
         }
+        console.log('❌ Using memory storage (not persistent)');
         return 'memory';
     }
 
@@ -73,8 +84,7 @@ class StorageService {
                         });
                         serialized = result.data;
                     } catch (fileError) {
-                        // File doesn't exist yet - this is normal on first run
-                        console.log('No saved data file found (first runtime).');
+                        // File doesn't exist yet - normal on first run
                         return null;
                     }
                     break;
