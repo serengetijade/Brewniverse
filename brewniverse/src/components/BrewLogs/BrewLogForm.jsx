@@ -152,7 +152,7 @@ function BrewLogForm() {
                     return {
                         ...prevData,
                         dateBottled: value,
-                        activity: prevData.activity.filter(act => 
+                        activity: prevData.activity.filter(act =>
                             act.topic.toLowerCase() !== ActivityTopicEnum.DateBottled.toLowerCase()
                         )
                     };
@@ -416,11 +416,13 @@ function BrewLogForm() {
                                 style={{ flex: 1 }}
                             >
                                 <option value="">Select a recipe (optional)</option>
-                                {state.recipes.map(recipe => (
-                                    <option key={recipe.id} value={recipe.id}>
-                                        {recipe.name}
-                                    </option>
-                                ))}
+                                {[...state.recipes]
+                                    .sort((a, b) => a.name.localeCompare(b.name))
+                                    .map(recipe => (
+                                        <option key={recipe.id} value={recipe.id}>
+                                            {recipe.name}
+                                        </option>
+                                    ))}
                             </select>
                         </div>
 
@@ -896,7 +898,7 @@ function BrewLogForm() {
 
                     <div className="form-group">
                         <JournalEntryList
-                            brewLogId={id}/>
+                            brewLogId={id} />
                     </div>
                 </div>
             </form>
