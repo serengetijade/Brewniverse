@@ -31,9 +31,20 @@
     color: var(--color-primary);
 }
 
+/* Journal card styles */
 .journal-card {
     position: relative;
     overflow: hidden;
+}
+
+.journal-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--item-color);
+    box-shadow: 0 0 10px var(--item-color);
 }
 
 .journal-card .recipe-card-accent {

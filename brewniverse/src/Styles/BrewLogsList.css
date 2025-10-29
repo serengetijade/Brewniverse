@@ -166,11 +166,6 @@
         align-items: flex-start;
         gap: 0.5rem;
     }
-/*
-    .brewlog-status {
-        width: 100%;
-        justify-content: flex-start;
-    }*/
 
     .brewlog-card-stat {
         padding: 0.625rem;
