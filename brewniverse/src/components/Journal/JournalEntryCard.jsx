@@ -1,4 +1,4 @@
-import { Calendar, Info, SquarePen } from 'lucide-react';
+import { BookOpen, Calendar, SquarePen } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
@@ -49,13 +49,14 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                         </div>
                     </div>
                     <div className="displayList-actions item-actions">
+                        {entry.brewLogId &&  
                         <Button
                             variant="ghost"
                             size="small"
-                            onClick={() => navigate(`/journal/${entry.id}`)}
+                            onClick={() => navigate(`/brewlogs/${entry.brewLogId}`)}
                         >
-                            <Info size={16} />
-                        </Button>
+                            <BookOpen size={16} />
+                        </Button>}
                         <Button
                             variant="ghost"
                             size="small"
