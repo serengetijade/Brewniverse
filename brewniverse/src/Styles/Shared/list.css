@@ -172,32 +172,32 @@
 
 
 /* Display Option: List*/
-.displayList-grid {
+.list-view-row {
     display: grid;
     grid-template-columns: auto auto;
     justify-content: space-between;
 }
 
-.displayList .brewlog-header {
+.list-view .brewlog-header {
     margin-bottom: 0rem;
 }
 
-.displayList .item-content {
+.list-view .item-content {
     margin-bottom: 0rem;
     display: inline-flex;
 }
 
-.displayList .brewlog-date{
+.list-view .brewlog-date{
     padding-right: 1rem;
 }
 
-.displayList .item-actions {
+.list-view .item-actions {
     display: grid;
     margin: auto;
     gap: 2rem;
 }
 
-    .displayList .item-actions .btn {
+    .list-view .item-actions .btn {
         width: fit-content;
         padding: 0rem 0rem;
         min-height: fit-content;

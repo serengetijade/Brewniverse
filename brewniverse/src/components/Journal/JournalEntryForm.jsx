@@ -221,7 +221,7 @@ function JournalEntryForm() {
                                 </div>
                             </div>
 
-                            <div className="form-row">
+                            <div className="form-row col-2">
                                 <div className="form-group">
                                     <label htmlFor="type" className="form-label">
                                         Type *
@@ -278,11 +278,8 @@ function JournalEntryForm() {
                             placeholder="Where did you try it?"
                         />
                     </div>
-                </div>
 
-                {/* Rating */}
-                <div className="form-section">
-                    <h3>Rating</h3>
+                    {/* Rating */}
                     <Rating
                         value={formState.rating}
                         onChange={handleRatingChange}

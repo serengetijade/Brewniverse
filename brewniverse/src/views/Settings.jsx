@@ -121,8 +121,8 @@ function Settings() {
                                     variant="outline"
                                     onClick={async () => {
                                         try {
-                                            await StorageService.exportToFile(state);
-                                            alert('Data exported successfully!');
+                                            const result = await StorageService.exportToFile(state);
+                                            alert(result.message || 'Data exported successfully!');
                                         } catch (error) {
                                             alert('Error exporting data: ' + error.message);
                                         }

@@ -233,9 +233,9 @@ function RecipeDetail() {
                 showDelete={false}
                 collapsible={true}
                 defaultExpanded={false}
-                submitLabel="Edit Recipe"
+                submitLabel="Edit"
                 submitIcon={<Edit size={16} />}
-                cancelLabel="Back to Recipes"
+                cancelLabel="Back"
             />
         </div>
     );

@@ -126,18 +126,50 @@ class StorageService {
                 data: data,
             };
 
-            const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-                type: 'application/json',
-            });
+            const jsonContent = JSON.stringify(exportData, null, 2);
+            const fileName = `brewniverse-backup-${new Date().toISOString().slice(0, 10)}.json`;
 
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `brewniverse-backup-${new Date().toISOString().slice(0, 10)}.json`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
+            // Use Capacitor Filesystem for mobile, blob download for web
+            if (Capacitor.isNativePlatform()) {
+                // Save to Documents directory on mobile (easier to find)
+                await Filesystem.writeFile({
+                    path: fileName,
+                    data: jsonContent,
+                    directory: Directory.Documents,
+                    encoding: 'utf8'
+                });
+
+                // Get the file URI to show the user
+                const fileUri = await Filesystem.getUri({
+                    path: fileName,
+                    directory: Directory.Documents
+                });
+
+                return {
+                    success: true,
+                    message: `File saved successfully!\n\nLocation: Documents/${fileName}\n\nYou can find it in your phone's Documents folder or using a file manager app.`,
+                    path: fileUri.uri
+                };
+            } else {
+                // Web browser - use blob download
+                const blob = new Blob([jsonContent], {
+                    type: 'application/json',
+                });
+
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+
+                return {
+                    success: true,
+                    message: 'File downloaded successfully!'
+                };
+            }
         } catch (error) {
             console.error('Error exporting data:', error);
             throw error;
