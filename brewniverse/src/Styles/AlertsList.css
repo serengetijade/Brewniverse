@@ -1,3 +1,6 @@
+@import "../Styles/Shared/list.css";
+@import "../Styles/Shared/search.css";
+
 .alert-card {
     position: relative;
     overflow: hidden;
