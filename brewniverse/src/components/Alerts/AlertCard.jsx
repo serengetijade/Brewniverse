@@ -127,19 +127,19 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
         return (
             <div className={`item-card alert-card list-view ${alert.isCompleted ? 'alert-completed-card' : ''}`}
                 style={{ '--item-color': topicConfig.color }}>
-                <div className="alert-card-accent"></div>
+                <div className="item-card-accent alert-card-accent"></div>
                 <div className="list-view-row">
                     <div className="list-view-body">
-                        <div className="brewlog-header">
-                            <div className="brewlog-type">
+                        <div className="item-header alert-header">
+                            <div className="item-type alert-type">
                                 <div className="alert-topic-badge" style={{ backgroundColor: `${topicConfig.color}15`, color: topicConfig.color }}>
                                     <TopicIcon size={16} />
                                 </div>
-                                <h3 className="brewlog-name">{alert.name}</h3>
+                                <h3 className="item-title alert-name">{alert.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
-                            <div className="brewlog-date">
+                            <div className="item-date alert-date">
                                 <Calendar size={14} />
                                 {new Date(alert.date).toLocaleDateString('en-US', {
                                     month: 'long',

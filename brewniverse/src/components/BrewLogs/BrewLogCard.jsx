@@ -99,17 +99,17 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
 
     else return (
         <div className="item-card brewlog-card list-view" style={{ '--item-color': brewTypeConfig.color }}>
-            <div className="brewlog-card-accent"></div>
+            <div className="item-card-accent brewlog-card-accent"></div>
             <div className="list-view-row">
                 <div className="list-view-body">
-                    <div className="brewlog-header">
-                        <div className="brewlog-type">
-                            <span className="brewlog-type-icon-large">{brewTypeConfig.icon}</span>
-                            <h3 className="brewlog-name">{brewLog.name}</h3>
+                    <div className="item-header brewlog-header">
+                        <div className="item-type brewlog-type">
+                            <span className="item-type-icon-large brewlog-type-icon-large">{brewTypeConfig.icon}</span>
+                            <h3 className="item-title brewlog-name">{brewLog.name}</h3>
                         </div>
                     </div>
                     <div className="item-content">
-                        <div className="brewlog-date">
+                        <div className="item-date brewlog-date">
                             <Calendar size={14} />
                             <span>{new Date(brewLog.dateCreated).toLocaleDateString()}</span>
                         </div>

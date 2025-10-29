@@ -117,17 +117,17 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
         // List display mode
         return (
             <div className="item-card recipe-card list-view" style={{ '--item-color': brewTypeConfig.color }}>
-                <div className="recipe-card-accent"></div>
+                <div className="item-card-accent recipe-card-accent"></div>
                 <div className="list-view-row">
-                    <div>
-                        <div className="brewlog-header">
-                            <div className="brewlog-type">
-                                <span className="brewlog-type-icon-large">{brewTypeConfig.icon}</span>
-                                <h3 className="brewlog-name">{recipe.name}</h3>
+                    <div className="list-view-body">
+                        <div className="item-header recipe-header">
+                            <div className="item-type recipe-type">
+                                <span className="item-type-icon-large recipe-type-icon-large">{brewTypeConfig.icon}</span>
+                                <h3 className="item-title recipe-name">{recipe.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
-                            <div className="brewlog-date">
+                            <div className="item-date recipe-date">
                                 <Calendar size={14} />
                                 <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>
                             </div>

@@ -31,17 +31,17 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
         // List display mode
         return (
             <div className="item-card journal-card list-view" style={{ '--item-color': brewTypeConfig.color }}>
-                <div className="recipe-card-accent"></div>
+                <div className="item-card-accent journal-card-accent"></div>
                 <div className="list-view-row">
                     <div className="list-view-body">
-                        <div className="brewlog-header">
-                            <div className="brewlog-type">
-                                <span className="brewlog-type-icon-large">{brewTypeConfig.icon}</span>
-                                <h3 className="brewlog-name">{entry.name}</h3>
+                        <div className="item-header journal-header">
+                            <div className="item-type journal-type">
+                                <span className="item-type-icon-large journal-type-icon-large">{brewTypeConfig.icon}</span>
+                                <h3 className="item-title journal-name">{entry.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
-                            <div className="brewlog-date">
+                            <div className="item-date journal-date">
                                 <Calendar size={14} />
                                 <span>{new Date(entry.date).toLocaleDateString()}</span>
                             </div>
