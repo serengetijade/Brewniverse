@@ -201,7 +201,7 @@
 .empty-message {
     text-align: center;
     color: var(--color-textLight);
-    padding: 2rem;
+    padding: 1rem;
     font-style: italic;
 }
 

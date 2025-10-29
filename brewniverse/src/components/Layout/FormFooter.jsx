@@ -70,7 +70,8 @@ function FormFooter({
                     }}
                 >
                     {submitIcon || <Save size={16} />}
-                    {submitLabel || `${isEditing ? 'Update' : 'Create'} ${entityName}`}
+                    {submitLabel || `${isEditing ? 'Update' : 'Create'}`}
+                    {/*{submitLabel || `${isEditing ? 'Update' : 'Create'} ${entityName}`}*/}
                 </Button>
             </div>
         </div>

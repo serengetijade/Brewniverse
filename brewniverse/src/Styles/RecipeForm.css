@@ -5,7 +5,7 @@
     color: var(--color-textLight);
     font-style: italic;
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
     background-color: var(--color-surface);
     border-radius: var(--border-radius-sm);
     border: 1px solid var(--color-border);

@@ -173,7 +173,7 @@
     .btn-small {
         min-height: 48px;
         font-size: 1rem;
-        padding: 0.875rem 1.5rem;
+        padding: .5rem;
     }
 
     .btn-large {
