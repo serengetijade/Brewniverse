@@ -174,7 +174,6 @@
 /* Display Option: List*/
 .displayList-grid {
     display: grid;
-    /*grid-template-columns: repeat(auto-fit, minmax(2fr, 1fr));*/
     grid-template-columns: auto auto;
     justify-content: space-between;
 }
@@ -193,6 +192,7 @@
 }
 
 .displayList .item-actions {
+    display: grid;
     margin: auto;
     gap: 2rem;
 }

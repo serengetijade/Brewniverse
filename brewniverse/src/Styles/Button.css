@@ -90,15 +90,10 @@
         transform: translateY(-1px);
     }
 
-.btn-success {
-    background-color: var(--color-success);
-    color: white;
-}
-
     .btn-success:hover:not(.btn-disabled) {
-        background-color: #218838;
+        background-color: var(--color-success);
         transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 4px 8px var(--color-success);
     }
 
 .btn-warning {
@@ -112,16 +107,11 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
-.btn-error {
+.btn-error:hover:not(.btn-disabled) {
     background-color: var(--color-error);
-    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px var(--color-error);
 }
-
-    .btn-error:hover:not(.btn-disabled) {
-        background-color: #c82333;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
 
 /* States */
 .btn-disabled {

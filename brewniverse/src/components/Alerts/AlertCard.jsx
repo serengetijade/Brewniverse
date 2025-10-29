@@ -141,17 +141,19 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                         <div className="item-content">
                             <div className="brewlog-date">
                                 <Calendar size={14} />
-                                <span>{new Date(alert.date).toLocaleDateString()}</span>
+                                {new Date(alert.date).toLocaleDateString('en-US', {
+                                    month: 'long',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                    hour: "numeric",
+                                    minute: "numeric",
+                                    hour12: true
+                                })}
                             </div>
-                            {alert.isCompleted ? (
+                            {alert.isCompleted && (
                                 <div className="alert-completed-badge">
                                     <CheckCircle2 size={14} />
                                     <span>Completed</span>
-                                </div>
-                            ) : (
-                                <div className="alert-status-badge" style={{ backgroundColor: `${topicConfig.color}20`, color: topicConfig.color }}>
-                                    <Clock size={14} />
-                                    <span>Pending</span>
                                 </div>
                             )}
                         </div>
