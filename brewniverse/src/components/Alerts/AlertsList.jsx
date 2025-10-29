@@ -1,4 +1,4 @@
-import { Bell, Plus, Search } from 'lucide-react';
+import { Bell, BookOpen, Calendar, FileText, Plus, Search } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../Styles/AlertsList.css";
@@ -102,6 +102,11 @@ function AlertsList() {
                     setSortOrder(newSortOrder);
                 }}
                 searchPlaceholder="Search alerts by name or description..."
+                sortOptions={[
+                    { key: 'date', label: 'Date', icon: Calendar },
+                    { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
+                    { key: 'recipe', label: 'Recipe', icon: FileText }
+                ]}
             />
 
             {/* Individual Alerts Section */}
