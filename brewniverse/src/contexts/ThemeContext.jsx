@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from 'react';
 import StorageService from '../utils/StorageService';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 
 //ToDo: remove any unused variables
 // Theme definitions
@@ -125,6 +127,22 @@ const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
     const [currentTheme, setCurrentTheme] = React.useState('default');
 
+    React.useEffect(() => {
+        const initStatusBar = async () => {
+            if (Capacitor.isNativePlatform()) {
+                try {
+                    await StatusBar.show();
+                    // Set overlay to false so it doesn't overlap content
+                    await StatusBar.setOverlaysWebView({ overlay: false });
+                } catch (error) {
+                    console.error('Error initializing status bar:', error);
+                }
+            }
+        };
+
+        initStatusBar();
+    }, []);
+
     // Load theme from storage on mount
     React.useEffect(() => {
         const loadTheme = async () => {
@@ -143,13 +161,26 @@ export function ThemeProvider({ children }) {
 
     const theme = themes[currentTheme] || themes.default;
 
-    // Apply CSS custom properties to the root element
+    // Apply CSS custom properties to the root element and update status bar
     React.useEffect(() => {
         const root = document.documentElement;
         Object.entries(theme.colors).forEach(([key, value]) => {
             root.style.setProperty(`--color-${key}`, value);
         });
+
+        if (Capacitor.isNativePlatform()) {
+            updateStatusBar(theme.colors);
+        }
     }, [theme]);
+
+    const updateStatusBar = async (colors) => {
+        try {            
+            await StatusBar.setBackgroundColor({ color: colors.primary });
+            await StatusBar.setStyle({ style: Style.Dark }); //white icons
+        } catch (error) {
+            console.error('Error updating status bar:', error);
+        }
+    };
 
     const switchTheme = (themeName) => {
         if (themes[themeName]) {
