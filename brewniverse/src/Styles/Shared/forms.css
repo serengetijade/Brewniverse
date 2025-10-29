@@ -212,6 +212,10 @@
         margin-bottom: 1rem;
     }
 
+    .form-row {
+        gap: 0rem;
+    }
+
     .form-label {
         font-size: 1rem;
         margin-bottom: 0.25rem;

@@ -125,11 +125,11 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
     } else {
         // List display mode
         return (
-            <div className={`item-card alert-card displayList ${alert.isCompleted ? 'alert-completed-card' : ''}`}
+            <div className={`item-card alert-card list-view ${alert.isCompleted ? 'alert-completed-card' : ''}`}
                 style={{ '--item-color': topicConfig.color }}>
                 <div className="alert-card-accent"></div>
-                <div className="displayList-grid">
-                    <div className="displayList-body">
+                <div className="list-view-row">
+                    <div className="list-view-body">
                         <div className="brewlog-header">
                             <div className="brewlog-type">
                                 <div className="alert-topic-badge" style={{ backgroundColor: `${topicConfig.color}15`, color: topicConfig.color }}>
@@ -158,7 +158,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                             )}
                         </div>
                     </div>
-                    <div className="displayList-actions item-actions">
+                    <div className="list-view-actions item-actions">
                         <Button
                             variant="ghost"
                             size="small"

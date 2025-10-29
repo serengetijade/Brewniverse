@@ -155,14 +155,14 @@ function BrewLogDetail() {
             <FormFooter
                 isEditing={true}
                 entityName="Brew Log"
+                cancelLabel="Back to List"
                 onCancel={handleCancel}
-                onDelete={handleDelete}
                 showDelete={false}
+                onDelete={handleDelete}
                 collapsible={true}
                 defaultExpanded={false}
-                submitLabel="Edit Brew Log"
+                submitLabel="Edit"
                 submitIcon={<Edit size={16} />}
-                cancelLabel="Back to List"
                 onSubmit={() => navigate(`/brewlogs/${id}/edit`)}
             />
         </div>

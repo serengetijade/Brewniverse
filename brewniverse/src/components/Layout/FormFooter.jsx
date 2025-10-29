@@ -38,7 +38,7 @@ function FormFooter({
 
                 {isEditing && showDelete && (
                     <Button
-                        type="button"
+                        type="outline"
                         variant="error"
                         onClick={onDelete}
                     >

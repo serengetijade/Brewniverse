@@ -98,10 +98,10 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
         );
 
     else return (
-        <div className="item-card brewlog-card displayList" style={{ '--item-color': brewTypeConfig.color }}>
+        <div className="item-card brewlog-card list-view" style={{ '--item-color': brewTypeConfig.color }}>
             <div className="brewlog-card-accent"></div>
-            <div className="displayList-grid">
-                <div className="displayList-body">
+            <div className="list-view-row">
+                <div className="list-view-body">
                     <div className="brewlog-header">
                         <div className="brewlog-type">
                             <span className="brewlog-type-icon-large">{brewTypeConfig.icon}</span>
@@ -116,7 +116,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                         <Rating value={brewLog.rating || 0} isEditing={false} />
                     </div>
                 </div>
-                <div className="displayList-actions item-actions">
+                <div className="list-view-actions item-actions">
                     <Button
                         variant="ghost"
                         size="small"

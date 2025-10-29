@@ -101,7 +101,7 @@ function Rating({ value = 0, onChange, isEditing = false, label = "Rating" }) {
     return (
         <div className="rating-component">
             {isEditing && label && (
-                <label className="rating-label">{label}</label>
+                <label className="form-label">{label}</label>
             )}
             <div className="stars-container">
                 {Array.from({ length: totalStars }, (_, index) => renderStar(index))}
