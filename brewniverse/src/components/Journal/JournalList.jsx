@@ -17,6 +17,14 @@ function JournalList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [displayMode, setDisplayMode] = useState(() => {
+        return localStorage.getItem('journal-display-mode') || 'grid';
+    });
+
+    const handleDisplayChange = (mode) => {
+        setDisplayMode(mode);
+        localStorage.setItem('journal-display-mode', mode);
+    };
 
     const sortedEntries = useMemo(() => {
         let filteredEntries = state.journalEntries.filter(entry =>
@@ -128,6 +136,7 @@ function JournalList() {
                     setSortBy(newSortBy);
                     setSortOrder(newSortOrder);
                 }}
+                onDisplayChange={handleDisplayChange}
                 sortOptions={[
                     { key: 'date', label: 'Date', icon: Calendar },
                     { key: 'name', label: 'Name', icon: BookOpen },
@@ -162,6 +171,7 @@ function JournalList() {
                                 <JournalEntryCard
                                     key={entry.id}
                                     entry={entry}
+                                    displayOption={displayMode}
                                 />
                             ))}
                         </div>
@@ -197,6 +207,7 @@ function JournalList() {
                                                 <JournalEntryCard
                                                     key={entry.id}
                                                     entry={entry}
+                                                    displayOption={displayMode}
                                                 />
                                             ))}
                                         </div>

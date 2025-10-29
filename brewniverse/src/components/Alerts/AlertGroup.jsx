@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '../UI/Button';
 import AlertCard from './AlertCard';
 
-function AlertGroup({ groupKey, alerts, groupType, groupName, navigateUrl, editUrlTemplate }) {
+function AlertGroup({ groupKey, alerts, groupType, groupName, navigateUrl, editUrlTemplate, displayOption = 'grid' }) {
     const navigate = useNavigate();
 
     const getGroupIcon = () => {
@@ -52,6 +52,7 @@ function AlertGroup({ groupKey, alerts, groupType, groupName, navigateUrl, editU
                         key={alert.id}
                         alert={alert}
                         editUrl={editUrlTemplate.replace(':id', alert.id)}
+                        displayOption={displayOption}
                     />
                 ))}
             </div>

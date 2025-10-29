@@ -17,6 +17,14 @@ function AlertsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('asc');
+    const [displayMode, setDisplayMode] = useState(() => {
+        return localStorage.getItem('alerts-display-mode') || 'grid';
+    });
+
+    const handleDisplayChange = (mode) => {
+        setDisplayMode(mode);
+        localStorage.setItem('alerts-display-mode', mode);
+    };
 
     const alertGroups = state.alertGroups;
 
@@ -101,6 +109,7 @@ function AlertsList() {
                     setSortBy(newSortBy);
                     setSortOrder(newSortOrder);
                 }}
+                onDisplayChange={handleDisplayChange}
                 searchPlaceholder="Search alerts by name or description..."
                 sortOptions={[
                     { key: 'date', label: 'Date', icon: Calendar },
@@ -138,6 +147,7 @@ function AlertsList() {
                                             key={alert.id}
                                             alert={alert}
                                             editUrl={`/alerts/${alert.id}/edit`}
+                                            displayOption={displayMode}
                                         />
                                     ))}
                                 </div>
@@ -158,6 +168,7 @@ function AlertsList() {
                                                     groupName={brewLogName}
                                                     navigateUrl={brewLog ? `/brewlogs/${brewLogId}` : null}
                                                     editUrlTemplate="/alerts/:id/edit"
+                                                    displayOption={displayMode}
                                                 />
                                             );
                                         })}
@@ -179,6 +190,7 @@ function AlertsList() {
                                                         groupName={recipeName}
                                                         navigateUrl={recipe ? `/recipes/${recipeId}` : null}
                                                         editUrlTemplate="/alerts/:id/edit"
+                                                        displayOption={displayMode}
                                                     />
                                                 );
                                             })}

@@ -17,6 +17,14 @@ function RecipesList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [displayMode, setDisplayMode] = useState(() => {
+        return localStorage.getItem('recipes-display-mode') || 'grid';
+    });
+
+    const handleDisplayChange = (mode) => {
+        setDisplayMode(mode);
+        localStorage.setItem('recipes-display-mode', mode);
+    };
 
     // Process and filter recipes based on search and sort criteria
     const sortedRecipes = useMemo(() => {
@@ -116,6 +124,7 @@ function RecipesList() {
                     setSortBy(newSortBy);
                     setSortOrder(newSortOrder);
                 }}
+                onDisplayChange={handleDisplayChange}
                 sortOptions={[
                     { key: 'date', label: 'Date', icon: Calendar },
                     { key: 'name', label: 'Name', icon: FileText },
@@ -151,6 +160,7 @@ function RecipesList() {
                                 <RecipeCard
                                     key={recipe.id}
                                     recipe={recipe}
+                                    displayOption={displayMode}
                                 />
                             ))}
                         </div>
@@ -175,6 +185,7 @@ function RecipesList() {
                                                     <RecipeCard
                                                         key={recipe.id}
                                                         recipe={recipe}
+                                                        displayOption={displayMode}
                                                     />
                                                 ))}
                                             </div>
@@ -197,7 +208,7 @@ function RecipesList() {
                                                 </div>
                                                 <div className="items-grid">
                                                     {recipes.map((recipe) => (
-                                                        <RecipeCard key={recipe.id} recipe={recipe} />
+                                                        <RecipeCard key={recipe.id} recipe={recipe} displayOption={displayMode} />
                                                     ))}
                                                 </div>
                                             </div>

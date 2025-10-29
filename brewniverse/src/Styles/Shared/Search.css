@@ -2,7 +2,6 @@
 .search-sort-controls {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
     margin-bottom: 2rem;
     padding: 1.5rem;
     background: var(--color-surface);
@@ -15,6 +14,7 @@
   position: relative;
   display: flex;
   align-items: center;
+  padding-bottom: 1rem;
 }
 
 .search-icon {
@@ -50,6 +50,7 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .sort-label {
@@ -64,9 +65,24 @@
   gap: 0.5rem;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
   white-space: nowrap;
-  margin: auto;
+  flex: 1;
+  justify-content: center;
+}
+
+.display-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
+.display-controls .btn{
+    padding: 0rem;
+}
+
+.display-button {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
 /* Mobile optimizations */

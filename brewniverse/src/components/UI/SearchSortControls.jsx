@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, FileText, Search, Star } from 'lucide-react';
+import { BookOpen, Calendar, FileText, Grid3x3, List, Search, Star } from 'lucide-react';
 import React from 'react';
 import Button from './Button';
 
@@ -8,6 +8,7 @@ function SearchSortControls({
     sortBy,
     sortOrder,
     onSortChange,
+    onDisplayChange,
     sortOptions = [
         { key: 'date', label: 'Date', icon: Calendar },
         { key: 'rating', label: 'Rating', icon: Star },
@@ -26,6 +27,28 @@ function SearchSortControls({
 
     return (
         <div className="search-sort-controls">
+            {onDisplayChange && (
+                <div className="display-controls">
+                    <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => onDisplayChange('grid')}
+                        className="display-button"
+                    >
+                        <Grid3x3 size={16} />
+                        Grid
+                    </Button>
+                    <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => onDisplayChange('list')}
+                        className="display-button"
+                    >
+                        <List size={16} />
+                        List
+                    </Button>
+                </div>
+            )}
             <div className="search-bar">
                 <Search size={20} className="search-icon" />
                 <input
