@@ -18,6 +18,11 @@
   gap: 1rem;
 }
 
+.steps-footer {
+    text-align: center;
+    margin-top: 1rem;
+}
+
 .step-input-group {
   display: flex;
   align-items: flex-start;
@@ -36,7 +41,6 @@
   justify-content: center;
   font-weight: 600;
   font-size: 0.875rem;
-  margin-top: 0.75rem;
 }
 
 .step-textarea {
@@ -49,7 +53,6 @@
   flex-direction: column;
   gap: 0.5rem;
   flex-shrink: 0;
-  margin-top: 0.75rem;
 }
 
 .reorder-buttons {
@@ -71,44 +74,6 @@
 
 .remove-step-btn:hover {
   background-color: rgba(220, 53, 69, 0.1);
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  .instruction-container {
-    padding: 1rem;
-  }
-
-  .steps-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .step-input-group {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .step-number {
-    align-self: flex-start;
-    margin-top: 0;
-  }
-  
-  .remove-step-btn {
-    align-self: flex-end;
-    margin-top: 0;
-  }
-
-  .step-controls {
-      margin-left: auto;
-      margin-right: auto;
-  }
-  .reorder-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-  }
 }
 
 /* Instruction Checkbox ~ Steps Styling */
@@ -208,4 +173,42 @@
 .step-text-completed {
     text-decoration: line-through;
     opacity: 0.7;
+}
+
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .instruction-container {
+        padding: 1rem;
+    }
+
+    .steps-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .step-input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .step-number {
+        align-self: flex-start;
+    }
+
+    .remove-step-btn {
+        align-self: flex-end;
+    }
+
+    .step-controls {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .reorder-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
 }

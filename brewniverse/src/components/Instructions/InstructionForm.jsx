@@ -43,15 +43,6 @@ function InstructionForm({ instructions = [''], onInstructionsChange }) {
         <div className="instruction-container">
             <div className="steps-header">
                 <label className="form-label">Instructions</label>
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="small"
-                    onClick={addStep}
-                >
-                    <Plus size={16} />
-                    Add Step
-                </Button>
             </div>
 
             <div className="steps-container">
@@ -111,6 +102,17 @@ function InstructionForm({ instructions = [''], onInstructionsChange }) {
                         </div>
                     </div>
                 ))}
+            </div>
+            <div className="steps-footer">
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="small"
+                    onClick={addStep}
+                >
+                    <Plus size={16} />
+                    Add Step
+                </Button>
             </div>
         </div>
     );

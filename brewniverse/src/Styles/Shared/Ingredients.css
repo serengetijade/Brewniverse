@@ -20,7 +20,7 @@
 
 /* Ingredient Editor: Line Item Display */
 .ingredient-display {
-    padding: 0rem 1rem 0rem 1rem;
+    padding: .5rem 1rem;
     flex: 1;
     font-weight: 500;
     color: var(--color-text);
@@ -45,39 +45,16 @@
     border: 2px solid var(--color-primary);
 }
 
-.ingredient-editor-actions {
-    display: flex;
-    gap: 0.5rem;
-    flex-direction: column;
-}
-
-.ingredient-editor input[type="number"],
-.ingredient-editor .form-select {
-    text-align: center;
-}
-
-@media (max-width: 768px) {
-    .ingredient-editor {
-    }
-
     .ingredient-editor-actions {
-    }
-}
-
-@media (max-width: 480px) {
-    .ingredient-editor {
-        display: inline-block;
+        display: flex;
+        gap: 0.5rem;
+        flex-direction: column;
     }
 
-        .ingredient-editor input {
-            text-align: center;
-        }
-
-    .ingredient-editor-actions {
-        display: grid;
-        grid-template-columns: auto auto;
+    .ingredient-editor input[type="number"],
+    .ingredient-editor .form-select {
+        text-align: center;
     }
-}
 
 /* Ingredient Display (in Recipes) */
 .ingredient-container {
@@ -125,4 +102,32 @@
     color: var(--color-primary);
     white-space: nowrap;
     margin-left: 1rem;
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 480px) {
+    .ingredient-editor {
+        display: inline-block;
+    }
+
+    .ingredient-editor .form-group {
+        padding: 0rem 0rem .5rem 0rem;
+        margin-bottom: 0rem;
+    }
+
+        .ingredient-editor input {
+            text-align: center;
+        }
+
+    .ingredient-editor-actions {
+        display: grid;
+        grid-template-columns: auto auto;
+    }
+
+    .ingredient-display {
+        padding: .5rem;
+    }
+    
 }
