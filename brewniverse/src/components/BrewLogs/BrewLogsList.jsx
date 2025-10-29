@@ -15,6 +15,14 @@ function BrewLogsList() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [displayMode, setDisplayMode] = useState(() => {
+        return localStorage.getItem('brewlogs-display-mode') || 'grid';
+    });
+
+    const handleDisplayChange = (mode) => {
+        setDisplayMode(mode);
+        localStorage.setItem('brewlogs-display-mode', mode);
+    };
 
     const processedBrewLogs = useMemo(() => {
         let filteredBrewLogs = state.brewLogs.filter(brewLog =>
@@ -101,6 +109,7 @@ function BrewLogsList() {
                     setSortBy(newSortBy);
                     setSortOrder(newSortOrder);
                 }}
+                onDisplayChange={handleDisplayChange}
                 sortOptions={[
                     { key: 'date', label: 'Date', icon: Calendar },
                     { key: 'type', label: 'Type', icon: Type },
@@ -134,6 +143,7 @@ function BrewLogsList() {
                                 <BrewLogCard
                                     key={brewLog.id}
                                     brewLog={brewLog}
+                                    displayOption={displayMode}
                                 />
                             ))}
                         </div>
@@ -166,6 +176,7 @@ function BrewLogsList() {
                                                 <BrewLogCard
                                                     key={brewLog.id}
                                                     brewLog={brewLog}
+                                                    displayOption={displayMode}
                                                 />
                                             ))}
                                         </div>

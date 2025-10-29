@@ -171,6 +171,37 @@
 }
 
 
+/* Display Option: List*/
+.displayList-grid {
+    display: grid;
+    /*grid-template-columns: repeat(auto-fit, minmax(2fr, 1fr));*/
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+}
+
+.displayList .brewlog-header {
+    margin-bottom: 0rem;
+}
+
+.displayList .item-content {
+    margin-bottom: 0rem;
+    display: inline-flex;
+}
+
+.displayList .brewlog-date{
+    padding-right: 1rem;
+}
+
+.displayList .item-actions {
+    margin: auto;
+    gap: 2rem;
+}
+
+    .displayList .item-actions .btn {
+        width: fit-content;
+        padding: 0rem 0rem;
+        min-height: fit-content;
+    }
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
