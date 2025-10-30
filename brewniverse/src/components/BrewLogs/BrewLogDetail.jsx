@@ -61,10 +61,6 @@ function BrewLogDetail() {
                 <div className="brewlog-header-content">
                     <h1>{brewLog.name}</h1>
                     <div className="brewlog-meta">
-                        <span className="brewlog-type-badge">
-                            <BookOpen size={18} />
-                            {brewLog.type}
-                        </span>
                         <span className="brewlog-date-info">
                             <Calendar size={16} />
                             Started {new Date(brewLog.dateCreated).toLocaleDateString('en-US', {
