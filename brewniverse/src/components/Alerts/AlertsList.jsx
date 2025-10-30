@@ -1,4 +1,4 @@
-import { Bell, BookOpen, Calendar, FileText, Plus, Search } from 'lucide-react';
+import { AlertCircle, Bell, BookOpen, Calendar, FileText, Plus, Search } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../Styles/AlertsList.css";
@@ -39,6 +39,20 @@ function AlertsList() {
                 const dateA = new Date(a.date);
                 const dateB = new Date(b.date);
                 return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+            });
+        } else if (sortBy === 'priority') {
+            // Priority order: urgent > high > medium > low
+            const priorityOrder = { urgent: 1, high: 2, medium: 3, low: 4 };
+            filteredAlerts.sort((a, b) => {
+                const priorityA = priorityOrder[a.priority] || 0;
+                const priorityB = priorityOrder[b.priority] || 0;
+                if (priorityA === priorityB) {
+                    // ThenBy date
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateA - dateB;
+                }
+                return sortOrder === 'asc' ? priorityA - priorityB : priorityB - priorityA;
             });
         } else if (sortBy === 'brewlog') {
             // Group by brewLogId, then sort by date within each group
@@ -114,6 +128,7 @@ function AlertsList() {
                     searchPlaceholder="Search alerts by name or description..."
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
+                        { key: 'priority', label: 'Priority', icon: AlertCircle },
                         { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
                         { key: 'recipe', label: 'Recipe', icon: FileText }
                     ]}
@@ -138,10 +153,10 @@ function AlertsList() {
                             Create Your First Alert
                         </Button>
                     </div>
-                )
-                    : (
+                    )
+                        : (
                         <div className="items-container">
-                            {sortBy === 'date' ? (
+                            {sortBy === 'date' || sortBy === 'priority' ? (
                                 // Simple list view for date sorting
                                 <div className="items-grid">
                                     {processedAlerts.map((alert) => (

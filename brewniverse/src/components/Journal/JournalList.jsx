@@ -144,7 +144,7 @@ function JournalList() {
                             { key: 'name', label: 'Name', icon: BookOpen },
                             { key: 'brand', label: 'Brand', icon: Tag },
                             { key: 'type', label: 'Type', icon: ListTree },
-                            { key: 'rating', label: 'Rating', icon: Star }
+                            { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' }
                         ]}
                         searchPlaceholder="Search entries by name, brand, venue, style, or notes..."
                     />

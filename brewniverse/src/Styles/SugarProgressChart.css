@@ -44,27 +44,6 @@
   margin-bottom: 1.5rem;
 }
 
-.sugar-chart-stats .stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem;
-  background: var(--color-surface);
-  border-radius: var(--border-radius-sm);
-  text-align: center;
-}
-
-.sugar-chart-stats .stat-label {
-  font-size: 0.8rem;
-  color: var(--color-textLight);
-  font-weight: 500;
-}
-
-.sugar-chart-stats .stat-value {
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
 .sugar-chart-stats .stat-value.original {
 }
 

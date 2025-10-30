@@ -21,7 +21,10 @@ function SearchSortControls({
         if (sortBy === sortKey) {
             onSortChange(sortKey, sortOrder === 'asc' ? 'desc' : 'asc');
         } else {
-            onSortChange(sortKey, 'asc');
+            // Find the sort option to check if it has a defaultOrder
+            const sortOption = sortOptions.find(opt => opt.key === sortKey);
+            const defaultOrder = sortOption?.defaultOrder || 'asc';
+            onSortChange(sortKey, defaultOrder);
         }
     };
 

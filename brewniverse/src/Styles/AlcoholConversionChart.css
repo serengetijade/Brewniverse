@@ -44,27 +44,6 @@
   margin-bottom: 1.5rem;
 }
 
-.alcohol-chart-stats .stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  padding: 0.75rem;
-  background: var(--color-surface);
-  border-radius: var(--border-radius-sm);
-  text-align: center;
-}
-
-.alcohol-chart-stats .stat-label {
-  font-size: 0.85rem;
-  color: var(--color-textLight);
-  font-weight: 500;
-}
-
-.alcohol-chart-stats .stat-value {
-  font-size: 1.4rem;
-  font-weight: 700;
-}
-
 .alcohol-chart-tooltip {
   background: var(--color-cardBackground);
   border: 2px solid var(--color-primary);
@@ -144,9 +123,4 @@
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-
-  .alcohol-chart-stats .stat-value {
-    font-size: 1.25rem;
-  }
 }
-

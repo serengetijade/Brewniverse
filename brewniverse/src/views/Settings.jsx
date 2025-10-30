@@ -48,8 +48,8 @@ function Settings() {
     }));
 
     return (
-        <div className="main-content-container">
-            <div className="main-content-section settings">
+        <div className="main-content-container settings">
+            <div className="main-content-section">
                 <div className="settings-header">
                 <h1>Settings</h1>
                 <div className="settings-logo">
