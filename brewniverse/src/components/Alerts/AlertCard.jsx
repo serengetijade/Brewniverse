@@ -2,6 +2,8 @@ import { BookOpen, Calendar, CheckCircle2, Clock, SquarePen, Trash2 } from 'luci
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTopicConfig } from '../../constants/ActivityTopics';
+import { getPriorityConfig } from '../../constants/AlertPriority';
+import { getBrewTypeIcon } from '../../constants/BrewTypes';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import Button from '../UI/Button';
 
@@ -11,6 +13,8 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
     const brewLog = state.brewLogs.find(x => x.id === alert.brewLogId);
     const topicConfig = getTopicConfig(alert.topic);
     const TopicIcon = topicConfig.icon;
+    const priorityConfig = getPriorityConfig(alert.priority);
+    const brewTypeIcon = brewLog ? getBrewTypeIcon(brewLog.type) : '🧪';
 
     const handleDelete = () => {
         if (window.confirm(`Are you sure you want to delete "${alert.name}"?`)) {
@@ -38,9 +42,17 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
     };
 
     if (displayOption === 'grid') {
+        const cardStyle = {
+            '--item-color': topicConfig.color,
+            ...(alert.priority !== 'low' && !alert.isCompleted ? { 
+                backgroundColor: `${priorityConfig.color}15`,
+                borderColor: priorityConfig.color
+            } : {})
+        };
+
         return (
             <div className={`item-card alert-card ${alert.isCompleted ? 'alert-completed-card' : ''}`}
-                style={{ '--item-color': topicConfig.color }}>
+                style={cardStyle}>
                 <div className="alert-card-accent"></div>
                 <div className="alert-header">
                     <div className="alert-header-left">
@@ -91,20 +103,18 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                         </div>
                     </div>
 
-                    <div className="alert-brewlog-reference">
-                        <BookOpen size={14} />
-                        <span>Brew: <span className="alert-brewlog-name">{brewLog?.name || 'Unknown Brew'}</span></span>
-                    </div>
+                    {brewLog && (
+                        <div 
+                            className="alert-brewlog-reference clickable"
+                            onClick={() => navigate(`/brewlogs/${alert.brewLogId}`)}
+                        >
+                            <span className="brew-type-icon">{brewTypeIcon}</span>
+                            <span className="alert-brewlog-name">{brewLog.name}</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="item-actions">
-                    <Button
-                        variant="outline"
-                        size="small"
-                        onClick={() => navigate(`/brewlogs/${alert.brewLogId}`)}
-                    >
-                        <BookOpen size={16} />
-                    </Button>
                     <Button
                         variant="outline"
                         size="small"
@@ -124,9 +134,17 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
         );
     } else {
         // List display mode
+        const listCardStyle = {
+            '--item-color': topicConfig.color,
+            ...(alert.priority !== 'low' && !alert.isCompleted ? { 
+                backgroundColor: `${priorityConfig.color}15`,
+                borderColor: priorityConfig.color
+            } : {})
+        };
+
         return (
             <div className={`item-card alert-card list-view ${alert.isCompleted ? 'alert-completed-card' : ''}`}
-                style={{ '--item-color': topicConfig.color }}>
+                style={listCardStyle}>
                 <div className="item-card-accent alert-card-accent"></div>
                 <div className="list-view-row">
                     <div className="list-view-body">

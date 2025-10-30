@@ -309,6 +309,10 @@
     }
     .item-header {
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: .5rem;
+    }
+
+    .items-grid {
+        gap: .5rem;
     }
 }
