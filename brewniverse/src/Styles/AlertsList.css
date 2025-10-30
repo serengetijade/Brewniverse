@@ -133,6 +133,11 @@
     line-height: 1;
 }
 
+.alert-card .item-actions {
+    display: flex;
+    justify-content: space-between
+}
+
 /* Brew Log Reference */
 .alert-brewlog-reference {
     display: flex;

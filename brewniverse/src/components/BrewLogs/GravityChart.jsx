@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Zap } from 'lucide-react';
+import { Scale } from 'lucide-react';
 import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, AreaChart } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
 import { formatGravityDataForChart, getGravity13Break } from '../../utils/gravityCalculations';
@@ -68,7 +68,7 @@ function GravityChart({ gravityActivities }) {
     if (chartData.length === 0) {
         return (
             <div className="gravity-chart-empty">
-                <Zap size={32} />
+                <Scale size={32} />
                 <p>Add gravity readings to see the fermentation chart</p>
             </div>
         );
@@ -77,7 +77,7 @@ function GravityChart({ gravityActivities }) {
     return (
         <div className="gravity-chart-container">
             <div className="gravity-chart-header">
-                <h4><Zap size={20} /> Fermentation Progress</h4>
+                <h4><Scale size={20} /> Gravity Progress</h4>
                 {chartData.length > 0 && (
                     <div className="gravity-chart-stats">
                         <span className="stat">

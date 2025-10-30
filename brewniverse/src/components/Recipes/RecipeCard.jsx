@@ -134,6 +134,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                             <Rating value={recipe.rating || 0} isEditing={false} />
                         </div>
                     </div>
+
                     <div className="list-view-actions item-actions">
                         <Button
                             variant="ghost"

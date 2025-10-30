@@ -2,8 +2,6 @@ import { Bell, BookOpen, Calendar, FileText, Plus, Search } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../Styles/AlertsList.css";
-import "../../Styles/Shared/list.css";
-import "../../Styles/Shared/search.css";
 import { useApp } from '../../contexts/AppContext';
 import ListHeader from '../Layout/ListHeader';
 import Button from '../UI/Button';

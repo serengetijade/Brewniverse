@@ -113,7 +113,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                         Edit
                     </Button>
                     <Button
-                        variant={alert.isCompleted ? "error" : "success"}
+                        variant="outline"
                         size="small"
                         onClick={handleComplete}
                     >
@@ -153,7 +153,6 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                             {alert.isCompleted && (
                                 <div className="alert-completed-badge">
                                     <CheckCircle2 size={14} />
-                                    <span>Completed</span>
                                 </div>
                             )}
                         </div>

@@ -1,4 +1,4 @@
-import { Calendar, Droplet, Info, SquarePen, TrendingUp } from 'lucide-react';
+import { Calendar, Info, Scale, SquarePen, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
@@ -66,7 +66,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                             {gravityFinal && (
                                 <div className="brewlog-card-stat">
                                     <div className="brewlog-card-stat-icon">
-                                        <Droplet size={16} />
+                                        <Scale size={16} />
                                     </div>
                                     <div className="brewlog-card-stat-info">
                                         <span className="brewlog-card-stat-label">Current Gravity</span>
@@ -78,7 +78,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-actions">
+                <div className="item-actions form-row col-2">
                     <Button
                         variant="outline"
                         size="medium"
@@ -87,7 +87,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                         View Details
                     </Button>
                     <Button
-                        variant="ghost"
+                        variant="outline"
                         size="medium"
                         onClick={() => navigate(`/brewlogs/${brewLog.id}/edit`)}
                     >
