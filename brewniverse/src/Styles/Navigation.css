@@ -114,7 +114,6 @@
 
 .menu-items {
     flex: 1;
-    padding: 1rem 0;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -169,5 +168,10 @@
     
     .menu-content {
         height: calc(100vh - 60px);
+    }
+}
+@media (max-width: 480px) {
+    .menu-header {
+        padding: 1rem;
     }
 }
