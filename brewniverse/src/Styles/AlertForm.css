@@ -85,20 +85,3 @@
     border-radius: var(--border-radius-sm);
     border: 1px solid var(--color-border);
 }
-
-/* Priority indicators */
-.priority-low {
-    border-left: 4px solid #28a745;
-}
-
-.priority-medium {
-    border-left: 4px solid #ffc107;
-}
-
-.priority-high {
-    border-left: 4px solid #fd7e14;
-}
-
-.priority-urgent {
-    border-left: 4px solid #dc3545;
-}
