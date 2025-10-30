@@ -84,10 +84,9 @@
 }
 
 .item-actions {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .alert-completed {
@@ -170,47 +169,6 @@
     margin-right: auto;
 }
 
-
-/* Display Option: List*/
-.list-view-row {
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
-}
-
-.list-view .item-header {
-    margin-bottom: 0rem;
-}
-
-.list-view .brewlog-header {
-    margin-bottom: 0rem;
-}
-
-.list-view .item-content {
-    margin-bottom: 0rem;
-    display: inline-flex;
-}
-
-.list-view .item-date {
-    padding-right: 1rem;
-}
-
-.list-view .brewlog-date{
-    padding-right: 1rem;
-}
-
-.list-view .item-actions {
-    display: grid;
-    margin: auto;
-    gap: 2rem;
-}
-
-    .list-view .item-actions .btn {
-        width: fit-content;
-        padding: 0rem 0rem;
-        min-height: fit-content;
-    }
-
 .item-card-accent {
     position: absolute;
     top: 0;
@@ -263,6 +221,47 @@
     line-height: 1.3;
 }
 
+/* Display Option: List View*/
+.list-view-row {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+}
+
+.list-view .item-header {
+    margin-bottom: 0rem;
+}
+
+.list-view .brewlog-header {
+    margin-bottom: 0rem;
+}
+
+.list-view .item-content {
+    margin-bottom: 0rem;
+    display: inline-flex;
+}
+
+.list-view .item-date {
+    padding-right: 1rem;
+}
+
+.list-view .brewlog-date {
+    padding-right: 1rem;
+}
+
+.list-view .item-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin: auto;
+    gap: 2rem;
+}
+
+    .list-view .item-actions .btn {
+        width: fit-content;
+        padding: 0rem 0rem;
+        min-height: fit-content;
+    }
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
     .list-page,
@@ -291,10 +290,6 @@
     .items-grid {
         grid-template-columns: 1fr;
         gap: 1rem;
-    }
-
-    .item-actions {
-        flex-direction: column;
     }
 
         .item-actions .btn {

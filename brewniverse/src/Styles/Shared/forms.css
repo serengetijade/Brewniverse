@@ -104,6 +104,11 @@
     gap: 1rem;
 }
 
+    .col-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
 /* Footer */
 .form-with-footer {
     padding-bottom: 2rem;

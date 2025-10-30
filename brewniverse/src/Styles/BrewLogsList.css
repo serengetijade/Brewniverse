@@ -94,7 +94,7 @@
     height: 32px;
     border-radius: var(--border-radius-sm);
     background: linear-gradient(135deg, var(--item-color), var(--item-color)dd);
-    color: white;
+    color: var(--color-highlight);
     flex-shrink: 0;
 }
 
