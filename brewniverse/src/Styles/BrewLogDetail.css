@@ -10,8 +10,8 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 2rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 2px solid var(--color-border);
   flex-wrap: wrap;
 }
@@ -35,19 +35,6 @@
   align-items: center;
 }
 
-.brewlog-type-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
-  color: white;
-  border-radius: var(--border-radius-sm);
-  font-weight: 700;
-  font-size: 1rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
 .brewlog-date-info {
   display: flex;
   align-items: center;
@@ -66,8 +53,8 @@
 }
 
 .brewlog-description {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
   background: var(--color-surface);
   border-left: 4px solid var(--color-accent);
   border-radius: var(--border-radius-sm);
@@ -82,8 +69,8 @@
 }
 
 .brewlog-notes {
-  margin-top: 2rem;
-  padding: 1.5rem;
+  margin-top: 1rem;
+  padding: 1rem;
   background: var(--color-cardBackground);
   border: 1px solid var(--color-border);
   border-radius: var(--border-radius-med);
@@ -235,14 +222,12 @@
     gap: 0.75rem;
   }
 
-  .brewlog-type-badge,
   .brewlog-date-info {
     width: 100%;
     justify-content: center;
   }
 
   .brewlog-description {
-    padding: 1rem;
     font-size: 1rem;
   }
 
@@ -258,5 +243,9 @@
 @media (max-width: 480px) {
     .brewlog-detail{
         padding: .5rem;
+    }
+
+    .brewlog-detail-header {
+        gap: 1rem;
     }
 }
