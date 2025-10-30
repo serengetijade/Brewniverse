@@ -68,10 +68,6 @@ function AlcoholConversionChart({ gravityActivities }) {
                     <Wine size={20} />
                     Alcohol Conversion
                 </h3>
-                <div className="alcohol-chart-badge">
-                    <Target size={14} />
-                    {alcoholData.conversionPercent}% Complete
-                </div>
             </div>
 
             <div className="alcohol-chart-stats">

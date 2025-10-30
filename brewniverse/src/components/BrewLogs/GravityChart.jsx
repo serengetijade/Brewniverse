@@ -103,7 +103,7 @@ function GravityChart({ gravityActivities }) {
 
                         {oneThirdBreakValue && (
                             <span className="stat">
-                                <span className="stat-label">1/3 Break:</span>
+                                <span className="stat-label">1/3:</span>
                                 <span className="stat-value">{oneThirdBreakValue.toFixed(3)}</span>
                             </span>
                         )}
