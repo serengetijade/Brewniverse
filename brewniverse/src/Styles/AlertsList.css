@@ -149,10 +149,27 @@
     border-radius: var(--border-radius-med);
     font-size: 0.8125rem;
     color: var(--color-textLight);
+    transition: all 0.2s ease;
 }
+
+    .alert-brewlog-reference.clickable {
+        cursor: pointer;
+    }
+
+    .alert-brewlog-reference.clickable:hover {
+        background: var(--color-surfaceActive);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
 
     .alert-brewlog-reference svg {
         color: var(--item-color);
+        flex-shrink: 0;
+    }
+
+    .alert-brewlog-reference .brew-type-icon {
+        font-size: 1.25rem;
+        line-height: 1;
         flex-shrink: 0;
     }
 
@@ -196,5 +213,13 @@
 
     .alert-datetime-value {
         font-size: 1rem;
+    }
+
+    .alert-date-section {
+        flex-direction:row;
+    }
+
+    .alert-time-section {
+        flex-direction: row;
     }
 }
