@@ -131,7 +131,7 @@ function RecipesList() {
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
                         { key: 'name', label: 'Name', icon: FileText },
-                        { key: 'rating', label: 'Rating', icon: Star },
+                        { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' },
                         { key: 'type', label: 'Type', icon: ListTree },
                         { key: 'brewlog', label: 'Usage', icon: BookOpen }
                     ]}

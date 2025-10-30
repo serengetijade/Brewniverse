@@ -83,6 +83,16 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: var(--color-surface);
+    border-radius: var(--border-radius-sm);
+    text-align: center;
+}
+
 .stat-icon {
   display: flex;
   align-items: center;
@@ -145,7 +155,7 @@
 }
 
 .stat-value {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: var(--color-text);
   font-weight: 700;
   word-break: break-word;
@@ -177,6 +187,10 @@
     padding: 0.875rem;
   }
 
+  .stat-item {
+      padding: .5rem;
+  }
+
   .stat-icon {
     width: 40px;
     height: 40px;
@@ -186,4 +200,3 @@
     font-size: 1rem;
   }
 }
-

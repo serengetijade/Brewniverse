@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, FileText, Plus, Search, Star, Type } from 'lucide-react';
+import { BookOpen, Calendar, FileText, Plus, Search, Star, Type, ArrowDownAZ } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../Styles/BrewLogsList.css';
@@ -36,6 +36,19 @@ function BrewLogsList() {
                 const dateA = new Date(a.dateCreated);
                 const dateB = new Date(b.dateCreated);
                 return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+            });
+        }
+        else if (sortBy === 'name') {
+            filteredBrewLogs.sort((a, b) => {
+                const nameA = a.name.toLowerCase();
+                const nameB = b.name.toLowerCase();
+                if (nameA === nameB) {
+                    // ThenBy date
+                    const dateA = new Date(a.dateCreated);
+                    const dateB = new Date(b.dateCreated);
+                    return dateB - dateA;
+                }
+                return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
             });
         }
         else if (sortBy === 'type') {
@@ -115,9 +128,10 @@ function BrewLogsList() {
                     onDisplayChange={handleDisplayChange}
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
+                        { key: 'name', label: 'Name', icon: ArrowDownAZ },
                         { key: 'type', label: 'Type', icon: Type },
                         { key: 'recipe', label: 'Recipe', icon: FileText },
-                        { key: 'rating', label: 'Rating', icon: Star }
+                        { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' }
                     ]}
                     searchPlaceholder="Search brew logs by name, description, or type..."
                 />
@@ -143,7 +157,7 @@ function BrewLogsList() {
                     </div>
                 ) : (
                     <div className="items-container">
-                        {sortBy === 'date' || sortBy === 'type' || sortBy === 'rating' ? (
+                        {sortBy === 'date' || sortBy === 'name' || sortBy === 'type' || sortBy === 'rating' ? (
                             <div className="items-grid">
                                 {processedBrewLogs.map((brewLog) => (
                                     <BrewLogCard
