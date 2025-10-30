@@ -65,7 +65,7 @@ function IngredientsSummary({ brewLog }) {
                 {new Date(activity.date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
-                    year: 'numeric'
+                    year: '2-digit'
                 })}
             </div>
         </div>
