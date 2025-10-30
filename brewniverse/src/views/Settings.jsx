@@ -48,8 +48,9 @@ function Settings() {
     }));
 
     return (
-        <div className="settings">
-            <div className="settings-header">
+        <div className="main-content-container">
+            <div className="main-content-section settings">
+                <div className="settings-header">
                 <h1>Settings</h1>
                 <div className="settings-logo">
                     <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
@@ -268,6 +269,7 @@ function Settings() {
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     );

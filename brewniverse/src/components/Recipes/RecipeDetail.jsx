@@ -82,8 +82,8 @@ function RecipeDetail() {
     const progress = calculateProgress();
 
     return (
-        <div className="recipe-detail">
-            <div className="recipe-detail-card">
+        <div className="main-content-container recipe-detail">
+            <div className="main-content-section recipe-detail-card">
                 {/* Hero Section */}
                 <div className="recipe-hero">
                     <h1>{recipe.name}</h1>
@@ -224,19 +224,21 @@ function RecipeDetail() {
                 </div>
             </div>
 
-            <FormFooter
-                isEditing={true}
-                entityName="Recipe"
-                onCancel={() => navigate('/recipes')}
-                onDelete={handleDelete}
-                onSubmit={() => navigate(`/recipes/${id}/edit`)}
-                showDelete={false}
-                collapsible={true}
-                defaultExpanded={false}
-                submitLabel="Edit"
-                submitIcon={<Edit size={16} />}
-                cancelLabel="Back"
-            />
+            <div className="main-content-section">
+                <FormFooter
+                    isEditing={true}
+                    entityName="Recipe"
+                    onCancel={() => navigate('/recipes')}
+                    onDelete={handleDelete}
+                    onSubmit={() => navigate(`/recipes/${id}/edit`)}
+                    showDelete={false}
+                    collapsible={true}
+                    defaultExpanded={false}
+                    submitLabel="Edit"
+                    submitIcon={<Edit size={16} />}
+                    cancelLabel="Back"
+                />
+            </div>
         </div>
     );
 }

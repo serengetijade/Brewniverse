@@ -64,7 +64,6 @@ function GravityChart({ gravityActivities }) {
         return null;
     };
 
-    // Don't render if no data
     if (chartData.length === 0) {
         return (
             <div className="gravity-chart-empty">
@@ -80,16 +79,19 @@ function GravityChart({ gravityActivities }) {
                 <h4><Scale size={20} /> Gravity Progress</h4>
                 {chartData.length > 0 && (
                     <div className="gravity-chart-stats">
+
                         <span className="stat">
                             <span className="stat-label">OG:</span>
                             <span className="stat-value">{chartData[0].gravity.toFixed(3)}</span>
                         </span>
+
                         {chartData.length > 1 && (
                             <>
                                 <span className="stat">
                                     <span className="stat-label">Current:</span>
                                     <span className="stat-value">{chartData[chartData.length - 1].gravity.toFixed(3)}</span>
                                 </span>
+
                                 <span className="stat">
                                     <span className="stat-label">Drop:</span>
                                     <span className="stat-value">
@@ -97,6 +99,13 @@ function GravityChart({ gravityActivities }) {
                                     </span>
                                 </span>
                             </>
+                        )}
+
+                        {oneThirdBreakValue && (
+                            <span className="stat">
+                                <span className="stat-label">1/3 Break:</span>
+                                <span className="stat-value">{oneThirdBreakValue.toFixed(3)}</span>
+                            </span>
                         )}
                     </div>
                 )}

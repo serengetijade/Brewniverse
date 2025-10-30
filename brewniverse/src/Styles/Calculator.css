@@ -1,8 +1,5 @@
 /* Calculator Page Layout */
 .calculator-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
 }
 
 .page-header {
@@ -292,9 +289,6 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .calculator-page {
-        padding: 1rem;
-    }
 
     .page-header h1 {
         font-size: 2rem;
@@ -330,9 +324,6 @@
 }
 
 @media (max-width: 480px) {
-    .calculator-page {
-        padding: 0.5rem;
-    }
 
     .calculator-title {
         padding: 1.5rem;

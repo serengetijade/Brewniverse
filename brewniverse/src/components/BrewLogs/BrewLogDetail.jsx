@@ -55,9 +55,9 @@ function BrewLogDetail() {
     const journalEntriesCount = state.journalEntries.filter(entry => entry.brewLogId === id).length;
 
     return (
-        <div className="brewlog-detail">
+        <div className="brewlog-detail main-content-container">
             {/* Header Section */}
-            <div className="brewlog-detail-header">
+            <div className="main-content-section brewlog-detail-header">
                 <div className="brewlog-header-content">
                     <h1>{brewLog.name}</h1>
                     <div className="brewlog-meta">
@@ -86,85 +86,87 @@ function BrewLogDetail() {
                 </div>
             </div>
 
-            {/* Description Section */}
-            {brewLog.description && (
-                <div className="brewlog-description">
-                    {brewLog.description}
-                </div>
-            )}
+            <div className="main-content-section">
+                {/* Description Section */}
+                {brewLog.description && (
+                    <div className="brewlog-description">
+                        {brewLog.description}
+                    </div>
+                )}
 
-            {/* Statistics Section */}
-            <div className="brewlog-content-section">
-                <BrewLogStats brewLog={brewLog} />
-            </div>
-
-            {/* Gravity Chart Section */}
-            <div className="brewlog-content-section">
-                <GravityChart gravityActivities={gravityActivities} />
-            </div>
-
-            {/* Alcohol & Sugar Charts Row */}
-            <div className="brewlog-charts-row">
-                <AlcoholConversionChart gravityActivities={gravityActivities} />
-                <SugarProgressChart gravityActivities={gravityActivities} />
-            </div>
-
-            {/* Ingredients Section */}
-            <div className="brewlog-content-section">
-                <IngredientsSummary brewLog={brewLog} />
-            </div>
-
-            {/* Notes Section */}
-            {brewLog.notes && (
+                {/* Statistics Section */}
                 <div className="brewlog-content-section">
-                    <div className="brewlog-notes">
-                        <h3>
-                            <FileText size={20} />
-                            Notes
-                        </h3>
-                        <div className="brewlog-notes-content">
-                            {brewLog.notes}
+                    <BrewLogStats brewLog={brewLog} />
+                </div>
+
+                {/* Gravity Chart Section */}
+                <div className="brewlog-content-section">
+                    <GravityChart gravityActivities={gravityActivities} />
+                </div>
+
+                {/* Alcohol & Sugar Charts Row */}
+                <div className="brewlog-charts-row">
+                    <AlcoholConversionChart gravityActivities={gravityActivities} />
+                    <SugarProgressChart gravityActivities={gravityActivities} />
+                </div>
+
+                {/* Ingredients Section */}
+                <div className="brewlog-content-section">
+                    <IngredientsSummary brewLog={brewLog} />
+                </div>
+
+                {/* Notes Section */}
+                {brewLog.notes && (
+                    <div className="brewlog-content-section">
+                        <div className="brewlog-notes">
+                            <h3>
+                                <FileText size={20} />
+                                Notes
+                            </h3>
+                            <div className="brewlog-notes-content">
+                                {brewLog.notes}
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )}
 
-            {/* Journal Entries & Ratings */}
-            {journalEntriesCount > 0 &&
-                (<div className="brewlog-content-section">
-                    <div className="brewlog-notes">
-                        <h3>
-                            <NotebookPen size={20} />
-                            Journal
-                        </h3>
-                        <JournalEntryList brewLogId={id} />
+                {/* Journal Entries & Ratings */}
+                {journalEntriesCount > 0 &&
+                    (<div className="brewlog-content-section">
+                        <div className="brewlog-notes">
+                            <h3>
+                                <NotebookPen size={20} />
+                                Journal
+                            </h3>
+                            <JournalEntryList brewLogId={id} />
+                        </div>
                     </div>
+                    )}
+
+                <div className="brewlog-content-section">
+                    <RatingsChart brewLogId={id} />
                 </div>
-            )}
 
-            <div className="brewlog-content-section">
-                <RatingsChart brewLogId={id} />
+                {/* Activity Timeline Section */}
+                <div className="brewlog-content-section">
+                    <ActivityTimeline activity={brewLog.activity || []} />
+                </div>
+
+                {/* Footer */}
+                <FormFooter
+                    isEditing={true}
+                    entityName="Brew Log"
+                    cancelLabel="Back to List"
+                    onCancel={handleCancel}
+                    showDelete={false}
+                    onDelete={handleDelete}
+                    collapsible={true}
+                    defaultExpanded={false}
+                    submitLabel="Edit"
+                    submitIcon={<Edit size={16} />}
+                    onSubmit={() => navigate(`/brewlogs/${id}/edit`)}
+                />
             </div>
-
-            {/* Activity Timeline Section */}
-            <div className="brewlog-content-section">
-                <ActivityTimeline activity={brewLog.activity || []} />
-            </div>
-
-            {/* Footer */}
-            <FormFooter
-                isEditing={true}
-                entityName="Brew Log"
-                cancelLabel="Back to List"
-                onCancel={handleCancel}
-                showDelete={false}
-                onDelete={handleDelete}
-                collapsible={true}
-                defaultExpanded={false}
-                submitLabel="Edit"
-                submitIcon={<Edit size={16} />}
-                onSubmit={() => navigate(`/brewlogs/${id}/edit`)}
-            />
         </div>
     );
 }

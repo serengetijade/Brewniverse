@@ -89,35 +89,39 @@ function AlertsList() {
     }, [state.alerts, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="brewlogs-list">
-            <ListHeader
-                h1="Alerts & Reminders"
-                description="Manage your brewing alerts and reminders - never miss a step!"
-                buttonText="New Alert"
-                url="/alerts/new"
-            >
-            </ListHeader>
+        <div className="main-content-container">
+            <div className="main-content-section brewlogs-list">
+                <ListHeader
+                    h1="Alerts & Reminders"
+                    description="Manage your brewing alerts and reminders - never miss a step!"
+                    buttonText="New Alert"
+                    url="/alerts/new"
+                >
+                </ListHeader>
+            </div>
 
-            <SearchSortControls
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortChange={(newSortBy, newSortOrder) => {
-                    setSortBy(newSortBy);
-                    setSortOrder(newSortOrder);
-                }}
-                onDisplayChange={handleDisplayChange}
-                searchPlaceholder="Search alerts by name or description..."
-                sortOptions={[
-                    { key: 'date', label: 'Date', icon: Calendar },
-                    { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
-                    { key: 'recipe', label: 'Recipe', icon: FileText }
-                ]}
-            />
+            <div className="main-content-section">
+                <SearchSortControls
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    onSortChange={(newSortBy, newSortOrder) => {
+                        setSortBy(newSortBy);
+                        setSortOrder(newSortOrder);
+                    }}
+                    onDisplayChange={handleDisplayChange}
+                    searchPlaceholder="Search alerts by name or description..."
+                    sortOptions={[
+                        { key: 'date', label: 'Date', icon: Calendar },
+                        { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
+                        { key: 'recipe', label: 'Recipe', icon: FileText }
+                    ]}
+                />
+            </div>
 
             {/* Individual Alerts Section */}
-            <div className="alerts-section">
+            <div className="main-content-section alerts-section">
                 {state.alerts.length === 0 ? (
                     <div className="empty-state">
                         <div className="empty-icon">
