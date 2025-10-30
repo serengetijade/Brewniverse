@@ -497,88 +497,61 @@ function BrewLogForm() {
                 {/* Gravity Readings */}
                 <div className="form-section">
                     <h3>Gravity Readings</h3>
+                    {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
+                        <p className="section-description">Please add gravity entries below to see calculated values</p>
+                    )}
 
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="gravity.original" className="form-label">
-                                Original Gravity {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 ? " (please add entry)" : null}
-                            </label>
-                            <input
-                                step="0.001"
-                                value={getGravityOriginal(gravityActivities)}
-                                className="form-input  calculated-field"
-                                placeholder="1.050"
-                                readOnly
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="gravity13Break" className="form-label">
-                                1/3 Break Gravity (auto-calculated)
-                            </label>
-                            <input
-                                step="0.001"
-                                name="gravity13Break"
-                                className="form-input calculated-field"
-                                value={getGravity13Break(gravityActivities)}
-                                readOnly
-                                placeholder="1.030"
-                                title="This field is automatically calculated from Original Gravity"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label className="form-label">
-                                Final Gravity
-                            </label>
-                            <input
-                                type="number"
-                                step="0.001"
-                                className="form-input  calculated-field"
-                                value={getGravityFinal(gravityActivities)}
-                                readOnly
-                                placeholder="1.000"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="form-row">
-                        <div className="form-group">
-                            <label htmlFor="estimatedABV" className="form-label">
-                                Current ABV (auto-calculated)
-                            </label>
-                            <div className="input-with-suffix">
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    className="form-input calculated-field"
-                                    value={getCurrentAbv(gravityActivities)}
-                                    readOnly
-                                    placeholder="12.5"
-                                    title="This field is automatically calculated from Original Gravity"
-                                />
-                                <span className="input-suffix">%</span>
+                    <div className="gravity-stats-container">
+                        <div className="gravity-stat-card accent20">
+                            <div className="gravity-stat-label">Original Gravity</div>
+                            <div className="gravity-stat-value">
+                                {getGravityOriginal(gravityActivities) || '—'}
                             </div>
+                            {getGravityOriginal(gravityActivities) && (
+                                <div className="gravity-stat-subtitle">Starting point</div>
+                            )}
                         </div>
 
-                        <div className="form-group">
-                            <label htmlFor="finalABV" className="form-label">
-                                Potential Final ABV (auto-calculated)
-                            </label>
-                            <div className="input-with-suffix">
-                                <input
-                                    type="number"
-                                    step="0.01"
-                                    //id="finalABV"
-                                    //name="finalABV"
-                                    className="form-input calculated-field"
-                                    value={getPotentialAbv(gravityActivities)}
-                                    readOnly
-                                    placeholder="12.5"
-                                    title="This field is automatically calculated from Original and Final Gravity"
-                                />
-                                <span className="input-suffix">%</span>
+                        <div className="gravity-stat-card accent15">
+                            <div className="gravity-stat-label">1/3 Break Gravity</div>
+                            <div className="gravity-stat-value">
+                                {getGravity13Break(gravityActivities) || '—'}
                             </div>
+                            {getGravity13Break(gravityActivities) && (
+                                <div className="gravity-stat-subtitle">Add nutrient at this point</div>
+                            )}
+                        </div>
+
+                        <div className="gravity-stat-card accent10">
+                            <div className="gravity-stat-label">Final Gravity</div>
+                            <div className="gravity-stat-value">
+                                {getGravityFinal(gravityActivities) || '—'}
+                            </div>
+                            {getGravityFinal(gravityActivities) && (
+                                <div className="gravity-stat-subtitle">Fermentation complete</div>
+                            )}
+                        </div>
+
+                        <div className="gravity-stat-card accent08">
+                            <div className="gravity-stat-label">Current ABV</div>
+                            <div className="gravity-stat-value">
+                                {getCurrentAbv(gravityActivities) || '—'}
+                                {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                            </div>
+                            {getCurrentAbv(gravityActivities) && (
+                                <div className="gravity-stat-subtitle">Present alcohol content</div>
+                            )}
+                        </div>
+
+                        <div className="gravity-stat-card accent05">
+                            <div className="gravity-stat-label">Potential Final ABV</div>
+                            <div className="gravity-stat-value">
+                                {getPotentialAbv(gravityActivities) || '—'}
+                                {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                            </div>
+                            {getPotentialAbv(gravityActivities) && (
+                                <div className="gravity-stat-subtitle">Estimated at completion</div>
+                            )}
                         </div>
                     </div>
 

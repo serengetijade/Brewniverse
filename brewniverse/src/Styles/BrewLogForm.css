@@ -55,6 +55,77 @@
     cursor: not-allowed;
 }
 
+/* Gravity & ABV Stats Cards */
+.gravity-stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.gravity-stat-card {
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius-med);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.gravity-stat-card:hover {
+    box-shadow: 0 4px 12px rgba(var(--color-secondary-rgb), 0.2);
+}
+
+.gravity-stat-card.accent20 {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.20) 0%, rgba(var(--color-accent-rgb), 0.15) 100%);
+}
+
+.gravity-stat-card.accent15 {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.15) 0%, rgba(var(--color-accent-rgb), 0.10) 100%);
+}
+
+.gravity-stat-card.accent10 {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.10) 0%, rgba(var(--color-accent-rgb), 0.08) 100%);
+}
+
+.gravity-stat-card.accent08 {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.08) 0%, rgba(var(--color-accent-rgb), 0.05) 100%);
+}
+
+.gravity-stat-card.accent05 {
+    background: linear-gradient(135deg, rgba(var(--color-accent-rgb), 0.05) 0%, rgba(var(--color-accent-rgb), 0.03) 100%);
+}
+
+.gravity-stat-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-textLight);
+    margin-bottom: 0.25rem;
+}
+
+.gravity-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    line-height: 1;
+}
+
+.gravity-stat-unit {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-textLight);
+    margin-left: 0.25rem;
+}
+
+.gravity-stat-subtitle {
+    font-size: 0.75rem;
+    color: var(--color-textLight);
+    font-style: italic;
+}
+
 /* Input with suffix styles */
 .input-with-suffix {
     position: relative;
@@ -98,10 +169,66 @@
         grid-template-columns: 1fr;
         gap: 0.5rem;
     }
+
+    /* Optimize gravity stats for tablets */
+    .gravity-stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .gravity-stat-card {
+        padding: 1rem;
+    }
+
+    .gravity-stat-label {
+        font-size: 0.7rem;
+    }
+
+    .gravity-stat-value {
+        font-size: 1.5rem;
+    }
+
+    .gravity-stat-unit {
+        font-size: 0.875rem;
+    }
 }
 
 @media (max-width: 480px) {
     .nutrient-schedule-entry {
         padding: 1.25rem;
+    }
+
+    /* Compact single-column layout for mobile */
+    .gravity-stats-container {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .gravity-stat-card {
+        padding: 0.875rem 1rem;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .gravity-stat-label {
+        font-size: 0.8rem;
+        margin-bottom: 0;
+        flex: 1;
+    }
+
+    .gravity-stat-value {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .gravity-stat-unit {
+        font-size: 0.875rem;
+    }
+
+    .gravity-stat-subtitle {
+        display: none;
     }
 }

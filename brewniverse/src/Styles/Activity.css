@@ -14,6 +14,10 @@
         /*margin-bottom: 0rem;*/
     }
 
+.activity-inputs {
+    display: contents;
+}
+
 .activity-editor-actions {
     display: grid;
     grid-template-columns: auto;
@@ -61,22 +65,34 @@
 
 @media (max-width: 480px) {
     .activity {
-        grid-template-columns: auto;
-        padding: 0.75rem 0.75rem;
+        grid-template-columns: 1fr auto;
+        gap: .5rem;
+        padding: 0.75rem 0.5rem;
+        align-items: center;
     }
 
         .activity .form-group {
             margin-bottom: .5rem;
         }
 
+    .activity-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0rem;
+    }
+
     .activity-editor-actions {
-        grid-template-columns: auto auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
         justify-content: center;
+        align-items: center;
+        height: 100%;
     }
 
     .activity .btn {
         padding: 0.4rem 0.15rem;
-        min-width: 36px;
+        min-width: 30px;
     }
 
     .activity .form-input {

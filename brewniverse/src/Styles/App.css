@@ -178,11 +178,11 @@
     }
 
     .main-content-container {
-        padding: 0.5rem;
+        padding: .5rem;
     }
 
     .card {
-        padding: 1.25rem 1rem;
+        padding: 1.25rem .75rem;
     }
 
     .list-item {

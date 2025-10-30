@@ -150,28 +150,30 @@ function Activity({
 
     return (
         <div className="activity">
-            <div className="form-group">
-                <label className="form-label">{itemLabel}</label>
+            <div className="activity-inputs">
+                <div className="form-group">
+                    <label className="form-label">{itemLabel}</label>
+                        <input
+                            ref={descriptionInputRef}
+                            type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
+                            step="0.001"
+                            min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
+                            className="form-input"
+                            placeholder="Item details"
+                            value={activityState.description}
+                            onChange={handleDescriptionChange}
+                            maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
+                        />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">Date</label>
                     <input
-                        ref={descriptionInputRef}
-                        type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
-                        step="0.001"
-                        min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
+                        type="datetime-local"
                         className="form-input"
-                        placeholder="Item details"
-                        value={activityState.description}
-                        onChange={handleDescriptionChange}
-                        maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
+                        value={activityState.date}
+                        onChange={(e) => handleChange(activityState.id, 'date', e.target.value)}
                     />
-            </div>
-            <div className="form-group">
-                <label className="form-label">Date</label>
-                <input
-                    type="datetime-local"
-                    className="form-input"
-                    value={activityState.date}
-                    onChange={(e) => handleChange(activityState.id, 'date', e.target.value)}
-                />
+                </div>
             </div>
             <div className="activity-editor-actions">
                 {showAlertButton && (
