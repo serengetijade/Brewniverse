@@ -60,15 +60,15 @@ function Dashboard() {
         .slice(0, 3);
 
     return (
-        <div className="dashboard">
-            <div className="dashboard-header">
+        <div className="main-content-container dashboard">
+            <div className="main-content-section dashboard-header">
                 <div className="dashboard-logo">
                     <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
                 </div>
                 <p>Track your brewing journey</p>
             </div>
 
-            <div className="shortcuts-grid">
+            <div className="main-content-section shortcuts-grid">
                 {shortcuts.map((shortcut) => {
                     const Icon = shortcut.icon;
                     return (
@@ -89,7 +89,7 @@ function Dashboard() {
                 })}
             </div>
 
-            <div className="dashboard-sections">
+            <div className="main-content-section dashboard-sections">
                 {recentBrewLogs.length > 0 && (
                     <div className="dashboard-section">
                         <div className="section-header">

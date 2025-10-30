@@ -91,113 +91,120 @@ function BrewLogsList() {
     }, [state.brewLogs, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="brewlogs-list">
-            <ListHeader
-                h1="Brew Logs"
-                description="Track your brewing batches and progress"
-                buttonText="New Brew Log"
-                url="/brewlogs/new"
-            >
-            </ListHeader>
+        <div className="main-content-container brewlogs-list">
+            <div className="main-content-section">
+                <ListHeader
+                    h1="Brew Logs"
+                    description="Track your brewing batches and progress"
+                    buttonText="New Brew Log"
+                    url="/brewlogs/new"
+                >
+                </ListHeader>
+            </div>
 
-            <SearchSortControls
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortChange={(newSortBy, newSortOrder) => {
-                    setSortBy(newSortBy);
-                    setSortOrder(newSortOrder);
-                }}
-                onDisplayChange={handleDisplayChange}
-                sortOptions={[
-                    { key: 'date', label: 'Date', icon: Calendar },
-                    { key: 'type', label: 'Type', icon: Type },
-                    { key: 'recipe', label: 'Recipe', icon: FileText },
-                    { key: 'rating', label: 'Rating', icon: Star }
-                ]}
-                searchPlaceholder="Search brew logs by name, description, or type..."
-            />
+            <div className="main-content-section">
+                <SearchSortControls
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    onSortChange={(newSortBy, newSortOrder) => {
+                        setSortBy(newSortBy);
+                        setSortOrder(newSortOrder);
+                    }}
+                    onDisplayChange={handleDisplayChange}
+                    sortOptions={[
+                        { key: 'date', label: 'Date', icon: Calendar },
+                        { key: 'type', label: 'Type', icon: Type },
+                        { key: 'recipe', label: 'Recipe', icon: FileText },
+                        { key: 'rating', label: 'Rating', icon: Star }
+                    ]}
+                    searchPlaceholder="Search brew logs by name, description, or type..."
+                />
+            </div>
 
-            {state.brewLogs.length === 0 ? (
-                <div className="empty-state">
-                    <div className="empty-icon">
-                        <BookOpen size={64} />
+            <div className="main-content-section">
+                {state.brewLogs.length === 0 ? (
+
+                    <div className="empty-state">
+                        <div className="empty-icon">
+                            <BookOpen size={64} />
+                        </div>
+                        <h3>No Brew Logs Yet</h3>
+                        <p>Start tracking your brewing journey by creating your first brew log.</p>
+                        <Button
+                            variant="primary"
+                            size="large"
+                            onClick={() => navigate('/brewlogs/new')}
+                        >
+                            <Plus size={20} />
+                            Create Your First Brew Log
+                        </Button>
                     </div>
-                    <h3>No Brew Logs Yet</h3>
-                    <p>Start tracking your brewing journey by creating your first brew log.</p>
-                    <Button
-                        variant="primary"
-                        size="large"
-                        onClick={() => navigate('/brewlogs/new')}
-                    >
-                        <Plus size={20} />
-                        Create Your First Brew Log
-                    </Button>
-                </div>
-            ) : (
-                <div className="items-container">
-                    {sortBy === 'date' || sortBy === 'type' || sortBy === 'rating' ? (
-                        <div className="items-grid">
-                            {processedBrewLogs.map((brewLog) => (
-                                <BrewLogCard
-                                    key={brewLog.id}
-                                    brewLog={brewLog}
-                                    displayOption={displayMode}
-                                />
-                            ))}
-                        </div>
-                    ) : sortBy === 'recipe' ? (
-                        // Grouped by Recipe
-                        <div className="items-grouped">
-                            {Object.entries(processedBrewLogs).map(([recipeId, brewLogs]) => {
-                                const recipe = state.recipes.find(r => r.id === recipeId);
-                                const recipeName = recipe ? recipe.name : 'No Recipe';
-
-                                return (
-                                    <div key={recipeId} className="item-group">
-                                        <div className="group-header">
-                                            <h3 className="group-title">
-                                                <FileText size={20} />
-                                                {recipeName}
-                                            </h3>
-                                            {recipe && (
-                                                <Button
-                                                    variant="outline"
-                                                    size="small"
-                                                    onClick={() => navigate(`/recipes/${recipeId}`)}
-                                                >
-                                                    Go To Recipe
-                                                </Button>
-                                            )}
-                                        </div>
-                                        <div className="items-grid">
-                                            {brewLogs.map((brewLog) => (
-                                                <BrewLogCard
-                                                    key={brewLog.id}
-                                                    brewLog={brewLog}
-                                                    displayOption={displayMode}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    ) : null}
-
-                    {searchTerm && processedBrewLogs.length === 0 && (
-                        <div className="empty-state">
-                            <div className="empty-icon">
-                                <Search size={64} />
+                ) : (
+                    <div className="items-container">
+                        {sortBy === 'date' || sortBy === 'type' || sortBy === 'rating' ? (
+                            <div className="items-grid">
+                                {processedBrewLogs.map((brewLog) => (
+                                    <BrewLogCard
+                                        key={brewLog.id}
+                                        brewLog={brewLog}
+                                        displayOption={displayMode}
+                                    />
+                                ))}
                             </div>
-                            <h3>No Results Found</h3>
-                            <p>No brew logs match your search criteria. Try adjusting your search terms.</p>
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
+                        ) : sortBy === 'recipe' ? (
+                            // Grouped by Recipe
+                            <div className="items-grouped">
+                                {Object.entries(processedBrewLogs).map(([recipeId, brewLogs]) => {
+                                    const recipe = state.recipes.find(r => r.id === recipeId);
+                                    const recipeName = recipe ? recipe.name : 'No Recipe';
+
+                                    return (
+                                        <div key={recipeId} className="item-group">
+                                            <div className="group-header">
+                                                <h3 className="group-title">
+                                                    <FileText size={20} />
+                                                    {recipeName}
+                                                </h3>
+                                                {recipe && (
+                                                    <Button
+                                                        variant="outline"
+                                                        size="small"
+                                                        onClick={() => navigate(`/recipes/${recipeId}`)}
+                                                    >
+                                                        Go To Recipe
+                                                    </Button>
+                                                )}
+                                            </div>
+                                            <div className="items-grid">
+                                                {brewLogs.map((brewLog) => (
+                                                    <BrewLogCard
+                                                        key={brewLog.id}
+                                                        brewLog={brewLog}
+                                                        displayOption={displayMode}
+                                                    />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : null}
+
+                        {searchTerm && processedBrewLogs.length === 0 && (
+                            <div className="empty-state">
+                                <div className="empty-icon">
+                                    <Search size={64} />
+                                </div>
+                                <h3>No Results Found</h3>
+                                <p>No brew logs match your search criteria. Try adjusting your search terms.</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        </div >
     );
 }
 

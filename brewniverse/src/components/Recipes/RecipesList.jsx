@@ -106,109 +106,92 @@ function RecipesList() {
     }, [state.recipes, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="brewlogs-list">
-            <ListHeader
-                h1="Recipes"
-                description="Manage your brewing recipes and ingredients"
-                buttonText="New Recipe"
-                url="/recipes/new"
-            >
-            </ListHeader>
+        <div className="main-content-container">
+            <div className="main-content-section brewlogs-list">
+                <ListHeader
+                    h1="Recipes"
+                    description="Manage your brewing recipes and ingredients"
+                    buttonText="New Recipe"
+                    url="/recipes/new"
+                >
+                </ListHeader>
+            </div>
 
-            <SearchSortControls
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortChange={(newSortBy, newSortOrder) => {
-                    setSortBy(newSortBy);
-                    setSortOrder(newSortOrder);
-                }}
-                onDisplayChange={handleDisplayChange}
-                sortOptions={[
-                    { key: 'date', label: 'Date', icon: Calendar },
-                    { key: 'name', label: 'Name', icon: FileText },
-                    { key: 'rating', label: 'Rating', icon: Star },
-                    { key: 'type', label: 'Type', icon: ListTree },
-                    { key: 'brewlog', label: 'Usage', icon: BookOpen }
-                ]}
-                searchPlaceholder="Search recipes by name or description..."
-            />
+            <div className="main-content-section">
+                <SearchSortControls
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    sortBy={sortBy}
+                    sortOrder={sortOrder}
+                    onSortChange={(newSortBy, newSortOrder) => {
+                        setSortBy(newSortBy);
+                        setSortOrder(newSortOrder);
+                    }}
+                    onDisplayChange={handleDisplayChange}
+                    sortOptions={[
+                        { key: 'date', label: 'Date', icon: Calendar },
+                        { key: 'name', label: 'Name', icon: FileText },
+                        { key: 'rating', label: 'Rating', icon: Star },
+                        { key: 'type', label: 'Type', icon: ListTree },
+                        { key: 'brewlog', label: 'Usage', icon: BookOpen }
+                    ]}
+                    searchPlaceholder="Search recipes by name or description..."
+                />
+            </div>
 
-            {state.recipes.length === 0 ? (
-                <div className="empty-state">
-                    <div className="empty-icon">
-                        <FileText size={64} />
-                    </div>
-                    <h3>No Recipes Yet</h3>
-                    <p>Create your first recipe to start building your brewing library.</p>
-                    <Button
-                        variant="primary"
-                        size="large"
-                        onClick={() => navigate('/recipes/new')}
-                    >
-                        <Plus size={20} />
-                        Create Your First Recipe
-                    </Button>
-                </div>
-            ) : (
-                <div className="items-container">
-                    {sortBy === 'date' || sortBy === 'name' || sortBy === 'rating' ? (
-                        // Sort by date, name, or rating
-                        <div className="items-grid">
-                            {sortedRecipes.map((recipe) => (
-                                <RecipeCard
-                                    key={recipe.id}
-                                    recipe={recipe}
-                                    displayOption={displayMode}
-                                />
-                            ))}
+            <div className="main-content-section">
+                {state.recipes.length === 0 ? (
+                    <div className="empty-state">
+                        <div className="empty-icon">
+                            <FileText size={64} />
                         </div>
-                    )
-                        : sortBy === 'brewlog' ? (
-                            // Sort/Grouped by Usage (Used vs Unused)
-                            <div className="items-grouped">
-                                {Object.entries(sortedRecipes).map(([groupKey, recipes]) => {
-                                    const groupName = groupKey === 'used' ? 'Used in Brew Logs' : 'Not Yet Used';
-                                    const groupIcon = groupKey === 'used' ? <BookOpen size={20} /> : <FileText size={20} />;
-
-                                    return (
-                                        <div key={groupKey} className="item-group">
-                                            <div className="group-header">
-                                                <h3 className="group-title">
-                                                    {groupIcon}
-                                                    {groupName}
-                                                </h3>
-                                            </div>
-                                            <div className="items-grid">
-                                                {recipes.map((recipe) => (
-                                                    <RecipeCard
-                                                        key={recipe.id}
-                                                        recipe={recipe}
-                                                        displayOption={displayMode}
-                                                    />
-                                                ))}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+                        <h3>No Recipes Yet</h3>
+                        <p>Create your first recipe to start building your brewing library.</p>
+                        <Button
+                            variant="primary"
+                            size="large"
+                            onClick={() => navigate('/recipes/new')}
+                        >
+                            <Plus size={20} />
+                            Create Your First Recipe
+                        </Button>
+                    </div>
+                ) : (
+                    <div className="items-container">
+                        {sortBy === 'date' || sortBy === 'name' || sortBy === 'rating' ? (
+                            // Sort by date, name, or rating
+                            <div className="items-grid">
+                                {sortedRecipes.map((recipe) => (
+                                    <RecipeCard
+                                        key={recipe.id}
+                                        recipe={recipe}
+                                        displayOption={displayMode}
+                                    />
+                                ))}
                             </div>
                         )
-                            : sortBy === 'type' ? (
-                                // Sort/Grouped by Recipe Type  
+                            : sortBy === 'brewlog' ? (
+                                // Sort/Grouped by Usage (Used vs Unused)
                                 <div className="items-grouped">
-                                    {Object.entries(sortedRecipes).map(([type, recipes]) => {
-                                        let brewType = BrewTypes.find(x => x.name === type);
+                                    {Object.entries(sortedRecipes).map(([groupKey, recipes]) => {
+                                        const groupName = groupKey === 'used' ? 'Used in Brew Logs' : 'Not Yet Used';
+                                        const groupIcon = groupKey === 'used' ? <BookOpen size={20} /> : <FileText size={20} />;
+
                                         return (
-                                            <div key={type} className="item-group">
+                                            <div key={groupKey} className="item-group">
                                                 <div className="group-header">
                                                     <h3 className="group-title">
-                                                        {brewType.icon} {brewType.name}
+                                                        {groupIcon}
+                                                        {groupName}
                                                     </h3>
                                                 </div>
                                                 <div className="items-grid">
                                                     {recipes.map((recipe) => (
-                                                        <RecipeCard key={recipe.id} recipe={recipe} displayOption={displayMode} />
+                                                        <RecipeCard
+                                                            key={recipe.id}
+                                                            recipe={recipe}
+                                                            displayOption={displayMode}
+                                                        />
                                                     ))}
                                                 </div>
                                             </div>
@@ -216,19 +199,42 @@ function RecipesList() {
                                     })}
                                 </div>
                             )
-                                : null}
+                                : sortBy === 'type' ? (
+                                    // Sort/Grouped by Recipe Type  
+                                    <div className="items-grouped">
+                                        {Object.entries(sortedRecipes).map(([type, recipes]) => {
+                                            let brewType = BrewTypes.find(x => x.name === type);
+                                            return (
+                                                <div key={type} className="item-group">
+                                                    <div className="group-header">
+                                                        <h3 className="group-title">
+                                                            {brewType.icon} {brewType.name}
+                                                        </h3>
+                                                    </div>
+                                                    <div className="items-grid">
+                                                        {recipes.map((recipe) => (
+                                                            <RecipeCard key={recipe.id} recipe={recipe} displayOption={displayMode} />
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                )
+                                    : null}
 
-                    {searchTerm && sortedRecipes.length === 0 && (
-                        <div className="empty-state">
-                            <div className="empty-icon">
-                                <Search size={64} />
+                        {searchTerm && sortedRecipes.length === 0 && (
+                            <div className="empty-state">
+                                <div className="empty-icon">
+                                    <Search size={64} />
+                                </div>
+                                <h3>No Results Found</h3>
+                                <p>No recipes match your search criteria. Try adjusting your search terms.</p>
                             </div>
-                            <h3>No Results Found</h3>
-                            <p>No recipes match your search criteria. Try adjusting your search terms.</p>
-                        </div>
-                    )}
-                </div>
-            )}
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

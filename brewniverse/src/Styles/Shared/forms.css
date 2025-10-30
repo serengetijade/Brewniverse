@@ -47,11 +47,7 @@
 
 /* Form Container */
 .form-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
 }
-
 
 .form-header {
     text-align: center;
@@ -59,15 +55,12 @@
 }
 
     .form-header h1 {
-        margin-bottom: 0.5rem;
         color: var(--color-primary);
         margin: 0 0 0.5rem 0;
-        font-size: 2rem;
     }
 
     .form-header p {
         color: var(--color-textLight);
-        font-size: 1.125rem;
         font-size: 1.125rem;
     }
 
@@ -178,7 +171,6 @@
 /* Mobile Form Sections */
 @media (max-width: 768px) {
     .form-container {
-        padding: 0.5rem;
     }
 
         .form-container .section-header {

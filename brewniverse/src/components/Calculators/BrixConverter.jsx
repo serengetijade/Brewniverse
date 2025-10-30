@@ -87,8 +87,9 @@ function BrixConverter() {
     };
 
     return (
-        <div className="calculator-page">
-            <div className="calculator-header">
+        <div className="main-content-container">
+            <div className="main-content-section calculator-page">
+                <div className="calculator-header">
                 <Button
                     variant="ghost"
                     size="small"
@@ -261,6 +262,7 @@ function BrixConverter() {
                         <li>Hydrometers are accurate during fermentation but less convenient</li>
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
     );

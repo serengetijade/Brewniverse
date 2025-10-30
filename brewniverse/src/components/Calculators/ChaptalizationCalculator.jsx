@@ -115,8 +115,9 @@ function ChaptalizationCalculator() {
     };
 
     return (
-        <div className="calculator-page">
-            <div className="calculator-header">
+        <div className="main-content-container">
+            <div className="main-content-section calculator-page">
+                <div className="calculator-header">
                 <Button
                     variant="ghost"
                     size="small"
@@ -286,6 +287,7 @@ function ChaptalizationCalculator() {
                         <li>Remember that residual sugars will affect final ABV calculations</li>
                     </ul>
                 </div>
+            </div>
             </div>
         </div>
     );

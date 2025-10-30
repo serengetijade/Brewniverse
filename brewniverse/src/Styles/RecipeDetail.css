@@ -2,10 +2,6 @@
 @import './Shared/ingredients.css';
 
 .recipe-detail {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-    padding-bottom: 6rem;
 }
 
 .recipe-detail-card {
@@ -208,8 +204,6 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .recipe-detail {
-        padding: 1rem 0.5rem;
-        padding-bottom: 6rem;
     }
 
     .recipe-hero {

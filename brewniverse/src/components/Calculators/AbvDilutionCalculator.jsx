@@ -136,8 +136,9 @@ function AbvDilutionCalculator() {
     };
 
     return (
-        <div className="calculator-page">
-            <div className="calculator-header">
+        <div className="main-content-container">
+            <div className="main-content-section calculator-page">
+                <div className="calculator-header">
                 <Button
                     variant="ghost"
                     size="small"
@@ -453,6 +454,7 @@ function AbvDilutionCalculator() {
                         The formula uses a weighted average: <strong>(ABV₁ × Vol₁ + ABV₂ × Vol₂) / (Vol₁ + Vol₂)</strong>
                     </p>
                 </div>
+            </div>
             </div>
         </div>
     );

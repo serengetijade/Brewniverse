@@ -16,6 +16,18 @@
     overflow-y: auto;
 }
 
+.main-content-container {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 1rem;
+}
+
+.main-content-section {
+    /*display: flex;
+    flex-direction: column;*/
+}
+
 /* Card styles */
 .card {
     background: var(--color-surface);
@@ -130,9 +142,12 @@
         padding: 0.5rem;
     }
 
+    .main-content-container {
+        padding: 1rem;
+    }
+
     .card {
         padding: 1.25rem;
-        border-radius: var(--border-radius-med);
         margin-bottom: 1rem;
     }
 
@@ -162,9 +177,12 @@
         padding: 0rem;
     }
 
+    .main-content-container {
+        padding: 0.5rem;
+    }
+
     .card {
-        padding: 1.5rem 1rem;
-        border-radius: var(--border-radius-lg);
+        padding: 1.25rem 1rem;
     }
 
     .list-item {

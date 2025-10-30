@@ -122,7 +122,7 @@ function JournalEntryForm() {
     };
 
     return (
-        <div className="form-container form-with-footer">
+        <div className="main-content-container form-container form-with-footer">
             <FormHeader
                 isEditing={isEditing}
                 entityName="Journal Entry"

@@ -1,5 +1,4 @@
 .settings {
-    padding: 1.5rem;
     max-width: 800px;
     margin: 0 auto;
 }
@@ -30,9 +29,6 @@
     }
 
 .settings-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
 }
 
 .settings-section {
@@ -125,9 +121,6 @@
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-    .settings {
-        padding: 1rem;
-    }
 
     .settings-header h1 {
         font-size: 1.75rem;

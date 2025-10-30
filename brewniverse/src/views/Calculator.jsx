@@ -42,8 +42,9 @@ function CalculatorList() {
     ];
 
     return (
-        <div className="calculator-page">
-            <div className="page-header">
+        <div className="main-content-container">
+            <div className="main-content-section calculator-page">
+                <div className="page-header">
                 <h1>Brewing Calculators</h1>
                 <p>Essential tools for your brewing calculations</p>
             </div>
@@ -67,6 +68,7 @@ function CalculatorList() {
                         </div>
                     );
                 })}
+            </div>
             </div>
         </div>
     );

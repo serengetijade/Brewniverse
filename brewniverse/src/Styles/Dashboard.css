@@ -1,7 +1,4 @@
 .dashboard {
-    padding: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 .dashboard-header {
@@ -36,9 +33,6 @@
 }
 
 .dashboard-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
 }
 
 .dashboard-section {
@@ -141,9 +135,6 @@
 
 /* Mobile optimizations */
 @media (max-width: 768px) {
-    .dashboard {
-        padding: 1rem;
-    }
 
     .dashboard-header h1 {
         font-size: 1.75rem;

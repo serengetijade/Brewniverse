@@ -119,115 +119,121 @@ function JournalList() {
     }, [state.journalEntries, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="brewlogs-list">
-            <ListHeader
-                h1="Journal"
-                description="Track and rate beverages you've tasted"
-                buttonText="New Entry"
-                url="/journal/new"
-            />
+        <div className="main-content-container">
+            <div className="main-content-section brewlogs-list">
+                <ListHeader
+                    h1="Journal"
+                    description="Track and rate beverages you've tasted"
+                    buttonText="New Entry"
+                    url="/journal/new"
+                />
 
-            <SearchSortControls
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-                sortBy={sortBy}
-                sortOrder={sortOrder}
-                onSortChange={(newSortBy, newSortOrder) => {
-                    setSortBy(newSortBy);
-                    setSortOrder(newSortOrder);
-                }}
-                onDisplayChange={handleDisplayChange}
-                sortOptions={[
-                    { key: 'date', label: 'Date', icon: Calendar },
-                    { key: 'name', label: 'Name', icon: BookOpen },
-                    { key: 'brand', label: 'Brand', icon: Tag },
-                    { key: 'type', label: 'Type', icon: ListTree },
-                    { key: 'rating', label: 'Rating', icon: Star }
-                ]}
-                searchPlaceholder="Search entries by name, brand, venue, style, or notes..."
-            />
-
-            {state.journalEntries.length === 0 ? (
-                <div className="empty-state">
-                    <div className="empty-icon">
-                        <BookOpen size={64} />
-                    </div>
-                    <h3>No Journal Entries Yet</h3>
-                    <p>Start tracking beverages you've tasted and rate your favorites.</p>
-                    <Button
-                        variant="primary"
-                        size="large"
-                        onClick={() => navigate('/journal/new')}
-                    >
-                        <Plus size={20} />
-                        Create Your First Entry
-                    </Button>
+                <div className="main-content-section">
+                    <SearchSortControls
+                        searchTerm={searchTerm}
+                        onSearchChange={setSearchTerm}
+                        sortBy={sortBy}
+                        sortOrder={sortOrder}
+                        onSortChange={(newSortBy, newSortOrder) => {
+                            setSortBy(newSortBy);
+                            setSortOrder(newSortOrder);
+                        }}
+                        onDisplayChange={handleDisplayChange}
+                        sortOptions={[
+                            { key: 'date', label: 'Date', icon: Calendar },
+                            { key: 'name', label: 'Name', icon: BookOpen },
+                            { key: 'brand', label: 'Brand', icon: Tag },
+                            { key: 'type', label: 'Type', icon: ListTree },
+                            { key: 'rating', label: 'Rating', icon: Star }
+                        ]}
+                        searchPlaceholder="Search entries by name, brand, venue, style, or notes..."
+                    />
                 </div>
-            ) : (
-                <div className="items-container">
-                    {sortBy === 'date' || sortBy === 'rating' ? (
-                        <div className="recent-items">
-                            {sortedEntries.map((entry) => (
-                                <JournalEntryCard
-                                    key={entry.id}
-                                    entry={entry}
-                                    displayOption={displayMode}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="items-grouped">
-                            {Object.entries(sortedEntries).map(([groupKey, entries]) => {
-                                let groupName = groupKey;
-                                let groupIcon = <BookOpen size={20} />;
 
-                                if (sortBy === 'type') {
-                                    const brewType = BrewTypes.find(x => x.name === groupKey);
-                                    if (brewType) {
-                                        groupName = `${brewType.icon} ${brewType.name}`;
-                                        groupIcon = null;
-                                    }
-                                } else if (sortBy === 'brand') {
-                                    groupIcon = <Tag size={20} />;
-                                } else if (sortBy === 'name') {
-                                    groupIcon = null;
-                                    groupName = groupKey;
-                                }
-
-                                return (
-                                    <div key={groupKey} className="item-group">
-                                        <div className="group-header">
-                                            <h3 className="group-title">
-                                                {groupIcon}
-                                                {groupName}
-                                            </h3>
-                                        </div>
-                                        <div className="recent-items">
-                                            {entries.map((entry) => (
-                                                <JournalEntryCard
-                                                    key={entry.id}
-                                                    entry={entry}
-                                                    displayOption={displayMode}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {searchTerm && sortedEntries.length === 0 && (
+                <div className="main-content-section">
+                    {state.journalEntries.length === 0 ? (
                         <div className="empty-state">
                             <div className="empty-icon">
-                                <Search size={64} />
+                                <BookOpen size={64} />
                             </div>
-                            <h3>No Results Found</h3>
-                            <p>No journal entries match your search criteria. Try adjusting your search terms.</p>
+                            <h3>No Journal Entries Yet</h3>
+                            <p>Start tracking beverages you've tasted and rate your favorites.</p>
+                            <Button
+                                variant="primary"
+                                size="large"
+                                onClick={() => navigate('/journal/new')}
+                            >
+                                <Plus size={20} />
+                                Create Your First Entry
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="items-container">
+                            {sortBy === 'date' || sortBy === 'rating' ? (
+                                <div className="recent-items">
+                                    {sortedEntries.map((entry) => (
+                                        <JournalEntryCard
+                                            key={entry.id}
+                                            entry={entry}
+                                            displayOption={displayMode}
+                                        />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="items-grouped">
+                                    {Object.entries(sortedEntries).map(([groupKey, entries]) => {
+                                        let groupName = groupKey;
+                                        let groupIcon = <BookOpen size={20} />;
+
+                                        if (sortBy === 'type') {
+                                            const brewType = BrewTypes.find(x => x.name === groupKey);
+                                            if (brewType) {
+                                                groupName = `${brewType.icon} ${brewType.name}`;
+                                                groupIcon = null;
+                                            }
+                                        } else if (sortBy === 'brand') {
+                                            groupIcon = <Tag size={20} />;
+                                        } else if (sortBy === 'name') {
+                                            groupIcon = null;
+                                            groupName = groupKey;
+                                        }
+
+                                        return (
+                                            <div key={groupKey} className="item-group">
+                                                <div className="group-header">
+                                                    <h3 className="group-title">
+                                                        {groupIcon}
+                                                        {groupName}
+                                                    </h3>
+                                                </div>
+                                                <div className="recent-items">
+                                                    {entries.map((entry) => (
+                                                        <JournalEntryCard
+                                                            key={entry.id}
+                                                            entry={entry}
+                                                            displayOption={displayMode}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            {searchTerm && sortedEntries.length === 0 && (
+                                <div className="empty-state">
+                                    <div className="empty-icon">
+                                        <Search size={64} />
+                                    </div>
+                                    <h3>No Results Found</h3>
+                                    <p>No journal entries match your search criteria. Try adjusting your search terms.</p>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }
