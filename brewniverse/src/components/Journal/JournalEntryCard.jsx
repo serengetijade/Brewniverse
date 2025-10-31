@@ -12,9 +12,9 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
     if (displayOption === 'grid') {
         return (
             <div className="item-card journal-entry-card" style={{ '--item-color': brewTypeConfig.color }}>
-                <div className="journal-card-accent"></div>
+                <div className="item-card-accent"></div>
                 
-                <div className="journal-entry-header">
+                <div className="item-card-header journal-entry-header">
                     <div className="journal-entry-type">
                         <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="journal-entry-type-info">
@@ -33,7 +33,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-content">
+                <div className="item-card-content">
                     <h3 className="journal-entry-name">{entry.name}</h3>
                     
                     {entry.style && (
@@ -43,28 +43,28 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                     <Rating value={entry.rating || 0} isEditing={false} />
 
                     {(entry.abv || entry.venue) && (
-                        <div className="journal-entry-stats-grid">
+                        <div className="item-card-stat-grid">
                             {entry.abv && (
-                                <div className="journal-entry-stat">
-                                    <div className="journal-entry-stat-icon">
+                                <div className="item-card-stat">
+                                    <div className="item-card-stat-icon">
                                         <Percent size={16} />
                                     </div>
-                                    <div className="journal-entry-stat-info">
-                                        <span className="journal-entry-stat-label">ABV</span>
-                                        <span className="journal-entry-stat-value">
+                                    <div className="item-card-stat-info">
+                                        <span className="item-card-stat-label">ABV</span>
+                                        <span className="item-card-stat-value">
                                             {parseFloat(entry.abv) ? parseFloat(entry.abv) + '%' : '--'}
                                         </span> 
                                     </div>
                                 </div>
                             )}
                             {entry.venue && (
-                                <div className="journal-entry-stat">
-                                    <div className="journal-entry-stat-icon">
+                                <div className="item-card-stat">
+                                    <div className="item-card-stat-icon">
                                         <MapPin size={16} />
                                     </div>
-                                    <div className="journal-entry-stat-info">
-                                        <span className="journal-entry-stat-label">Venue</span>
-                                        <span className="journal-entry-stat-value">{entry.venue}</span>
+                                    <div className="item-card-stat-info">
+                                        <span className="item-card-stat-label">Venue</span>
+                                        <span className="item-card-stat-value">{entry.venue}</span>
                                     </div>
                                 </div>
                             )}
@@ -72,7 +72,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-actions form-row col-2">
+                <div className="item-card-actions">
                     <Button
                         variant="ghost"
                         size="medium"
@@ -104,7 +104,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                             <Rating value={entry.rating || 0} isEditing={false} />
                         </div>
                     </div>
-                    <div className="list-view-actions item-actions">
+                    <div className="list-view-actions item-card-actions">
                         {entry.brewLogId &&
                             <Button
                                 variant="ghost"

@@ -40,16 +40,6 @@
     overflow: hidden;
 }
 
-.journal-card-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--item-color);
-    box-shadow: 0 0 10px var(--item-color);
-}
-
 .journal-entry-header {
     display: flex;
     align-items: flex-start;
@@ -106,86 +96,11 @@
     border: 1px solid var(--color-border);
 }
 
-.journal-entry-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 0.75rem;
-    margin-top: 1rem;
-}
-
-.journal-entry-stat {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: var(--color-surface);
-    border-radius: var(--border-radius-med);
-    border: 1px solid var(--color-border);
-    transition: all 0.2s ease;
-}
-
-.journal-entry-stat-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--border-radius-sm);
-    background: linear-gradient(135deg, var(--item-color), var(--item-color)dd);
-    color: var(--color-highlight);
-    flex-shrink: 0;
-}
-
-.journal-entry-stat-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    min-width: 0;
-}
-
-.journal-entry-stat-label {
-    font-size: 0.625rem;
-    color: var(--color-textLight);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-    line-height: 1;
-}
-
-.journal-entry-stat-value {
-    font-size: 0.875rem;
-    color: var(--color-text);
-    font-weight: 700;
-    line-height: 1;
-    /*overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;*/
-}
 
 /* Journal card styles */
 .journal-card {
     position: relative;
     overflow: hidden;
-}
-
-.journal-card-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--item-color);
-    box-shadow: 0 0 10px var(--item-color);
-}
-
-.journal-card .recipe-card-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--item-color);
-    box-shadow: 0 0 10px var(--item-color);
 }
 
 /* Mobile optimizations for journal entry cards */
@@ -198,7 +113,7 @@
         gap: 0.5rem;
     }
 
-    .journal-entry-stat {
+    .item-card-stat {
         padding: 0.625rem;
     }
 }

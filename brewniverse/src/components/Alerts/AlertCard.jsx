@@ -53,8 +53,8 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
         return (
             <div className={`item-card alert-card ${alert.isCompleted ? 'alert-completed-card' : ''}`}
                 style={cardStyle}>
-                <div className="alert-card-accent"></div>
-                <div className="alert-header">
+                <div className="item-card-accent"></div>
+                <div className="item-card-header alert-header">
                     <div className="alert-header-left">
                         <div className="alert-title-row">
                             <div className="alert-topic-badge" style={{ backgroundColor: `${topicConfig.color}15`, color: topicConfig.color }}>
@@ -74,7 +74,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-content">
+                <div className="item-card-content">
                     <div className="alert-datetime-display">
                         <div className="alert-date-section">
                             <div className="alert-datetime-label">
@@ -114,7 +114,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-actions">
+                <div className="item-card-actions">
                     <Button
                         variant="outline"
                         size="small"
@@ -175,7 +175,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                             )}
                         </div>
                     </div>
-                    <div className="list-view-actions item-actions">
+                    <div className="list-view-actions item-card-actions">
                         <Button
                             variant="ghost"
                             size="small"

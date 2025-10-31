@@ -34,8 +34,8 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
     if (displayOption === 'grid') {
         return (
             <div className="item-card recipe-card" style={{ '--item-color': brewTypeConfig.color }}>
-                <div className="recipe-card-accent"></div>
-                <div className="recipe-header">
+                <div className="item-card-accent"></div>
+                <div className="item-card-header recipe-header">
                     <div className="recipe-type">
                         <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="recipe-type-info">
@@ -52,7 +52,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                     </div>
                 </div>
 
-                <div className="item-content">
+                <div className="item-card-content">
                     <h3 className="recipe-name">{recipe.name}</h3>
                     {recipe.description && (
                         <p className="item-description">{recipe.description}</p>
@@ -60,31 +60,37 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
 
                     <Rating value={recipe.rating || 0} isEditing={false} />
 
-                    <div className="recipe-ingredients-grid">
+                    <div className="item-card-stat-grid">
                         {breakdown.primary > 0 && (
-                            <div className="item-stat">
-                                <Atom size={16} />
-                                <div className="item-stat-info">
-                                    <span className="item-stat-value">{breakdown.primary}</span>
-                                    <span className="item-stat-label">Primary</span>
+                            <div className="item-card-stat">
+                                <div className="item-card-stat-icon">
+                                    <Atom size={16} />
+                                </div>
+                                <div className="item-card-stat-info">
+                                    <span className="item-card-stat-label">Primary</span>
+                                    <span className="item-card-stat-value">{breakdown.primary}</span>
                                 </div>
                             </div>
                         )}
                         {breakdown.secondary > 0 && (
-                            <div className="item-stat">
-                                <Barrel size={16} />
-                                <div className="item-stat-info">
-                                    <span className="item-stat-value">{breakdown.secondary}</span>
-                                    <span className="item-stat-label">Secondary</span>
+                            <div className="item-card-stat">
+                                <div className="item-card-stat-icon">
+                                    <Barrel size={16} />
+                                </div>
+                                <div className="item-card-stat-info">
+                                    <span className="item-card-stat-label">Secondary</span>
+                                    <span className="item-card-stat-value">{breakdown.secondary}</span>
                                 </div>
                             </div>
                         )}
                         {breakdown.adjunct > 0 && (
-                            <div className="item-stat">
-                                <Leaf size={16} />
-                                <div className="item-stat-info">
-                                    <span className="item-stat-value">{breakdown.adjunct}</span>
-                                    <span className="item-stat-label">Adjunct</span>
+                            <div className="item-card-stat">
+                                <div className="item-card-stat-icon">
+                                    <Leaf size={16} />
+                                </div>
+                                <div className="item-card-stat-info">
+                                    <span className="item-card-stat-label">Adjunct</span>
+                                    <span className="item-card-stat-value">{breakdown.adjunct}</span>
                                 </div>
                             </div>
                         )}
@@ -95,7 +101,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-actions">
+                <div className="item-card-actions">
                     <Button
                         variant="ghost"
                         size="medium"
@@ -135,7 +141,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                         </div>
                     </div>
 
-                    <div className="list-view-actions item-actions">
+                    <div className="list-view-actions item-card-actions">
                         <Button
                             variant="ghost"
                             size="small"
