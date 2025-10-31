@@ -203,14 +203,21 @@ function BrewLogForm() {
     }, [formState.activity]);
 
     // Nutrients
-    const addNutrientScheduleEntry = (date, description) => {
-        addActivity(
-            updateFormDataCallback,
-            date ? date : getDate(),
-            getTopicDisplayName(ActivityTopicEnum.Nutrient),
-            description ? description : "",
-            ActivityTopicEnum.Nutrient,
-            id);
+    const addNutrientScheduleEntry = () => {
+        const newActivity = createActivity(
+                getDate(),
+                getTopicDisplayName(ActivityTopicEnum.Nutrient),
+                null,
+                ActivityTopicEnum.Nutrient,
+                id,
+                null
+            );
+
+        // Add all activities in a single state update
+        updateFormDataCallback(prev => ({
+            ...prev,
+            activity: [...prev.activity, newActivity]
+        }));
     };
 
     const addNutrientActivitiesByOption = (scheduleOption) => {
