@@ -78,15 +78,15 @@ function BrewLogForm() {
                 type: ActionTypes.updateBrewLog,
                 payload: { ...brewLogData, id }
             });
+            navigate(`/brewlogs/${id}`);
         }
         else {
             dispatch({
                 type: ActionTypes.addBrewLog,
                 payload: brewLogData
             });
+            navigate('/brewlogs');
         }
-
-        navigate('/brewlogs');
     };
 
     const updateFormData = (updates) => {
@@ -1049,7 +1049,6 @@ function BrewLogForm() {
                 showCancel={!isEditing}
                 cancelIcon={<X size={18} />}
                 onCancel={() => navigate('/brewlogs')}
-                onSubmit={() => navigate(`/brewlogs/${id}`)}
                 showDelete={true}
                 onDelete={onDelete}
             />

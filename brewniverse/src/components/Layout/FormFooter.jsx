@@ -42,7 +42,7 @@ function FormFooter({
                         variant="error"
                         onClick={onDelete}
                     >
-                        <Trash2 size={16} />
+                        <Trash2 size={18} />
                         Delete
                     </Button>
                 )}
@@ -64,14 +64,14 @@ function FormFooter({
                         e.preventDefault();
                         if (onSubmit) {
                             onSubmit();
-                        } else {
+                        } 
+                        else {
                             document.querySelector('form').requestSubmit();
                         }
                     }}
                 >
-                    {submitIcon || <Save size={16} />}
-                    {submitLabel || `${isEditing ? 'Update' : 'Create'}`}
-                    {/*{submitLabel || `${isEditing ? 'Update' : 'Create'} ${entityName}`}*/}
+                    {submitIcon || <Save size={18} />}
+                    {submitLabel || `${isEditing ? 'Save' : 'Create'}`}
                 </Button>
             </div>
         </div>
