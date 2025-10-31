@@ -40,6 +40,11 @@
     margin-bottom: 0.25rem;
 }
 
+.activity-bottom-button {
+    display: flex;
+    justify-content:right;
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
     .activity {

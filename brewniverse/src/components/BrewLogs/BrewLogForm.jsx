@@ -569,6 +569,7 @@ function BrewLogForm() {
                         itemLabel="Gravity Reading"
                         sectionInfoMessage=""
                         brewLogId={id}
+                        showBottomButton={true}
                     >
                     </ActivityList>
 

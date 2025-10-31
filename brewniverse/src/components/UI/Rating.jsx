@@ -99,7 +99,7 @@ function Rating({ value = 0, onChange, isEditing = false, label = "Rating" }) {
     }
 
     return (
-        <div className="rating-component">
+        <div className={`rating-component ${isEditing ? 'editable': ''}`}>
             {isEditing && label && (
                 <label className="form-label">{label}</label>
             )}
