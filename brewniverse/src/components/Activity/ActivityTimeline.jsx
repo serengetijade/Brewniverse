@@ -17,13 +17,12 @@ function BrewLogTimeline({ activity = [] }) {
             date = new Date(year, month - 1, day);
         }
         const datePart = date.toLocaleDateString(undefined, {
-            weekday: 'short',
             month: 'short',
             day: 'numeric',
             year: 'numeric'
         });
         const timePart = date.toLocaleTimeString(undefined, {
-            hour: '2-digit',
+            hour: 'numeric',
             minute: '2-digit',
             hour12: true
         });
@@ -95,7 +94,7 @@ function BrewLogTimeline({ activity = [] }) {
                                     )}
                                 </div>
 
-                                <div className="timeline-event-card">
+                                <div className="timeline-event-card" tabindex="0">
                                     <div className="event-header">
                                         <div className="event-title">{item.name}</div>
                                         <div className="event-badges">
@@ -114,14 +113,16 @@ function BrewLogTimeline({ activity = [] }) {
                                         </div>
                                     </div>
 
-                                    <div className="event-datetime">
-                                        <span className="event-date">{formattedDate.date}</span>
-                                        <span className="event-time">{formattedDate.time}</span>
-                                    </div>
+                                    <div className="toggle-focus">
+                                        <div className="event-datetime">
+                                            <span className="event-date">{formattedDate.date} - {formattedDate.time}</span>
+                                            <span className="event-time"></span>
+                                        </div>
 
-                                    {item.description && (
-                                        <div className="event-description">{item.description}</div>
-                                    )}
+                                        {item.description && (
+                                            <div className="event-description">{item.description}</div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         );

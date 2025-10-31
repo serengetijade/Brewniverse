@@ -97,7 +97,7 @@
 .timeline-event-card:hover {
   transform: translateX(4px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-}
+} 
 
 .event-header {
   display: flex;
@@ -236,7 +236,8 @@
   .event-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
+    gap: 0rem;
+    margin-bottom: 0rem;
   }
 
   .event-badges {
