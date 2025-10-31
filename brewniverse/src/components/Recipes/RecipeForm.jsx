@@ -81,15 +81,15 @@ function RecipeForm() {
                 type: ActionTypes.updateRecipe,
                 payload: { ...recipeData, id }
             });
+            navigate(`/recipes/${id}`);
         }
         else {
             dispatch({
                 type: ActionTypes.addRecipe,
                 payload: recipeData
             });
+            navigate('/recipes');
         }
-
-        navigate('/recipes');
     };
 
     const updateFormData = (updates) => {
@@ -413,7 +413,6 @@ function RecipeForm() {
                 showCancel={!isEditing}
                 showDelete={true}
                 onDelete={onDelete}
-                onSubmit={() => navigate(`/recipes/${id}`)}
             />
         </div>
     );
