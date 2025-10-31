@@ -97,18 +97,18 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
 
                 <div className="item-actions">
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="medium"
                         onClick={() => navigate(`/recipes/${recipe.id}`)}
                     >
-                        View Details
+                        <Info size={18} />View
                     </Button>
                     <Button
                         variant="ghost"
                         size="medium"
                         onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
                     >
-                        Edit
+                        <SquarePen size={18} />Edit
                     </Button>
                 </div>
             </div>

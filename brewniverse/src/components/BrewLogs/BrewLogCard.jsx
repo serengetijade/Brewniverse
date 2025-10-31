@@ -80,18 +80,18 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
 
                 <div className="item-actions form-row col-2">
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="medium"
                         onClick={() => navigate(`/brewlogs/${brewLog.id}`)}
                     >
-                        View Details
+                        <Info size={18} />View
                     </Button>
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="medium"
                         onClick={() => navigate(`/brewlogs/${brewLog.id}/edit`)}
                     >
-                        Edit
+                        <SquarePen size={18} />Edit
                     </Button>
                 </div>
             </div>

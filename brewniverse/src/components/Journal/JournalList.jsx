@@ -119,8 +119,8 @@ function JournalList() {
     }, [state.journalEntries, searchTerm, sortBy, sortOrder]);
 
     return (
-        <div className="main-content-container">
-            <div className="main-content-section brewlogs-list">
+        <div className="main-content-container journal-list">
+            <div className="main-content-section">
                 <ListHeader
                     h1="Journal"
                     description="Track and rate beverages you've tasted"
