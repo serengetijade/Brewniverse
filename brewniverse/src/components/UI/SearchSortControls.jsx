@@ -74,7 +74,7 @@ function SearchSortControls({
                             className="sort-button"
                         >
                             <Icon size={16} />
-                            {label} {sortBy === key && (sortOrder === 'asc' ? '↑' : '↓')}
+                            {label} <span style={{ opacity: sortBy === key ? 1 : 0 }}>{sortOrder === 'asc' ? '↑' : '↓'}</span>
                         </Button>
                     ))}
                 </div>
