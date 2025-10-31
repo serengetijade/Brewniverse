@@ -205,15 +205,14 @@ function BrewLogForm() {
     // Nutrients
     const addNutrientScheduleEntry = () => {
         const newActivity = createActivity(
-                getDate(),
-                getTopicDisplayName(ActivityTopicEnum.Nutrient),
-                null,
-                ActivityTopicEnum.Nutrient,
-                id,
-                null
-            );
+            getDate(),
+            getTopicDisplayName(ActivityTopicEnum.Nutrient),
+            null,
+            ActivityTopicEnum.Nutrient,
+            id,
+            null
+        );
 
-        // Add all activities in a single state update
         updateFormDataCallback(prev => ({
             ...prev,
             activity: [...prev.activity, newActivity]

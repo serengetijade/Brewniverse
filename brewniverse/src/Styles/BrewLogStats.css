@@ -103,41 +103,6 @@
   flex-shrink: 0;
 }
 
-.stat-icon.primary {
-  background: rgba(var(--color-primary-rgb), 0.1);
-  color: var(--color-primary);
-}
-
-.stat-icon.secondary {
-  background: rgba(var(--color-secondary-rgb), 0.1);
-  color: var(--color-secondary);
-}
-
-.stat-icon.accent {
-  background: rgba(var(--color-accent-rgb), 0.1);
-  color: var(--color-accent);
-}
-
-.stat-icon.highlight {
-  background: rgba(var(--color-highlight-rgb), 0.1);
-  color: var(--color-highlight);
-}
-
-.stat-icon.success {
-  background: rgba(40, 167, 69, 0.1);
-  color: var(--color-success);
-}
-
-.stat-icon.warning {
-  background: rgba(255, 193, 7, 0.1);
-  color: var(--color-warning);
-}
-
-.stat-icon.info {
-  background: rgba(23, 162, 184, 0.1);
-  color: var(--color-info);
-}
-
 .stat-content {
   flex: 1;
   display: flex;

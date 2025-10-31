@@ -90,7 +90,7 @@ function RecipeDetail() {
                     <div className="recipe-meta">
                         <div className="recipe-meta-item">
                             <Calendar size={18} />
-                            <span>Created {new Date(recipe.dateCreated).toLocaleDateString()}</span>
+                            <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>
                         </div>
                         {recipe.difficulty && (
                             <div className="recipe-meta-item">

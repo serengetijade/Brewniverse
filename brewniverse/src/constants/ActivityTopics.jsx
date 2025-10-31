@@ -22,6 +22,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Gravity]: {
         key: ActivityTopicEnum.Gravity,
         color: '#7cce29',
+        rgb: '124, 206, 41',
         description: 'Specific gravity measurements for tracking fermentation progress',
         displayName: 'Gravity Reading',
         displayName_Alert: 'Take Gravity Reading',
@@ -31,6 +32,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Yeast]: {
         key: ActivityTopicEnum.Yeast,
         color: '#FFA347',
+        rgb: '255, 163, 71',
         description: 'Yeast pitching and additions',
         displayName: 'Yeast Added',
         displayName_Alert: 'Add Yeast',
@@ -40,6 +42,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Nutrient]: {
         key: ActivityTopicEnum.Nutrient,
         color: '#ff66ff',
+        rgb: '255,102,255',
         description: 'Yeast nutrient additions',
         displayName: 'Nutrients Added',
         displayName_Alert: 'Add Nutrients',
@@ -49,6 +52,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.PecticEnzyme]: {
         key: ActivityTopicEnum.PecticEnzyme,
         color: '#c79fea',
+        rgb: '199,159,234',
         description: 'Pectic enzyme additions for clarity',
         displayName: 'Pectic Enzyme Added',
         displayName_Alert: 'Add Pectic Enzyme',
@@ -58,6 +62,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Acid]: {
         key: ActivityTopicEnum.Acid,
         color: '#b6e62b',
+        rgb: '182,230,43',
         description: 'Acid additions for pH adjustment',
         displayName: 'Acid Added',
         displayName_Alert: 'Add Acid',
@@ -67,6 +72,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Base]: {
         key: ActivityTopicEnum.Base,
         color: '#06b6d4',
+        rgb: '6,182,212',
         description: 'Base additions for pH adjustment',
         displayName: 'Base Added',
         displayName_Alert: 'Add Base',
@@ -76,6 +82,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Tannin]: {
         key: ActivityTopicEnum.Tannin,
         color: '#a16707',
+        rgb: '161,103,7',
         description: 'Tannin additions for body and mouthfeel',
         displayName: 'Tannin Added',
         displayName_Alert: 'Add Tannin',
@@ -85,6 +92,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.PH]: {
         key: ActivityTopicEnum.PH,
         color: '#ec4899',
+        rgb: '236,72,153',
         description: 'pH measurements and adjustments',
         displayName: 'pH Measured/Adjusted',
         displayName_Alert: 'Take pH Reading and/or Adjust pH',
@@ -94,6 +102,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.DateCreated]: {
         key: ActivityTopicEnum.DateCreated,
         color: '#006633',
+        rgb: '0,102,51',
         description: 'Date when brew was started',
         displayName: 'Date Created',
         displayName_Alert: 'Start a new brew',
@@ -103,6 +112,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.DateRacked]: {
         key: ActivityTopicEnum.DateRacked,
         color: '#0066ff',
+        rgb: '0,102,255',
         description: 'Date when brew was transferred to secondary',
         displayName: 'Brew Racked',
         displayName_Alert: 'Time to Rack Your Brew',
@@ -112,6 +122,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.DateStabilized]: {
         key: ActivityTopicEnum.DateStabilized,
         color: '#69c3ff',
+        rgb: '105,195,255',
         description: 'Date when stabilizers were added',
         displayName: 'Stabilization',
         displayName_Alert: 'Stabilize your brew',
@@ -120,7 +131,8 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.DateBottled]: {
         key: ActivityTopicEnum.DateBottled,
-        color: '#0000cc',
+        color: '#67ad34',
+        rgb: '103,173,52',
         description: 'Date when brew was bottled',
         displayName: 'Brew Bottled',
         displayName_Alert: 'Time to Bottle',
@@ -130,6 +142,7 @@ export const ActivityTopicConfiguration = {
     [ActivityTopicEnum.Other]: {
         key: ActivityTopicEnum.Other,
         color: '#6b7280',
+        rgb: '107, 114, 128',
         description: 'Other miscellaneous activities',
         displayName: 'Activity',
         displayName_Alert: 'Time for action!',
@@ -161,6 +174,11 @@ export const getTopicColor = (topic) => {
     return config.color;
 };
 
+export const getTopicColorRgb = (topic) => {
+    const config = getTopicConfig(topic);
+    return config.rgb;
+};
+
 export const getTopicDisplayName = (topic) => {
     const config = getTopicConfig(topic);
     return config.displayName;
@@ -171,7 +189,7 @@ export const getTopicDisplayNameForAlerts = (topic) => {
     return config.displayName_Alert;
 };
 
-export const getTopicIcon = (topic, size = 18) => {
+export const getTopicIcon = (topic, size = 20) => {
     const config = getTopicConfig(topic);
     const IconComponent = config.icon;
     return <IconComponent size={size} />;

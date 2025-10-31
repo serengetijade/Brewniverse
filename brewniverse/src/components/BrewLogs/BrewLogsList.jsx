@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, FileText, Plus, Search, Star, Type, ArrowDownAZ } from 'lucide-react';
+import { BookOpen, Calendar, FileText, ListTree, Plus, Search, Star, ArrowDownAZ } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../Styles/BrewLogsList.css';
@@ -129,7 +129,7 @@ function BrewLogsList() {
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
                         { key: 'name', label: 'Name', icon: ArrowDownAZ },
-                        { key: 'type', label: 'Type', icon: Type },
+                        { key: 'type', label: 'Type', icon: ListTree },
                         { key: 'recipe', label: 'Recipe', icon: FileText },
                         { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' }
                     ]}
