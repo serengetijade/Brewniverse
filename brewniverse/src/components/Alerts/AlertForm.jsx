@@ -1,3 +1,4 @@
+import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/AlertForm.css';
@@ -270,9 +271,9 @@ function AlertForm() {
 
             <FormFooter
                 isEditing={isEditing}
-                entityName="Alert"
                 showCancel={!isEditing}
                 onCancel={() => navigate('/alerts')}
+                cancelIcon={<X size={18 }/>}
                 onDelete={handleDelete}
             />
         </div>

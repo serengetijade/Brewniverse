@@ -226,17 +226,13 @@ function RecipeDetail() {
 
             <div className="main-content-section">
                 <FormFooter
-                    isEditing={true}
-                    entityName="Recipe"
+                    isEditing={false}
+                    showCancel={true}
+                    cancelLabel="List"
                     onCancel={() => navigate('/recipes')}
-                    onDelete={handleDelete}
                     onSubmit={() => navigate(`/recipes/${id}/edit`)}
-                    showDelete={false}
-                    collapsible={true}
-                    defaultExpanded={false}
-                    submitLabel="Edit"
                     submitIcon={<Edit size={16} />}
-                    cancelLabel="Back"
+                    submitLabel="Edit"
                 />
             </div>
         </div>
