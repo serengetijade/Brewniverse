@@ -313,7 +313,9 @@ function BrewLogForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <h3>Basic Information</h3>
+                    <div className="section-header">
+                        <h3>Basic Information</h3>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
@@ -487,7 +489,9 @@ function BrewLogForm() {
 
                 {/* Yeast */}
                 <div className="form-section">
-                    <h3>Pitch Yeast</h3>
+                    <div className="section-header">
+                        <h3>Pitch Yeast</h3>
+                    </div>
                     <ActivityList
                         formData={formState}
                         setFormData={updateFormDataCallback}
@@ -502,7 +506,9 @@ function BrewLogForm() {
 
                 {/* Gravity Readings */}
                 <div className="form-section">
-                    <h3>Gravity Readings</h3>
+                    <div className="section-header">
+                        <h3>Gravity Readings</h3>
+                    </div>
                     {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
                         <p className="section-description">Please add gravity entries below to see calculated values</p>
                     )}
@@ -578,7 +584,9 @@ function BrewLogForm() {
 
                 {/* Nutrients */}
                 <div className="form-section">
-                    <h3>Nutrients</h3>
+                    <div className="section-header">
+                        <h3>Nutrients</h3>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="nutrients" className="form-label">
@@ -653,7 +661,9 @@ function BrewLogForm() {
 
                 {/* Pectic Enzyme */}
                 <div className="form-section">
-                    <h3>Pectic Enzyme</h3>
+                    <div className="section-header">
+                        <h3>Pectic Enzyme</h3>
+                    </div>
                     <div className="form-group">
                         <label htmlFor="pecticEnzyme" className="form-label">
                             Pectic Enzyme
@@ -685,7 +695,9 @@ function BrewLogForm() {
 
                 {/* Acids and Bases */}
                 <div className="form-section">
-                    <h3>Acids and Bases</h3>
+                    <div className="section-header">
+                        <h3>Acids and Bases</h3>
+                    </div>
 
                     {/* Acids */}
                     <div className="form-group">
@@ -748,7 +760,9 @@ function BrewLogForm() {
 
                 {/* Tannins */}
                 <div className="form-section">
-                    <h3>Tannins</h3>
+                    <div className="section-header">
+                        <h3>Tannins</h3>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="tannins" className="form-label">
@@ -780,7 +794,9 @@ function BrewLogForm() {
 
                 {/* Important Dates */}
                 <div className="form-section">
-                    <h3>Important Dates</h3>
+                    <div className="section-header">
+                        <h3>Important Dates</h3>
+                    </div>
                     <div className="form-group">
                         <ActivityList
                             formData={formState}
@@ -823,8 +839,10 @@ function BrewLogForm() {
 
                 {/*Other Activities*/}
                 <div className="form-section">
-                    <div className="form-group">
+                    <div className="section-header">
                         <h3>Other Activities</h3>
+                    </div>
+                    <div className="form-group">
                         <ActivityList
                             formData={formState}
                             setFormData={updateFormDataCallback}
@@ -840,10 +858,12 @@ function BrewLogForm() {
 
                 {/* Notes */}
                 <div className="form-section">
-                    <div className="form-group">
+                    <div className="section-header">
                         <h3>
                             Notes
                         </h3>
+                    </div>
+                    <div className="form-group">
                         <textarea
                             id="notes"
                             name="notes"
@@ -860,9 +880,11 @@ function BrewLogForm() {
                 {/* Journal Entries */}
                 <div className="form-section brewlog-journal">
                     <div className="form-group brewlog-journal-header">
-                        <h3>
-                            Journal
-                        </h3>
+                        <div className="section-header">
+                            <h3>
+                                Journal
+                            </h3>
+                        </div>
                         <div className="brewlog-journal-action">
                             <Button
                                 type="button"
