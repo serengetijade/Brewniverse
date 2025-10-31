@@ -2,8 +2,6 @@ import { BookOpen, Calendar, ListTree, Plus, Search, Star, Tag } from 'lucide-re
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../Styles/JournalList.css';
-import '../../Styles/Shared/list.css';
-import '../../Styles/Shared/search.css';
 import JournalEntryCard from './JournalEntryCard';
 import ListHeader from '../Layout/ListHeader';
 import Button from '../UI/Button';

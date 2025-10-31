@@ -2,7 +2,7 @@ import React from 'react';
 import { useApp } from '../../contexts/AppContext';
 import JournalEntryCard from './JournalEntryCard';
 
-function JournalEntryList({ brewLogId, showHeading = false }) {
+function JournalEntryList(brewLogId) {
     const { state } = useApp();
 
     const journalEntries = state.journalEntries
@@ -18,7 +18,11 @@ function JournalEntryList({ brewLogId, showHeading = false }) {
             ) : (
                 <div className="recent-items">
                     {journalEntries.map(entry => (
-                        <JournalEntryCard key={entry.id} entry={entry} />
+                        <JournalEntryCard
+                            key={entry.id}
+                            entry={entry}
+                            displayOption="list"
+                        />
                     ))}
                 </div>
             )}

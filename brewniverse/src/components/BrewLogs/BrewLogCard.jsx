@@ -22,7 +22,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                 <div className="brewlog-card-accent"></div>
                 <div className="brewlog-header">
                     <div className="brewlog-type">
-                        <span className="brewlog-type-icon-large">{brewTypeConfig.icon}</span>
+                        <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="brewlog-type-info">
                             <span className="type-text">{brewLog.type}</span>
                             <div className="brewlog-date">
@@ -104,7 +104,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                 <div className="list-view-body">
                     <div className="item-header brewlog-header">
                         <div className="item-type brewlog-type">
-                            <span className="item-type-icon-large brewlog-type-icon-large">{brewTypeConfig.icon}</span>
+                            <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                             <h3 className="item-title brewlog-name">{brewLog.name}</h3>
                         </div>
                     </div>

@@ -877,8 +877,7 @@ function BrewLogForm() {
                     </div>
 
                     <div className="form-group">
-                        <JournalEntryList
-                            brewLogId={id} />
+                        <JournalEntryList brewLogId={id} />
                     </div>
                 </div>
             </form>
