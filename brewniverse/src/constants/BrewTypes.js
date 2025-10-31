@@ -1,8 +1,10 @@
 export const BrewTypeEnum = {
+    Acerglyn: 'Acerglyn',
     Beer: 'Beer',
     Cider: 'Cider',
     Kombucha: 'Kombucha',
     Mead: 'Mead',
+    Metheglin: 'Metheglin',
     Sake: 'Sake',
     Wine: 'Wine',
     Vinegar: 'Vinegar',
@@ -10,13 +12,21 @@ export const BrewTypeEnum = {
 };
 
 export const BrewTypeConfiguration = {
+    [BrewTypeEnum.Acerglyn]: {
+        id: 1,
+        key: BrewTypeEnum.Acerglyn,
+        name: 'Acerglyn',
+        icon: '🍁',
+        description: 'Brewed maply syrup & honey',
+        color:'#c31553' //'#d7265d' // pink
+    },
     [BrewTypeEnum.Beer]: {
         id: 1,
         key: BrewTypeEnum.Beer,
         name: 'Beer',
         icon: '🍺',
-        description: 'Fermented beverage made from grains, typically barley',
-        color: '#dd8e0a' // amber
+        description: 'Fermented drink made from grains, typically barley',
+        color: '#DB810A' // amber
     },
     [BrewTypeEnum.Cider]: {
         id: 2,
@@ -32,7 +42,7 @@ export const BrewTypeConfiguration = {
         name: 'Kombucha',
         icon: '🫖', //teapot
         description: 'Fermented tea with SCOBY',
-        color: '#fc5a84' // magenta
+        color: '#fa673a' // orange
     },
     [BrewTypeEnum.Mead]: {
         id: 4,
@@ -40,7 +50,15 @@ export const BrewTypeConfiguration = {
         name: 'Mead',
         icon: '🍯',
         description: 'Fermented honey beverage',
-        color: '#EAB308' // yellow
+        color: '#EAB308' // yellow 
+    },
+    [BrewTypeEnum.Metheglin]: {
+        id: 4,
+        key: BrewTypeEnum.Metheglin,
+        name: 'Metheglin',
+        icon: '🌿',
+        description: 'Fermented herbs & honey',
+        color: '#7ba25b' // green
     },
     [BrewTypeEnum.Sake]: {
         id: 5,
@@ -56,7 +74,15 @@ export const BrewTypeConfiguration = {
         name: 'Wine',
         icon: '🍷',
         description: 'Fermented grape juice',
-        color: '#DC2626' // red
+        color:  '#de239b' //'#9f65b5' magenta
+    },
+    [BrewTypeEnum.Vinegar]: {
+        id: 7,
+        key: BrewTypeEnum.Vinegar,
+        name: 'Vinegar',
+        icon: '🏺',
+        description: 'Anything fermented + Acetobacter',
+        color: '#904194' //purple
     },
     [BrewTypeEnum.Other]: {
         id: 7,
@@ -66,14 +92,6 @@ export const BrewTypeConfiguration = {
         description: 'Other fermented beverages',
         color: '#267f6b' // teal
     },
-    [BrewTypeEnum.Vinegar]: {
-        id: 7,
-        key: BrewTypeEnum.Vinegar,
-        name: 'Vinegar',
-        icon: '🏺',
-        description: 'Anything fermented + Acetobacter',
-        color: '#904194'
-    }
 };
 
 export const getAllBrewTypes = () => {
