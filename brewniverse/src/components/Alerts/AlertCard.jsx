@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, CheckCircle2, Clock, SquarePen, Trash2 } from 'lucide-react';
+import { Calendar, CheckCircle2, Clock, SquarePen, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTopicConfig } from '../../constants/ActivityTopics';

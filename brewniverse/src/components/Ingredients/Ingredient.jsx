@@ -1,4 +1,4 @@
-import { Save, Trash2, X } from 'lucide-react';
+import { SquarePen, Save, Trash2, X } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import '../../Styles/Shared/ingredients.css';
 import { Validation } from '../../constants/ValidationConstants';
@@ -135,7 +135,7 @@ function Ingredient({
                     size="small"
                     onClick={() => onEdit(type, ingredient.id)}
                 >
-                    Edit
+                    <SquarePen size={16} />
                 </Button>
                 <Button
                     type="button"

@@ -259,6 +259,7 @@ function Settings() {
                                     <h4>Features:</h4>
                                     <ul>
                                         <li>Track brew logs with detailed information</li>
+                                        <li>Record tasting experiences in the journal</li>
                                         <li>Manage and reference recipes</li>
                                         <li>Set up alerts and reminders</li>
                                         <li>Calculate brew outcomes</li>

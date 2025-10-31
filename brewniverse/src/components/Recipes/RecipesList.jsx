@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, FileText, ListTree, Plus, Search, Star } from 'lucide-react';
+import { ArrowDownAZ, BookOpen, Calendar, FileText, ListTree, Plus, Search, Star } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../Styles/RecipesList.css';
@@ -130,7 +130,7 @@ function RecipesList() {
                     onDisplayChange={handleDisplayChange}
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
-                        { key: 'name', label: 'Name', icon: FileText },
+                        { key: 'name', label: 'Name', icon: ArrowDownAZ },
                         { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' },
                         { key: 'type', label: 'Type', icon: ListTree },
                         { key: 'brewlog', label: 'Usage', icon: BookOpen }

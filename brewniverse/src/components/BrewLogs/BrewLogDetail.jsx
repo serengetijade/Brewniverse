@@ -63,7 +63,7 @@ function BrewLogDetail() {
                     <div className="brewlog-meta">
                         <span className="brewlog-date-info">
                             <Calendar size={16} />
-                            Started {new Date(brewLog.dateCreated).toLocaleDateString('en-US', {
+                            {new Date(brewLog.dateCreated).toLocaleDateString('en-US', {
                                 month: 'long',
                                 day: 'numeric',
                                 year: 'numeric'
