@@ -3,16 +3,6 @@
     overflow: hidden;
 }
 
-.recipe-card-accent {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--item-color);
-    box-shadow: 0 0 10px var(--item-color);
-}
-
 .recipe-header {
     display: flex;
     align-items: flex-start;
@@ -71,12 +61,6 @@
     line-height: 1.3;
 }
 
-.recipe-ingredients-grid {
-    display: flex;
-    gap: 0.75rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-}
 
 .recipe-no-ingredients {
     margin-top: 1rem;

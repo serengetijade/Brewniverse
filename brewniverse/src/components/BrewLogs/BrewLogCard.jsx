@@ -19,8 +19,8 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     if (displayOption == 'grid')
         return (
             <div className="item-card brewlog-card" style={{ '--item-color': brewTypeConfig.color }}>
-                <div className="brewlog-card-accent"></div>
-                <div className="brewlog-header">
+                <div className="item-card-accent"></div>
+                <div className="item-card-header brewlog-header">
                     <div className="brewlog-type">
                         <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="brewlog-type-info">
@@ -42,7 +42,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     </div>
                 </div>
 
-                <div className="item-content">
+                <div className="item-card-content">
                     <h3 className="brewlog-name">{brewLog.name}</h3>
                     {brewLog.description && (
                         <p className="item-description">{brewLog.description}</p>
@@ -51,26 +51,26 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     <Rating value={brewLog.rating || 0} isEditing={false} />
 
                     {(currentAbv || gravityFinal) && (
-                        <div className="brewlog-card-stats-grid">
+                        <div className="item-card-stat-grid">
                             {currentAbv && (
-                                <div className="brewlog-card-stat">
-                                    <div className="brewlog-card-stat-icon">
+                                <div className="item-card-stat">
+                                    <div className="item-card-stat-icon">
                                         <TrendingUp size={16} />
                                     </div>
-                                    <div className="brewlog-card-stat-info">
-                                        <span className="brewlog-card-stat-label">Current ABV</span>
-                                        <span className="brewlog-card-stat-value">{currentAbv}%</span>
+                                    <div className="item-card-stat-info">
+                                        <span className="item-card-stat-label">Current ABV</span>
+                                        <span className="item-card-stat-value">{currentAbv}%</span>
                                     </div>
                                 </div>
                             )}
                             {gravityFinal && (
-                                <div className="brewlog-card-stat">
-                                    <div className="brewlog-card-stat-icon">
+                                <div className="item-card-stat">
+                                    <div className="item-card-stat-icon">
                                         <Scale size={16} />
                                     </div>
-                                    <div className="brewlog-card-stat-info">
-                                        <span className="brewlog-card-stat-label">Current Gravity</span>
-                                        <span className="brewlog-card-stat-value">{gravityFinal}</span>
+                                    <div className="item-card-stat-info">
+                                        <span className="item-card-stat-label">Current Gravity</span>
+                                        <span className="item-card-stat-value">{gravityFinal}</span>
                                     </div>
                                 </div>
                             )}
@@ -78,7 +78,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     )}
                 </div>
 
-                <div className="item-actions form-row col-2">
+                <div className="item-card-actions">
                     <Button
                         variant="ghost"
                         size="medium"
@@ -116,7 +116,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                         <Rating value={brewLog.rating || 0} isEditing={false} />
                     </div>
                 </div>
-                <div className="list-view-actions item-actions">
+                <div className="list-view-actions item-card-actions">
                     <Button
                         variant="ghost"
                         size="small"
