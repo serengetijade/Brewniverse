@@ -12,7 +12,9 @@ export function ActivityList({
     headerLabel,
     itemLabel,
     sectionInfoMessage,
-    brewLogId
+    brewLogId,
+    showTopButton = true,
+    showBottomButton = false
 }) {
     const buttonSize = 14;
 
@@ -20,23 +22,25 @@ export function ActivityList({
         <div className="form-group">
             <div className="section-header">
                 <label className="form-label">{headerLabel}</label>
-                <Button
-                    type="button"
-                    variant="outline"
-                    size="small"
-                    onClick={() => addActivity(
-                        setFormData,
-                        getDate(),
-                        getTopicDisplayName(topic),
-                        null,
-                        topic,
-                        formData.id,
-                        null)
-                    }
-                >
-                    <Plus size={buttonSize} />
-                    Add Entry
-                </Button>
+                {showTopButton &&
+                    < Button
+                        type="button"
+                        variant="outline"
+                        size="small"
+                        onClick={() => addActivity(
+                            setFormData,
+                            getDate(),
+                            getTopicDisplayName(topic),
+                            null,
+                            topic,
+                            formData.id,
+                            null)
+                        }
+                    >
+                        <Plus size={buttonSize} />
+                        Add Entry
+                    </Button>
+                }
             </div>
 
             {getActivitiesByTopic(formData, topic).length === 0
@@ -54,6 +58,28 @@ export function ActivityList({
                                 setFormData={setFormData}
                             />
                         ))}
+
+                        {showBottomButton &&
+                            <div className="activity-bottom-button">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="small"
+                                    onClick={() => addActivity(
+                                        setFormData,
+                                        getDate(),
+                                        getTopicDisplayName(topic),
+                                        null,
+                                        topic,
+                                        formData.id,
+                                        null)
+                                    }
+                                >
+                                    <Plus size={buttonSize} />
+                                    Add Entry
+                                </Button>
+                            </div>
+                        }
                     </div>
                 )
             }
