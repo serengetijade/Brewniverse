@@ -149,13 +149,13 @@ function JournalEntryForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <div 
+                    <div
                         className="section-header collapsible"
                         onClick={() => toggleSection('basicInfo')}
                     >
                         <h3>
-                            <ChevronDown 
-                                size={20} 
+                            <ChevronDown
+                                size={20}
                                 className={`section-toggle-icon ${collapsedSections.basicInfo ? 'collapsed' : ''}`}
                             />
                             Basic Information
@@ -163,192 +163,192 @@ function JournalEntryForm() {
                     </div>
 
                     <div className={`section-content ${collapsedSections.basicInfo ? 'collapsed' : ''}`}>
-                    <div className="form-group">
-                        <label htmlFor="date" className="form-label">
-                            Date *
-                        </label>
-                        <input
-                            type="datetime-local"
-                            id="date"
-                            name="date"
-                            className="form-input"
-                            value={formState.date}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="date" className="form-label">
+                                Date *
+                            </label>
+                            <input
+                                type="datetime-local"
+                                id="date"
+                                name="date"
+                                className="form-input"
+                                value={formState.date}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="brewLogId" className="form-label">
-                            Related Brew Log
-                        </label>
-                        <select
-                            id="brewLogId"
-                            name="brewLogId"
-                            className="form-input"
-                            value={formState.brewLogId}
-                            onChange={handleChange}
-                        >
-                            <option value="">No brew log</option>
-                            {state.brewLogs.map(brewLog => (
-                                <option key={brewLog.id} value={brewLog.id}>
-                                    {brewLog.name} ({brewLog.type})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="brewLogId" className="form-label">
+                                Related Brew Log
+                            </label>
+                            <select
+                                id="brewLogId"
+                                name="brewLogId"
+                                className="form-input"
+                                value={formState.brewLogId}
+                                onChange={handleChange}
+                            >
+                                <option value="">No brew log</option>
+                                {state.brewLogs.map(brewLog => (
+                                    <option key={brewLog.id} value={brewLog.id}>
+                                        {brewLog.name} ({brewLog.type})
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    {formState.brewLogId == '' &&
-                        <div>
-                            <div className="form-group">
-                                <label htmlFor="name" className="form-label">
-                                    Name *
-                                </label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    className="form-input"
-                                    value={formState.name}
-                                    onChange={handleChange}
-                                    required
-                                    maxLength={Validation.InputMaxLength}
-                                    placeholder="Enter brew name"
-                                />
-                            </div>
-
-                            <div className="form-row">
+                        {formState.brewLogId == '' &&
+                            <div>
                                 <div className="form-group">
-                                    <label htmlFor="brand" className="form-label">
-                                        Brand
+                                    <label htmlFor="name" className="form-label">
+                                        Name *
                                     </label>
                                     <input
                                         type="text"
-                                        id="brand"
-                                        name="brand"
+                                        id="name"
+                                        name="name"
                                         className="form-input"
-                                        value={formState.brand}
-                                        onChange={handleChange}
-                                        maxLength={Validation.InputMaxLength}
-                                        placeholder="Enter brand name"
-                                    />
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="style" className="form-label">
-                                        Style
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="style"
-                                        name="style"
-                                        className="form-input"
-                                        value={formState.style}
-                                        onChange={handleChange}
-                                        maxLength={Validation.InputMaxLength}
-                                        placeholder="e.g., IPA, Pinot Noir, etc."
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="form-row col-2">
-                                <div className="form-group">
-                                    <label htmlFor="type" className="form-label">
-                                        Type *
-                                    </label>
-                                    <select
-                                        id="type"
-                                        name="type"
-                                        className="form-input"
-                                        value={formState.type}
+                                        value={formState.name}
                                         onChange={handleChange}
                                         required
-                                    >
-                                        {BrewTypes.map((brewType) => (
-                                            <option key={brewType.key} value={brewType.key}>
-                                                {brewType.icon} {brewType.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                <div className="form-group">
-                                    <label htmlFor="abv" className="form-label">
-                                        ABV (%)
-                                    </label>
-                                    <input
-                                        type="number"
-                                        id="abv"
-                                        name="abv"
-                                        className="form-input"
-                                        value={formState.abv}
-                                        onChange={handleChange}
-                                        step="0.1"
-                                        min="0"
-                                        max="100"
-                                        placeholder="Alcohol by volume"
+                                        maxLength={Validation.InputMaxLength}
+                                        placeholder="Enter brew name"
                                     />
                                 </div>
+
+                                <div className="form-row">
+                                    <div className="form-group">
+                                        <label htmlFor="brand" className="form-label">
+                                            Brand
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="brand"
+                                            name="brand"
+                                            className="form-input"
+                                            value={formState.brand}
+                                            onChange={handleChange}
+                                            maxLength={Validation.InputMaxLength}
+                                            placeholder="Enter brand name"
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="style" className="form-label">
+                                            Style
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="style"
+                                            name="style"
+                                            className="form-input"
+                                            value={formState.style}
+                                            onChange={handleChange}
+                                            maxLength={Validation.InputMaxLength}
+                                            placeholder="e.g., IPA, Pinot Noir, etc."
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-row col-2">
+                                    <div className="form-group">
+                                        <label htmlFor="type" className="form-label">
+                                            Type *
+                                        </label>
+                                        <select
+                                            id="type"
+                                            name="type"
+                                            className="form-input"
+                                            value={formState.type}
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            {BrewTypes.map((brewType) => (
+                                                <option key={brewType.key} value={brewType.key}>
+                                                    {brewType.icon} {brewType.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="abv" className="form-label">
+                                            ABV (%)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            id="abv"
+                                            name="abv"
+                                            className="form-input"
+                                            value={formState.abv}
+                                            onChange={handleChange}
+                                            step="0.1"
+                                            min="0"
+                                            max="100"
+                                            placeholder="Alcohol by volume"
+                                        />
+                                    </div>
+                                </div>
                             </div>
+                        }
+
+                        <div className="form-group">
+                            <label htmlFor="venue" className="form-label">
+                                Venue
+                            </label>
+                            <input
+                                type="text"
+                                id="venue"
+                                name="venue"
+                                className="form-input"
+                                value={formState.venue}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="Where did you try it?"
+                            />
                         </div>
-                    }
 
-                    <div className="form-group">
-                        <label htmlFor="venue" className="form-label">
-                            Venue
-                        </label>
-                        <input
-                            type="text"
-                            id="venue"
-                            name="venue"
-                            className="form-input"
-                            value={formState.venue}
-                            onChange={handleChange}
-                            maxLength={Validation.InputMaxLength}
-                            placeholder="Where did you try it?"
+                        {/* Rating */}
+                        <Rating
+                            value={formState.rating}
+                            onChange={handleRatingChange}
+                            isEditing={true}
+                            label="Your Rating"
                         />
-                    </div>
-
-                    {/* Rating */}
-                    <Rating
-                        value={formState.rating}
-                        onChange={handleRatingChange}
-                        isEditing={true}
-                        label="Your Rating"
-                    />
                     </div>
                 </div>
 
                 {/* Notes */}
                 <div className="form-section">
-                    <div 
+                    <div
                         className="section-header collapsible"
                         onClick={() => toggleSection('notes')}
                     >
                         <h3>
-                            <ChevronDown 
-                                size={20} 
+                            <ChevronDown
+                                size={20}
                                 className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
                             />
                             Notes
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
-                    <div className="form-group">
-                        <label htmlFor="notes" className="form-label">
-                            Tasting Notes
-                        </label>
-                        <textarea
-                            id="notes"
-                            name="notes"
-                            className="form-textarea"
-                            value={formState.notes}
-                            onChange={handleChange}
-                            maxLength={Validation.TextAreaMaxLength}
-                            rows="6"
-                            placeholder="Describe the flavors, aromas, appearance, and overall experience..."
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="notes" className="form-label">
+                                Tasting Notes
+                            </label>
+                            <textarea
+                                id="notes"
+                                name="notes"
+                                className="form-textarea"
+                                value={formState.notes}
+                                onChange={handleChange}
+                                maxLength={Validation.TextAreaMaxLength}
+                                rows="6"
+                                placeholder="Describe the flavors, aromas, appearance, and overall experience..."
+                            />
+                        </div>
                     </div>
                 </div>
             </form>

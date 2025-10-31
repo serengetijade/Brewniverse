@@ -273,7 +273,7 @@ function AlertForm() {
                 isEditing={isEditing}
                 showCancel={!isEditing}
                 onCancel={() => navigate('/alerts')}
-                cancelIcon={<X size={18 }/>}
+                cancelIcon={<X size={18} />}
                 onDelete={handleDelete}
             />
         </div>
