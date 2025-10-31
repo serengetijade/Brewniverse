@@ -4,7 +4,13 @@ import { Validation } from '../../constants/ValidationConstants';
 import Button from '../UI/Button';
 import '../../Styles/Shared/instructions.css';
 
-function InstructionForm({ instructions = [''], onInstructionsChange }) {
+function InstructionForm({ 
+    instructions = [''], 
+    onInstructionsChange,
+    isCollapsible = false,
+    isCollapsed = false,
+    onToggle = null,
+}) {
     const handleStepChange = (index, value) => {
         const newSteps = [...instructions];
         newSteps[index] = value;
@@ -41,10 +47,22 @@ function InstructionForm({ instructions = [''], onInstructionsChange }) {
 
     return (
         <div className="instruction-container">
-            <div className="section-header">
-                <h3>Instructions</h3>
+            <div 
+                className={`section-header ${isCollapsible ? 'collapsible' : ''}`}
+                onClick={isCollapsible ? onToggle : undefined}
+            >
+                <h3>
+                    {isCollapsible && (
+                        <ChevronDown 
+                            size={20} 
+                            className={`section-toggle-icon ${isCollapsed ? 'collapsed' : ''}`}
+                        />
+                    )}
+                    Instructions
+                </h3>
             </div>
 
+            <div className={`section-content ${isCollapsible && isCollapsed ? 'collapsed' : ''}`}>
             <div className="steps-container">
                 {instructions.map((step, index) => (
                     <div key={index} className="step-input-group">
@@ -113,6 +131,7 @@ function InstructionForm({ instructions = [''], onInstructionsChange }) {
                     <Plus size={16} />
                     Add Step
                 </Button>
+            </div>
             </div>
         </div>
     );

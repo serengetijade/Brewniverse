@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -18,6 +18,23 @@ function RecipeForm() {
     const navigate = useNavigate();
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
+
+    // Collapsible section state with localStorage persistence
+    const [collapsedSections, setCollapsedSections] = useState(() => {
+        const saved = localStorage.getItem('recipeFormCollapsedSections');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const toggleSection = (sectionName) => {
+        setCollapsedSections(prev => {
+            const newState = {
+                ...prev,
+                [sectionName]: !prev[sectionName]
+            };
+            localStorage.setItem('recipeFormCollapsedSections', JSON.stringify(newState));
+            return newState;
+        });
+    };
 
     const [formState, setFormState] = useState(() => new Recipe({ id }));
 
@@ -124,8 +141,20 @@ function RecipeForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <h3>Basic Information</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('basicInfo')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.basicInfo ? 'collapsed' : ''}`}
+                            />
+                            Basic Information
+                        </h3>
+                    </div>
 
+                    <div className={`section-content ${collapsedSections.basicInfo ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
                             Recipe Name *
@@ -255,6 +284,7 @@ function RecipeForm() {
                             label="Rating"
                         />
                     </div>
+                    </div>
                 </div>
 
                 {/* Primary Ingredients */}
@@ -266,6 +296,9 @@ function RecipeForm() {
                         sectionName="Primary Ingredients"
                         sectionDescription=""
                         sectionInfoMessage="List ingredients used during primary fermentation. No primary ingredients added yet."
+                        isCollapsible={true}
+                        isCollapsed={collapsedSections.primaryIngredients}
+                        onToggle={() => toggleSection('primaryIngredients')}
                     >
                     </IngredientList>
                 </div>
@@ -279,6 +312,9 @@ function RecipeForm() {
                         sectionName="Secondary Ingredients"
                         sectionDescription=""
                         sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. No secondary ingredients added yet."
+                        isCollapsible={true}
+                        isCollapsed={collapsedSections.secondaryIngredients}
+                        onToggle={() => toggleSection('secondaryIngredients')}
                     >
                     </IngredientList>
                 </div>
@@ -288,11 +324,27 @@ function RecipeForm() {
                     <InstructionForm
                         instructions={formState.instructions}
                         onInstructionsChange={handleInstructionsChange}
+                        isCollapsible={true}
+                        isCollapsed={collapsedSections.instructions}
+                        onToggle={() => toggleSection('instructions')}
                     />
                 </div>
 
                 {/* Notes */}
                 <div className="form-section">
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('notes')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
+                            />
+                            Notes & Tips
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="notes" className="form-label">
                             Notes & Tips
@@ -308,12 +360,25 @@ function RecipeForm() {
                             rows={4}
                         />
                     </div>
+                    </div>
                 </div>
 
                 {/* Connected Brew Logs (only show when editing) */}
                 {isEditing && (
                     <div className="form-section">
-                        <h3>Connected Brew Logs</h3>
+                        <div 
+                            className="section-header collapsible"
+                            onClick={() => toggleSection('connectedBrewLogs')}
+                        >
+                            <h3>
+                                <ChevronDown 
+                                    size={20} 
+                                    className={`section-toggle-icon ${collapsedSections.connectedBrewLogs ? 'collapsed' : ''}`}
+                                />
+                                Connected Brew Logs
+                            </h3>
+                        </div>
+                        <div className={`section-content ${collapsedSections.connectedBrewLogs ? 'collapsed' : ''}`}>
                         {getConnectedBrewLogs().length === 0 ? (
                             <p className="empty-message">No brew logs are using this recipe yet.</p>
                         ) : (
@@ -336,6 +401,7 @@ function RecipeForm() {
                                 ))}
                             </div>
                         )}
+                        </div>
                     </div>
                 )}
             </form>

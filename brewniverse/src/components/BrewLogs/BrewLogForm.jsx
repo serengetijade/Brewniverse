@@ -1,4 +1,4 @@
-﻿import { X, Plus } from 'lucide-react';
+﻿import { X, Plus, ChevronDown } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -23,6 +23,23 @@ function BrewLogForm() {
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
     let buttonSize = 14;
+
+    // Collapsible section state with localStorage persistence
+    const [collapsedSections, setCollapsedSections] = useState(() => {
+        const saved = localStorage.getItem('brewLogFormCollapsedSections');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const toggleSection = (sectionName) => {
+        setCollapsedSections(prev => {
+            const newState = {
+                ...prev,
+                [sectionName]: !prev[sectionName]
+            };
+            localStorage.setItem('brewLogFormCollapsedSections', JSON.stringify(newState));
+            return newState;
+        });
+    };
 
     const newFormId = generateId();
     const initialDateCreatedActivity = createActivity(
@@ -313,10 +330,20 @@ function BrewLogForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Basic Information</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('basicInfo')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.basicInfo ? 'collapsed' : ''}`}
+                            />
+                            Basic Information
+                        </h3>
                     </div>
 
+                    <div className={`section-content ${collapsedSections.basicInfo ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
                             Brew Name *
@@ -459,6 +486,7 @@ function BrewLogForm() {
                         ) : null
                         }
                     </div>
+                    </div>
                 </div>
 
                 {/* Primary Ingredients */}
@@ -470,6 +498,9 @@ function BrewLogForm() {
                         sectionName="Primary Ingredients"
                         sectionDescription=""
                         sectionInfoMessage="Primary ingredients contribute to the flavor, color, and alcohol content of the brew. These are things such as malted grains, sugar, honey, molasses, agave, fruit, and other fermentables. No primary ingredients added yet."
+                        isCollapsible={true}
+                        isCollapsed={collapsedSections.primaryIngredients}
+                        onToggle={() => toggleSection('primaryIngredients')}
                     >
                     </IngredientList>
                 </div>
@@ -483,15 +514,28 @@ function BrewLogForm() {
                         sectionName="Secondary Ingredients"
                         sectionDescription=""
                         sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. These are optional additions added after primary fermentation has finished. No secondary ingredients added yet."
+                        isCollapsible={true}
+                        isCollapsed={collapsedSections.secondaryIngredients}
+                        onToggle={() => toggleSection('secondaryIngredients')}
                     >
                     </IngredientList>
                 </div>
 
                 {/* Yeast */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Pitch Yeast</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('yeast')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.yeast ? 'collapsed' : ''}`}
+                            />
+                            Pitch Yeast
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.yeast ? 'collapsed' : ''}`}>
                     <ActivityList
                         formData={formState}
                         setFormData={updateFormDataCallback}
@@ -502,13 +546,24 @@ function BrewLogForm() {
                         brewLogId={id}
                     >
                     </ActivityList>
+                    </div>
                 </div>
 
                 {/* Gravity Readings */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Gravity Readings</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('gravity')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.gravity ? 'collapsed' : ''}`}
+                            />
+                            Gravity Readings
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
                     {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
                         <p className="section-description">Please add gravity entries below to see calculated values</p>
                     )}
@@ -580,13 +635,24 @@ function BrewLogForm() {
                     </ActivityList>
 
                     <GravityChart gravityActivities={gravityActivities} />
+                    </div>
                 </div>
 
                 {/* Nutrients */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Nutrients</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('nutrients')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.nutrients ? 'collapsed' : ''}`}
+                            />
+                            Nutrients
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.nutrients ? 'collapsed' : ''}`}>
 
                     <div className="form-group">
                         <label htmlFor="nutrients" className="form-label">
@@ -657,13 +723,24 @@ function BrewLogForm() {
                             />
                         ))}
                     </div>
+                    </div>
                 </div>
 
                 {/* Pectic Enzyme */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Pectic Enzyme</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('pecticEnzyme')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
+                            />
+                            Pectic Enzyme
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="pecticEnzyme" className="form-label">
                             Pectic Enzyme
@@ -691,13 +768,24 @@ function BrewLogForm() {
                         brewLogId={id}
                     >
                     </ActivityList>
+                    </div>
                 </div>
 
                 {/* Acids and Bases */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Acids and Bases</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('acidsAndBases')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}
+                            />
+                            Acids and Bases
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}>
 
                     {/* Acids */}
                     <div className="form-group">
@@ -756,13 +844,24 @@ function BrewLogForm() {
                         brewLogId={id}
                     >
                     </ActivityList>
+                    </div>
                 </div>
 
                 {/* Tannins */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Tannins</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('tannins')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.tannins ? 'collapsed' : ''}`}
+                            />
+                            Tannins
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.tannins ? 'collapsed' : ''}`}>
 
                     <div className="form-group">
                         <label htmlFor="tannins" className="form-label">
@@ -790,13 +889,24 @@ function BrewLogForm() {
                         brewLogId={id}
                     >
                     </ActivityList>
+                    </div>
                 </div>
 
                 {/* Important Dates */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Important Dates</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('importantDates')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.importantDates ? 'collapsed' : ''}`}
+                            />
+                            Important Dates
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.importantDates ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <ActivityList
                             formData={formState}
@@ -835,13 +945,24 @@ function BrewLogForm() {
                             onChange={handleChange}
                         />
                     </div>
+                    </div>
                 </div>
 
                 {/*Other Activities*/}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Other Activities</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('otherActivities')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.otherActivities ? 'collapsed' : ''}`}
+                            />
+                            Other Activities
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.otherActivities ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <ActivityList
                             formData={formState}
@@ -854,15 +975,24 @@ function BrewLogForm() {
                         >
                         </ActivityList>
                     </div>
+                    </div>
                 </div>
 
                 {/* Notes */}
                 <div className="form-section">
-                    <div className="section-header">
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('notes')}
+                    >
                         <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
+                            />
                             Notes
                         </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <textarea
                             id="notes"
@@ -875,16 +1005,25 @@ function BrewLogForm() {
                             rows={4}
                         />
                     </div>
+                    </div>
                 </div>
 
                 {/* Journal Entries */}
                 <div className="form-section brewlog-journal">
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('journal')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.journal ? 'collapsed' : ''}`}
+                            />
+                            Journal
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.journal ? 'collapsed' : ''}`}>
                     <div className="form-group brewlog-journal-header">
-                        <div className="section-header">
-                            <h3>
-                                Journal
-                            </h3>
-                        </div>
                         <div className="brewlog-journal-action">
                             <Button
                                 type="button"
@@ -900,6 +1039,7 @@ function BrewLogForm() {
 
                     <div className="form-group">
                         <JournalEntryList brewLogId={id} />
+                    </div>
                     </div>
                 </div>
             </form>

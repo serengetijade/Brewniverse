@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import '../../Styles/JournalEntryForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -17,6 +17,23 @@ function JournalEntryForm() {
     const { state, dispatch } = useApp();
     const [searchParams] = useSearchParams();
     const isEditing = Boolean(id);
+
+    // Collapsible section state with localStorage persistence
+    const [collapsedSections, setCollapsedSections] = useState(() => {
+        const saved = localStorage.getItem('journalFormCollapsedSections');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const toggleSection = (sectionName) => {
+        setCollapsedSections(prev => {
+            const newState = {
+                ...prev,
+                [sectionName]: !prev[sectionName]
+            };
+            localStorage.setItem('journalFormCollapsedSections', JSON.stringify(newState));
+            return newState;
+        });
+    };
 
     const [formState, setFormState] = useState(() => {
         const brewLogId = searchParams.get('brewLogId') || '';
@@ -132,10 +149,20 @@ function JournalEntryForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Basic Information</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('basicInfo')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.basicInfo ? 'collapsed' : ''}`}
+                            />
+                            Basic Information
+                        </h3>
                     </div>
 
+                    <div className={`section-content ${collapsedSections.basicInfo ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="date" className="form-label">
                             Date *
@@ -289,13 +316,24 @@ function JournalEntryForm() {
                         isEditing={true}
                         label="Your Rating"
                     />
+                    </div>
                 </div>
 
                 {/* Notes */}
                 <div className="form-section">
-                    <div className="section-header">
-                        <h3>Notes</h3>
+                    <div 
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('notes')}
+                    >
+                        <h3>
+                            <ChevronDown 
+                                size={20} 
+                                className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
+                            />
+                            Notes
+                        </h3>
                     </div>
+                    <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
                     <div className="form-group">
                         <label htmlFor="notes" className="form-label">
                             Tasting Notes
@@ -310,6 +348,7 @@ function JournalEntryForm() {
                             rows="6"
                             placeholder="Describe the flavors, aromas, appearance, and overall experience..."
                         />
+                    </div>
                     </div>
                 </div>
             </form>
