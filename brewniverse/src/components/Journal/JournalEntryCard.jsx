@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, SquarePen } from 'lucide-react';
+import { BookOpen, Calendar, MapPin, Percent, SquarePen, Tag } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
@@ -11,20 +11,76 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
 
     if (displayOption === 'grid') {
         return (
-            <div className="recent-item" style={{ borderLeftColor: brewTypeConfig.color }}>
-                <div className="recent-item-content">
-                    <h4>{brewTypeConfig.icon} {entry.name} {(entry.brand && entry.brand != "Brewniverse") && <span>({entry.brand})</span>}</h4>
-                    <p>{entry.type}</p>
-                    <Rating value={entry.rating || 0} isEditing={false} />
-                    <small>{new Date(entry.date).toLocaleDateString()}</small>
+            <div className="item-card journal-entry-card" style={{ '--item-color': brewTypeConfig.color }}>
+                <div className="journal-card-accent"></div>
+                
+                <div className="journal-entry-header">
+                    <div className="journal-entry-type">
+                        <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
+                        <div className="journal-entry-type-info">
+                            <span className="type-text">{entry.type}</span>
+                            <div className="journal-entry-date">
+                                <Calendar size={14} />
+                                <span>{new Date(entry.date).toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {entry.brand && entry.brand !== "Brewniverse" && (
+                        <div className="journal-entry-brand-badge">
+                            <Tag size={12} />
+                            <span>{entry.brand}</span>
+                        </div>
+                    )}
                 </div>
-                <Button
-                    variant="ghost"
-                    size="small"
-                    onClick={() => navigate(`/journal/${entry.id}`)}
-                >
-                    <SquarePen size={18} />Edit
-                </Button>
+
+                <div className="item-content">
+                    <h3 className="journal-entry-name">{entry.name}</h3>
+                    
+                    {entry.style && (
+                        <p className="journal-entry-style">{entry.style}</p>
+                    )}
+
+                    <Rating value={entry.rating || 0} isEditing={false} />
+
+                    {(entry.abv || entry.venue) && (
+                        <div className="journal-entry-stats-grid">
+                            {entry.abv && (
+                                <div className="journal-entry-stat">
+                                    <div className="journal-entry-stat-icon">
+                                        <Percent size={16} />
+                                    </div>
+                                    <div className="journal-entry-stat-info">
+                                        <span className="journal-entry-stat-label">ABV</span>
+                                        <span className="journal-entry-stat-value">
+                                            {parseFloat(entry.abv) ? parseFloat(entry.abv) + '%' : '--'}
+                                        </span> 
+                                    </div>
+                                </div>
+                            )}
+                            {entry.venue && (
+                                <div className="journal-entry-stat">
+                                    <div className="journal-entry-stat-icon">
+                                        <MapPin size={16} />
+                                    </div>
+                                    <div className="journal-entry-stat-info">
+                                        <span className="journal-entry-stat-label">Venue</span>
+                                        <span className="journal-entry-stat-value">{entry.venue}</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                <div className="item-actions form-row col-2">
+                    <Button
+                        variant="ghost"
+                        size="medium"
+                        onClick={() => navigate(`/journal/${entry.id}`)}
+                    >
+                        <SquarePen size={18} />Edit
+                    </Button>
+                </div>
             </div>
         );
     } else {
