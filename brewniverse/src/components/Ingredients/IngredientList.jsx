@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { Plus, ChevronDown } from 'lucide-react';
 import React from 'react';
 import '../../Styles/Shared/ingredients.css';
 import IngredientModel from '../../models/Ingredient';
@@ -12,6 +12,9 @@ export default function IngredientList({
     sectionName,
     sectionDescription,
     sectionInfoMessage,
+    isCollapsible = false,
+    isCollapsed = false,
+    onToggle = null,
 }) {
     const [editingIngredient, setEditingIngredient] = React.useState(null);
 
@@ -83,10 +86,22 @@ export default function IngredientList({
 
     return (
         <div>
-            <div className="section-header">
-                <h3>{sectionName}{description}</h3>
+            <div 
+                className={`section-header ${isCollapsible ? 'collapsible' : ''}`}
+                onClick={isCollapsible ? onToggle : undefined}
+            >
+                <h3>
+                    {isCollapsible && (
+                        <ChevronDown 
+                            size={20} 
+                            className={`section-toggle-icon ${isCollapsed ? 'collapsed' : ''}`}
+                        />
+                    )}
+                    {sectionName}{description}
+                </h3>
             </div>
 
+            <div className={`section-content ${isCollapsible && isCollapsed ? 'collapsed' : ''}`}>
             <div className="form-group">
                 {formDataObj[ingredientType].length === 0
                     ? (<p className="empty-message">{sectionInfoMessage}</p>)
@@ -120,6 +135,7 @@ export default function IngredientList({
                     <Plus size={16} />
                     Add Ingredient
                 </Button>
+            </div>
             </div>
         </div>
     );
