@@ -41,8 +41,8 @@ function InstructionForm({ instructions = [''], onInstructionsChange }) {
 
     return (
         <div className="instruction-container">
-            <div className="steps-header">
-                <label className="form-label">Instructions</label>
+            <div className="section-header">
+                <h3>Instructions</h3>
             </div>
 
             <div className="steps-container">

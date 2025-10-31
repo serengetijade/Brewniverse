@@ -132,7 +132,9 @@ function JournalEntryForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <h3>Basic Information</h3>
+                    <div className="section-header">
+                        <h3>Basic Information</h3>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="date" className="form-label">
@@ -291,7 +293,9 @@ function JournalEntryForm() {
 
                 {/* Notes */}
                 <div className="form-section">
-                    <h3>Notes</h3>
+                    <div className="section-header">
+                        <h3>Notes</h3>
+                    </div>
                     <div className="form-group">
                         <label htmlFor="notes" className="form-label">
                             Tasting Notes
