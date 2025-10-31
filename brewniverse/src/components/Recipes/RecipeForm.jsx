@@ -141,13 +141,13 @@ function RecipeForm() {
             <form onSubmit={handleSubmit} className="card">
                 {/* Basic Information */}
                 <div className="form-section">
-                    <div 
+                    <div
                         className="section-header collapsible"
                         onClick={() => toggleSection('basicInfo')}
                     >
                         <h3>
-                            <ChevronDown 
-                                size={20} 
+                            <ChevronDown
+                                size={20}
                                 className={`section-toggle-icon ${collapsedSections.basicInfo ? 'collapsed' : ''}`}
                             />
                             Basic Information
@@ -155,135 +155,135 @@ function RecipeForm() {
                     </div>
 
                     <div className={`section-content ${collapsedSections.basicInfo ? 'collapsed' : ''}`}>
-                    <div className="form-group">
-                        <label htmlFor="name" className="form-label">
-                            Recipe Name *
-                        </label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            className="form-input"
-                            value={formState.name}
-                            onChange={handleChange}
-                            required
-                            maxLength={Validation.InputMaxLength}
-                            placeholder="Enter recipe name"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="dateCreated" className="form-label">
-                            Date Created *
-                        </label>
-                        <input
-                            type="datetime-local"
-                            id="dateCreated"
-                            name="dateCreated"
-                            className="form-input"
-                            value={formState.dateCreated}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="type" className="form-label">
-                            Type *
-                        </label>
-                        <select
-                            id="type"
-                            name="type"
-                            className="form-select"
-                            value={formState.type}
-                            onChange={handleChange}
-                            required
-                        >
-                            {BrewTypes.map((type) => (
-                                <option key={type.name} value={type.name}>
-                                    {type.icon} {type.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="difficulty" className="form-label">
-                                Difficulty Level
-                            </label>
-                            <select
-                                id="difficulty"
-                                name="difficulty"
-                                className="form-select"
-                                value={formState.difficulty}
-                                onChange={handleChange}
-                            >
-                                <option value="Beginner">Beginner</option>
-                                <option value="Intermediate">Intermediate</option>
-                                <option value="Advanced">Advanced</option>
-                                <option value="Expert">Expert</option>
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="volume" className="form-label">
-                                Estimated Yield
+                            <label htmlFor="name" className="form-label">
+                                Recipe Name *
                             </label>
                             <input
                                 type="text"
-                                id="volume"
-                                name="volume"
+                                id="name"
+                                name="name"
                                 className="form-input"
-                                value={formState.volume}
+                                value={formState.name}
                                 onChange={handleChange}
+                                required
                                 maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
+                                placeholder="Enter recipe name"
                             />
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="estimatedABV" className="form-label">
-                                Estimated ABV (%)
+                            <label htmlFor="dateCreated" className="form-label">
+                                Date Created *
                             </label>
                             <input
-                                type="number"
-                                step="0.1"
-                                id="estimatedABV"
-                                name="estimatedABV"
+                                type="datetime-local"
+                                id="dateCreated"
+                                name="dateCreated"
                                 className="form-input"
-                                value={formState.estimatedABV}
+                                value={formState.dateCreated}
                                 onChange={handleChange}
-                                min={Validation.NumberMin}
-                                placeholder="12.5"
+                                required
                             />
                         </div>
-                    </div>
 
-                    <div className="form-group">
-                        <label htmlFor="description" className="form-label">
-                            Description
-                        </label>
-                        <textarea
-                            id="description"
-                            name="description"
-                            className="form-textarea"
-                            value={formState.description}
-                            onChange={handleChange}
-                            maxLength={Validation.TextareaMaxLength}
-                            placeholder="Brief description of this recipe"
-                            rows={3}
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="type" className="form-label">
+                                Type *
+                            </label>
+                            <select
+                                id="type"
+                                name="type"
+                                className="form-select"
+                                value={formState.type}
+                                onChange={handleChange}
+                                required
+                            >
+                                {BrewTypes.map((type) => (
+                                    <option key={type.name} value={type.name}>
+                                        {type.icon} {type.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                    <div className="form-group">
-                        <Rating
-                            value={formState.rating}
-                            onChange={(newRating) => updateFormData({ rating: newRating })}
-                            isEditing={true}
-                            label="Rating"
-                        />
-                    </div>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="difficulty" className="form-label">
+                                    Difficulty Level
+                                </label>
+                                <select
+                                    id="difficulty"
+                                    name="difficulty"
+                                    className="form-select"
+                                    value={formState.difficulty}
+                                    onChange={handleChange}
+                                >
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                    <option value="Expert">Expert</option>
+                                </select>
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="volume" className="form-label">
+                                    Estimated Yield
+                                </label>
+                                <input
+                                    type="text"
+                                    id="volume"
+                                    name="volume"
+                                    className="form-input"
+                                    value={formState.volume}
+                                    onChange={handleChange}
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="e.g., 5 gallons, 1 gallon"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="estimatedABV" className="form-label">
+                                    Estimated ABV (%)
+                                </label>
+                                <input
+                                    type="number"
+                                    step="0.1"
+                                    id="estimatedABV"
+                                    name="estimatedABV"
+                                    className="form-input"
+                                    value={formState.estimatedABV}
+                                    onChange={handleChange}
+                                    min={Validation.NumberMin}
+                                    placeholder="12.5"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="description" className="form-label">
+                                Description
+                            </label>
+                            <textarea
+                                id="description"
+                                name="description"
+                                className="form-textarea"
+                                value={formState.description}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="Brief description of this recipe"
+                                rows={3}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <Rating
+                                value={formState.rating}
+                                onChange={(newRating) => updateFormData({ rating: newRating })}
+                                isEditing={true}
+                                label="Rating"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -332,75 +332,75 @@ function RecipeForm() {
 
                 {/* Notes */}
                 <div className="form-section">
-                    <div 
+                    <div
                         className="section-header collapsible"
                         onClick={() => toggleSection('notes')}
                     >
                         <h3>
-                            <ChevronDown 
-                                size={20} 
+                            <ChevronDown
+                                size={20}
                                 className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
                             />
                             Notes & Tips
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
-                    <div className="form-group">
-                        <label htmlFor="notes" className="form-label">
-                            Notes & Tips
-                        </label>
-                        <textarea
-                            id="notes"
-                            name="notes"
-                            className="form-textarea"
-                            value={formState.notes}
-                            onChange={handleChange}
-                            maxLength={Validation.TextareaMaxLength}
-                            placeholder="Additional notes, tips, and observations for this recipe"
-                            rows={4}
-                        />
-                    </div>
+                        <div className="form-group">
+                            <label htmlFor="notes" className="form-label">
+                                Notes & Tips
+                            </label>
+                            <textarea
+                                id="notes"
+                                name="notes"
+                                className="form-textarea"
+                                value={formState.notes}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="Additional notes, tips, and observations for this recipe"
+                                rows={4}
+                            />
+                        </div>
                     </div>
                 </div>
 
                 {/* Connected Brew Logs (only show when editing) */}
                 {isEditing && (
                     <div className="form-section">
-                        <div 
+                        <div
                             className="section-header collapsible"
                             onClick={() => toggleSection('connectedBrewLogs')}
                         >
                             <h3>
-                                <ChevronDown 
-                                    size={20} 
+                                <ChevronDown
+                                    size={20}
                                     className={`section-toggle-icon ${collapsedSections.connectedBrewLogs ? 'collapsed' : ''}`}
                                 />
                                 Connected Brew Logs
                             </h3>
                         </div>
                         <div className={`section-content ${collapsedSections.connectedBrewLogs ? 'collapsed' : ''}`}>
-                        {getConnectedBrewLogs().length === 0 ? (
-                            <p className="empty-message">No brew logs are using this recipe yet.</p>
-                        ) : (
-                            <div className="connected-brews">
-                                {getConnectedBrewLogs().map((brewLog) => (
-                                    <div key={brewLog.id} className="connected-brew-item">
-                                        <div className="brew-info">
-                                            <h4>{brewLog.name}</h4>
-                                            <p>{brewLog.type} • Created {new Date(brewLog.dateCreated).toLocaleDateString()}</p>
+                            {getConnectedBrewLogs().length === 0 ? (
+                                <p className="empty-message">No brew logs are using this recipe yet.</p>
+                            ) : (
+                                <div className="connected-brews">
+                                    {getConnectedBrewLogs().map((brewLog) => (
+                                        <div key={brewLog.id} className="connected-brew-item">
+                                            <div className="brew-info">
+                                                <h4>{brewLog.name}</h4>
+                                                <p>{brewLog.type} • Created {new Date(brewLog.dateCreated).toLocaleDateString()}</p>
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="small"
+                                                onClick={() => navigate(`/brewlogs/${brewLog.id}`)}
+                                            >
+                                                View Brew Log
+                                            </Button>
                                         </div>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="small"
-                                            onClick={() => navigate(`/brewlogs/${brewLog.id}`)}
-                                        >
-                                            View Brew Log
-                                        </Button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
