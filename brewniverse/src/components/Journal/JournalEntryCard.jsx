@@ -13,17 +13,17 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
         return (
             <div className="recent-item" style={{ borderLeftColor: brewTypeConfig.color }}>
                 <div className="recent-item-content">
-                    <h4>{brewTypeConfig.icon} {entry.name} {(entry.brand && entry.brand != "Brewniverse") && <span>({ entry.brand })</span>}</h4>
+                    <h4>{brewTypeConfig.icon} {entry.name} {(entry.brand && entry.brand != "Brewniverse") && <span>({entry.brand})</span>}</h4>
                     <p>{entry.type}</p>
                     <Rating value={entry.rating || 0} isEditing={false} />
                     <small>{new Date(entry.date).toLocaleDateString()}</small>
                 </div>
                 <Button
-                    variant="outline"
+                    variant="ghost"
                     size="small"
                     onClick={() => navigate(`/journal/${entry.id}`)}
                 >
-                    View
+                    <SquarePen size={18} />Edit
                 </Button>
             </div>
         );
@@ -49,14 +49,14 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                         </div>
                     </div>
                     <div className="list-view-actions item-actions">
-                        {entry.brewLogId &&  
-                        <Button
-                            variant="ghost"
-                            size="small"
-                            onClick={() => navigate(`/brewlogs/${entry.brewLogId}`)}
-                        >
-                            <BookOpen size={16} />
-                        </Button>}
+                        {entry.brewLogId &&
+                            <Button
+                                variant="ghost"
+                                size="small"
+                                onClick={() => navigate(`/brewlogs/${entry.brewLogId}`)}
+                            >
+                                <BookOpen size={16} />
+                            </Button>}
                         <Button
                             variant="ghost"
                             size="small"
