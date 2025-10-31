@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Edit, FileText, NotebookPen } from 'lucide-react';
+import { ArrowLeft, BookOpen, Calendar, Edit, FileText, NotebookPen } from 'lucide-react';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogDetail.css';
@@ -45,10 +45,6 @@ function BrewLogDetail() {
             });
             navigate('/brewlogs');
         }
-    };
-
-    const handleCancel = () => {
-        navigate('/brewlogs');
     };
 
     const gravityActivities = getGravityActivities(brewLog.activity || []);
@@ -150,14 +146,12 @@ function BrewLogDetail() {
 
                 {/* Footer */}
                 <FormFooter
-                    isEditing={true}
-                    entityName="Brew Log"
-                    cancelLabel="Back to List"
-                    onCancel={handleCancel}
+                    isEditing={false}
+                    showCancel={true}
+                    cancelLabel="List"
+                    onCancel={() => navigate(`/brewlogs`)}
                     showDelete={false}
                     onDelete={handleDelete}
-                    collapsible={true}
-                    defaultExpanded={false}
                     submitLabel="Edit"
                     submitIcon={<Edit size={16} />}
                     onSubmit={() => navigate(`/brewlogs/${id}/edit`)}

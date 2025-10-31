@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import '../../Styles/JournalEntryForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -311,11 +312,11 @@ function JournalEntryForm() {
 
             <FormFooter
                 isEditing={isEditing}
-                entityName="Journal Entry"
+                cancelIcon={<X size={18} />}
                 onCancel={() => navigate('/journal')}
+                showCancel={!isEditing}
                 onDelete={onDelete}
                 onSubmit={handleSubmit}
-                showCancel={!isEditing}
                 showDelete={isEditing}
             />
         </div>

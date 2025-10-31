@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -341,11 +342,12 @@ function RecipeForm() {
 
             <FormFooter
                 isEditing={isEditing}
-                entityName="Recipe"
+                cancelIcon={<X size={18} />}
+                onCancel={() => navigate(`/recipes`)}
                 showCancel={!isEditing}
-                onCancel={() => navigate('/recipes')}
                 showDelete={true}
                 onDelete={onDelete}
+                onSubmit={() => navigate(`/recipes/${id}`)}
             />
         </div>
     );

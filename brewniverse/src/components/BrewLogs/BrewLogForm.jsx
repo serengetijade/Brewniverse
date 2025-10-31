@@ -1,4 +1,4 @@
-﻿import { Plus } from 'lucide-react';
+﻿import { X, Plus } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -885,9 +885,10 @@ function BrewLogForm() {
 
             <FormFooter
                 isEditing={isEditing}
-                entityName="Brew Log"
                 showCancel={!isEditing}
+                cancelIcon={<X size={18} />}
                 onCancel={() => navigate('/brewlogs')}
+                onSubmit={() => navigate(`/brewlogs/${id}`)}
                 showDelete={true}
                 onDelete={onDelete}
             />

@@ -1,10 +1,9 @@
-import { ChevronDown, ChevronUp, Save, Trash2, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp, Save, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import Button from '../UI/Button';
 
 function FormFooter({
     isEditing,
-    entityName,
     onCancel,
     onDelete,
     onSubmit,
@@ -14,7 +13,8 @@ function FormFooter({
     defaultExpanded = false,
     submitLabel = null,
     submitIcon = null,
-    cancelLabel = "Cancel"
+    cancelLabel = "Cancel",
+    cancelIcon = <ArrowLeft size={ 18 }/>
 }) {
     const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
@@ -53,7 +53,7 @@ function FormFooter({
                         variant="ghost"
                         onClick={onCancel}
                     >
-                        <X size={16} />
+                        {cancelIcon}
                         {cancelLabel}
                     </Button>}
 
