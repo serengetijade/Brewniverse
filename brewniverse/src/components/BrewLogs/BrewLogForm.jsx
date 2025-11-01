@@ -1,5 +1,5 @@
 ﻿import { ChevronDown, Plus, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -90,17 +90,20 @@ function BrewLogForm() {
         }
     };
 
-    const updateFormData = (updates) => {
-        const updatedData = BrewLog.fromJSON({ ...formState.toJSON(), ...updates });
-        setFormState(updatedData);
-
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateBrewLog,
-                payload: { ...updatedData.toJSON(), id }
-            });
-        }
-    };
+    const updateFormData = useCallback((updates) => {
+        setFormState(prevState => {
+            const updatedData = BrewLog.fromJSON({ ...prevState.toJSON(), ...updates });
+            
+            if (isEditing) {
+                dispatch({
+                    type: ActionTypes.updateBrewLog,
+                    payload: { ...updatedData.toJSON(), id }
+                });
+            }
+            
+            return updatedData;
+        });
+    }, [isEditing, id, dispatch]);
 
     const updateFormDataCallback = (updaterFn) => {
         const currentData = formState.toJSON();
