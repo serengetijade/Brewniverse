@@ -80,9 +80,9 @@ function BrewLogStats({ brewLog }) {
         {
             id: 'abv',
             icon: <Zap size={20} />,
-            label: 'Current ABV',
-            value: gravityActivities.length > 0 ? `${getCurrentAbv(gravityActivities)}%` : 'N/A',
-            subtext: gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null,
+            label: brewLog.finalAbv ? 'Final ABV' : 'Current ABV',
+            value: brewLog.finalAbv ? `${brewLog.finalAbv}%` : (gravityActivities.length > 0 ? `${getCurrentAbv(gravityActivities)}%` : 'N/A'),
+            subtext: brewLog.finalAbv ? 'After dilution/blending' : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
             color: '204,102,204'
         },
         {

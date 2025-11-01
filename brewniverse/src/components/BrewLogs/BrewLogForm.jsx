@@ -9,6 +9,7 @@ import BrewLog from '../../models/BrewLog';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
+import MiniAbvCalculator from '../Calculators/MiniAbvCalculator';
 import IngredientList from '../Ingredients/IngredientList';
 import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
@@ -889,6 +890,28 @@ function BrewLogForm() {
                             brewLogId={id}
                         >
                         </ActivityList>
+                    </div>
+                </div>
+
+                {/* Final ABV Calculator */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('abv')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.abv ? 'collapsed' : ''}`}
+                            />
+                            Final ABV Calculator
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.abv ? 'collapsed' : ''}`}>
+                        <MiniAbvCalculator 
+                            formState={formState}
+                            updateFormData={updateFormData}
+                        />
                     </div>
                 </div>
 
