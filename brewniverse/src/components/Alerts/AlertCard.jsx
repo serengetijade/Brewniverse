@@ -51,7 +51,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
         };
 
         return (
-            <div className={`item-card alert-card ${alert.isCompleted ? 'alert-completed-card' : ''}`}
+            <div className={`item-card grid-view alert-card ${alert.isCompleted ? 'alert-completed-card' : ''}`}
                 style={cardStyle}>
                 <div className="item-card-accent"></div>
                 <div className="item-card-header alert-header">
@@ -116,15 +116,15 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
 
                 <div className="item-card-actions">
                     <Button
-                        variant="outline"
-                        size="small"
+                        variant="ghost"
+                        size="medium"
                         onClick={() => navigate(editUrl)}
                     >
-                        Edit
+                        <SquarePen size={18} />Edit
                     </Button>
                     <Button
-                        variant="outline"
-                        size="small"
+                        variant="ghost"
+                        size="medium"
                         onClick={handleComplete}
                     >
                         {alert.isCompleted ? <Trash2 size={16} /> : "Complete"}
@@ -178,14 +178,14 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                     <div className="list-view-actions item-card-actions">
                         <Button
                             variant="ghost"
-                            size="small"
+                            size="medium"
                             onClick={() => navigate(editUrl)}
                         >
                             <SquarePen size={16} />
                         </Button>
                         <Button
                             variant={alert.isCompleted ? "error" : "success"}
-                            size="small"
+                            size="medium"
                             onClick={handleComplete}
                         >
                             {alert.isCompleted ? <Trash2 size={16} /> : <CheckCircle2 size={16} />}

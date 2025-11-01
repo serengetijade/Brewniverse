@@ -22,10 +22,10 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
 
     if (displayOption == 'grid')
         return (
-            <div className="item-card brewlog-card" style={{ '--item-color': brewTypeConfig.color }}>
+            <div className="item-card grid-view brewlog-card" style={{ '--item-color': brewTypeConfig.color }}>
                 <div className="item-card-accent"></div>
                 <div className="item-card-header brewlog-header">
-                    <div className="brewlog-type">
+                    <div className="item-card-type brewlog-type">
                         <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="brewlog-type-info">
                             <span className="type-text">{brewLog.type}</span>
@@ -107,7 +107,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
             <div className="list-view-row">
                 <div className="list-view-body">
                     <div className="item-header brewlog-header">
-                        <div className="item-type brewlog-type">
+                        <div className="item-type">
                             <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                             <h3 className="item-title brewlog-name">{brewLog.name}</h3>
                         </div>

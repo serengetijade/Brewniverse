@@ -11,7 +11,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
 
     if (displayOption === 'grid') {
         return (
-            <div className="item-card journal-entry-card" style={{ '--item-color': brewTypeConfig.color }}>
+            <div className="item-card grid-view journal-entry-card" style={{ '--item-color': brewTypeConfig.color }}>
                 <div className="item-card-accent"></div>
                 
                 <div className="item-card-header journal-entry-header">
@@ -108,17 +108,17 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                         {entry.brewLogId &&
                             <Button
                                 variant="ghost"
-                                size="small"
+                                size="medium"
                                 onClick={() => navigate(`/brewlogs/${entry.brewLogId}`)}
                             >
-                                <BookOpen size={16} />
+                                <BookOpen size={18} />
                             </Button>}
                         <Button
                             variant="ghost"
-                            size="small"
+                            size="medium"
                             onClick={() => navigate(`/journal/${entry.id}/edit`)}
                         >
-                            <SquarePen size={16} />
+                            <SquarePen size={18} />
                         </Button>
                     </div>
                 </div>
