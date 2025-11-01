@@ -140,9 +140,9 @@ function JournalList() {
                         sortOptions={[
                             { key: 'date', label: 'Date', icon: Calendar },
                             { key: 'name', label: 'Name', icon: BookOpen },
-                            { key: 'brand', label: 'Brand', icon: Tag },
+                            { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' },
                             { key: 'type', label: 'Type', icon: ListTree },
-                            { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' }
+                            { key: 'brand', label: 'Brand', icon: Tag }
                         ]}
                         searchPlaceholder="Search entries by name, brand, venue, style, or notes..."
                     />

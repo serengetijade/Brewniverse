@@ -39,7 +39,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                     <div className="recipe-type">
                         <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                         <div className="recipe-type-info">
-                            <span className="type-text">{recipe.difficulty} {recipe.type}</span>
+                            <span className="type-text">{recipe.difficulty}<br/>{recipe.type}</span>
                             <div className="recipe-date">
                                 <Calendar size={14} />
                                 <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>

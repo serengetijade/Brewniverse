@@ -109,7 +109,7 @@ function AlcoholConversionChart({ gravityActivities }) {
                         stroke={theme.colors.textLight}
                         style={{ fontSize: '13px', fontWeight: '500' }}
                     />
-                    <Tooltip content={<CustomTooltip />} />
+                    {/*<Tooltip content={<CustomTooltip />} />*/}
                     <Bar
                         dataKey="value"
                         stackId="a"

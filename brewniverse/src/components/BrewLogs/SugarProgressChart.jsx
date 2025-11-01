@@ -129,7 +129,7 @@ function SugarProgressChart({ gravityActivities }) {
                             style: { fontSize: '12px' }
                         }}
                     />
-                    <Tooltip content={<CustomTooltip />} />
+                    {/*<Tooltip content={<CustomTooltip />} />*/}
                     <Bar
                         dataKey="value"
                         radius={[8, 8, 0, 0]}
