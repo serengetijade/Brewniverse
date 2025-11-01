@@ -131,7 +131,7 @@ function Activity({
                 recurringInterval: 1,
                 endDate: '',
                 isCompleted: false,
-                priority: 'medium'
+                priority: 'low'
             };
 
             // Dispatch to create alert in global state

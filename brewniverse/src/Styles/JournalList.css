@@ -98,10 +98,15 @@
 
 
 /* Journal card styles */
+.journal-entry-card .item-card-actions{
+    grid-template-columns: 1fr;
+}
+
 .journal-card {
     position: relative;
     overflow: hidden;
 }
+
 
 /* Mobile optimizations for journal entry cards */
 @media (max-width: 768px) {

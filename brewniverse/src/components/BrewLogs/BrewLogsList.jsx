@@ -129,9 +129,9 @@ function BrewLogsList() {
                     sortOptions={[
                         { key: 'date', label: 'Date', icon: Calendar },
                         { key: 'name', label: 'Name', icon: ArrowDownAZ },
+                        { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' },
                         { key: 'type', label: 'Type', icon: ListTree },
-                        { key: 'recipe', label: 'Recipe', icon: FileText },
-                        { key: 'rating', label: 'Rating', icon: Star, defaultOrder: 'desc' }
+                        { key: 'recipe', label: 'Recipe', icon: FileText }
                     ]}
                     searchPlaceholder="Search brew logs by name, description, or type..."
                 />
