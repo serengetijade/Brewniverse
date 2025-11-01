@@ -15,6 +15,10 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);
     const currentAbv = getCurrentAbv(gravityActivities);
     const gravityFinal = getGravityFinal(gravityActivities);
+    
+    // Use finalAbv if available, otherwise use currentAbv
+    const displayAbv = brewLog.finalAbv || currentAbv;
+    const abvLabel = brewLog.finalAbv ? 'Final ABV' : 'Current ABV';
 
     if (displayOption == 'grid')
         return (
@@ -50,16 +54,16 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
 
                     <Rating value={brewLog.rating || 0} isEditing={false} />
 
-                    {(currentAbv || gravityFinal) && (
+                    {(displayAbv || gravityFinal) && (
                         <div className="item-card-stat-grid">
-                            {currentAbv && (
+                            {displayAbv && (
                                 <div className="item-card-stat">
                                     <div className="item-card-stat-icon">
                                         <TrendingUp size={16} />
                                     </div>
                                     <div className="item-card-stat-info">
-                                        <span className="item-card-stat-label">Current ABV</span>
-                                        <span className="item-card-stat-value">{currentAbv}%</span>
+                                        <span className="item-card-stat-label">{abvLabel}</span>
+                                        <span className="item-card-stat-value">{displayAbv}%</span>
                                     </div>
                                 </div>
                             )}

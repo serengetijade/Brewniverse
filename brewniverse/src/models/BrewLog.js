@@ -11,6 +11,7 @@ class BrewLog {
         this.dateBottled = data.dateBottled || '';
         this.dateCreated = data.dateCreated || getDate();
         this.description = data.description || '';
+        this.finalAbv = data.finalAbv || '';
         this.gravity13Break = data.gravity13Break || '';
         this.gravityFinal = data.gravityFinal || '';
         this.gravityOriginal = data.gravityOriginal || '';
@@ -42,6 +43,7 @@ class BrewLog {
             dateBottled: this.dateBottled,
             dateCreated: this.dateCreated,
             dateStabilized: this.dateStabilized,
+            finalAbv: this.finalAbv,
             description: this.description,
             gravity13Break: this.getGravity13Break(),
             gravityFinal: this.getGravityFinal(),

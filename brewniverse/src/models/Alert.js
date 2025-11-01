@@ -11,7 +11,7 @@ class Alert {
         this.isCompleted = data.isCompleted || false;
         this.isRecurring = data.isRecurring || false;
         this.name = data.name || '';
-        this.priority = data.priority || 'medium';
+        this.priority = data.priority || 'low';
         this.recurringInterval = data.recurringInterval || 1;
         this.recurringType = data.recurringType || 'daily';
     }
