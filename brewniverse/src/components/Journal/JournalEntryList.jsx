@@ -2,7 +2,7 @@ import React from 'react';
 import { useApp } from '../../contexts/AppContext';
 import JournalEntryCard from './JournalEntryCard';
 
-function JournalEntryList(brewLogId) {
+function JournalEntryList({ brewLogId }) {
     const { state } = useApp();
 
     const journalEntries = state.journalEntries
