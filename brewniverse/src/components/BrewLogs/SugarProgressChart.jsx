@@ -106,7 +106,7 @@ function SugarProgressChart({ gravityActivities }) {
             <ResponsiveContainer width="100%" height={250}>
                 <BarChart
                     data={chartData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                    margin={{ top: 5, right: 5, left: 5, bottom:5 }}
                 >
                     <CartesianGrid
                         strokeDasharray="3 3"
