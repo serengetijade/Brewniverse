@@ -33,7 +33,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
 
     if (displayOption === 'grid') {
         return (
-            <div className="item-card recipe-card" style={{ '--item-color': brewTypeConfig.color }}>
+            <div className="item-card grid-view recipe-card" style={{ '--item-color': brewTypeConfig.color }}>
                 <div className="item-card-accent"></div>
                 <div className="item-card-header recipe-header">
                     <div className="recipe-type">
@@ -126,14 +126,14 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                 <div className="item-card-accent recipe-card-accent"></div>
                 <div className="list-view-row">
                     <div className="list-view-body">
-                        <div className="item-header recipe-header">
-                            <div className="item-type recipe-type">
+                        <div className="item-header">
+                            <div className="item-type">
                                 <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
                                 <h3 className="item-title recipe-name">{recipe.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
-                            <div className="item-date recipe-date">
+                            <div className="item-date">
                                 <Calendar size={14} />
                                 <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>
                             </div>
