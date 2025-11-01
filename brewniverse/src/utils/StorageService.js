@@ -1,5 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 const STORAGE_KEY = 'brewniverse-data';
 const STORAGE_FILE = 'brewniverse-data.json';
@@ -131,25 +132,47 @@ class StorageService {
 
             // Use Capacitor Filesystem for mobile, blob download for web
             if (Capacitor.isNativePlatform()) {
-                // Save to Documents directory on mobile (easier to find)
                 await Filesystem.writeFile({
                     path: fileName,
                     data: jsonContent,
-                    directory: Directory.Documents,
+                    directory: Directory.Cache,
                     encoding: 'utf8'
                 });
 
-                // Get the file URI to show the user
+                // Get the file URI
                 const fileUri = await Filesystem.getUri({
                     path: fileName,
-                    directory: Directory.Documents
+                    directory: Directory.Cache
                 });
 
-                return {
-                    success: true,
-                    message: `File saved successfully!\n\nLocation: Documents/${fileName}\n\nYou can find it in your phone's Documents folder or using a file manager app.`,
-                    path: fileUri.uri
-                };
+                // Use Share API - let user choose where to save
+                try {
+                    await Share.share({
+                        title: 'Brewniverse Backup',
+                        text: `Backup created on ${new Date().toLocaleDateString()}`,
+                        url: fileUri.uri,
+                        dialogTitle: 'Save your Brewniverse backup'
+                    });
+
+                    return {
+                        success: true,
+                        message: 'Export initiated! Choose where to save your backup file.'
+                    };
+                } catch (shareError) {
+                    console.log('Share failed, saving to Documents instead:', shareError);
+                    
+                    await Filesystem.writeFile({
+                        path: fileName,
+                        data: jsonContent,
+                        directory: Directory.Documents,
+                        encoding: 'utf8'
+                    });
+
+                    return {
+                        success: true,
+                        message: `File saved to Documents folder:\n${fileName}\n\nYou can find it using a file manager app.`
+                    };
+                }
             } else {
                 // Web browser - use blob download
                 const blob = new Blob([jsonContent], {
