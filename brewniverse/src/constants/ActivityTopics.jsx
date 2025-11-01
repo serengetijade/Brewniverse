@@ -31,8 +31,8 @@ export const ActivityTopicConfiguration = {
     },
     [ActivityTopicEnum.Yeast]: {
         key: ActivityTopicEnum.Yeast,
-        color: '#FFA347',
-        rgb: '255, 163, 71',
+        color: '#ffc947',
+        rgb: '255, 201, 71',
         description: 'Yeast pitching and additions',
         displayName: 'Yeast Added',
         displayName_Alert: 'Add Yeast',
