@@ -47,12 +47,15 @@ function MiniAbvCalculator({ formState, updateFormData }) {
     }, [currentAbv, currentVolume, addedAbv, addedVolume]);
 
     useEffect(() => {
+        // Only update finalAbv when we have a calculated value
+        // Don't clear it if inputs are incomplete
         if (finalAbv !== null) {
-            updateFormData({ finalAbv: finalAbv });
-        } else {
-            updateFormData({ finalAbv: '' });
+            const currentFinalAbv = formState.finalAbv || '';
+            if (String(currentFinalAbv) !== String(finalAbv)) {
+                updateFormData({ finalAbv: finalAbv });
+            }
         }
-    }, [finalAbv]);
+    }, [finalAbv, formState.finalAbv, updateFormData]);
 
     const handleAbvChange = (e) => {
         setCurrentAbv(e.target.value);
@@ -78,7 +81,7 @@ function MiniAbvCalculator({ formState, updateFormData }) {
                     <input
                         type="number"
                         id="calc-currentVolume"
-                        step="0.1"
+                        step="0.001"
                         min="0"
                         className="form-input"
                         value={currentVolume}
@@ -95,7 +98,7 @@ function MiniAbvCalculator({ formState, updateFormData }) {
                     <input
                         type="number"
                         id="calc-currentAbv"
-                        step="0.1"
+                        step="0.01"
                         min="0"
                         max="100"
                         className="form-input"
@@ -129,7 +132,7 @@ function MiniAbvCalculator({ formState, updateFormData }) {
                     <input
                         type="number"
                         id="calc-addedVolume"
-                        step="0.1"
+                        step="0.001"
                         min="0"
                         className="form-input"
                         value={addedVolume}
@@ -146,7 +149,7 @@ function MiniAbvCalculator({ formState, updateFormData }) {
                     <input
                         type="number"
                         id="calc-addedAbv"
-                        step="0.1"
+                        step="0.01"
                         min="0"
                         max="100"
                         className="form-input"

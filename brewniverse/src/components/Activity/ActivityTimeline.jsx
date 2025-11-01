@@ -94,7 +94,7 @@ function BrewLogTimeline({ activity = [] }) {
                                     )}
                                 </div>
 
-                                <div className="timeline-event-card" tabindex="0">
+                                <div className="timeline-event-card" tabIndex="0">
                                     <div className="event-header">
                                         <div className="event-title">{item.name}</div>
                                         <div className="event-badges">
