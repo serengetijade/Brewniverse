@@ -166,7 +166,6 @@ function Activity({
                         />
                 </div>
                 <div className="form-group">
-                    <label className="form-label">Date</label>
                     <input
                         type="datetime-local"
                         className="form-input"
