@@ -15,7 +15,7 @@ function MiniAbvCalculator({ formState, updateFormData }) {
     const [addedAbv, setAddedAbv] = useState('0');
     const [hasManuallyEditedAbv, setHasManuallyEditedAbv] = useState(false);
 
-    // Only auto-populate currentAbv on initial load or when gravity readings are first added
+    // Auto-populate currentAbv on initial load or when gravity readings are first added
     useEffect(() => {
         if (calculatedCurrentAbv && !hasManuallyEditedAbv && !currentAbv) {
             setCurrentAbv(calculatedCurrentAbv);
@@ -65,12 +65,13 @@ function MiniAbvCalculator({ formState, updateFormData }) {
     const resetToOriginal = () => {
         setCurrentAbv(originalAbv);
         setHasManuallyEditedAbv(false);
+        updateFormData({ finalAbv: '' });
     };
 
     return (
         <div className="mini-dilution-calculator">
             <p className="section-description">
-                Calculate the final ABV after diluting, backsweetening, or blending your brew
+                Calculate the final ABV after diluting or blending your brew. Or set to a known final value.
             </p>
             
             <div className="form-row">
