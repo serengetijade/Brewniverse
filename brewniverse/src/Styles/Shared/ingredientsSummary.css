@@ -79,8 +79,9 @@
 }
 
 .main-section-header {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: left;
   gap: 0.875rem;
   margin-bottom: 1rem;
   padding-bottom: 0.875rem;
@@ -122,14 +123,14 @@
 }
 
 .ingredient-count-badge {
-  display: inline-block;
-  font-size: 0.8rem;
-  color: var(--color-textLight);
-  font-weight: 600;
-  background: var(--color-cardBackground);
-  padding: 0.25rem 0.625rem;
-  border-radius: 4px;
-  border: 1px solid var(--color-border);
+    display: inline-block;
+    font-size: 0.8rem;
+    color: var(--color-textLight);
+    font-weight: 600;
+    background: var(--color-cardBackground);
+    padding: 0.25rem 0.625rem;
+    border-radius: 4px;
+    border: 1px solid var(--color-border);
 }
 
 /* Main Ingredient List */
