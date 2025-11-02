@@ -96,18 +96,16 @@
   height: 44px;
   border-radius: var(--border-radius-sm);
   background: var(--color-cardBackground);
-  border: 2px solid var(--color-border);
+  border: 1px solid var(--color-border);
   flex-shrink: 0;
 }
 
 .primary-section .main-icon-wrapper {
-  color: var(--color-primary);
-  border-color: var(--color-primary);
+  border-color: var(--color-textLight);
 }
 
 .secondary-section .main-icon-wrapper {
-  color: var(--color-secondary);
-  border-color: var(--color-secondary);
+  border-color: var(--color-textLight);
 }
 
 .main-section-info {
@@ -127,10 +125,7 @@
     font-size: 0.8rem;
     color: var(--color-textLight);
     font-weight: 600;
-    background: var(--color-cardBackground);
-    padding: 0.25rem 0.625rem;
-    border-radius: 4px;
-    border: 1px solid var(--color-border);
+    padding: 0rem;
 }
 
 /* Main Ingredient List */
