@@ -51,11 +51,9 @@
 }
 
 .sugar-chart-stats .stat-value.consumed {
-  color: var(--color-secondary);
 }
 
 .sugar-chart-stats .stat-value.residual {
-  color: var(--color-highlight);
 }
 
 .sugar-chart-stats .stat-subtext {
