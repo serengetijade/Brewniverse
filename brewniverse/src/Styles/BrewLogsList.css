@@ -66,6 +66,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.status-archived {
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-highlight));
+    color: white;
+}
+
 .status-completed {
     background: linear-gradient(135deg, var(--color-success), #22a745);
     color: white;

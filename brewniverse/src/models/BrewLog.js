@@ -6,6 +6,7 @@ class BrewLog {
         this.id = data.id || generateId();
         this.acids = data.acids || '';
         this.activity = data.activity || [];
+        this.archived = data.archived || '';
         this.bases = data.bases || '';
         this.currentAbv = data.currentAbv || '';
         this.dateBottled = data.dateBottled || '';
@@ -38,6 +39,7 @@ class BrewLog {
         return {
             acids: this.acids,
             activity: this.activity,
+            archived: this.archived,
             bases: this.bases,
             currentAbv: this.getCurrentAbv(),
             dateBottled: this.dateBottled,

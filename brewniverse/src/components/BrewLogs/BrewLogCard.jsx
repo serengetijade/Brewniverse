@@ -41,13 +41,13 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                         </div>
                     </div>
                     <div className="brewlog-status">
-                        {brewLog.dateBottled ? (
-                            <span className="status-badge status-completed">Bottled</span>
-                        ) : (getActivitiesByTopic(brewLog, ActivityTopicEnum.DateRacked)).length > 0 ? (
-                            <span className="status-badge status-racked">Secondary</span>
-                        ) : (
-                            <span className="status-badge status-fermenting">Fermenting</span>
-                        )}
+                        {brewLog.archived  
+                            ? (<span className="status-badge status-archived">Archived</span>)
+                            : brewLog.dateBottled
+                                ? (<span className="status-badge status-completed">Bottled</span>)
+                                : (getActivitiesByTopic(brewLog, ActivityTopicEnum.DateRacked)).length > 0
+                                    ? (<span className="status-badge status-racked">Secondary</span>)
+                                    : (<span className="status-badge status-fermenting">Fermenting</span>)}
                     </div>
                 </div>
 
