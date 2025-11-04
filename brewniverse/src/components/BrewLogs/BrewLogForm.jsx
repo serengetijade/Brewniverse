@@ -406,7 +406,7 @@ function BrewLogForm() {
                             </label>
                             <input
                                 type="text"
-                                id="name"
+                                id="volume"
                                 name="volume"
                                 className="form-input"
                                 value={formState.volume}

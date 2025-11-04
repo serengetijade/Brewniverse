@@ -1,5 +1,5 @@
 export const Validation = {
-    InputMaxLength: 250,
+    InputMaxLength: 200,
 
     TextareaMaxLength: 1000,
 

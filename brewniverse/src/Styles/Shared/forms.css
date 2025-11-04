@@ -212,6 +212,10 @@
         transform: translateX(-50%) translateY(-110%) scale(0.95);
     }
 
+.form-footer .btn.btn-delete {
+    color: var(--color-error);
+}
+
 /* Mobile Form Sections */
 @media (max-width: 768px) {
     .form-container .section-header {
