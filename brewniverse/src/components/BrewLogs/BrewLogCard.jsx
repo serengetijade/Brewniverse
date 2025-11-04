@@ -6,6 +6,8 @@ import { getCurrentAbv, getGravityActivities, getGravityFinal } from '../../util
 import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';
+import { getDaysSinceAsDescription } from '../../utils/DateUtils';
+import { getTopicIcon } from '../../constants/ActivityTopics';
 
 function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     const navigate = useNavigate();
@@ -15,7 +17,10 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);
     const currentAbv = getCurrentAbv(gravityActivities);
     const gravityFinal = getGravityFinal(gravityActivities);
-    
+
+    // Dates
+    let bottledXdays = getDaysSinceAsDescription(brewLog.dateBottled);
+
     // Use finalAbv if available, otherwise use currentAbv
     const displayAbv = brewLog.finalAbv || currentAbv;
     const abvLabel = brewLog.finalAbv ? 'Final ABV' : 'Current ABV';
@@ -67,17 +72,32 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                                     </div>
                                 </div>
                             )}
-                            {gravityFinal && (
+                            {brewLog.dateBottled ? (
                                 <div className="item-card-stat">
                                     <div className="item-card-stat-icon">
-                                        <Scale size={16} />
+                                        {getTopicIcon(ActivityTopicEnum.DateBottled)}
                                     </div>
                                     <div className="item-card-stat-info">
-                                        <span className="item-card-stat-label">Current Gravity</span>
-                                        <span className="item-card-stat-value">{gravityFinal}</span>
+                                        <span className="item-card-stat-label">Bottled</span>
+                                        <span className="item-card-stat-value">{bottledXdays}</span>
                                     </div>
                                 </div>
-                            )}
+                            )
+                                :
+                                (gravityFinal && (
+                                    <div className="item-card-stat">
+                                        <div className="item-card-stat-icon">
+                                            {getTopicIcon(ActivityTopicEnum.Gravity)}
+                                        </div>
+                                        <div className="item-card-stat-info">
+                                            <span className="item-card-stat-label">Current Gravity</span>
+                                            <span className="item-card-stat-value">{gravityFinal}</span>
+                                        </div>
+                                    </div>
+                                ))
+                            }
+
+
                         </div>
                     )}
                 </div>

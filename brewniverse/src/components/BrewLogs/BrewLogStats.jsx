@@ -3,6 +3,7 @@ import React from 'react';
 import '../../Styles/BrewLogStats.css';
 import { getTopicColorRgb, getTopicConfig, getTopicIcon } from '../../constants/ActivityTopics';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
+import { getDaysSinceAsDescription } from '../../utils/DateUtils';
 import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 
 function BrewLogStats({ brewLog }) {
@@ -33,15 +34,6 @@ function BrewLogStats({ brewLog }) {
         });
     };
 
-    const calculateDaysSince = (dateString) => {
-        if (!dateString) return null;
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        return diffDays;
-    };
-
     const topicConfig = getTopicConfig();
 
     const stats = [
@@ -50,7 +42,7 @@ function BrewLogStats({ brewLog }) {
             icon: <Calendar size={20} />,
             label: 'Started',
             value: formatDate(brewLog.dateCreated),
-            subtext: brewLog.dateCreated ? `${calculateDaysSince(brewLog.dateCreated)} days ago` : null,
+            subtext: brewLog.dateCreated ? `${getDaysSinceAsDescription(brewLog.dateCreated)}` : null,
             color: getTopicColorRgb(ActivityTopicEnum.DateCreated)
         },
         {
@@ -90,7 +82,7 @@ function BrewLogStats({ brewLog }) {
             icon: getTopicIcon(ActivityTopicEnum.DateRacked),
             label: 'Racked',
             value: formatDate( dateRacked),
-            subtext: dateRacked ? `${calculateDaysSince(dateRacked)} days ago` : null,
+            subtext: dateRacked ? `${getDaysSinceAsDescription(dateRacked)}` : null,
             color: getTopicColorRgb(ActivityTopicEnum.DateRacked)
         },
         {
@@ -98,7 +90,7 @@ function BrewLogStats({ brewLog }) {
             icon: getTopicIcon(ActivityTopicEnum.DateStabilized),
             label: 'Stabilized',
             value: formatDate(dateStabilized),
-            subtext: dateStabilized ? `${calculateDaysSince(dateStabilized)} days ago` : null,
+            subtext: dateStabilized ? `${getDaysSinceAsDescription(dateStabilized)}` : null,
             color: getTopicColorRgb(ActivityTopicEnum.DateStabilized)
         },
         {
@@ -106,7 +98,7 @@ function BrewLogStats({ brewLog }) {
             icon: getTopicIcon(ActivityTopicEnum.DateBottled),
             label: 'Bottled',
             value: formatDate(dateBottled),
-            subtext: dateBottled ? `${calculateDaysSince(dateBottled)} days ago` : null,
+            subtext: dateBottled ? `${getDaysSinceAsDescription(brewLog.dateBottled)}` : null,
             color: getTopicColorRgb(ActivityTopicEnum.DateBottled)
         }
     ];

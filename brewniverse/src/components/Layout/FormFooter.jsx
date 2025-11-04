@@ -34,13 +34,14 @@ function FormFooter({
                     {isExpanded ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
                 </button>
             )}
-            <div className="form-footer-content">
 
+            <div className="form-footer-content">
                 {isEditing && showDelete && (
                     <Button
                         type="outline"
                         variant="error"
                         onClick={onDelete}
+                        className="btn-delete"
                     >
                         <Trash2 size={18} />
                         Delete

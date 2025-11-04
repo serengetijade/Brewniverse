@@ -135,15 +135,16 @@
 }
 
 .list-view .item-card-actions {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
     .list-view .item-card-actions .btn {
         width: fit-content;
         padding: 0rem 0rem;
-        min-height: fit-content;
+        min-height: 1rem;
     }
 
 /* Card stat grid */
