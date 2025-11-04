@@ -7,6 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import MiniAbvCalculator from '../Calculators/MiniAbvCalculator';
@@ -51,23 +52,30 @@ function BrewLogForm() {
         newFormId
     );
 
-    const [formState, setFormState] = useState(() => new BrewLog({
+    const getInitialState = () => new BrewLog({
         id: newFormId,
         activity: [initialDateCreatedActivity],
         dateCreated: initialDateCreatedActivity.date,
-    }));
+    });
+
+    const [formState, setFormState] = useState(getInitialState);
+    const [initialState, setInitialState] = useState(getInitialState);
 
     useEffect(() => {
         if (isEditing) {
             const brewLog = state.brewLogs.find(log => log.id === id);
             if (brewLog) {
-                setFormState(BrewLog.fromJSON({
+                const loadedState = BrewLog.fromJSON({
                     ...brewLog,
                     activity: brewLog.activity || []
-                }));
+                });
+                setFormState(loadedState);
+                setInitialState(loadedState);
             }
         }
     }, [id, isEditing, state.brewLogs]);
+
+    const { hasUnsavedChanges } = useUnsavedChanges(formState, initialState, isEditing);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -329,6 +337,7 @@ function BrewLogForm() {
             <FormHeader
                 isEditing={isEditing}
                 entityName="Brew Log"
+                hasUnsavedChanges={hasUnsavedChanges}
             />
 
             <form onSubmit={handleSubmit} className="card">
@@ -1077,6 +1086,7 @@ function BrewLogForm() {
                 onCancel={() => navigate('/brewlogs')}
                 showDelete={true}
                 onDelete={onDelete}
+                shouldBlockNavigation={false}
             />
         </div>
     );

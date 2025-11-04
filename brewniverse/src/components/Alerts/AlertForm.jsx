@@ -5,6 +5,7 @@ import '../../Styles/AlertForm.css';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import Alert from '../../models/Alert';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 
@@ -14,19 +15,26 @@ function AlertForm() {
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
 
-    const [formState, setFormState] = useState(() => new Alert({ id }));
+    const getInitialState = () => new Alert({ id });
+
+    const [formState, setFormState] = useState(getInitialState);
+    const [initialState, setInitialState] = useState(getInitialState);
 
     useEffect(() => {
         if (isEditing) {
             const alert = state.alerts.find(a => a.id === id);
             if (alert) {
-                setFormState(Alert.fromJSON({
+                const loadedState = Alert.fromJSON({
                     ...alert,
                     date: new Date(alert.date).toISOString().slice(0, 16)
-                }));
+                });
+                setFormState(loadedState);
+                setInitialState(loadedState);
             }
         }
     }, [id, isEditing]);
+
+    const { hasUnsavedChanges } = useUnsavedChanges(formState, initialState, isEditing);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -88,6 +96,7 @@ function AlertForm() {
             <FormHeader
                 isEditing={isEditing}
                 entityName="Alert"
+                hasUnsavedChanges={hasUnsavedChanges}
             />
 
             <form onSubmit={handleSubmit} className="card">
@@ -275,6 +284,7 @@ function AlertForm() {
                 onCancel={() => navigate('/alerts')}
                 cancelIcon={<X size={18} />}
                 onDelete={handleDelete}
+                shouldBlockNavigation={false}
             />
         </div>
     );

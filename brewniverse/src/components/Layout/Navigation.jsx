@@ -2,11 +2,13 @@ import { ArrowLeft, Bell, BookOpen, Calculator, FileText, Home, Menu, NotebookPe
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../Styles/Navigation.css';
+import { useNavigationContext } from '../../contexts/NavigationContext';
 
 function Navigation() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
+    const { navigate: contextNavigate } = useNavigationContext();
 
     const menuItems = [
         { path: '/', icon: Home, label: 'Dashboard' },
@@ -19,15 +21,16 @@ function Navigation() {
     ];
 
     const handleNavigation = (path) => {
-        navigate(path);
+        contextNavigate(path, navigate);
         setIsMenuOpen(false);
     };
 
     const handleBack = () => {
         if (window.history.length > 1) {
-            navigate(-1);
+            // Pass a callback function for back navigation
+            contextNavigate(() => navigate(-1));
         } else {
-            navigate('/');
+            contextNavigate('/', navigate);
         }
     };
 

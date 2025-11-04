@@ -6,6 +6,7 @@ import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import Recipe from '../../models/Recipe';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
 import FormFooter from '../Layout/FormFooter';
@@ -36,19 +37,26 @@ function RecipeForm() {
         });
     };
 
-    const [formState, setFormState] = useState(() => new Recipe({ id }));
+    const getInitialState = () => new Recipe({ id });
+
+    const [formState, setFormState] = useState(getInitialState);
+    const [initialState, setInitialState] = useState(getInitialState);
 
     useEffect(() => {
         if (isEditing) {
             const recipe = state.recipes.find(r => r.id === id);
             if (recipe) {
-                setFormState(Recipe.fromJSON({
+                const loadedState = Recipe.fromJSON({
                     ...recipe,
                     instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
-                }));
+                });
+                setFormState(loadedState);
+                setInitialState(loadedState);
             }
         }
     }, [id, isEditing, state.recipes]);
+
+    const { hasUnsavedChanges } = useUnsavedChanges(formState, initialState, isEditing);
 
     const onDelete = (e) => {
         e.preventDefault();
@@ -136,6 +144,7 @@ function RecipeForm() {
             <FormHeader
                 isEditing={isEditing}
                 entityName="Recipe"
+                hasUnsavedChanges={hasUnsavedChanges}
             />
 
             <form onSubmit={handleSubmit} className="card">
@@ -413,6 +422,7 @@ function RecipeForm() {
                 showCancel={!isEditing}
                 showDelete={true}
                 onDelete={onDelete}
+                shouldBlockNavigation={false}
             />
         </div>
     );

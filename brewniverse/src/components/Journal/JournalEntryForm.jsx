@@ -7,6 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations'
 import { ActionTypes, generateId, useApp } from '../../contexts/AppContext';
 import JournalEntry from '../../models/JournalEntry';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Rating from '../UI/Rating';
@@ -35,7 +36,7 @@ function JournalEntryForm() {
         });
     };
 
-    const [formState, setFormState] = useState(() => {
+    const getInitialState = () => {
         const brewLogId = searchParams.get('brewLogId') || '';
         const type = searchParams.get('type');
         const name = searchParams.get('name');
@@ -48,13 +49,18 @@ function JournalEntryForm() {
         initialData.brand = "Brewniverse";
 
         return new JournalEntry(initialData);
-    });
+    };
+
+    const [formState, setFormState] = useState(getInitialState);
+    const [initialState, setInitialState] = useState(getInitialState);
 
     useEffect(() => {
         if (isEditing) {
             const entry = state.journalEntries.find(e => e.id === id);
             if (entry) {
-                setFormState(JournalEntry.fromJSON(entry));
+                const loadedState = JournalEntry.fromJSON(entry);
+                setFormState(loadedState);
+                setInitialState(loadedState);
             }
         } else {
             const brewLogId = searchParams.get('brewLogId');
@@ -68,10 +74,14 @@ function JournalEntryForm() {
                 if (name) updates.name = name;
                 if (abv) updates.abv = parseFloat(abv);
 
-                setFormState(prev => new JournalEntry({ ...prev.toJSON(), ...updates }));
+                const updatedState = new JournalEntry({ ...formState.toJSON(), ...updates });
+                setFormState(updatedState);
+                setInitialState(updatedState);
             }
         }
     }, [id, isEditing, state.journalEntries, searchParams]);
+
+    const { hasUnsavedChanges } = useUnsavedChanges(formState, initialState, isEditing);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
@@ -144,6 +154,7 @@ function JournalEntryForm() {
             <FormHeader
                 isEditing={isEditing}
                 entityName="Journal Entry"
+                hasUnsavedChanges={hasUnsavedChanges}
             />
 
             <form onSubmit={handleSubmit} className="card">
@@ -361,6 +372,7 @@ function JournalEntryForm() {
                 onDelete={onDelete}
                 onSubmit={handleSubmit}
                 showDelete={isEditing}
+                shouldBlockNavigation={false}
             />
         </div>
     );
