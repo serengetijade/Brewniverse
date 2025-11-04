@@ -1,5 +1,6 @@
+import { App as CapacitorApp } from '@capacitor/app';
 import { ArrowLeft, Bell, BookOpen, Calculator, FileText, Home, Menu, NotebookPen, Settings } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../Styles/Navigation.css';
 
@@ -32,6 +33,35 @@ function Navigation() {
     };
 
     const isHomePage = location.pathname === '/';
+
+    // Handle Android back button using Capacitor App plugin
+    useEffect(() => {
+        let backButtonListener;
+
+        const setupBackButton = async () => {
+            try {
+                backButtonListener = await CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+                    if (location.pathname === '/') {
+                        CapacitorApp.minimizeApp();
+                    }
+                    else {
+                        handleBack();
+                    }
+                });
+            }
+            catch (error) {
+                console.log('Back button listener not available (likely running in browser)');
+            }
+        };
+
+        setupBackButton();
+
+        return () => {
+            if (backButtonListener) {
+                backButtonListener.remove();
+            }
+        };
+    }, [location.pathname, navigate]);
 
     return (
         <>
