@@ -190,7 +190,7 @@ function BrewLogForm() {
         navigate('/brewlogs');
     }
 
-    // Gravity - memoize to prevent unnecessary recalculations
+    // Gravity
     const gravityActivities = React.useMemo(() => {
         return getGravityActivities(formState.activity, ActivityTopicEnum.Gravity);
     }, [formState.activity]);
