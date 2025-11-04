@@ -2,7 +2,8 @@ import { AlertCircle, Bell, BookOpen, Calendar, FileText, Plus, Search } from 'l
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../../Styles/AlertsList.css";
-import { useApp } from '../../contexts/AppContext';
+import { ActionTypes, getDate, useApp } from '../../contexts/AppContext';
+import Alert from '../../models/Alert';
 import ListHeader from '../Layout/ListHeader';
 import Button from '../UI/Button';
 import SearchSortControls from '../UI/SearchSortControls';
@@ -11,7 +12,7 @@ import AlertGroup from './AlertGroup';
 
 function AlertsList() {
     const navigate = useNavigate();
-    const { state } = useApp();
+    const { state, dispatch } = useApp();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('asc');
@@ -102,6 +103,22 @@ function AlertsList() {
         return filteredAlerts;
     }, [state.alerts, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
+    const handleCreateAlert = () => {
+        const newAlert = new Alert({
+            name: 'New Alert',
+            date: getDate()
+        });
+
+        const alertData = newAlert.toJSON();
+
+        dispatch({
+            type: ActionTypes.addAlert,
+            payload: alertData
+        });
+
+        return alertData.id;
+    };
+
     return (
         <div className="main-content-container">
             <div className="main-content-section brewlogs-list">
@@ -110,6 +127,7 @@ function AlertsList() {
                     description="Manage your brewing alerts and reminders - never miss a step!"
                     buttonText="New Alert"
                     url="/alerts/new"
+                    onCreate={handleCreateAlert}
                 >
                 </ListHeader>
             </div>
@@ -153,8 +171,8 @@ function AlertsList() {
                             Create Your First Alert
                         </Button>
                     </div>
-                    )
-                        : (
+                )
+                    : (
                         <div className="items-container">
                             {sortBy === 'date' || sortBy === 'priority' ? (
                                 // Simple list view for date sorting

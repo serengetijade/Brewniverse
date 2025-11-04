@@ -4,8 +4,21 @@ import { useNavigate } from 'react-router-dom';
 import '../../Styles/Shared/list.css';
 import Button from '../UI/Button';
 
-const ListHeader = ({ h1, buttonText, description, url }) => {
+const ListHeader = ({ h1, buttonText, description, url, onCreate }) => {
     const navigate = useNavigate();
+
+    const handleClick = async () => {
+        if (onCreate) {
+            const newId = await onCreate();
+            if (newId) {
+                const baseUrl = url.replace('/new', '');
+                navigate(`${baseUrl}/${newId}/edit`);
+            }
+        }
+        else {
+            navigate(url);
+        }
+    };
 
     return (
         <div className="list-header">
@@ -16,7 +29,7 @@ const ListHeader = ({ h1, buttonText, description, url }) => {
             <Button
                 variant="primary"
                 size="large"
-                onClick={() => navigate(url)}
+                onClick={handleClick}
             >
                 <Plus size={20} />
                 {buttonText}

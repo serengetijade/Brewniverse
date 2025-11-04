@@ -14,19 +14,17 @@ function AlertForm() {
     const { state, dispatch } = useApp();
     const isEditing = Boolean(id);
 
-    const [formState, setFormState] = useState(() => new Alert({ id }));
+    const [formState, setFormState] = useState(() => new Alert());
 
     useEffect(() => {
-        if (isEditing) {
-            const alert = state.alerts.find(a => a.id === id);
-            if (alert) {
-                setFormState(Alert.fromJSON({
-                    ...alert,
-                    date: new Date(alert.date).toISOString().slice(0, 16)
-                }));
-            }
+        const alert = state.alerts.find(a => a.id === id);
+        if (alert) {
+            setFormState(Alert.fromJSON({
+                ...alert,
+                date: new Date(alert.date).toISOString().slice(0, 16)
+            }));
         }
-    }, [id, isEditing]);
+    }, [id, state.alerts]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -36,18 +34,10 @@ function AlertForm() {
             date: new Date(formState.date).toISOString(),
         };
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateAlert,
-                payload: { ...alertData, id }
-            });
-        }
-        else {
-            dispatch({
-                type: ActionTypes.addAlert,
-                payload: alertData
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateAlert,
+            payload: { ...alertData, id }
+        });
 
         navigate('/alerts');
     };
@@ -56,16 +46,14 @@ function AlertForm() {
         const updatedData = Alert.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateAlert,
-                payload: {
-                    ...updatedData.toJSON(),
-                    id,
-                    date: new Date(updatedData.date).toISOString()
-                }
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateAlert,
+            payload: {
+                ...updatedData.toJSON(),
+                id,
+                date: new Date(updatedData.date).toISOString()
+            }
+        });
     };
 
     const handleChange = (e) => {
@@ -95,17 +83,15 @@ function AlertForm() {
                 <div className="form-section">
                     <h3>Basic Information</h3>
 
-                    {isEditing && (
-                        <div className="form-group form-group-completed">
-                            <button
-                                type="button"
-                                className={`btn btn-completed ${formState.isCompleted ? 'btn-completed-active' : ''}`}
-                                onClick={() => updateFormData({ isCompleted: !formState.isCompleted })}
-                            >
-                                {formState.isCompleted ? '✓ Completed' : 'Mark as completed'}
-                            </button>
-                        </div>
-                    )}
+                    <div className="form-group form-group-completed">
+                        <button
+                            type="button"
+                            className={`btn btn-completed ${formState.isCompleted ? 'btn-completed-active' : ''}`}
+                            onClick={() => updateFormData({ isCompleted: !formState.isCompleted })}
+                        >
+                            {formState.isCompleted ? '✓ Completed' : 'Mark as completed'}
+                        </button>
+                    </div>
 
                     <div className="form-group">
                         <label htmlFor="name" className="form-label">
