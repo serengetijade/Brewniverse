@@ -5,7 +5,9 @@ import '../../Styles/RecipesList.css';
 import '../../Styles/Shared/list.css';
 import '../../Styles/Shared/search.css';
 import BrewTypes from '../../constants/BrewTypes';
-import { useApp } from '../../contexts/AppContext';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
+import Recipe from '../../models/Recipe';
+import { getDate } from '../../contexts/AppContext';
 import ListHeader from '../Layout/ListHeader';
 import Button from '../UI/Button';
 import SearchSortControls from '../UI/SearchSortControls';
@@ -13,7 +15,7 @@ import RecipeCard from './RecipeCard';
 
 function RecipesList() {
     const navigate = useNavigate();
-    const { state } = useApp();
+    const { state, dispatch } = useApp();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
@@ -105,6 +107,22 @@ function RecipesList() {
         return filteredRecipes;
     }, [state.recipes, state.brewLogs, searchTerm, sortBy, sortOrder]);
 
+    const handleCreateRecipe = () => {
+        const newRecipe = new Recipe({
+            name: 'New Recipe',
+            dateCreated: getDate()
+        });
+
+        const recipeData = newRecipe.toJSON();
+
+        dispatch({
+            type: ActionTypes.addRecipe,
+            payload: recipeData
+        });
+
+        return recipeData.id;
+    };
+
     return (
         <div className="main-content-container">
             <div className="main-content-section brewlogs-list">
@@ -113,6 +131,7 @@ function RecipesList() {
                     description="Manage your brewing recipes and ingredients"
                     buttonText="New Recipe"
                     url="/recipes/new"
+                    onCreate={handleCreateRecipe}
                 >
                 </ListHeader>
             </div>

@@ -1,12 +1,12 @@
+import { ChevronDown, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { X, ChevronDown } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import '../../Styles/JournalEntryForm.css';
 import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
-import { getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations'
-import { ActionTypes, generateId, useApp } from '../../contexts/AppContext';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
 import JournalEntry from '../../models/JournalEntry';
+import { getCurrentAbv, getGravityActivities } from '../../utils/gravityCalculations';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Rating from '../UI/Rating';
@@ -35,60 +35,24 @@ function JournalEntryForm() {
         });
     };
 
-    const [formState, setFormState] = useState(() => {
-        const brewLogId = searchParams.get('brewLogId') || '';
-        const type = searchParams.get('type');
-        const name = searchParams.get('name');
-        const abv = searchParams.get('abv');
-
-        const initialData = { id: generateId() || id, brewLogId };
-        if (type) initialData.type = type;
-        if (name) initialData.name = name;
-        if (abv) initialData.abv = parseFloat(abv);
-        initialData.brand = "Brewniverse";
-
-        return new JournalEntry(initialData);
-    });
+    const [formState, setFormState] = useState(() => new JournalEntry());
 
     useEffect(() => {
-        if (isEditing) {
-            const entry = state.journalEntries.find(e => e.id === id);
-            if (entry) {
-                setFormState(JournalEntry.fromJSON(entry));
-            }
-        } else {
-            const brewLogId = searchParams.get('brewLogId');
-            const type = searchParams.get('type');
-            const name = searchParams.get('name');
-            const abv = searchParams.get('abv');
-
-            if (brewLogId || type || name || abv) {
-                const updates = { brewLogId };
-                if (type) updates.type = type;
-                if (name) updates.name = name;
-                if (abv) updates.abv = parseFloat(abv);
-
-                setFormState(prev => new JournalEntry({ ...prev.toJSON(), ...updates }));
-            }
+        const entry = state.journalEntries.find(e => e.id === id);
+        if (entry) {
+            setFormState(JournalEntry.fromJSON(entry));
         }
-    }, [id, isEditing, state.journalEntries, searchParams]);
+    }, [id, state.journalEntries]);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
 
         const entryData = formState.toJSON();
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateJournalEntry,
-                payload: { ...entryData, id }
-            });
-        } else {
-            dispatch({
-                type: ActionTypes.addJournalEntry,
-                payload: entryData
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateJournalEntry,
+            payload: { ...entryData, id }
+        });
 
         navigate('/journal');
     };
@@ -97,12 +61,10 @@ function JournalEntryForm() {
         const updatedData = JournalEntry.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateJournalEntry,
-                payload: { ...updatedData.toJSON(), id }
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateJournalEntry,
+            payload: { ...updatedData.toJSON(), id }
+        });
     };
 
     const handleChange = (e) => {

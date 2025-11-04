@@ -1,5 +1,5 @@
+import { ChevronDown, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { X, ChevronDown } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
@@ -36,19 +36,17 @@ function RecipeForm() {
         });
     };
 
-    const [formState, setFormState] = useState(() => new Recipe({ id }));
+    const [formState, setFormState] = useState(() => new Recipe());
 
     useEffect(() => {
-        if (isEditing) {
-            const recipe = state.recipes.find(r => r.id === id);
-            if (recipe) {
-                setFormState(Recipe.fromJSON({
-                    ...recipe,
-                    instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
-                }));
-            }
+        const recipe = state.recipes.find(r => r.id === id);
+        if (recipe) {
+            setFormState(Recipe.fromJSON({
+                ...recipe,
+                instructions: recipe.instructions && recipe.instructions.length > 0 ? recipe.instructions : ['']
+            }));
         }
-    }, [id, isEditing, state.recipes]);
+    }, [id, state.recipes]);
 
     const onDelete = (e) => {
         e.preventDefault();
@@ -76,32 +74,21 @@ function RecipeForm() {
 
         const recipeData = formState.toJSON();
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateRecipe,
-                payload: { ...recipeData, id }
-            });
-            navigate(`/recipes/${id}`);
-        }
-        else {
-            dispatch({
-                type: ActionTypes.addRecipe,
-                payload: recipeData
-            });
-            navigate('/recipes');
-        }
+        dispatch({
+            type: ActionTypes.updateRecipe,
+            payload: { ...recipeData, id }
+        });
+        navigate(`/recipes/${id}`);
     };
 
     const updateFormData = (updates) => {
         const updatedData = Recipe.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateRecipe,
-                payload: { ...updatedData.toJSON(), id }
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateRecipe,
+            payload: { ...updatedData.toJSON(), id }
+        });
     };
 
     const updateFormDataCallback = (updaterFn) => {
@@ -110,12 +97,10 @@ function RecipeForm() {
         const newRecipe = Recipe.fromJSON(updatedData);
         setFormState(newRecipe);
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateRecipe,
-                payload: { ...newRecipe.toJSON(), id }
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateRecipe,
+            payload: { ...newRecipe.toJSON(), id }
+        });
     };
 
     const handleChange = (e) => {
@@ -419,4 +404,3 @@ function RecipeForm() {
 }
 
 export default RecipeForm;
-

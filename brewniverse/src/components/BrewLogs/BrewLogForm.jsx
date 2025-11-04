@@ -42,68 +42,42 @@ function BrewLogForm() {
         });
     };
 
-    const newFormId = generateId();
-    const initialDateCreatedActivity = createActivity(
-        getDate(),
-        'Date Created',
-        'New brew started',
-        'DateCreated',
-        newFormId
-    );
-
-    const [formState, setFormState] = useState(() => new BrewLog({
-        id: newFormId,
-        activity: [initialDateCreatedActivity],
-        dateCreated: initialDateCreatedActivity.date,
-    }));
+    const [formState, setFormState] = useState(() => new BrewLog());
 
     useEffect(() => {
-        if (isEditing) {
-            const brewLog = state.brewLogs.find(log => log.id === id);
-            if (brewLog) {
-                setFormState(BrewLog.fromJSON({
-                    ...brewLog,
-                    activity: brewLog.activity || []
-                }));
-            }
+        const brewLog = state.brewLogs.find(log => log.id === id);
+        if (brewLog) {
+            setFormState(BrewLog.fromJSON({
+                ...brewLog,
+                activity: brewLog.activity || []
+            }));
         }
-    }, [id, isEditing, state.brewLogs]);
+    }, [id, state.brewLogs]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const brewLogData = formState.toJSON();
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateBrewLog,
-                payload: { ...brewLogData, id }
-            });
-            navigate(`/brewlogs/${id}`);
-        }
-        else {
-            dispatch({
-                type: ActionTypes.addBrewLog,
-                payload: brewLogData
-            });
-            navigate('/brewlogs');
-        }
+        dispatch({
+            type: ActionTypes.updateBrewLog,
+            payload: { ...brewLogData, id }
+        });
+        navigate(`/brewlogs/${id}`);
     };
 
     const updateFormData = useCallback((updates) => {
         setFormState(prevState => {
             const updatedData = BrewLog.fromJSON({ ...prevState.toJSON(), ...updates });
             
-            if (isEditing) {
-                dispatch({
-                    type: ActionTypes.updateBrewLog,
-                    payload: { ...updatedData.toJSON(), id }
-                });
-            }
+            dispatch({
+                type: ActionTypes.updateBrewLog,
+                payload: { ...updatedData.toJSON(), id }
+            });
             
             return updatedData;
         });
-    }, [isEditing, id, dispatch]);
+    }, [id, dispatch]);
 
     const updateFormDataCallback = (updaterFn) => {
         const currentData = formState.toJSON();
@@ -111,12 +85,10 @@ function BrewLogForm() {
         const newBrewLog = BrewLog.fromJSON(updatedData);
         setFormState(newBrewLog);
 
-        if (isEditing) {
-            dispatch({
-                type: ActionTypes.updateBrewLog,
-                payload: { ...newBrewLog.toJSON(), id }
-            });
-        }
+        dispatch({
+            type: ActionTypes.updateBrewLog,
+            payload: { ...newBrewLog.toJSON(), id }
+        });
     };
 
     const updateActivityDateByTopic = (e) => {

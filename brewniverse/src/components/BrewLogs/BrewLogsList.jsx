@@ -4,14 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import '../../Styles/BrewLogsList.css';
 import '../../Styles/Shared/list.css';
 import '../../Styles/Shared/search.css';
-import { useApp } from '../../contexts/AppContext';
+import { ActionTypes, useApp } from '../../contexts/AppContext';
+import BrewLog from '../../models/BrewLog';
+import { createActivity, ActivityTopicEnum } from '../Activity/Activity';
+import { getDate } from '../../contexts/AppContext';
 import ListHeader from '../Layout/ListHeader';
 import Button from '../UI/Button';
 import SearchSortControls from '../UI/SearchSortControls';
 import BrewLogCard from './BrewLogCard';
 function BrewLogsList() {
     const navigate = useNavigate();
-    const { state } = useApp();
+    const { state, dispatch } = useApp();
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
@@ -103,6 +106,31 @@ function BrewLogsList() {
         return filteredBrewLogs;
     }, [state.brewLogs, searchTerm, sortBy, sortOrder]);
 
+    const handleCreateBrewLog = () => {
+        const newBrewLog = new BrewLog({
+            name: 'New Brew Log',
+            dateCreated: getDate(),
+            activity: [
+                createActivity(
+                    getDate(),
+                    'Date Created',
+                    'New brew started',
+                    ActivityTopicEnum.DateCreated,
+                    null
+                )
+            ]
+        });
+
+        const brewLogData = newBrewLog.toJSON();
+        
+        dispatch({
+            type: ActionTypes.addBrewLog,
+            payload: brewLogData
+        });
+
+        return brewLogData.id;
+    };
+
     return (
         <div className="main-content-container brewlogs-list">
             <div className="main-content-section">
@@ -111,6 +139,7 @@ function BrewLogsList() {
                     description="Track your brewing batches and progress"
                     buttonText="New Brew Log"
                     url="/brewlogs/new"
+                    onCreate={handleCreateBrewLog}
                 >
                 </ListHeader>
             </div>
