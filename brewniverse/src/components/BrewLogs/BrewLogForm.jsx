@@ -1,4 +1,4 @@
-﻿import { ChevronDown, Plus, X } from 'lucide-react';
+﻿import { Archive, ChevronDown, Plus, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -1037,6 +1037,43 @@ function BrewLogForm() {
 
                         <div className="form-group">
                             <JournalEntryList brewLogId={id} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Archived */}
+                <div className="form-section brewlog-archived">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('archived')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.archived ? 'collapsed' : ''}`}
+                            />
+                            Archive
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.archived ? 'collapsed' : ''}`}>
+                        <p className="section-description">
+                            Mark this brew as archived when you're done with it. This will only change the status badge in the list so you'll be able to tell at a glance. All info will be retained until you choose to delete it. 
+                        </p>
+                        <div className="form-group">
+                            <Button
+                                type="button"
+                                variant={formState.archived ? "primary" : "secondary"}
+                                size="small"
+                                onClick={() => updateFormData({ archived: formState.archived ? '' : getDate() })}
+                            >
+                                <Archive size={16} />
+                                {formState.archived ? 'Archived' : 'Archive This Brew'}
+                            </Button>
+                            {formState.archived && (
+                                <p className="field-hint" style={{ marginTop: '0.5rem' }}>
+                                    Archived on {new Date(formState.archived).toLocaleDateString()}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -104,7 +104,9 @@ function BrewLogStats({ brewLog }) {
     ];
 
     const getBrewStatus = () => {
-        if (dateBottledActivities.length > 0) {
+        if (brewLog.archived)
+            return { label: 'Archived', color: 'highlight', icon: <BottleWine size={16} /> };
+        else if (dateBottledActivities.length > 0) {
             return { label: 'Bottled', color: 'highlight', icon: <BottleWine size={16} /> };
         } else if (stabilizedActivities.length > 0) {
             return { label: 'Stabilized', color: 'accent', icon: <Shield size={16} /> };
