@@ -75,6 +75,7 @@ function AlertForm() {
         <div className="main-content-container form-container form-with-footer">
             <FormHeader
                 isEditing={isEditing}
+                name={formState.name}
                 entityName="Alert"
             />
 
