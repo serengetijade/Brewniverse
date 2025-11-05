@@ -8,15 +8,15 @@
     color: var(--color-text);
     display: flex;
     flex-direction: column;
-    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .main-content {
     flex: 1;
     overflow-y: auto;
-    /* Add safe area padding for left and right edges */
+    /* Add safe area padding for all edges */
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .main-content-container {
