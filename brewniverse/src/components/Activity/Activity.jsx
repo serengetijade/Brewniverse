@@ -111,7 +111,7 @@ function Activity({
             );
 
             if (confirmNavigate) {
-                navigate(`/alerts/${activityState.alertId}`);
+                navigate(`/alerts/${activityState.alertId}/edit`);
             }
         }
         else {
