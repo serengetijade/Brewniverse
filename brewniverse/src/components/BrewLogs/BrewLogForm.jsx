@@ -1,4 +1,4 @@
-﻿import { Archive, ChevronDown, Plus, X } from 'lucide-react';
+﻿import { Archive, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -42,6 +42,25 @@ function BrewLogForm() {
         });
     };
 
+    const allSections = [
+        'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
+        'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
+        'abv', 'importantDates', 'otherActivities', 'notes', 'journal', 'archived'
+    ];
+    const collapseAll = () => {
+        const newState = {};
+        allSections.forEach(section => {
+            newState[section] = true;
+        });
+        setCollapsedSections(newState);
+        localStorage.setItem('brewLogFormCollapsedSections', JSON.stringify(newState));
+    };
+
+    const hasExpandedSections = () => {
+        if (Object.keys(collapsedSections).length === 0) return true;
+        return Object.values(collapsedSections).some(isCollapsed => isCollapsed !== true);
+    };
+
     const [formState, setFormState] = useState(() => new BrewLog());
 
     useEffect(() => {
@@ -69,12 +88,12 @@ function BrewLogForm() {
     const updateFormData = useCallback((updates) => {
         setFormState(prevState => {
             const updatedData = BrewLog.fromJSON({ ...prevState.toJSON(), ...updates });
-            
+
             dispatch({
                 type: ActionTypes.updateBrewLog,
                 payload: { ...updatedData.toJSON(), id }
             });
-            
+
             return updatedData;
         });
     }, [id, dispatch]);
@@ -305,6 +324,20 @@ function BrewLogForm() {
             />
 
             <form onSubmit={handleSubmit} className="card">
+                {hasExpandedSections() && (
+                    <div className="form-section collapse-all-container">
+                        <Button
+                            variant="secondary"
+                            className="collapse-all-button"
+                            onClick={collapseAll}
+                            aria-label="Collapse all sections"
+                            size="small"
+                        >
+                            <ChevronUp size={20} />Collapse all sections
+                        </Button>
+                    </div>
+                )}
+
                 {/* Basic Information */}
                 <div className="form-section">
                     <div
@@ -884,7 +917,7 @@ function BrewLogForm() {
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.abv ? 'collapsed' : ''}`}>
-                        <MiniAbvCalculator 
+                        <MiniAbvCalculator
                             formState={formState}
                             updateFormData={updateFormData}
                         />
@@ -1058,7 +1091,7 @@ function BrewLogForm() {
                     </div>
                     <div className={`section-content ${collapsedSections.archived ? 'collapsed' : ''}`}>
                         <p className="section-description">
-                            Mark this brew as archived when you're done with it. This will only change the status badge in the list so you'll be able to tell at a glance. All info will be retained until you choose to delete it. 
+                            Mark this brew as archived when you're done with it. This will only change the status badge in the list so you'll be able to tell at a glance. All info will be retained until you choose to delete it.
                         </p>
                         <div className="form-group">
                             <Button
