@@ -35,8 +35,8 @@ function AlertForm() {
         };
 
         dispatch({
-            type: ActionTypes.updateAlert,
-            payload: { ...alertData, id }
+            type: isEditing ? ActionTypes.updateAlert : ActionTypes.addAlert,
+            payload: isEditing ? { ...alertData, id } : alertData
         });
 
         navigate('/alerts');
@@ -45,15 +45,6 @@ function AlertForm() {
     const updateFormData = (updates) => {
         const updatedData = Alert.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
-
-        dispatch({
-            type: ActionTypes.updateAlert,
-            payload: {
-                ...updatedData.toJSON(),
-                id,
-                date: new Date(updatedData.date).toISOString()
-            }
-        });
     };
 
     const handleChange = (e) => {
