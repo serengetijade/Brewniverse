@@ -21,18 +21,40 @@ function BrewLogsList() {
     const [displayMode, setDisplayMode] = useState(() => {
         return localStorage.getItem('brewlogs-display-mode') || 'grid';
     });
+    const [archiveFilter, setArchiveFilter] = useState('active');
 
     const handleDisplayChange = (mode) => {
-        setDisplayMode(mode);
-        localStorage.setItem('brewlogs-display-mode', mode);
+        if (mode === 'archive') {
+            setArchiveFilter(prev => {
+                if (prev === 'active') return 'archived';
+                if (prev === 'archived') return 'all';
+                return 'active';
+            });
+        } else {
+            setDisplayMode(mode);
+            localStorage.setItem('brewlogs-display-mode', mode);
+        }
     };
 
     const processedBrewLogs = useMemo(() => {
-        let filteredBrewLogs = state.brewLogs.filter(brewLog =>
-            (brewLog.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (brewLog.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (brewLog.type || '').toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        let filteredBrewLogs = state.brewLogs.filter(brewLog => {
+            // Filter by archive status
+            const isArchived = brewLog.archived && brewLog.archived !== '';
+            let matchesArchiveFilter = true;
+            
+            if (archiveFilter === 'active') {
+                matchesArchiveFilter = !isArchived;
+            } else if (archiveFilter === 'archived') {
+                matchesArchiveFilter = isArchived;
+            }
+
+            // Filter by search term
+            const matchesSearch = (brewLog.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (brewLog.description || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (brewLog.type || '').toLowerCase().includes(searchTerm.toLowerCase());
+            
+            return matchesArchiveFilter && matchesSearch;
+        });
 
         if (sortBy === 'date') {
             filteredBrewLogs.sort((a, b) => {
@@ -104,7 +126,7 @@ function BrewLogsList() {
         }
 
         return filteredBrewLogs;
-    }, [state.brewLogs, searchTerm, sortBy, sortOrder]);
+    }, [state.brewLogs, searchTerm, sortBy, sortOrder, archiveFilter]);
 
     const handleCreateBrewLog = () => {
         const newBrewLog = new BrewLog({
@@ -163,6 +185,9 @@ function BrewLogsList() {
                         { key: 'recipe', label: 'Recipe', icon: FileText }
                     ]}
                     searchPlaceholder="Search brew logs by name, description, or type..."
+                    showArchive={true}
+                    archiveFilter={archiveFilter}
+                    displayMode={displayMode}
                 />
             </div>
 

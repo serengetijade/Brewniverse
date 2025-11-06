@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, FileText, Grid3x3, List, Search, Star } from 'lucide-react';
+import { Archive, BookOpen, Calendar, FileText, Grid3x3, List, Search, Star } from 'lucide-react';
 import React from 'react';
 import Button from './Button';
 
@@ -15,7 +15,9 @@ function SearchSortControls({
         { key: 'brewlog', label: 'Brew Log', icon: BookOpen },
         { key: 'recipe', label: 'Recipe', icon: FileText }
     ],
-    searchPlaceholder = "Search items..."
+    searchPlaceholder = "Search items...",
+    showArchive = false,
+    archiveFilter = 'active'
 }) {
     const handleSortClick = (sortKey) => {
         if (sortBy === sortKey) {
@@ -41,6 +43,20 @@ function SearchSortControls({
                         <Grid3x3 size={16} />
                         Grid
                     </Button>
+                    {showArchive && <Button
+                        variant="ghost"
+                        size="small"
+                        onClick={() => onDisplayChange('archive')}
+                        className="display-button"
+                        title={
+                            archiveFilter === 'active' ? 'Click to show archived items' :
+                            archiveFilter === 'archived' ? 'Click to show all items' :
+                            'Click to show active items only'
+                        }
+                    >
+                        <Archive size={16} />
+                        {archiveFilter === 'active' ? 'Active' : archiveFilter === 'archived' ? 'Archived' : 'All'}
+                    </Button>}
                     <Button
                         variant="ghost"
                         size="small"
