@@ -1,4 +1,4 @@
-import { Calendar, CheckCircle2, Clock, SquarePen, Trash2 } from 'lucide-react';
+import { Calendar, Check, CheckCircle2, Clock, SquarePen, Trash2 } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTopicConfig } from '../../constants/ActivityTopics';
@@ -127,7 +127,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                         size="medium"
                         onClick={handleComplete}
                     >
-                        {alert.isCompleted ? <Trash2 size={16} /> : "Complete"}
+                        {alert.isCompleted ? <Trash2 size={16} /> : (<><Check size={16}/>Complete</>)}
                     </Button>
                 </div>
             </div>
