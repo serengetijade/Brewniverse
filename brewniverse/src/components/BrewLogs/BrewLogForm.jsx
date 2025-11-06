@@ -1091,7 +1091,7 @@ function BrewLogForm() {
                     </div>
                     <div className={`section-content ${collapsedSections.archived ? 'collapsed' : ''}`}>
                         <p className="section-description">
-                            Mark this brew as archived when you're done with it. This will only change the status badge in the list so you'll be able to tell at a glance. All info will be retained until you choose to delete it.
+                            Mark this brew as archived when you're done with it. All info will be retained until you choose to delete it.
                         </p>
                         <div className="form-group">
                             <Button
