@@ -1,4 +1,4 @@
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
@@ -34,6 +34,21 @@ function RecipeForm() {
             localStorage.setItem('recipeFormCollapsedSections', JSON.stringify(newState));
             return newState;
         });
+    };
+
+    const collapseAll = () => {
+        const allSections = ['basicInfo', 'primaryIngredients', 'secondaryIngredients', 'instructions', 'notes', 'connectedBrewLogs'];
+        const newState = {};
+        allSections.forEach(section => {
+            newState[section] = true;
+        });
+        setCollapsedSections(newState);
+        localStorage.setItem('recipeFormCollapsedSections', JSON.stringify(newState));
+    };
+
+    const hasExpandedSections = () => {
+        if (Object.keys(collapsedSections).length === 0) return true;
+        return Object.values(collapsedSections).some(isCollapsed => isCollapsed !== true);
     };
 
     const [formState, setFormState] = useState(() => new Recipe());
@@ -125,6 +140,19 @@ function RecipeForm() {
             />
 
             <form onSubmit={handleSubmit} className="card">
+                {hasExpandedSections() && (
+                    <div className="form-section collapse-all-container">
+                        <Button
+                            variant="secondary"
+                            className="collapse-all-button"
+                            onClick={collapseAll}
+                            aria-label="Collapse all sections"
+                            size="small"
+                        >
+                            <ChevronUp size={20} />Collapse all sections
+                        </Button>
+                    </div>
+                )}
                 {/* Basic Information */}
                 <div className="form-section">
                     <div

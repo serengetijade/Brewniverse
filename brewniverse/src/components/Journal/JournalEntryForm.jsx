@@ -1,4 +1,4 @@
-import { ChevronDown, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import '../../Styles/JournalEntryForm.css';
@@ -10,6 +10,7 @@ import { getCurrentAbv, getGravityActivities } from '../../utils/gravityCalculat
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Rating from '../UI/Rating';
+import Button from '../UI/Button';
 
 function JournalEntryForm() {
     const { id } = useParams();
@@ -33,6 +34,21 @@ function JournalEntryForm() {
             localStorage.setItem('journalFormCollapsedSections', JSON.stringify(newState));
             return newState;
         });
+    };
+
+    const collapseAll = () => {
+        const allSections = ['basicInfo', 'notes'];
+        const newState = {};
+        allSections.forEach(section => {
+            newState[section] = true;
+        });
+        setCollapsedSections(newState);
+        localStorage.setItem('journalFormCollapsedSections', JSON.stringify(newState));
+    };
+
+    const hasExpandedSections = () => {
+        if (Object.keys(collapsedSections).length === 0) return true;
+        return Object.values(collapsedSections).some(isCollapsed => isCollapsed !== true);
     };
 
     const [formState, setFormState] = useState(() => new JournalEntry());
@@ -110,6 +126,19 @@ function JournalEntryForm() {
             />
 
             <form onSubmit={handleSubmit} className="card">
+                {hasExpandedSections() && (
+                    <div className="form-section collapse-all-container">
+                        <Button
+                            variant="secondary"
+                            className="collapse-all-button"
+                            onClick={collapseAll}
+                            aria-label="Collapse all sections"
+                            size="small"
+                        >
+                            <ChevronUp size={20} />Collapse all sections
+                        </Button>
+                    </div>
+                )}
                 {/* Basic Information */}
                 <div className="form-section">
                     <div

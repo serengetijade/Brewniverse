@@ -93,6 +93,46 @@
         margin: 0;
     }
 
+/* Collapse All Button - FIXED */
+/* Position below the navigation bar as fixed*/
+/*    .collapse-all-button {
+    /*position: fixed;
+    z-index: 50;
+    top: calc(var(--nav-height, 80px) + 0.5rem);
+    right: calc(0.5rem + env(safe-area-inset-right));
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;    
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    color: var(--color-textLight);
+   
+}    .collapse-all-button:hover {
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .collapse-all-button:active {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary);
+        transform: scale(0.95);
+    } */
+
+/* Collapse All Button */
+.collapse-all-container {
+    text-align: center;
+}
+
+.collapse-all-button {
+    width: 100%;
+}
+
 /* Collapsible Section */
 .section-header.collapsible {
     cursor: pointer;
