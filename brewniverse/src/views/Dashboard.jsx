@@ -1,4 +1,4 @@
-import { Bell, Book, BookOpen, Calculator, FileText } from 'lucide-react';
+import { Bell, Book, BookOpen, Calculator, FileText, Info } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Dashboard.css';
@@ -147,10 +147,28 @@ function Dashboard() {
                                 <div key={alert.id} className="recent-item alert-item">
                                     <div className="recent-item-content">
                                         <h4>{alert.name}</h4>
-                                        <p>{alert.description}</p>
                                         <small>{new Date(alert.date).toLocaleDateString()}</small>
                                     </div>
-                                    <div className="alert-indicator" />
+                                    <div>
+                                        <Button
+                                            variant="ghost"
+                                            size="small"
+                                            onClick={() => navigate(`/brewlogs/${alert.brewLogId}`)}
+                                        >
+                                            <p>{alert.description}</p>
+
+                                            <Info size={20} />
+                                        </Button>
+                                        {alert.brewLogId && <Button
+                                            variant="ghost"
+                                            size="small"
+                                            onClick={() => navigate(`/brewlogs/${alert.brewLogId}`)}
+                                        >
+                                        <p>{alert.description}</p>
+                                        
+                                            <BookOpen size={20}/>
+                                        </Button>}
+                                    </div>
                                 </div>
                             ))}
                         </div>

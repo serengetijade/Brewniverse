@@ -104,10 +104,14 @@
 }
 
     .btn-warning:hover:not(.btn-disabled) {
-        background-color: #e0a800;
+        background-color: var(--color-warning);
         transform: translateY(-1px);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
+
+.btn-error {
+    color: var(--color-error);
+}
 
 .btn-error:hover:not(.btn-disabled) {
     background-color: var(--color-error);

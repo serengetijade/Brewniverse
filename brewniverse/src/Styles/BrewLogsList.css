@@ -31,6 +31,12 @@
     letter-spacing: 0.5px;
 }
 
+.brewlog-card .alert-indicator{
+    color: var(--color-error);
+    display: grid;
+    vertical-align:bottom;
+}
+
 .brewlog-date {
     display: flex;
     align-items: center;
