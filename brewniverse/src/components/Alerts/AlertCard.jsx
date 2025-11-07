@@ -60,7 +60,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                             <div className="alert-topic-badge" style={{ backgroundColor: `${topicConfig.color}15`, color: topicConfig.color }}>
                                 <TopicIcon size={16} />
                             </div>
-                            <h3 className="alert-name">{alert.name}</h3>
+                            <h3 className="item-title">{alert.name}</h3>
                         </div>
                         {alert.description &&
                             <p className="item-description">{alert.description}</p>
@@ -87,6 +87,7 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                                     day: 'numeric',
                                     year: 'numeric'
                                 })}
+
                             </div>
                         </div>
                         <div className="alert-time-section">
@@ -153,16 +154,13 @@ function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
                                 <div className="alert-topic-badge" style={{ backgroundColor: `${topicConfig.color}15`, color: topicConfig.color }}>
                                     <TopicIcon size={16} />
                                 </div>
-                                <h3 className="item-title alert-name">{alert.name}</h3>
+                                <h3 className="item-title">{alert.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
                             <div className="item-date alert-date">
                                 <Calendar size={14} />
                                 {new Date(alert.date).toLocaleDateString('en-US', {
-                                    month: 'long',
-                                    day: 'numeric',
-                                    year: 'numeric',
                                     hour: "numeric",
                                     minute: "numeric",
                                     hour12: true

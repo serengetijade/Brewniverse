@@ -53,7 +53,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                 </div>
 
                 <div className="item-card-content">
-                    <h3 className="recipe-name">{recipe.name}</h3>
+                    <h3 className="item-title">{recipe.name}</h3>
                     {recipe.description && (
                         <p className="item-description">{recipe.description}</p>
                     )}
@@ -120,7 +120,6 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
             </div>
         );
     } else {
-        // List display mode
         return (
             <div className="item-card recipe-card list-view" style={{ '--item-color': brewTypeConfig.color }}>
                 <div className="item-card-accent recipe-card-accent"></div>
@@ -129,7 +128,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                         <div className="item-header">
                             <div className="item-type">
                                 <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
-                                <h3 className="item-title recipe-name">{recipe.name}</h3>
+                                <h3 className="item-title">{recipe.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">

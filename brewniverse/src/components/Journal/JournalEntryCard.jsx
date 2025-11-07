@@ -34,7 +34,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                 </div>
 
                 <div className="item-card-content">
-                    <h3 className="journal-entry-name">{entry.name}</h3>
+                    <h3 className="item-title">{entry.name}</h3>
                     
                     {entry.style && (
                         <p className="journal-entry-style">{entry.style}</p>
@@ -93,7 +93,7 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                         <div className="item-header journal-header">
                             <div className="item-type journal-type">
                                 <span className="item-type-icon-large journal-type-icon-large">{brewTypeConfig.icon}</span>
-                                <h3 className="item-title journal-name">{entry.name}</h3>
+                                <h3 className="item-title">{entry.name}</h3>
                             </div>
                         </div>
                         <div className="item-content">
