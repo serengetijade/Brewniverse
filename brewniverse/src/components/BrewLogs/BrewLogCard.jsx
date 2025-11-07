@@ -129,7 +129,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     <div className="item-header brewlog-header">
                         <div className="item-type">
                             <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
-                            <h3 className="item-title brewlog-name">{brewLog.name}</h3>
+                            <h3 className="item-title">{brewLog.name}</h3>
                         </div>
                     </div>
                     <div className="item-content">
