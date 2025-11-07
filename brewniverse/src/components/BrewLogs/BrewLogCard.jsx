@@ -1,4 +1,4 @@
-import { Calendar, Info, Scale, SquarePen, TrendingUp } from 'lucide-react';
+import { Bell, Calendar, Info, SquarePen, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
@@ -8,10 +8,15 @@ import Button from '../UI/Button';
 import Rating from '../UI/Rating';
 import { getDaysSinceAsDescription } from '../../utils/DateUtils';
 import { getTopicIcon } from '../../constants/ActivityTopics';
+import { useApp } from '../../contexts/AppContext';
 
 function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     const navigate = useNavigate();
+    const { state } = useApp();
     const brewTypeConfig = getBrewTypeConfig(brewLog.type);
+
+    // Check if this brew log has any associated alerts
+    const hasAnyAlerts = state.alerts.some(alert => alert.brewLogId === brewLog.id);
 
     // Calculate gravity-based values
     const gravityActivities = getGravityActivities(brewLog.activity || []);
@@ -41,7 +46,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                         </div>
                     </div>
                     <div className="brewlog-status">
-                        {brewLog.archived  
+                        {brewLog.archived
                             ? (<span className="status-badge status-archived">Archived</span>)
                             : brewLog.dateBottled
                                 ? (<span className="status-badge status-completed">Bottled</span>)
@@ -52,7 +57,16 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                 </div>
 
                 <div className="item-card-content">
-                    <h3 className="brewlog-name">{brewLog.name}</h3>
+                    <h3 className="brewlog-name">
+                        {brewLog.name}
+                        {hasAnyAlerts && <Button
+                            variant="error"
+                            size="small"
+                            onClick={() => navigate(`/alerts`)}
+                        >
+                            <Bell size={16} />
+                        </Button>}
+                    </h3>
                     {brewLog.description && (
                         <p className="item-description">{brewLog.description}</p>
                     )}
@@ -129,7 +143,8 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     <div className="item-header brewlog-header">
                         <div className="item-type">
                             <span className="item-type-icon-large">{brewTypeConfig.icon}</span>
-                            <h3 className="item-title">{brewLog.name}</h3>
+                            <h3 className="item-title">{brewLog.name}
+                            </h3>
                         </div>
                     </div>
                     <div className="item-content">
@@ -148,6 +163,13 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                     >
                         <Info size={16} />
                     </Button>
+                    {hasAnyAlerts && <Button
+                        variant="error"
+                        size="small"
+                        onClick={() => navigate(`/alerts`)}
+                    >
+                        <Bell size={16} />
+                    </Button>}
                     <Button
                         variant="ghost"
                         size="small"
