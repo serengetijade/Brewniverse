@@ -56,16 +56,6 @@ function BrewLogDetail() {
             <div className="main-content-section brewlog-detail-header">
                 <div className="brewlog-header-content">
                     <h1>{brewLog.name}</h1>
-                    <div className="brewlog-meta">
-                        <span className="brewlog-date-info">
-                            <Calendar size={16} />
-                            {new Date(brewLog.dateCreated).toLocaleDateString('en-US', {
-                                month: 'long',
-                                day: 'numeric',
-                                year: 'numeric'
-                            })}
-                        </span>
-                    </div>
                 </div>
                 <div className="brewlog-header-actions">
                     <Button
@@ -103,6 +93,17 @@ function BrewLogDetail() {
                 </div>
 
                 {/* Ingredients Section */}
+                {brewLog.recipeId &&
+                    <div className="brewlog-content-section">
+                        <Button
+                            variant="secondary"
+                            onClick={() => navigate(`/recipes/${brewLog.recipeId}/`)}
+                            fullWidth={true}
+                        >
+                            <Edit size={16} />
+                            Go to Recipe
+                        </Button>
+                    </div>}
                 <div className="brewlog-content-section">
                     <IngredientsSummary brewLog={brewLog} />
                 </div>
