@@ -246,6 +246,6 @@
     }
 
     .brewlog-detail-header {
-        gap: 1rem;
+        gap: 0rem;
     }
 }
