@@ -59,6 +59,28 @@ function JournalEntryForm() {
             setFormState(JournalEntry.fromJSON(entry));
         }
     }, [id, state.journalEntries]);
+        
+    useEffect(() => {
+        if (!isEditing) {
+            const brewLogId = searchParams.get('brewLogId');
+            const type = searchParams.get('type');
+            const name = searchParams.get('name');
+            const abv = searchParams.get('abv');
+
+            if (brewLogId) {
+                const updates = {
+                    brewLogId,
+                    brand: 'Brewniverse'
+                };
+
+                if (type) updates.type = type;
+                if (name) updates.name = name;
+                if (abv) updates.abv = abv;
+
+                setFormState(JournalEntry.fromJSON(updates));
+            }
+        }
+    }, [isEditing, searchParams]);
 
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
