@@ -42,24 +42,11 @@ function JournalList() {
             });
         }
         else if (sortBy === 'name') {
-            const grouped = {};
-            filteredEntries.forEach(entry => {
-                const firstLetter = (entry.name || 'Unknown')[0].toUpperCase();
-                if (!grouped[firstLetter]) {
-                    grouped[firstLetter] = [];
-                }
-                grouped[firstLetter].push(entry);
+            filteredEntries.sort((a, b) => {
+                const nameA = (a.name || 'Unknown').toLowerCase();
+                const nameB = (b.name || 'Unknown').toLowerCase();
+                return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
             });
-
-            Object.keys(grouped).forEach(groupKey => {
-                grouped[groupKey].sort((a, b) => {
-                    const nameA = a.name.toLowerCase();
-                    const nameB = b.name.toLowerCase();
-                    return sortOrder === 'asc' ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-                });
-            });
-
-            return grouped;
         }
         else if (sortBy === 'brand') {
             const grouped = {};
@@ -186,7 +173,7 @@ function JournalList() {
                         </div>
                     ) : (
                         <div className="items-container">
-                            {sortBy === 'date' || sortBy === 'rating' ? (
+                            {sortBy === 'date' || sortBy === 'rating' || sortBy === 'name' ? (
                                 <div className="recent-items">
                                     {sortedEntries.map((entry) => (
                                         <JournalEntryCard
