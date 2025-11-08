@@ -90,9 +90,11 @@
 
 
 /* Journal card styles */
-.journal-entry-card .item-card-actions{
+.journal-entry-card .item-card-actions:has(> .item-card-actions-col2) { }
+
+.journal-entry-card .item-card-actions:not(:has(> .item-card-actions-col2)) {
     grid-template-columns: 1fr;
-}
+}  
 
 .journal-card {
     position: relative;
