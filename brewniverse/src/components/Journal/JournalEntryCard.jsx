@@ -73,6 +73,15 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                 </div>
 
                 <div className="item-card-actions">
+                    {entry.brewLogId &&
+                        <Button
+                            className="item-card-actions-col2"
+                            variant="ghost"
+                            size="medium"
+                            onClick={() => navigate(`/brewlogs/${entry.brewLogId}`)}
+                        >
+                            <BookOpen size={18} />Brew Log
+                        </Button>}
                     <Button
                         variant="ghost"
                         size="medium"
