@@ -19,20 +19,14 @@ function AlertForm() {
     useEffect(() => {
         const alert = state.alerts.find(a => a.id === id);
         if (alert) {
-            setFormState(Alert.fromJSON({
-                ...alert,
-                date: new Date(alert.date).toISOString().slice(0, 16)
-            }));
+            setFormState(Alert.fromJSON(alert));
         }
     }, [id, state.alerts]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const alertData = {
-            ...formState.toJSON(),
-            date: new Date(formState.date).toISOString(),
-        };
+        const alertData = formState.toJSON();
 
         dispatch({
             type: isEditing ? ActionTypes.updateAlert : ActionTypes.addAlert,
@@ -45,6 +39,11 @@ function AlertForm() {
     const updateFormData = (updates) => {
         const updatedData = Alert.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
+
+        dispatch({
+            type: ActionTypes.updateAlert,
+            payload: { ...updatedData.toJSON(), id }
+        });
     };
 
     const handleChange = (e) => {
