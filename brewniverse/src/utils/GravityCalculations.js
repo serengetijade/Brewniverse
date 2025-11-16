@@ -89,14 +89,18 @@ export const formatGravityDataForChart = (gravityActivities) => {
 
     return gravityActivities
         .filter(activity => activity.description && !isNaN(parseFloat(activity.description)))
-        .map(activity => ({
-            date: new Date(activity.date),
-            gravity: parseFloat(activity.description),
-            dateLabel: new Date(activity.date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: '2-digit'
-            })
-        }))
-        .sort((a, b) => a.date - b.date);
+        .map(activity => {
+            const date = new Date(activity.date);
+            return {
+                date: date,
+                timestamp: date.getTime(),
+                gravity: parseFloat(activity.description),
+                dateLabel: date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: '2-digit'
+                })
+            };
+        })
+        .sort((a, b) => a.timestamp - b.timestamp);
 };
