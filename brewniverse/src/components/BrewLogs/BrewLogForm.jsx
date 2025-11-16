@@ -1,4 +1,4 @@
-﻿import { Archive, ChevronDown, ChevronUp, Plus, X } from 'lucide-react';
+﻿import { Archive, ChevronDown, ChevronUp, Copy, Plus, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -45,7 +45,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
-        'abv', 'importantDates', 'otherActivities', 'notes', 'journal', 'archived'
+        'abv', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -198,6 +198,32 @@ function BrewLogForm() {
         }
 
         return;
+    };
+
+    const makeCopy = (e) => {
+        if (!window.confirm('Are you sure you want to make a copy of this Brew Log?')) return;
+
+        const newId = generateId();
+        
+        const brewLogCopy = formState.toJSON();
+        
+        brewLogCopy.id = newId;
+        brewLogCopy.name = `${brewLogCopy.name.trimEnd()} (Copy)`;
+        
+        if (brewLogCopy.activity && brewLogCopy.activity.length > 0) {
+            brewLogCopy.activity = brewLogCopy.activity.map(activity => ({
+                ...activity,
+                id: generateId(),
+                brewLogId: newId
+            }));
+        }
+        
+        dispatch({
+            type: ActionTypes.addBrewLog,
+            payload: brewLogCopy
+        });
+        
+        navigate(`/brewlogs/${newId}`);
     };
 
     const onDelete = (e) => {
@@ -1071,6 +1097,38 @@ function BrewLogForm() {
 
                         <div className="form-group">
                             <JournalEntryList brewLogId={id} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Copy */}
+                <div className="form-section brewlog-copy">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('copy')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.copy ? 'collapsed' : ''}`}
+                            />
+                            Make a Copy
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.copy ? 'collapsed' : ''}`}>
+                        <p className="section-description">
+                            Make a copy of this brew log. Use this if you are splitting up a batch or making a similar brew. All info will be duplicated into a new log, except for journal entries.
+                        </p>
+                        <div className="form-group">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                size="small"
+                                onClick={() => makeCopy()}
+                            >
+                                <Copy size={16} />
+                                Copy
+                            </Button>
                         </div>
                     </div>
                 </div>
