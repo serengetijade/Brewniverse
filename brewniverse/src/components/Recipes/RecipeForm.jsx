@@ -1,10 +1,10 @@
-import { ChevronDown, ChevronUp, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Copy, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/RecipeForm.css';
 import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
-import { ActionTypes, useApp } from '../../contexts/AppContext';
+import { ActionTypes, generateId, useApp } from '../../contexts/AppContext';
 import Recipe from '../../models/Recipe';
 import IngredientList from '../Ingredients/IngredientList';
 import InstructionForm from '../Instructions/InstructionForm';
@@ -37,7 +37,7 @@ function RecipeForm() {
     };
 
     const collapseAll = () => {
-        const allSections = ['basicInfo', 'primaryIngredients', 'secondaryIngredients', 'instructions', 'notes', 'connectedBrewLogs'];
+        const allSections = ['basicInfo', 'primaryIngredients', 'secondaryIngredients', 'instructions', 'notes', 'copy', 'connectedBrewLogs'];
         const newState = {};
         allSections.forEach(section => {
             newState[section] = true;
@@ -129,6 +129,24 @@ function RecipeForm() {
 
     const getConnectedBrewLogs = () => {
         return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
+    };
+
+    const makeCopy = (e) => {
+        if (!window.confirm('Are you sure you want to make a copy of this Recipe?')) return;
+
+        const newId = generateId();
+        
+        const recipeCopy = formState.toJSON();
+        
+        recipeCopy.id = newId;
+        recipeCopy.name = `${recipeCopy.name.trimEnd()} (Copy)`;
+        
+        dispatch({
+            type: ActionTypes.addRecipe,
+            payload: recipeCopy
+        });
+        
+        navigate(`/recipes/${newId}`);
     };
 
     return (
@@ -376,6 +394,40 @@ function RecipeForm() {
                         </div>
                     </div>
                 </div>
+
+                {/* Copy */}
+                {isEditing && (
+                    <div className="form-section recipe-copy">
+                        <div
+                            className="section-header collapsible"
+                            onClick={() => toggleSection('copy')}
+                        >
+                            <h3>
+                                <ChevronDown
+                                    size={20}
+                                    className={`section-toggle-icon ${collapsedSections.copy ? 'collapsed' : ''}`}
+                                />
+                                Make a Copy
+                            </h3>
+                        </div>
+                        <div className={`section-content ${collapsedSections.copy ? 'collapsed' : ''}`}>
+                            <p className="section-description">
+                                Make a copy of this recipe. All info will be duplicated into a new recipe, except for connected brew logs.
+                            </p>
+                            <div className="form-group">
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    size="small"
+                                    onClick={() => makeCopy()}
+                                >
+                                    <Copy size={16} />
+                                    Copy
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Connected Brew Logs (only show when editing) */}
                 {isEditing && (
