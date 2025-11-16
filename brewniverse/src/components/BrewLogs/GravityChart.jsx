@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Scale } from 'lucide-react';
 import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, AreaChart } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
-import { formatGravityDataForChart, getGravity13Break } from '../../utils/gravityCalculations';
+import { formatGravityDataForChart, getGravity13Break, getGravityDrop } from '../../utils/gravityCalculations';
 import '../../Styles/GravityChart.css';
 
 function GravityChart({ gravityActivities }) {
@@ -95,7 +95,7 @@ function GravityChart({ gravityActivities }) {
                                 <span className="stat">
                                     <span className="stat-label">Drop:</span>
                                     <span className="stat-value">
-                                        {(chartData[0].gravity - chartData[chartData.length - 1].gravity).toFixed(3)}
+                                        {getGravityDrop(gravityActivities)}
                                     </span>
                                 </span>
                             </>
