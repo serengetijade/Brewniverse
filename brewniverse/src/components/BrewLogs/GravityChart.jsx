@@ -47,14 +47,18 @@ function GravityChart({ gravityActivities }) {
     const CustomTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             const data = payload[0].payload;
+            const dateTime = data.date.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
             return (
                 <div className="gravity-chart-tooltip">
-                    <p className="tooltip-date">{data.date.toLocaleDateString('en-US', {
-                        weekday: 'short',
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric'
-                    })}</p>
+                    <p className="tooltip-date">{dateTime}</p>
                     <p className="tooltip-gravity">
                         <strong>Gravity:</strong> {data.gravity.toFixed(3)}
                     </p>
@@ -138,12 +142,23 @@ function GravityChart({ gravityActivities }) {
                     />
 
                     <XAxis
-                        dataKey="dateLabel"
+                        dataKey="timestamp"
+                        type="number"
+                        domain={['dataMin', 'dataMax']}
+                        scale="time"
                         stroke={theme.colors.textLight}
                         style={{ fontSize: '12px' }}
                         angle={-45}
                         textAnchor="end"
                         height={60}
+                        tickFormatter={(timestamp) => {
+                            const date = new Date(timestamp);
+                            return date.toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: '2-digit'
+                            });
+                        }}
                     />
 
                     <YAxis
