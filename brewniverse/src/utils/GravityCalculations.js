@@ -25,6 +25,25 @@ export const getGravity13Break = (gravityActivities) => {
     return result;
 };
 
+export const getGravityDrop = (gravityActivities) => {
+    if (gravityActivities.length < 2) return '';
+    
+    let totalDrop = 0;
+    
+    for (let i = 0; i < gravityActivities.length - 1; i++) {
+        const currentGravity = parseFloat(gravityActivities[i].description);
+        const nextGravity = parseFloat(gravityActivities[i + 1].description);
+        
+        // If gravity decreased (fermentation occurred), add the drop
+        if (currentGravity > nextGravity) {
+            totalDrop += (currentGravity - nextGravity);
+        }
+        // If gravity increased (step feeding), we don't subtract from the drop
+    }
+    
+    return totalDrop.toFixed(3);
+};
+
 export const getCurrentAbv = (gravityActivities) => {
     if (gravityActivities.length < 1) return '';
     
