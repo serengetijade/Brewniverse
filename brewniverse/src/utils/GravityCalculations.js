@@ -27,12 +27,21 @@ export const getGravity13Break = (gravityActivities) => {
 
 export const getCurrentAbv = (gravityActivities) => {
     if (gravityActivities.length < 1) return '';
-    const originalGravity = getGravityOriginal(gravityActivities);
-    if (!originalGravity) return '';
-
-    const latestGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description);
-    const result = ((parseFloat(originalGravity) - latestGravity) * 131.25).toFixed(2);
-    return result;
+    
+    let totalAbv = 0;
+    
+    for (let i = 0; i < gravityActivities.length - 1; i++) {
+        const currentGravity = parseFloat(gravityActivities[i].description);
+        const nextGravity = parseFloat(gravityActivities[i + 1].description);
+        
+        // If gravity decreased (fermentation occurred), add the ABV produced
+        if (currentGravity > nextGravity) {
+            totalAbv += (currentGravity - nextGravity) * 131.25;
+        }
+        // If gravity increased (step feeding), we don't add to ABV
+    }
+    
+    return totalAbv.toFixed(2);
 };
 
 export const getPotentialAbv = (gravityActivities) => {
