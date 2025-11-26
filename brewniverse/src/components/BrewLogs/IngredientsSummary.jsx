@@ -14,9 +14,17 @@ import { ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
 import '../../Styles/Shared/ingredientsSummary.css';
 
 function IngredientsSummary({ brewLog }) {
-    // Get ingredients
-    const primaryIngredients = brewLog.ingredientsPrimary || [];
-    const secondaryIngredients = brewLog.ingredientsSecondary || [];
+    // Get ingredients and sort by order
+    const primaryIngredients = (brewLog.ingredientsPrimary || []).sort((a, b) => {
+        const orderA = a.order !== undefined ? a.order : 999999;
+        const orderB = b.order !== undefined ? b.order : 999999;
+        return orderA - orderB;
+    });
+    const secondaryIngredients = (brewLog.ingredientsSecondary || []).sort((a, b) => {
+        const orderA = a.order !== undefined ? a.order : 999999;
+        const orderB = b.order !== undefined ? b.order : 999999;
+        return orderA - orderB;
+    });
 
     // Get additions from activities
     const yeastActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Yeast);
@@ -47,7 +55,7 @@ function IngredientsSummary({ brewLog }) {
         );
     }
 
-    const renderMainIngredient = (ingredient) => (
+    const renderIngredient = (ingredient) => (
         <div key={ingredient.id} className="main-ingredient-item">
             <span className="main-ingredient-name">{ingredient.name}</span>
             {ingredient.amount && ingredient.unit && (
@@ -106,7 +114,7 @@ function IngredientsSummary({ brewLog }) {
                                 </div>
                             </div>
                             <div className="main-ingredient-list">
-                                {primaryIngredients.map(renderMainIngredient)}
+                                {primaryIngredients.map(renderIngredient)}
                             </div>
                         </div>
                     )}
@@ -126,7 +134,7 @@ function IngredientsSummary({ brewLog }) {
                                 </div>
                             </div>
                             <div className="main-ingredient-list">
-                                {secondaryIngredients.map(renderMainIngredient)}
+                                {secondaryIngredients.map(renderIngredient)}
                             </div>
                         </div>
                     )}

@@ -327,7 +327,8 @@ function BrewLogForm() {
                 id: generateId(),
                 name: item.name || '',
                 amount: item.amount || '',
-                unit: item.unit || 'oz'
+                unit: item.unit || 'oz',
+                order: item.order !== undefined ? item.order : 0
             }));
         };
 

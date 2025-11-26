@@ -5,6 +5,7 @@ class Ingredient {
         this.amount = data.amount || '';
         this.id = data.id || generateId();
         this.name = data.name || '';
+        this.order = data.order || 0;
         this.unit = data.unit || 'oz';
     }
 
@@ -17,6 +18,7 @@ class Ingredient {
             amount: this.amount,
             id: this.id,
             name: this.name,
+            order: this.order,
             unit: this.unit,
         };
     }
@@ -43,4 +45,3 @@ class Ingredient {
 }
 
 export default Ingredient;
-
