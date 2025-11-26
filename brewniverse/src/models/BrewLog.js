@@ -16,8 +16,8 @@ class BrewLog {
         this.gravity13Break = data.gravity13Break || '';
         this.gravityFinal = data.gravityFinal || '';
         this.gravityOriginal = data.gravityOriginal || '';
-        this.ingredientsPrimary = data.ingredientsPrimary || [];
-        this.ingredientsSecondary = data.ingredientsSecondary || [];
+        this.ingredientsPrimary = this._ensureIngredientOrder(data.ingredientsPrimary || []);
+        this.ingredientsSecondary = this._ensureIngredientOrder(data.ingredientsSecondary || []);
         this.name = data.name || '';
         this.notes = data.notes || '';
         this.nutrients = data.nutrients || '';
@@ -29,6 +29,13 @@ class BrewLog {
         this.type = data.type || 'Mead';
         this.volume = data.volume || '';
         this.yeast = data.yeast || '';
+    }
+
+    _ensureIngredientOrder(ingredients) {
+        return ingredients.map((ingredient, index) => ({
+            ...ingredient,
+            order: ingredient.order !== undefined ? ingredient.order : index
+        }));
     }
 
     static fromJSON(json) {

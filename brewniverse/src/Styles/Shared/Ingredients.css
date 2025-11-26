@@ -12,7 +12,54 @@
     background-color: var(--color-surface);
     border-radius: var(--border-radius-sm);
     border: 1px solid var(--color-border);
+    cursor: move;
+    transition: all 0.2s ease;
+    position: relative;
+    user-select: none; /* Prevent text selection during drag */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
+
+    .ingredient-item:hover {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .ingredient-item.dragging {
+        opacity: 0.5;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transform: scale(1.02);
+    }
+
+    .ingredient-item.drag-over {
+        border-top: 3px solid var(--color-primary);
+        margin-top: 3px;
+    }
+
+.ingredient-drag-handle {
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 .25rem;
+    color: var(--color-text-muted);
+    cursor: grab;
+    touch-action: none; /* Prevent touch scrolling while dragging */
+    user-select: none; /* Prevent text selection on touch */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+    .ingredient-drag-handle:active {
+        cursor: grabbing;
+    }
+
+.ingredient-item[draggable="false"] {
+    cursor: default;
+}
+
+    .ingredient-item[draggable="false"] .ingredient-drag-handle {
+        display: none;
+    }
 
 .ingredient-add-container {
     text-align: center;
@@ -105,6 +152,14 @@
 }
 
 @media (max-width: 768px) {
+    .ingredient-item {
+        touch-action: pan-y; /* Allow vertical scrolling but intercept for drag */
+    }
+
+    .ingredient-item:active {
+        background-color: var(--color-surfaceActive);
+        transform: scale(0.98);
+    }
 }
 
 @media (max-width: 480px) {

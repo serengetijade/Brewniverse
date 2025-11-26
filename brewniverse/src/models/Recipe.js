@@ -7,14 +7,21 @@ class Recipe {
         this.difficulty = data.difficulty || 'Beginner';
         this.estimatedABV = data.estimatedABV || '';
         this.id = data.id || generateId();
-        this.ingredientsPrimary = data.ingredientsPrimary || [];
-        this.ingredientsSecondary = data.ingredientsSecondary || [];
+        this.ingredientsPrimary = this._ensureIngredientOrder(data.ingredientsPrimary || []);
+        this.ingredientsSecondary = this._ensureIngredientOrder(data.ingredientsSecondary || []);
         this.instructions = data.instructions || [''];
         this.name = data.name || '';
         this.notes = data.notes || '';
         this.rating = data.rating || 0;
         this.type = data.type || 'Mead';
         this.volume = data.volume || '';
+    }
+
+    _ensureIngredientOrder(ingredients) {
+        return ingredients.map((ingredient, index) => ({
+            ...ingredient,
+            order: ingredient.order !== undefined ? ingredient.order : index
+        }));
     }
 
     static fromJSON(json) {
