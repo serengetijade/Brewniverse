@@ -204,12 +204,12 @@ function BrewLogForm() {
         if (!window.confirm('Are you sure you want to make a copy of this Brew Log?')) return;
 
         const newId = generateId();
-        
+
         const brewLogCopy = formState.toJSON();
-        
+
         brewLogCopy.id = newId;
         brewLogCopy.name = `${brewLogCopy.name.trimEnd()} (Copy)`;
-        
+
         if (brewLogCopy.activity && brewLogCopy.activity.length > 0) {
             brewLogCopy.activity = brewLogCopy.activity.map(activity => ({
                 ...activity,
@@ -217,12 +217,12 @@ function BrewLogForm() {
                 brewLogId: newId
             }));
         }
-        
+
         dispatch({
             type: ActionTypes.addBrewLog,
             payload: brewLogCopy
         });
-        
+
         navigate(`/brewlogs/${newId}`);
     };
 
@@ -435,22 +435,6 @@ function BrewLogForm() {
 
                         <div className="form-group">
                             <label htmlFor="name" className="form-label">
-                                Volume
-                            </label>
-                            <input
-                                type="text"
-                                id="volume"
-                                name="volume"
-                                className="form-input"
-                                value={formState.volume}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="name" className="form-label">
                                 Description
                             </label>
                             <textarea
@@ -586,95 +570,6 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Gravity Readings */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('gravity')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.gravity ? 'collapsed' : ''}`}
-                            />
-                            Gravity Readings
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
-                        {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
-                            <p className="section-description">Please add gravity entries below to see calculated values</p>
-                        )}
-
-                        <div className="gravity-stats-container">
-                            <div className="gravity-stat-card accent20">
-                                <div className="gravity-stat-label">Original Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityOriginal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityOriginal(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Starting point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent15">
-                                <div className="gravity-stat-label">1/3 Break Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravity13Break(gravityActivities) || '—'}
-                                </div>
-                                {getGravity13Break(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Add nutrient at this point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent10">
-                                <div className="gravity-stat-label">Final Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityFinal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityFinal(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Fermentation complete</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent08">
-                                <div className="gravity-stat-label">Current ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getCurrentAbv(gravityActivities) || '—'}
-                                    {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getCurrentAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Present alcohol content</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent05">
-                                <div className="gravity-stat-label">Potential Final ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getPotentialAbv(gravityActivities) || '—'}
-                                    {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getPotentialAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Estimated at completion</div>
-                                )}
-                            </div>
-                        </div>
-
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Gravity}
-                            headerLabel="Gravity Readings"
-                            itemLabel="Gravity Reading"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                            showBottomButton={true}
-                        >
-                        </ActivityList>
-
-                        <GravityChart gravityActivities={gravityActivities} />
-                    </div>
-                </div>
-
                 {/* Nutrients */}
                 <div className="form-section">
                     <div
@@ -760,51 +655,6 @@ function BrewLogForm() {
                                 />
                             ))}
                         </div>
-                    </div>
-                </div>
-
-                {/* Pectic Enzyme */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('pecticEnzyme')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
-                            />
-                            Pectic Enzyme
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <label htmlFor="pecticEnzyme" className="form-label">
-                                Pectic Enzyme
-                            </label>
-
-                            <textarea
-                                id="pecticEnzyme"
-                                name="pecticEnzyme"
-                                className="form-textarea"
-                                value={formState.pecticEnzyme}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="General pectic enzyme information and notes"
-                                rows={3}
-                            />
-                        </div>
-
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.PecticEnzyme}
-                            headerLabel="Pectic Enzyme Additions"
-                            itemLabel="Enzyme Details"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                        >
-                        </ActivityList>
                     </div>
                 </div>
 
@@ -929,6 +779,140 @@ function BrewLogForm() {
                     </div>
                 </div>
 
+                {/* Pectic Enzyme */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('pecticEnzyme')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
+                            />
+                            Pectic Enzyme
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
+                        <div className="form-group">
+                            <label htmlFor="pecticEnzyme" className="form-label">
+                                Pectic Enzyme
+                            </label>
+
+                            <textarea
+                                id="pecticEnzyme"
+                                name="pecticEnzyme"
+                                className="form-textarea"
+                                value={formState.pecticEnzyme}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="General pectic enzyme information and notes"
+                                rows={3}
+                            />
+                        </div>
+
+                        <ActivityList
+                            formData={formState}
+                            setFormData={updateFormDataCallback}
+                            topic={ActivityTopicEnum.PecticEnzyme}
+                            headerLabel="Pectic Enzyme Additions"
+                            itemLabel="Enzyme Details"
+                            sectionInfoMessage=""
+                            brewLogId={id}
+                        >
+                        </ActivityList>
+                    </div>
+                </div>
+
+                {/* Gravity Readings */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('gravity')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.gravity ? 'collapsed' : ''}`}
+                            />
+                            Gravity Readings
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
+                        {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
+                            <p className="section-description">Please add gravity entries below to see calculated values</p>
+                        )}
+
+                        <div className="gravity-stats-container">
+                            <div className="gravity-stat-card accent20">
+                                <div className="gravity-stat-label">Original Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravityOriginal(gravityActivities) || '—'}
+                                </div>
+                                {getGravityOriginal(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Starting point</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent15">
+                                <div className="gravity-stat-label">1/3 Break Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravity13Break(gravityActivities) || '—'}
+                                </div>
+                                {getGravity13Break(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Add nutrient at this point</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent10">
+                                <div className="gravity-stat-label">Final Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravityFinal(gravityActivities) || '—'}
+                                </div>
+                                {getGravityFinal(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Fermentation complete</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent08">
+                                <div className="gravity-stat-label">Current ABV</div>
+                                <div className="gravity-stat-value">
+                                    {getCurrentAbv(gravityActivities) || '—'}
+                                    {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                                </div>
+                                {getCurrentAbv(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Present alcohol content</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent05">
+                                <div className="gravity-stat-label">Potential Final ABV</div>
+                                <div className="gravity-stat-value">
+                                    {getPotentialAbv(gravityActivities) || '—'}
+                                    {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                                </div>
+                                {getPotentialAbv(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Estimated at completion</div>
+                                )}
+                            </div>
+                        </div>
+
+                        <ActivityList
+                            formData={formState}
+                            setFormData={updateFormDataCallback}
+                            topic={ActivityTopicEnum.Gravity}
+                            headerLabel="Gravity Readings"
+                            itemLabel="Gravity Reading"
+                            sectionInfoMessage=""
+                            brewLogId={id}
+                            showBottomButton={true}
+                        >
+                        </ActivityList>
+
+                        <GravityChart gravityActivities={gravityActivities} />
+                    </div>
+                </div>
+
                 {/* Final ABV Calculator */}
                 <div className="form-section">
                     <div
@@ -949,6 +933,8 @@ function BrewLogForm() {
                             updateFormData={updateFormData}
                         />
                     </div>
+                </div>
+                
                 </div>
 
                 {/* Important Dates */}
