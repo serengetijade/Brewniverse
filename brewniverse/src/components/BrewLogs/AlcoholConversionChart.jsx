@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Wine, Target } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
-import { getCurrentAbv, getPotentialAbv } from '../../utils/gravityCalculations';
+import { getCurrentAbv, getPotentialAbv } from '../../utils/GravityCalculations';
 import '../../Styles/AlcoholConversionChart.css';
 
 function AlcoholConversionChart({ gravityActivities }) {

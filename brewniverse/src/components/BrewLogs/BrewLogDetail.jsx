@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogDetail.css';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
-import { getGravityActivities } from '../../utils/gravityCalculations';
+import { getGravityActivities } from '../../utils/GravityCalculations';
 import ActivityTimeline from '../Activity/ActivityTimeline';
 import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';

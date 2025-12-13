@@ -2,7 +2,7 @@ import { Bell, Calendar, Info, SquarePen, TrendingUp } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getBrewTypeConfig } from '../../constants/BrewTypes';
-import { getCurrentAbv, getGravityActivities, getGravityFinal } from '../../utils/gravityCalculations';
+import { getCurrentAbv, getGravityActivities, getGravityFinal } from '../../utils/GravityCalculations';
 import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';

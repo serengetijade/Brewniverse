@@ -2,7 +2,7 @@ import { BottleWine, Calendar, ChartLine, Clock, ListTree, MoveVertical, Shield,
 import React from 'react';
 import '../../Styles/BrewLogStats.css';
 import { getTopicColorRgb, getTopicConfig, getTopicIcon } from '../../constants/ActivityTopics';
-import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
+import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
 import { getDaysSinceAsDescription } from '../../utils/DateUtils';
 import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 

@@ -4,6 +4,7 @@ export const BrewTypeEnum = {
     Cider: 'Cider',
     Kombucha: 'Kombucha',
     Mead: 'Mead',
+    Melomel: 'Melomel',
     Metheglin: 'Metheglin',
     Sake: 'Sake',
     Wine: 'Wine',
@@ -59,6 +60,14 @@ export const BrewTypeConfiguration = {
         icon: '🌿',
         description: 'Fermented herbs & honey',
         color: '#7ba25b' // green
+    },
+    [BrewTypeEnum.Melomel]: {
+        id: 4,
+        key: BrewTypeEnum.Melomel,
+        name: 'Melomel',
+        icon: '🍒',
+        description: 'Fermented fruit & honey',
+        color: '#FFCFDF' // light pink
     },
     [BrewTypeEnum.Sake]: {
         id: 5,

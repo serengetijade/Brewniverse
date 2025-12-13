@@ -1,9 +1,10 @@
-import { Activity as ActivityIcon, BottleWine, FlaskConical, FlaskRound,
+import { Activity as ActivityIcon, BottleWine, CirclePlus, FlaskConical, FlaskRound,
     Leaf, MoveVertical, Pill, PlayCircle, Scale, Shield, Sparkles, TestTubeDiagonal,
 } from 'lucide-react';
 
 export const ActivityTopicEnum = {
     Acid: 'acid',
+    Addition: 'addition',
     Base: 'base',
     DateBottled: 'datebottled',
     DateCreated: 'datecreated',
@@ -138,6 +139,16 @@ export const ActivityTopicConfiguration = {
         displayName_Alert: 'Time to Bottle',
         icon: BottleWine,
         label: 'Bottled'
+    },
+    [ActivityTopicEnum.Addition]: {
+        key: ActivityTopicEnum.Other,
+        color: '#b9bbc2',
+        rgb: '185, 187, 194',
+        description: 'Addition',
+        displayName: 'Addition',
+        displayName_Alert: 'Make an addition',
+        icon: CirclePlus,
+        label: 'Addition Added'
     },
     [ActivityTopicEnum.Other]: {
         key: ActivityTopicEnum.Other,

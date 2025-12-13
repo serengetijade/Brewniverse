@@ -6,7 +6,7 @@ import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, useApp } from '../../contexts/AppContext';
 import JournalEntry from '../../models/JournalEntry';
-import { getCurrentAbv, getGravityActivities } from '../../utils/gravityCalculations';
+import { getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Rating from '../UI/Rating';
