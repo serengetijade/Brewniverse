@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
-import { getCurrentAbv, getGravityActivities } from '../../utils/gravityCalculations';
+import { getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations';
 import '../../Styles/MiniAbvCalculator.css';
 import Button from '../UI/Button';
 

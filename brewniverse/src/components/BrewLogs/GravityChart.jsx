@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Scale } from 'lucide-react';
 import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, AreaChart } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
-import { formatGravityDataForChart, getGravity13Break, getGravityDrop } from '../../utils/gravityCalculations';
+import { formatGravityDataForChart, getGravity13Break, getGravityDrop } from '../../utils/GravityCalculations';
 import '../../Styles/GravityChart.css';
 
 function GravityChart({ gravityActivities }) {
