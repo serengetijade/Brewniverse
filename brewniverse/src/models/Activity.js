@@ -6,10 +6,20 @@ class Activity {
         this.alertId = data.alertId || null;
         this.brewLogId = data.brewLogId || '';
         this.date = data.date || getDate();
-        this.description = data.description || '';
+        this.description = data.description || ''; //gravity
         this.id = data.id || generateId();
         this.name = data.name || '';
         this.topic = data.topic || 'Other';
+
+        // Optional fields for gravity readings with ABV/volume tracking
+        this.addedAbv = data.addedAbv !== undefined ? data.addedAbv : 0;
+        this.addedVolume = data.addedVolume !== undefined ? data.addedVolume : 0;
+        this.addedGravity = data.addedGravity !== undefined ? data.addedGravity : 1.000;
+
+        this.abv = data.abv !== undefined ? data.abv : undefined;
+        this.volume = data.volume !== undefined ? data.volume : undefined;
+
+        this.additionActivityId = data.additionActivityId || null;
     }
 
     static fromJSON(json) {
@@ -17,7 +27,7 @@ class Activity {
     }
 
     toJSON() {
-        return {
+        const json = {
             alertId: this.alertId,
             brewLogId: this.brewLogId,
             date: this.date,
@@ -26,6 +36,16 @@ class Activity {
             name: this.name,
             topic: this.topic,
         };
+
+        // Include ABV/Volume tracking properties if they exist
+        if (this.addedAbv !== undefined) json.addedAbv = this.addedAbv;
+        if (this.addedVolume !== undefined) json.addedVolume = this.addedVolume;
+        if (this.addedGravity!== undefined) json.addedGravity = this.addedGravity;
+        if (this.abv !== undefined) json.abv = this.abv;
+        if (this.volume !== undefined) json.volume = this.volume;
+        if (this.additionActivityId) json.additionActivityId = this.additionActivityId;
+        
+        return json;
     }
 
     validate() {
@@ -52,4 +72,3 @@ class Activity {
 }
 
 export default Activity;
-

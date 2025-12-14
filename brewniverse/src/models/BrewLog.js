@@ -13,6 +13,7 @@ class BrewLog {
         this.dateCreated = data.dateCreated || getDate();
         this.description = data.description || '';
         this.finalAbv = data.finalAbv || '';
+        this.finalVolume = data.finalVolume || '';
         this.gravity13Break = data.gravity13Break || '';
         this.gravityFinal = data.gravityFinal || '';
         this.gravityOriginal = data.gravityOriginal || '';
@@ -46,6 +47,7 @@ class BrewLog {
         return {
             acids: this.acids,
             activity: this.activity,
+            additions: this.additions,
             archived: this.archived,
             bases: this.bases,
             currentAbv: this.getCurrentAbv(),

@@ -14,7 +14,8 @@ export function ActivityList({
     sectionInfoMessage,
     brewLogId,
     showTopButton = true,
-    showBottomButton = false
+    showBottomButton = false,
+    modeAction
 }) {
     const buttonSize = 14;
 
@@ -49,15 +50,18 @@ export function ActivityList({
                     : null)
                 : (
                     <div>
-                        {getActivitiesByTopic(formData, topic).map((item) => (
-                            <Activity
-                                key={item.id}
-                                activity={item}
-                                itemLabel={itemLabel}
-                                brewLogId={brewLogId}
-                                setFormData={setFormData}
-                            />
-                        ))}
+                        {getActivitiesByTopic(formData, topic).map((item) => {
+                            return (
+                                <Activity
+                                    key={item.id}
+                                    activity={item}
+                                    itemLabel={itemLabel}
+                                    brewLogId={brewLogId}
+                                    setFormData={setFormData}
+                                    modeAction={modeAction}
+                                />
+                            );
+                        })}
 
                         {showBottomButton &&
                             <div className="activity-bottom-button">

@@ -6,10 +6,10 @@ import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
-import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/gravityCalculations';
-import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
+import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
+import { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
-import MiniAbvCalculator from '../Calculators/MiniAbvCalculator';
+import Addition from '../Addition/Addition';
 import IngredientList from '../Ingredients/IngredientList';
 import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
@@ -45,7 +45,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
-        'abv', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -585,7 +585,6 @@ function BrewLogForm() {
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.nutrients ? 'collapsed' : ''}`}>
-
                         <div className="form-group">
                             <label htmlFor="nutrients" className="form-label">
                                 Nutrient Details
@@ -897,6 +896,26 @@ function BrewLogForm() {
                             </div>
                         </div>
 
+                        <div className="form-group">
+                            <label htmlFor="name" className="form-label">
+                                Starting Volume <small>(Required)</small>
+                            </label>
+                            <input
+                                type="text"
+                                id="volume"
+                                name="volume"
+                                className="form-input"
+                                value={formState.volume}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="e.g., 5 gallons, 1 gallon"
+                                required={true}
+                            />
+                            <p className="section-description">
+                                In order to calculate gravity, you must provide a starting volume.
+                            </p>
+                        </div>
+
                         <ActivityList
                             formData={formState}
                             setFormData={updateFormDataCallback}
@@ -913,28 +932,48 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Final ABV Calculator */}
+                {/* Additions */}
                 <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('abv')}
-                    >
+                    <div className="section-header collapsible" onClick={() => toggleSection('additions')}>
                         <h3>
                             <ChevronDown
                                 size={20}
-                                className={`section-toggle-icon ${collapsedSections.abv ? 'collapsed' : ''}`}
+                                className={`section-toggle-icon ${collapsedSections.additions ? 'collapsed' : ''}`}
                             />
-                            Final ABV Calculator
+                            Additions
                         </h3>
                     </div>
-                    <div className={`section-content ${collapsedSections.abv ? 'collapsed' : ''}`}>
-                        <MiniAbvCalculator
-                            formState={formState}
-                            updateFormData={updateFormData}
+                    <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
+                        <div className="form-group">
+                            <p className="section-description">
+                                Calculate the final ABV and final gravity after diluting or blending your brew. Or set to a known final value. Use this to record step feeds or backsweetening. An entry here will automatically calculate and record a new gravity reading - you can fine-tune that gravity reading, if needed, by going to that section and editing it.
+                                <br/><strong>It is recommended to take a gravity reading immediately before any addition(s).</strong>
+                            </p>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="name" className="form-label">
+                                Starting Volume <small>(Required)</small>
+                            </label>
+                            <input
+                                type="text"
+                                id="volume"
+                                name="volume"
+                                className="form-input"
+                                value={formState.volume}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="e.g., 5 gallons, 1 gallon"
+                                required={true}
+                            />
+                        </div>
+
+                        <Addition
+                            formData={formState}
+                            setFormData={updateFormDataCallback}
+                            brewLogId={id}
                         />
                     </div>
-                </div>
-                
                 </div>
 
                 {/* Important Dates */}

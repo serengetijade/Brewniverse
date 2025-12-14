@@ -10,6 +10,31 @@ export const getGravityOriginal = (gravityActivities) => {
     return gravityActivities.length > 0 ? gravityActivities[0].description : '';
 };
 
+export const getGravityPreviousOrLast = (currentReadingId, gravityActivities = []) => {
+    gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    let previousReading = null;
+
+    let currentIndex = -1;
+    if (currentReadingId) {
+        for (let i = 0; i < gravityActivities.length; i++) {
+            if (gravityActivities[i].id === currentReadingId) {
+                currentIndex = i;
+                break;
+            }
+        }
+    }
+
+    if (currentIndex !== -1 && 0 <= currentIndex - 1) {
+        previousReading = currentIndex > 0 ? gravityActivities[currentIndex - 1] : null;
+    }
+    else if (gravityActivities.length > 0) {
+        previousReading = gravityActivities[gravityActivities.length - 1];
+    }
+
+    return previousReading;
+}
+
 export const getGravityFinal = (gravityActivities) => {
     if (gravityActivities.length <= 1) return '';
     const latestGravity = gravityActivities[gravityActivities.length - 1];
@@ -27,39 +52,45 @@ export const getGravity13Break = (gravityActivities) => {
 
 export const getGravityDrop = (gravityActivities) => {
     if (gravityActivities.length < 2) return '';
-    
+
     let totalDrop = 0;
-    
+
     for (let i = 0; i < gravityActivities.length - 1; i++) {
         const currentGravity = parseFloat(gravityActivities[i].description);
         const nextGravity = parseFloat(gravityActivities[i + 1].description);
-        
+
         // If gravity decreased (fermentation occurred), add the drop
         if (currentGravity > nextGravity) {
             totalDrop += (currentGravity - nextGravity);
         }
         // If gravity increased (step feeding), we don't subtract from the drop
     }
-    
+
     return totalDrop.toFixed(3);
 };
 
 export const getCurrentAbv = (gravityActivities) => {
-    if (gravityActivities.length < 1) return '';
-    
+    if (gravityActivities == null || gravityActivities?.length < 1) return '';
+
+    // If the latest gravity activity has finalAbv calculated, use that
+    const latestGravity = gravityActivities[gravityActivities.length - 1];
+    if (latestGravity && latestGravity.finalAbv !== null && latestGravity.finalAbv !== undefined) {
+        return parseFloat(latestGravity.finalAbv)?.toFixed(2) || 0;
+    }
+
     let totalAbv = 0;
-    
+
     for (let i = 0; i < gravityActivities.length - 1; i++) {
         const currentGravity = parseFloat(gravityActivities[i].description);
         const nextGravity = parseFloat(gravityActivities[i + 1].description);
-        
+
         // If gravity decreased (fermentation occurred), add the ABV produced
         if (currentGravity > nextGravity) {
             totalAbv += (currentGravity - nextGravity) * 131.25;
         }
         // If gravity increased (step feeding), we don't add to ABV
     }
-    
+
     return totalAbv.toFixed(2);
 };
 
@@ -103,4 +134,62 @@ export const formatGravityDataForChart = (gravityActivities) => {
             };
         })
         .sort((a, b) => a.timestamp - b.timestamp);
+};
+
+export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initialVolume = 1) => {
+    const parsedAbv = parseFloat(currentInputs?.addedAbv);
+    const parsedGravity = parseFloat(currentInputs?.description);
+    const parsedVolume = parseFloat(currentInputs?.addedVolume);
+
+    const addedAbv = isNaN(parsedAbv) ? 0 : parsedAbv;
+    const addedGravity = isNaN(parsedGravity) ? 1.000 : parsedGravity;
+    const addedVolume = isNaN(parsedVolume) ? 0 : parsedVolume;
+
+    const previousReading = getGravityPreviousOrLast(currentInputs.Id, gravityActivities);
+
+    let startingAbv = parseFloat(previousReading?.abv ?? getCurrentAbv(gravityActivities));
+
+    let startingVolume = parseFloat(previousReading?.volume ?? initialVolume);
+
+    // VOLUME
+    const volumeResult = startingVolume + addedVolume;
+    if (volumeResult < 0) {
+        volumeResult = 0; // Volume cannot be negative
+    };
+
+    // GRAVITY - Calculate the weighted average current gravity
+    const previousFinalVolume = parseFloat(previousReading?.volume ?? startingVolume);
+    const previousGravity = parseFloat(previousReading?.description ?? 1.000);
+    const gravityResult = 0 < previousFinalVolume
+        ? 0 < volumeResult
+            ? (previousGravity * (previousFinalVolume / volumeResult)) + (addedGravity * (addedVolume / volumeResult))
+            : previousGravity
+        : addedGravity;
+
+    // ABV - Calculate weighted average ABV or from gravity drop
+    let abvResult = startingAbv;
+        
+    if (0 < addedVolume && 0 <= addedAbv) {
+        const totalAlcohol = (startingAbv * startingVolume) + (addedAbv * addedVolume);
+        abvResult = totalAlcohol / volumeResult;
+    }
+    else if (addedVolume < 0 || (addedVolume === 0 && addedAbv === 0)) {
+        const gravityDrop = previousGravity - gravityResult;
+        const abvFromGravityDrop = 0 < gravityDrop ? gravityDrop * 131.25 : 0;
+        abvResult += abvFromGravityDrop;
+    }
+
+    return {
+        startingAbv: startingAbv?.toFixed(2) || 0,
+        startingGravity: previousGravity.toFixed(3) || 1.000,
+        startingVolume: startingVolume?.toFixed(3) || 0,
+
+        addedAbv: addedAbv?.toFixed(2) || 0,
+        addedGravity: addedGravity?.toFixed(3) || 1.000,
+        addedVolume: addedVolume?.toFixed(3) || 0,
+
+        abv: abvResult?.toFixed(2) || 0,
+        description: gravityResult?.toFixed(3) || 1.000, // New gravity reading
+        volume: volumeResult?.toFixed(3)
+    };
 };
