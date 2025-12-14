@@ -12,7 +12,8 @@ function Activity({
     activity,
     itemLabel,
     brewLogId,
-    setFormData
+    setFormData,
+    modeAction,
 }) {
     const { state, dispatch } = useApp();
     const navigate = useNavigate();
@@ -72,7 +73,6 @@ function Activity({
         const value = e.target.value;
         // For gravity readings (numeric), validate positive numbers
         if (activity.topic === ActivityTopicEnum.Gravity) {
-            // Allow empty string to clear
             if (value === '') {
                 handleChange(activityState.id, 'description', '');
                 return;
@@ -81,7 +81,8 @@ function Activity({
             if (!isNaN(numValue) && numValue >= 0) {
                 handleChange(activityState.id, 'description', value);
             }
-        } else {
+        }
+        else {
             // For text fields, update directly
             handleChange(activityState.id, 'description', value);
         }
@@ -148,6 +149,90 @@ function Activity({
     const buttonSize = 14;
     const showAlertButton = isDateInFuture(activityState.date);
 
+    if (activity.topic === ActivityTopicEnum.Addition) {
+        return (
+            <div className="activity">                
+                <div className="activity-inputs">
+                    <div className="form-group">
+                        <label className="form-label">Date</label>
+                        <input
+                            type="datetime-local"
+                            className="form-input"
+                            value={activityState.date}
+                            onChange={(e) => {
+                                handleChange(activityState.id, 'date', e.target.value);
+                                modeAction && modeAction(activityState.id, 'date', e.target.value);
+                            }}
+                        />
+                        <label className="form-label">Added Volume</label>
+                        <input
+                            type="number"
+                            className="form-input"
+                            value={activityState.addedVolume || ''}
+                            onChange={(e) => {
+                                handleChange(activityState.id, 'addedVolume', e.target.value);
+                                modeAction && modeAction(activityState.id, 'addedVolume', e.target.value);
+                            }}
+                            step=".001"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label className="form-label">Added ABV%</label>
+                        <input
+                            type="number"
+                            className="form-input"
+                            value={activityState.addedAbv || ''}
+                            onChange={(e) => {
+                                handleChange(activityState.id, 'addedAbv', e.target.value);
+                                modeAction && modeAction(activityState.id, 'addedAbv', e.target.value);
+                            }}
+                            min="0"
+                            max="100"
+                            step=".01"
+                        />
+                        <label className="form-label">Added Gravity</label>
+                        <input
+                            type="number"
+                            className="form-input"
+                            value={activityState.description || ''}
+                            onChange={(e) => {
+                                handleChange(activityState.id, 'description', e.target.value);
+                                modeAction && modeAction(activityState.id, 'description', e.target.value);
+                            }}
+                            min="0.65"
+                            max="2"
+                            step=".001"
+                        />
+                    </div>
+                </div>
+
+                <div className="activity-editor-actions">
+                    {showAlertButton && (
+                        <Button
+                            type="button"
+                            variant={alertExists ? "primary" : "ghost"}
+                            size="small"
+                            onClick={handleAlertButtonClick}
+                            title={alertExists ? "Alert exists - click to view" : "Create alert for this activity"}
+                        >
+                            {alertExists ? <Bell size={buttonSize} /> : <BellPlus size={buttonSize} />}
+                        </Button>
+                    )}
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="small"
+                        onClick={handleDelete}
+                        title="Delete addition"
+                    >
+                        <Trash2 size={buttonSize} />
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+    // Default render mode
     return (
         <div className="activity">
             <div className="activity-inputs">
