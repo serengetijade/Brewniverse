@@ -10,7 +10,7 @@ export const getGravityOriginal = (gravityActivities) => {
     return gravityActivities.length > 0 ? gravityActivities[0].description : '';
 };
 
-export const getGravityPreviousOrLast = (currentReadingId, gravityActivities = []) => {
+export const getPreviousActivity = (currentReadingId, gravityActivities = []) => {
     gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
 
     let previousReading = null;
@@ -25,6 +25,9 @@ export const getGravityPreviousOrLast = (currentReadingId, gravityActivities = [
         }
     }
 
+    if (currentIndex === 0) {
+        return null;
+    }
     if (currentIndex !== -1 && 0 <= currentIndex - 1) {
         previousReading = currentIndex > 0 ? gravityActivities[currentIndex - 1] : null;
     }
@@ -145,11 +148,13 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     const addedGravity = isNaN(parsedGravity) ? 1.000 : parsedGravity;
     const addedVolume = isNaN(parsedVolume) ? 0 : parsedVolume;
 
-    const previousReading = getGravityPreviousOrLast(currentInputs.Id, gravityActivities);
+    const previousGravityActivity = getPreviousActivity(currentInputs.id, gravityActivities);
 
-    let startingAbv = parseFloat(previousReading?.abv ?? getCurrentAbv(gravityActivities));
+    let startingAbv = previousGravityActivity ?
+        parseFloat(previousGravityActivity?.abv ?? getCurrentAbv(gravityActivities)) ?? 0
+        : 0 ;
 
-    let startingVolume = parseFloat(previousReading?.volume ?? initialVolume);
+    let startingVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
 
     // VOLUME
     const volumeResult = startingVolume + addedVolume;
@@ -158,9 +163,9 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     };
 
     // GRAVITY - Calculate the weighted average current gravity
-    const previousFinalVolume = parseFloat(previousReading?.volume ?? startingVolume);
-    const previousGravity = parseFloat(previousReading?.addedGravity ?? 1.000);
-    const gravityResult = 0 < previousFinalVolume
+    const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? 0);
+    const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
+    const gravityResult = 0(0 < previousFinalVolume && 0 < addedVolume)
         ? 0 < volumeResult
             ? (previousGravity * (previousFinalVolume / volumeResult)) + (addedGravity * (addedVolume / volumeResult))
             : previousGravity

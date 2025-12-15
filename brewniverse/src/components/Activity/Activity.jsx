@@ -7,6 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
 import Button from '../UI/Button';
+import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, getPreviousActivity } from '../../utils/GravityCalculations';
 
 function Activity({
     activity,
@@ -43,7 +44,7 @@ function Activity({
                 payload: activityState.alertId
             });
         }
-        
+
         deleteActivity(setFormData, activityState.id);
     };
 
@@ -53,7 +54,7 @@ function Activity({
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
         }
-        
+
         // If the date field is changed and this activity has an alert, update the alert's date
         if (field === 'date' && activityState.alertId) {
             const alert = state.alerts.find(alert => alert.id === activityState.alertId);
@@ -151,7 +152,7 @@ function Activity({
 
     if (activity.topic === ActivityTopicEnum.Addition) {
         return (
-            <div className="activity">                
+            <div className="activity">
                 <div className="activity-inputs">
                     <div className="form-group">
                         <label className="form-label">Date</label>
@@ -268,17 +269,17 @@ function Activity({
             <div className="activity-inputs">
                 <div className="form-group">
                     <label className="form-label">{itemLabel}</label>
-                        <input
-                            ref={descriptionInputRef}
-                            type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
-                            step="0.001"
-                            min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
-                            className="form-input"
-                            placeholder="Item details"
-                            value={activityState.description}
-                            onChange={handleDescriptionChange}
-                            maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
-                        />
+                    <input
+                        ref={descriptionInputRef}
+                        type={(activity.topic === ActivityTopicEnum.Gravity) ? "number" : "text"}
+                        step="0.001"
+                        min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
+                        className="form-input"
+                        placeholder="Item details"
+                        value={activityState.description}
+                        onChange={handleDescriptionChange}
+                        maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
+                    />
                 </div>
                 <div className="form-group">
                     <input
@@ -314,7 +315,7 @@ function Activity({
     );
 }
 
-export function addActivity(setFormData, date, name, description, topic, brewLogId, alertId) {
+export function addActivity(setFormData, date, name, description, topic, brewLogId, alertId, volume) {
     const newActivity = createActivity(
         date ? date : getDate(),
         name ? name : getTopicDisplayName(topic),
@@ -369,6 +370,37 @@ export function deleteActivity(setFormData, id) {
 export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
         const prevData = prev.toJSON ? prev.toJSON() : prev;
+
+        const thisActivity = prevData.activity.find(x => String(x.id) === String(id));  
+        if (thisActivity?.topic == ActivityTopicEnum.Gravity && field == "description") {
+            let gravityActivities = getGravityActivities(prevData.activity);
+
+            const data = getGravityAbvVolumeData({
+                addedAbv: 0,
+                addedGravity: value,
+                addedVolume: 0,
+                date: thisActivity.date,
+                id: thisActivity.id
+            },
+                gravityActivities,
+                parseFloat(prevData.volume)
+            );
+
+            return {
+                ...prevData,
+                activity: prevData.activity.map(item =>
+                    item.id === id
+                        ? {
+                            ...item,
+                            [field]: value,
+                            abv: data.abv,
+                            volume: data.volume
+                        }
+                        : item
+                )
+            };
+        }
+
         return {
             ...prevData,
             activity: prevData.activity.map(item =>
