@@ -138,7 +138,7 @@ export const formatGravityDataForChart = (gravityActivities) => {
 
 export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initialVolume = 1) => {
     const parsedAbv = parseFloat(currentInputs?.addedAbv);
-    const parsedGravity = parseFloat(currentInputs?.description);
+    const parsedGravity = parseFloat(currentInputs?.addedGravity ?? currentInputs?.description);
     const parsedVolume = parseFloat(currentInputs?.addedVolume);
 
     const addedAbv = isNaN(parsedAbv) ? 0 : parsedAbv;
@@ -159,7 +159,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 
     // GRAVITY - Calculate the weighted average current gravity
     const previousFinalVolume = parseFloat(previousReading?.volume ?? startingVolume);
-    const previousGravity = parseFloat(previousReading?.description ?? 1.000);
+    const previousGravity = parseFloat(previousReading?.addedGravity ?? 1.000);
     const gravityResult = 0 < previousFinalVolume
         ? 0 < volumeResult
             ? (previousGravity * (previousFinalVolume / volumeResult)) + (addedGravity * (addedVolume / volumeResult))
@@ -168,7 +168,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 
     // ABV - Calculate weighted average ABV or from gravity drop
     let abvResult = startingAbv;
-        
+
     if (0 < addedVolume && 0 <= addedAbv) {
         const totalAlcohol = (startingAbv * startingVolume) + (addedAbv * addedVolume);
         abvResult = totalAlcohol / volumeResult;
@@ -189,7 +189,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
         addedVolume: addedVolume?.toFixed(3) || 0,
 
         abv: abvResult?.toFixed(2) || 0,
-        description: gravityResult?.toFixed(3) || 1.000, // New gravity reading
+        gravity: gravityResult?.toFixed(3) || 1.000,
         volume: volumeResult?.toFixed(3)
     };
 };

@@ -141,9 +141,9 @@ export const ActivityTopicConfiguration = {
         label: 'Bottled'
     },
     [ActivityTopicEnum.Addition]: {
-        key: ActivityTopicEnum.Other,
-        color: '#b9bbc2',
-        rgb: '185, 187, 194',
+        key: ActivityTopicEnum.Addition,
+        color: '#000000',
+        rgb: '0, 0, 0',
         description: 'Addition',
         displayName: 'Addition',
         displayName_Alert: 'Make an addition',

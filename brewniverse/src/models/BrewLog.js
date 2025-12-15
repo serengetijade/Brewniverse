@@ -6,6 +6,7 @@ class BrewLog {
         this.id = data.id || generateId();
         this.acids = data.acids || '';
         this.activity = data.activity || [];
+        this.additions = data.additions || [];
         this.archived = data.archived || '';
         this.bases = data.bases || '';
         this.currentAbv = data.currentAbv || '';
