@@ -2,7 +2,7 @@ import React from 'react';
 import { ActivityTopicEnum } from '../../constants/ActivityTopics';
 import { generateId, getDate } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
-import { getGravityAbvVolumeData, getGravityActivities } from '../../utils/GravityCalculations';
+import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities } from '../../utils/GravityCalculations';
 import ActivityList from '../Activity/ActivityList';
 
 function Addition({ formData, setFormData, brewLogId }) {
@@ -99,9 +99,12 @@ function Addition({ formData, setFormData, brewLogId }) {
                 }
             }
 
+            const currentAbv = getCurrentAbv(updatedActivities);
+
             return {
                 ...prevData,
-                activity: updatedActivities
+                activity: updatedActivities,
+                currentAbv: currentAbv
             };
         });
     };
