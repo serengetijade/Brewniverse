@@ -160,46 +160,76 @@ function Activity({
                             className="form-input"
                             value={activityState.date}
                             onChange={(e) => {
-                                handleChange(activityState.id, 'date', e.target.value);
-                                modeAction && modeAction(activityState.id, 'date', e.target.value);
+                                if (modeAction) {
+                                    modeAction(activityState.id, 'date', e.target.value);
+                                } else {
+                                    handleChange(activityState.id, 'date', e.target.value);
+                                }
                             }}
                         />
+
+                        <label className="form-label">Description</label>
+                        <textarea
+                            type="text"
+                            className="form-input"
+                            value={activityState.description || ''}
+                            onChange={(e) => {
+                                if (modeAction) {
+                                    modeAction(activityState.id, 'description', e.target.value);
+                                } else {
+                                    handleChange(activityState.id, 'description', e.target.value);
+                                }
+                            }}
+                            rows={4}
+                        />
+                    </div>
+
+                    <div className="form-group">
                         <label className="form-label">Added Volume</label>
                         <input
                             type="number"
                             className="form-input"
                             value={activityState.addedVolume || ''}
                             onChange={(e) => {
-                                handleChange(activityState.id, 'addedVolume', e.target.value);
-                                modeAction && modeAction(activityState.id, 'addedVolume', e.target.value);
+                                if (modeAction) {
+                                    modeAction(activityState.id, 'addedVolume', e.target.value);
+                                } else {
+                                    handleChange(activityState.id, 'addedVolume', e.target.value);
+                                }
                             }}
                             step=".001"
                         />
-                    </div>
-                    <div className="form-group">
+
                         <label className="form-label">Added ABV%</label>
                         <input
                             type="number"
                             className="form-input"
                             value={activityState.addedAbv || ''}
                             onChange={(e) => {
-                                handleChange(activityState.id, 'addedAbv', e.target.value);
-                                modeAction && modeAction(activityState.id, 'addedAbv', e.target.value);
+                                if (modeAction) {
+                                    modeAction(activityState.id, 'addedAbv', e.target.value);
+                                } else {
+                                    handleChange(activityState.id, 'addedAbv', e.target.value);
+                                }
                             }}
                             min="0"
                             max="100"
                             step=".01"
                         />
+
                         <label className="form-label">Added Gravity</label>
                         <input
                             type="number"
                             className="form-input"
-                            value={activityState.description || ''}
+                            value={activityState.addedGravity || ''}
                             onChange={(e) => {
-                                handleChange(activityState.id, 'description', e.target.value);
-                                modeAction && modeAction(activityState.id, 'description', e.target.value);
+                                if (modeAction) {
+                                    modeAction(activityState.id, 'addedGravity', e.target.value);
+                                } else {
+                                    handleChange(activityState.id, 'addedGravity', e.target.value);
+                                }
                             }}
-                            min="0.65"
+                            min="0.6"
                             max="2"
                             step=".001"
                         />

@@ -80,7 +80,7 @@ function InstructionForm({
                             onChange={(e) => handleStepChange(index, e.target.value)}
                             placeholder={`Enter step ${index + 1}`}
                             maxLength={Validation.TextareaMaxLength}
-                            rows={2}
+                            rows={5}
                         />
                         <div className="step-controls">
                             <div className="reorder-buttons">

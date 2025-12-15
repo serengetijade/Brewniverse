@@ -445,7 +445,7 @@ function BrewLogForm() {
                                 onChange={handleChange}
                                 maxLength={Validation.TextareaMaxLength}
                                 placeholder="Brief description of your brew"
-                                rows={3}
+                                rows={4}
                             />
                         </div>
 
