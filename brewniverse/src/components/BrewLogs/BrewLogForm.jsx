@@ -946,8 +946,9 @@ function BrewLogForm() {
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
                         <div className="form-group">
                             <p className="section-description">
-                                Calculate the final ABV and final gravity after diluting or blending your brew. Or set to a known final value. Use this to record step feeds or backsweetening. An entry here will automatically calculate and record a new gravity reading - you can fine-tune that gravity reading, if needed, by going to that section and editing it.
-                                <br/><strong>It is recommended to take a gravity reading immediately before any addition(s).</strong>
+                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after diluting or blending your brew.
+                                <br/>Please note: An entry here will create a new gravity reading. You can edit that estimated reading, but do not delete it because it is used for calculations. If you do accidentally delete it, you can edit the addition and a new gravity reading will appear.
+                                <br/><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                             </p>
                         </div>
 
