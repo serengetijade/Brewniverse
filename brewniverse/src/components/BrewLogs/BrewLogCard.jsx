@@ -26,10 +26,6 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     // Dates
     let bottledXdays = getDaysSinceAsDescription(brewLog.dateBottled);
 
-    // Use finalAbv if available, otherwise use currentAbv
-    const displayAbv = brewLog.finalAbv || currentAbv;
-    const abvLabel = brewLog.finalAbv ? 'Final ABV' : 'Current ABV';
-
     if (displayOption == 'grid')
         return (
             <div className="item-card grid-view brewlog-card" style={{ '--item-color': brewTypeConfig.color }}>
@@ -73,16 +69,16 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
 
                     <Rating value={brewLog.rating || 0} isEditing={false} />
 
-                    {(displayAbv || gravityFinal) && (
+                    {(currentAbv || gravityFinal) && (
                         <div className="item-card-stat-grid">
-                            {displayAbv && (
+                            {currentAbv && (
                                 <div className="item-card-stat">
                                     <div className="item-card-stat-icon">
                                         <TrendingUp size={16} />
                                     </div>
                                     <div className="item-card-stat-info">
-                                        <span className="item-card-stat-label">{abvLabel}</span>
-                                        <span className="item-card-stat-value">{displayAbv}%</span>
+                                        <span className="item-card-stat-label">ABV</span>
+                                        <span className="item-card-stat-value">{currentAbv}%</span>
                                     </div>
                                 </div>
                             )}

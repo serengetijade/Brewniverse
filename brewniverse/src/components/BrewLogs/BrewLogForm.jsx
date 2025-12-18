@@ -7,7 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
-import { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
+import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import IngredientList from '../Ingredients/IngredientList';
 import JournalEntryList from '../Journal/JournalEntryList';
@@ -239,6 +239,15 @@ function BrewLogForm() {
     const gravityActivities = React.useMemo(() => {
         return getGravityActivities(formState.activity, ActivityTopicEnum.Gravity);
     }, [formState.activity]);
+
+    // Addition
+    const additionActivities = getActivitiesByTopic(formState, ActivityTopicEnum.Addition); 
+    const totalAddedVolume = additionActivities.reduce(
+        (sum, activity) => sum + (parseFloat(activity.addedVolume) || 0),
+        0
+    );
+    const startingVolume = parseFloat(formState.volume) || 0;
+    const finalVolume = startingVolume + totalAddedVolume;
 
     // Nutrients
     const addNutrientScheduleEntry = () => {
@@ -946,12 +955,12 @@ function BrewLogForm() {
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
                         <div className="form-group">
                             <p className="section-description">
-                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution*.
+                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.*
                                 <br/>
                                 <br/><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                 <br/>
                                 <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, but do not delete it because it is used for calculations. If you do accidentally delete it, you can edit the addition and a new gravity reading will appear.
-                                <br />*If adding a solid/soluble granule, such as sugar, with a negligible volume, a gravity reading must be created manually. 
+                                <br />*If adding a solid or soluble granule, such as sugar, with a negligible volume, a gravity reading must be created manually. 
                             </p>
                         </div>
 
@@ -960,7 +969,7 @@ function BrewLogForm() {
                                 Starting Volume <small>(Required)</small>
                             </label>
                             <input
-                                type="text"
+                                type="number"
                                 id="volume"
                                 name="volume"
                                 className="form-input"
@@ -969,6 +978,7 @@ function BrewLogForm() {
                                 maxLength={Validation.InputMaxLength}
                                 placeholder="e.g., 5 gallons, 1 gallon"
                                 required={true}
+                                min={0}
                             />
                             <p className="section-description">
                                 In order to calculate gravity, you must provide a starting volume.
@@ -978,22 +988,23 @@ function BrewLogForm() {
                         {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
                             <div className="form-group">
                                 <label htmlFor="name" className="form-label">
-                                    Total Volume
+                                    Final Volume
                                 </label>
                                 <input
-                                    type="text"
-                                    id="volume"
-                                    name="volume"
+                                    type="number"
+                                    id="finalVolume"
+                                    name="finalVolume"
                                     className="form-input"
-                                    value={(formState.additions || []).reduce((sum, addition) => sum + (Number(addition.addedVolume) || 0), 0)
-                                        + Number(formState.volume)
-                                    }
+                                    value={finalVolume.toFixed(3)}
                                     onChange={handleChange}
                                     maxLength={Validation.InputMaxLength}
-                                    placeholder="e.g., 5 gallons, 1 gallon"
+                                    placeholder="Final volume after additions"
                                     required={true}
                                     readOnly={true}
                                 />
+                                <p className="section-description">
+                                    Starting volume + total additions ({totalAddedVolume.toFixed(3)})
+                                </p>
                             </div>
                         )}
 

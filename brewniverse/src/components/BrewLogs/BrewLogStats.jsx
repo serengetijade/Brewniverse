@@ -24,6 +24,15 @@ function BrewLogStats({ brewLog }) {
         dateBottledActivities[dateBottledActivities.length - 1]?.date
         : undefined;
 
+    const additionActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Addition);
+    const totalAddedVolume = additionActivities.reduce(
+        (sum, activity) => sum + (parseFloat(activity.addedVolume) || 0),
+        0
+    );
+    const startingVolume = parseFloat(brewLog.volume) || 0;
+    const finalVolume = startingVolume + totalAddedVolume;
+    const hasAdditions = additionActivities.filter(x => Number(x.addedVolume) > 0).length > 0;
+
     const formatDate = (dateString) => {
         if (!dateString) return 'Not set';
         const date = new Date(dateString);
@@ -50,9 +59,17 @@ function BrewLogStats({ brewLog }) {
             icon: <ListTree size={20} />,
             label: 'Type',
             value: brewLog.type || 'Not specified',
-            subtext: brewLog.volume ? `${brewLog.volume} volume` : null,
+            subtext: brewLog.volume ? `${brewLog.volume} starting volume` : null,
             color: '255,208,51'
         },
+        ...(hasAdditions ? [{
+            id: 'finalVolume',
+            icon: <MoveVertical size={20} />,
+            label: 'Final Volume',
+            value: `${finalVolume.toFixed(3)}`,
+            subtext: `+${totalAddedVolume.toFixed(3)} from additions`,
+            color: '51,153,255'
+        }] : []),
         {
             id: 'og',
             icon: getTopicIcon(ActivityTopicEnum.Gravity),
@@ -72,9 +89,11 @@ function BrewLogStats({ brewLog }) {
         {
             id: 'abv',
             icon: <Zap size={20} />,
-            label: brewLog.finalAbv ? 'Final ABV' : 'Current ABV',
-            value: brewLog.finalAbv ? `${brewLog.finalAbv}%` : (brewLog.currentAbv ? `${brewLog.currentAbv}%` : (gravityActivities.length > 0 ? `${getCurrentAbv(gravityActivities)}%` : 'N/A')),
-            subtext: brewLog.finalAbv ? 'After dilution/blending' : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
+            label: 'Current ABV',
+            value: (brewLog.currentAbv ? `${brewLog.currentAbv}%` : (gravityActivities.length > 0 ? `${getCurrentAbv(gravityActivities)}%` : 'N/A')),
+            subtext: brewLog.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0
+                ? 'After dilution/blending'
+                : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
             color: '204,102,204'
         },
         {
