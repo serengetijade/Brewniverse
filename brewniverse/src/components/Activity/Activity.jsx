@@ -7,7 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
 import Button from '../UI/Button';
-import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, UpdateAllGravityActivity } from '../../utils/GravityCalculations';
+import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, UpdateAllGravityActivity, UpdateGravityActivity } from '../../utils/GravityCalculations';
 
 function Activity({
     activity,
@@ -349,7 +349,6 @@ export function deleteActivity(setFormData, id) {
 
 export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
-
         const prevData = prev.toJSON ? prev.toJSON() : prev;
 
         const additionUpdate = handleAdditionUpdates(prevData, id, field, value);
@@ -388,51 +387,100 @@ function handleAdditionUpdates(prevData, id, field, value) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
     if (thisActivity?.topic == ActivityTopicEnum.Addition) {
-        let updatedActivities = prevData.activity.map(item =>
-            item.id === id
-                ? {
-                    ...item,
-                    [field]: value
-                }
-                : item
-        );
+        let updatedActivities = prevData.activity.map(item => {
+            if (item.id === id) {
+                const updated = { ...item };
+                updated[field] = value;
+
+                if (updated.addedAbv === undefined) updated.addedAbv = 0;
+                if (updated.addedVolume === undefined) updated.addedVolume = 0;
+                if (updated.addedGravity === undefined) updated.addedGravity = 0;
+
+                return updated;
+            }
+            return item;
+        });
+
+        const updatedAddition = updatedActivities.find(x => x.id === id);
 
         const linkedGravityActivities = updatedActivities.filter(
             activity => activity.additionActivityId === id && activity.topic === ActivityTopicEnum.Gravity
         );
 
-        if (linkedGravityActivities.length > 0) {
-            // Get the updated addition activity
-            const updatedAddition = updatedActivities.find(x => x.id === id);
+        // Check if we have the required fields to create/update a gravity activity
+        const hasRequiredFields = parseFloat(updatedAddition.addedVolume) > 0
+            && parseFloat(updatedAddition.addedAbv) >= 0
+            && parseFloat(updatedAddition.addedGravity) > 0;
 
-            let gravityActivities = getGravityActivities(updatedActivities);
+        let gravityActivities = getGravityActivities(updatedActivities);
 
-            linkedGravityActivities.forEach(linkedGravity => {
+        if (hasRequiredFields && linkedGravityActivities.length === 0) {
+            // Create new gravity activity linked to this addition
+
+            const newGravityActivity = new ActivityModel({
+                date: getDate(updatedAddition.date) ?? getDate(),
+                name: getTopicDisplayName(ActivityTopicEnum.Gravity),
+                topic: ActivityTopicEnum.Gravity,
+                brewLogId: updatedAddition.brewLogId,
+                additionActivityId: id,
+                addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
+                addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+                addedGravity: parseFloat(updatedAddition.addedGravity) || 0
+            });
+
+            const currentInputs = {
+                addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
+                addedGravity: parseFloat(updatedAddition.addedGravity) || 0,
+                addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+                date: updatedAddition.date,
+                id: newGravityActivity.id
+            };
+
+            const calculatedGravity = UpdateGravityActivity(
+                newGravityActivity,
+                currentInputs,
+                gravityActivities,
+                parseFloat(prevData.volume) || 0
+            );
+
+            updatedActivities.push(calculatedGravity.toJSON());
+            gravityActivities = getGravityActivities(updatedActivities);
+
+            return {
+                ...prevData,
+                activity: updatedActivities,
+                currentAbv: getCurrentAbv(gravityActivities)
+            };
+        }
+        else if (linkedGravityActivities.length > 0) {
+            const linkedGravity = linkedGravityActivities[0];
+            
+            const gravityActivityToUpdate = gravityActivities.find(g => g.id === linkedGravity.id);
+            
+            if (gravityActivityToUpdate) {
                 const currentInputs = {
                     addedAbv: updatedAddition.addedAbv,
                     addedGravity: updatedAddition.addedGravity,
                     addedVolume: updatedAddition.addedVolume,
-                    date: linkedGravity.date,
+                    date: updatedAddition.date,
                     description: linkedGravity.description,
                     id: linkedGravity.id
                 };
 
                 const recalculatedGravities = UpdateAllGravityActivity(
-                    linkedGravity,
+                    gravityActivityToUpdate,
                     currentInputs,
                     gravityActivities,
-                    parseFloat(prevData.volume)
+                    parseFloat(prevData.volume) || 0
                 );
 
-                // Update the activities array with recalculated values
                 updatedActivities = updatedActivities.map(item => {
                     const recalculated = recalculatedGravities.find(rg => rg.id === item.id);
                     return recalculated ? recalculated : item;
                 });
 
-                // Update gravityActivities for next iteration
                 gravityActivities = getGravityActivities(updatedActivities);
-            });
+            }
 
             return {
                 ...prevData,
