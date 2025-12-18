@@ -15,6 +15,7 @@ function Addition({ formData, setFormData, brewLogId }) {
                 addedGravity: parseFloat(additionActivity.addedGravity),
                 addedVolume: parseFloat(additionActivity.addedVolume),
                 date: additionActivity.date,
+                description: additionActivity.description,
             },
             gravityActivities,
             parseFloat(formData.volume) || 1

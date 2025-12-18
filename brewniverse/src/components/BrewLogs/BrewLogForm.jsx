@@ -141,6 +141,7 @@ function BrewLogForm() {
         const { name, value } = e.target;
         //e.target is the input changed. input.name == the property name for this input
 
+        //ToDo: handle volume changes -> update gravity activities
         if (name === 'dateCreated') {
             updateActivityDateByTopic(e);
         }
