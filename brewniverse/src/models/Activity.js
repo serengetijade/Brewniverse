@@ -14,7 +14,7 @@ class Activity {
         // Optional fields for gravity readings with ABV/volume tracking
         this.addedAbv = data.addedAbv !== undefined ? data.addedAbv : 0;
         this.addedVolume = data.addedVolume !== undefined ? data.addedVolume : 0;
-        this.addedGravity = data.addedGravity !== undefined ? data.addedGravity : 1.000;
+        this.addedGravity = data.addedGravity !== undefined ? data.addedGravity : 0;
 
         this.abv = data.abv !== undefined ? data.abv : undefined;
         this.volume = data.volume !== undefined ? data.volume : undefined;
