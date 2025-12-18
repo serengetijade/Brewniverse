@@ -967,7 +967,32 @@ function BrewLogForm() {
                                 placeholder="e.g., 5 gallons, 1 gallon"
                                 required={true}
                             />
+                            <p className="section-description">
+                                In order to calculate gravity, you must provide a starting volume.
+                            </p>
                         </div>
+
+                        {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
+                            <div className="form-group">
+                                <label htmlFor="name" className="form-label">
+                                    Total Volume
+                                </label>
+                                <input
+                                    type="text"
+                                    id="volume"
+                                    name="volume"
+                                    className="form-input"
+                                    value={(formState.additions || []).reduce((sum, addition) => sum + (Number(addition.addedVolume) || 0), 0)
+                                        + Number(formState.volume)
+                                    }
+                                    onChange={handleChange}
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="e.g., 5 gallons, 1 gallon"
+                                    required={true}
+                                    readOnly={true}
+                                />
+                            </div>
+                        )}
 
                         <div className="additions-container">
                             <ActivityList
