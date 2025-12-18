@@ -170,7 +170,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 
     let gravityResult = gravityReading;
     if (0 < addedVolume && 0 < volumeResult) { // Handle additions
-        totalGravity = (previousGravity * previousFinalVolume) + (addedGravity * addedVolume);
+        let totalGravity = (previousGravity * previousFinalVolume) + (addedGravity * addedVolume);
         gravityResult = totalGravity / volumeResult;
     }
 
@@ -242,7 +242,7 @@ export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivit
                 addedGravity: item.addedGravity,
                 addedVolume: item.addedVolume,
                 description: item.description,
-                date: currentInputs.date,
+                date: item.date,
                 id: item.id
             },
             updatedActivities,
