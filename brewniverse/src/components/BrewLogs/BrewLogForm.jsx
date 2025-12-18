@@ -9,7 +9,6 @@ import BrewLog from '../../models/BrewLog';
 import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
 import { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
-import Addition from '../Addition/Addition';
 import IngredientList from '../Ingredients/IngredientList';
 import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
@@ -970,11 +969,17 @@ function BrewLogForm() {
                             />
                         </div>
 
-                        <Addition
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            brewLogId={id}
-                        />
+                        <div className="additions-container">
+                            <ActivityList
+                                formData={formState}
+                                setFormData={updateFormDataCallback}
+                                topic={ActivityTopicEnum.Addition}
+                                sectionInfoMessage=""
+                                brewLogId={id}
+                                showTopButton={true}
+                                showBottomButton={true}
+                            />
+                        </div>
                     </div>
                 </div>
 

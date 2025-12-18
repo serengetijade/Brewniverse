@@ -170,7 +170,8 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 
     let gravityResult = gravityReading;
     if (0 < addedVolume && 0 < volumeResult) { // Handle additions
-        gravityResult = (previousGravity * (previousFinalVolume/volumeResult)) + (addedGravity * (addedVolume/volumeResult));
+        totalGravity = (previousGravity * previousFinalVolume) + (addedGravity * addedVolume);
+        gravityResult = totalGravity / volumeResult;
     }
 
     // ABV - Calculate weighted average ABV or from gravity drop
@@ -203,12 +204,13 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 export const UpdateGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
     let data = getGravityAbvVolumeData(currentInputs, gravityActivities, initialVolume);
 
+    activity.abv = data.abv;
     activity.addedAbv = data.addedAbv;
     activity.addedGravity = data.addedGravity;
     activity.addedVolume = data.addedVolume;
-    activity.abv = data.abv;
-    activity.volume = data.volume;
+    activity.date = currentInputs.date;
     activity.description = data.gravity;
+    activity.volume = data.volume;
 
     return activity;
 }
@@ -237,6 +239,7 @@ export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivit
                 addedGravity: item.addedGravity,
                 addedVolume: item.addedVolume,
                 description: item.description,
+                date: currentInputs.date,
                 id: item.id
             },
             updatedActivities,
