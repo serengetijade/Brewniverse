@@ -75,10 +75,10 @@ export const getGravityDrop = (gravityActivities) => {
 export const getCurrentAbv = (gravityActivities) => {
     if (gravityActivities == null || gravityActivities?.length < 1) return '';
 
-    // If the latest gravity activity has finalAbv calculated, use that
+    // If the latest gravity activity has abv calculated, use that
     const latestGravity = gravityActivities[gravityActivities.length - 1];
-    if (latestGravity && latestGravity.finalAbv !== null && latestGravity.finalAbv !== undefined) {
-        return parseFloat(latestGravity.finalAbv)?.toFixed(2) || 0;
+    if (latestGravity && latestGravity.abv !== null && latestGravity.abv !== undefined) {
+        return parseFloat(latestGravity.abv)?.toFixed(2) || 0;
     }
 
     let totalAbv = 0;
@@ -141,18 +141,20 @@ export const formatGravityDataForChart = (gravityActivities) => {
 
 export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initialVolume = 1) => {
     const parsedAbv = parseFloat(currentInputs?.addedAbv);
-    const parsedGravity = parseFloat(currentInputs?.addedGravity ?? currentInputs?.description);
+    const parsedAddedGravity = parseFloat(currentInputs?.addedGravity ?? currentInputs?.description);
     const parsedVolume = parseFloat(currentInputs?.addedVolume);
+    const parsedGravityReading = parseFloat(currentInputs?.description);
 
     const addedAbv = isNaN(parsedAbv) ? 0 : parsedAbv;
-    const addedGravity = isNaN(parsedGravity) ? 1.000 : parsedGravity;
+    const addedGravity = isNaN(parsedAddedGravity) ? 0 : parsedAddedGravity;
     const addedVolume = isNaN(parsedVolume) ? 0 : parsedVolume;
+    const gravityReading = isNaN(parsedGravityReading) ? 0 : parsedGravityReading;
 
     const previousGravityActivity = getPreviousActivity(currentInputs.id, gravityActivities);
 
     let startingAbv = previousGravityActivity ?
         parseFloat(previousGravityActivity?.abv ?? getCurrentAbv(gravityActivities)) ?? 0
-        : 0 ;
+        : 0;
 
     let startingVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
 
@@ -165,15 +167,14 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     // GRAVITY - Calculate the weighted average current gravity
     const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? 0);
     const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
-    const gravityResult = 0(0 < previousFinalVolume && 0 < addedVolume)
-        ? 0 < volumeResult
-            ? (previousGravity * (previousFinalVolume / volumeResult)) + (addedGravity * (addedVolume / volumeResult))
-            : previousGravity
-        : addedGravity;
+
+    let gravityResult = gravityReading;
+    if (0 < addedVolume && 0 < volumeResult) { // Handle additions
+        gravityResult = (previousGravity * (previousFinalVolume/volumeResult)) + (addedGravity * (addedVolume/volumeResult));
+    }
 
     // ABV - Calculate weighted average ABV or from gravity drop
     let abvResult = startingAbv;
-
     if (0 < addedVolume && 0 <= addedAbv) {
         const totalAlcohol = (startingAbv * startingVolume) + (addedAbv * addedVolume);
         abvResult = totalAlcohol / volumeResult;
@@ -190,7 +191,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
         startingVolume: startingVolume?.toFixed(3) || 0,
 
         addedAbv: addedAbv?.toFixed(2) || 0,
-        addedGravity: addedGravity?.toFixed(3) || 1.000,
+        addedGravity: addedGravity?.toFixed(3) || 0,
         addedVolume: addedVolume?.toFixed(3) || 0,
 
         abv: abvResult?.toFixed(2) || 0,
@@ -198,3 +199,52 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
         volume: volumeResult?.toFixed(3)
     };
 };
+
+export const UpdateGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
+    let data = getGravityAbvVolumeData(currentInputs, gravityActivities, initialVolume);
+
+    activity.addedAbv = data.addedAbv;
+    activity.addedGravity = data.addedGravity;
+    activity.addedVolume = data.addedVolume;
+    activity.abv = data.abv;
+    activity.volume = data.volume;
+    activity.description = data.gravity;
+
+    return activity;
+}
+
+export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
+    let activeActivity = UpdateGravityActivity(activity, currentInputs, gravityActivities, initialVolume);
+    let activeIndex = gravityActivities.indexOf(activity);
+
+    let updatedActivities = []
+
+    for (let i = 0; i < gravityActivities.length; i++) {
+        if (i < activeIndex) {
+            continue;
+        }
+
+        if (i == activeIndex) {
+            updatedActivities.push(activeActivity);
+            continue;
+        }
+
+        let item = gravityActivities[i];
+        var updatedActivity = UpdateGravityActivity(
+            item,
+            {
+                addedAbv: item.addedAbv,
+                addedGravity: item.addedGravity,
+                addedVolume: item.addedVolume,
+                description: item.description,
+                id: item.id
+            },
+            updatedActivities,
+            item.volume - item.addedVolume
+        )
+
+        updatedActivities.push(updatedActivity);
+    };
+
+    return updatedActivities;
+}

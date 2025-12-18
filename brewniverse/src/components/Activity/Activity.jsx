@@ -7,7 +7,7 @@ import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
 import Button from '../UI/Button';
-import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, getPreviousActivity } from '../../utils/GravityCalculations';
+import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, UpdateAllGravityActivity } from '../../utils/GravityCalculations';
 
 function Activity({
     activity,
@@ -371,40 +371,65 @@ export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
         const prevData = prev.toJSON ? prev.toJSON() : prev;
 
-        const thisActivity = prevData.activity.find(x => String(x.id) === String(id));  
+        const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
         if (thisActivity?.topic == ActivityTopicEnum.Gravity && field == "description") {
             let gravityActivities = getGravityActivities(prevData.activity);
 
-            const data = getGravityAbvVolumeData({
-                addedAbv: 0,
-                addedGravity: value,
-                addedVolume: 0,
+            var currentInputs = {
+                addedAbv: thisActivity.abv,
+                addedGravity: thisActivity.addedGravity,
+                addedVolume: thisActivity.addedVolume,
                 date: thisActivity.date,
+                description: thisActivity.description,
                 id: thisActivity.id
-            },
+            }
+
+            currentInputs[field] = value;
+
+            if (field === "date") {
+                return {
+                    ...prevData,
+                    activity: prevData.activity.map(item =>
+                        item.id === id
+                            ? {
+                                ...item,
+                                [field]: value
+                            }
+                            : item
+                    )
+                };
+            }
+
+            const updatedActivities = UpdateAllGravityActivity(
+                thisActivity,
+                currentInputs,
                 gravityActivities,
                 parseFloat(prevData.volume)
-            );
+            )
+
+            // Update all gravity activities with the recalculated values
+            const updatedActivityArray = prevData.activity.map(item => {
+                const updatedActivity = updatedActivities.find(ua => ua.id === item.id);
+                return updatedActivity ? updatedActivity : item;
+            });
 
             return {
                 ...prevData,
-                activity: prevData.activity.map(item =>
-                    item.id === id
-                        ? {
-                            ...item,
-                            [field]: value,
-                            abv: data.abv,
-                            volume: data.volume
-                        }
-                        : item
-                )
+                activity: updatedActivityArray,
+                currentAbv: getCurrentAbv(updatedActivities)
             };
         }
 
+        // For non-gravity activities or non-description field updates
         return {
             ...prevData,
             activity: prevData.activity.map(item =>
-                item.id === id ? { ...item, [field]: value } : item
+                item.id === id
+                    ? {
+                        ...item,
+                        [field]: value
+                    }
+                    : item
             )
         };
     });
