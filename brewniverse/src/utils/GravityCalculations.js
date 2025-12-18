@@ -217,6 +217,9 @@ export const UpdateGravityActivity = (activity, currentInputs, gravityActivities
 
 export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
     let activeActivity = UpdateGravityActivity(activity, currentInputs, gravityActivities, initialVolume);
+
+    gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));  
+
     let activeIndex = gravityActivities.indexOf(activity);
 
     let updatedActivities = []

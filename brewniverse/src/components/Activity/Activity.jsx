@@ -467,20 +467,6 @@ function handleGravityUpdates(prevData, id, field, value) {
 
         currentInputs[field] = value;
 
-        if (field === "date") {
-            return {
-                ...prevData,
-                activity: prevData.activity.map(item =>
-                    item.id === id
-                        ? {
-                            ...item,
-                            [field]: value
-                        }
-                        : item
-                )
-            };
-        }
-
         const updatedActivities = UpdateAllGravityActivity(
             thisActivity,
             currentInputs,
