@@ -32,7 +32,7 @@ function Activity({
             ...activity,
             brewLogId: activity.brewLogId || brewLogId || '',
         }));
-    }, [activity, brewLogId]);
+    }, [activity, brewLogId, activity.date, activity.description, activity.addedVolume, activity.addedAbv, activity.addedGravity]);
 
     const alertExists = activityState.alertId && state.alerts.some(alert => alert.id === activityState.alertId);
 
