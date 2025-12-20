@@ -334,7 +334,12 @@ export const getActivitiesByTopic = (formData, topic) => {
     const data = typeof formData === 'string' ? JSON.parse(formData) : formData;
     const activities = Array.isArray(data.activity) ? data.activity : [];
     const target = String(topic).toLowerCase();
-    return activities.filter(a => a && String(a.topic).toLowerCase() === target);
+    const result = activities.filter(a => a && String(a.topic).toLowerCase() === target);
+    return result.sort((a, b) => {
+        const ta = Date.parse(a?.date) || 0;
+        const tb = Date.parse(b?.date) || 0;
+        return ta - tb;
+    });
 };
 
 export function deleteActivity(setFormData, id) {

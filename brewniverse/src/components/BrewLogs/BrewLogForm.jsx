@@ -44,7 +44,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
-        'abv', 'additions', 'additionsInstructions', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'additionsInstructions', 'importantDates', 'otherActivities', 'notes', 'todo', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -557,6 +557,52 @@ function BrewLogForm() {
                     </IngredientList>
                 </div>
 
+                {/* To Do List */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('todo')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.todo ? 'collapsed' : ''}`}
+                            />
+                            To Do List
+                        </h3>
+                    </div>
+
+                    <div className={`section-content ${collapsedSections.todo ? 'collapsed' : ''}`}>
+                        {(formState.recipeId) ? (
+                            <div className="recipe-buttons">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="small"
+                                    onClick={() => navigate(`/recipes/${formState.recipeId}`)}
+                                    disabled={!formState.recipeId}
+                                >
+                                    Go to Recipe
+                                </Button>
+                            </div>
+                        ) : null
+                        }
+
+                        <div className="form-group">
+                            <ActivityList
+                                formData={formState}
+                                setFormData={updateFormDataCallback}
+                                topic={ActivityTopicEnum.ToDo}
+                                headerLabel=""
+                                itemLabel=""
+                                sectionInfoMessage="Follow along with a recipe, or set yourself a list of tasks to do."
+                                brewLogId={id}
+                            >
+                            </ActivityList>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Yeast */}
                 <div className="form-section">
                     <div
@@ -568,7 +614,7 @@ function BrewLogForm() {
                                 size={20}
                                 className={`section-toggle-icon ${collapsedSections.yeast ? 'collapsed' : ''}`}
                             />
-                            Pitch Yeast
+                            Yeast
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.yeast ? 'collapsed' : ''}`}>
@@ -980,7 +1026,7 @@ function BrewLogForm() {
                                         <br />
                                         <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                         <br />
-                                        <br />An entry here will create a new estimated gravity reading once all fields have been filled out - provided that added volume and added gravity are greater than 0. You can edit that gravity reading from the Gravity Readings section, or by changing the values entered here. If you accidentally delete the gravity reading, you can edit the addition here and a new gravity reading will appear. 
+                                        <br />An entry here will create a new estimated gravity reading once all fields have been filled out - provided that added volume and added gravity are greater than 0. You can edit that gravity reading from the Gravity Readings section, or by changing the values entered here. If you accidentally delete the gravity reading, you can edit the addition here and a new gravity reading will appear.
                                     </p>
                                 </div>
                             </div>
@@ -1132,36 +1178,6 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Notes */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('notes')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
-                            />
-                            Notes
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <textarea
-                                id="notes"
-                                name="notes"
-                                className="form-textarea"
-                                value={formState.notes}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="Additional notes about this brew"
-                                rows={4}
-                            />
-                        </div>
-                    </div>
-                </div>
-
                 {/* Journal Entries */}
                 <div className="form-section brewlog-journal">
                     <div
@@ -1193,6 +1209,36 @@ function BrewLogForm() {
 
                         <div className="form-group">
                             <JournalEntryList brewLogId={id} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Notes */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('notes')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.notes ? 'collapsed' : ''}`}
+                            />
+                            Notes
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.notes ? 'collapsed' : ''}`}>
+                        <div className="form-group">
+                            <textarea
+                                id="notes"
+                                name="notes"
+                                className="form-textarea"
+                                value={formState.notes}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="Additional notes about this brew"
+                                rows={4}
+                            />
                         </div>
                     </div>
                 </div>
