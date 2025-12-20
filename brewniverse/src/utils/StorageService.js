@@ -156,7 +156,7 @@ class StorageService {
 
                     return {
                         success: true,
-                        message: 'Export initiated! Choose where to save your backup file.'
+                        message: 'Export initiated! Your data has been saved.'
                     };
                 } catch (shareError) {
                     console.log('Share failed, saving to Documents instead:', shareError);
