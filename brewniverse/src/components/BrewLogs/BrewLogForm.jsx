@@ -926,6 +926,7 @@ function BrewLogForm() {
                                 placeholder="e.g., 5 gallons, 1 gallon"
                                 required={true}
                                 min={0}
+                                step="0.001"
                             />
                             <p className="section-description">
                                 In order to calculate gravity, you must provide a starting volume.
@@ -986,6 +987,7 @@ function BrewLogForm() {
                                 placeholder="e.g., 5 gallons, 1 gallon"
                                 required={true}
                                 min={0}
+                                step="0.001"
                             />
                             <p className="section-description">
                                 In order to calculate gravity, you must provide a starting volume.
