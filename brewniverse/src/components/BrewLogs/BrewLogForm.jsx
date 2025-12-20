@@ -955,12 +955,12 @@ function BrewLogForm() {
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
                         <div className="form-group">
                             <p className="section-description">
-                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.*
+                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.
+                                <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally. 
                                 <br/>
                                 <br/><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                 <br/>
-                                <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, but do not delete it because it is used for calculations. If you do accidentally delete it, you can edit the addition and a new gravity reading will appear.
-                                <br />*If adding a solid or soluble granule, such as sugar, with a negligible volume, a gravity reading must be created manually. 
+                                <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, as needed. If you accidentally delete it, you can edit the addition and a new gravity reading will appear.desds
                             </p>
                         </div>
 
@@ -1017,6 +1017,7 @@ function BrewLogForm() {
                                 brewLogId={id}
                                 showTopButton={true}
                                 showBottomButton={true}
+                                headerLabel="*Added Volume must be in the same unit as the Starting Volume"
                             />
                         </div>
                     </div>

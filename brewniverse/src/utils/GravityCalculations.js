@@ -141,7 +141,7 @@ export const formatGravityDataForChart = (gravityActivities) => {
 
 export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initialVolume = 1) => {
     const parsedAbv = parseFloat(currentInputs?.addedAbv);
-    const parsedAddedGravity = parseFloat(currentInputs?.addedGravity ?? currentInputs?.description);
+    const parsedAddedGravity = parseFloat(currentInputs?.addedGravity);
     const parsedVolume = parseFloat(currentInputs?.addedVolume);
     const parsedGravityReading = parseFloat(currentInputs?.description);
 
@@ -165,7 +165,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     };
 
     // GRAVITY - Calculate the weighted average current gravity
-    const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? 0);
+    const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
     const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
 
     let gravityResult = gravityReading;
@@ -218,9 +218,9 @@ export const UpdateGravityActivity = (activity, currentInputs, gravityActivities
 export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
     let activeActivity = UpdateGravityActivity(activity, currentInputs, gravityActivities, initialVolume);
 
+    let activeIndex = gravityActivities.findIndex(a => a.id === activity.id);
+    gravityActivities[activeIndex] = activeActivity;
     gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));  
-
-    let activeIndex = gravityActivities.indexOf(activity);
 
     let updatedActivities = []
 
