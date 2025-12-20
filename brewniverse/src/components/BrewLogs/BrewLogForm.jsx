@@ -140,7 +140,6 @@ function BrewLogForm() {
         const { name, value } = e.target;
         //e.target is the input changed. input.name == the property name for this input
 
-        //ToDo: handle volume changes -> update gravity activities
         if (name === 'dateCreated') {
             updateActivityDateByTopic(e);
         }
@@ -968,7 +967,7 @@ function BrewLogForm() {
                                 <br/>
                                 <br/><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                 <br/>
-                                <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, as needed. If you accidentally delete it, you can edit the addition and a new gravity reading will appear.desds
+                                <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, as needed. If you accidentally delete it, you can edit the addition and a new gravity reading will appear.
                             </p>
                         </div>
 
