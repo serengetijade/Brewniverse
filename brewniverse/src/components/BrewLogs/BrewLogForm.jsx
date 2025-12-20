@@ -6,7 +6,7 @@ import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
-import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
+import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv, UpdateAllGravityActivity } from '../../utils/GravityCalculations';
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import IngredientList from '../Ingredients/IngredientList';
@@ -192,6 +192,13 @@ function BrewLogForm() {
                     });
                 }
             }
+        }
+        else if (name === 'volume') {
+            if (gravityActivities == undefined) return;
+
+            UpdateAllGravityActivity(gravityActivities[0], gravityActivities[0], gravityActivities, value);
+
+            updateBrewLog(name, value);
         }
         else {
             updateBrewLog(name, value);
@@ -910,7 +917,7 @@ function BrewLogForm() {
                                 Starting Volume <small>(Required)</small>
                             </label>
                             <input
-                                type="text"
+                                type="number"
                                 id="volume"
                                 name="volume"
                                 className="form-input"
@@ -919,6 +926,7 @@ function BrewLogForm() {
                                 maxLength={Validation.InputMaxLength}
                                 placeholder="e.g., 5 gallons, 1 gallon"
                                 required={true}
+                                min={0}
                             />
                             <p className="section-description">
                                 In order to calculate gravity, you must provide a starting volume.
