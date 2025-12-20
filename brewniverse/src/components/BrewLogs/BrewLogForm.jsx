@@ -574,13 +574,14 @@ function BrewLogForm() {
 
                     <div className={`section-content ${collapsedSections.todo ? 'collapsed' : ''}`}>
                         {(formState.recipeId) ? (
-                            <div className="recipe-buttons">
+                            <div className="form-group">
                                 <Button
                                     type="button"
                                     variant="outline"
                                     size="small"
                                     onClick={() => navigate(`/recipes/${formState.recipeId}`)}
                                     disabled={!formState.recipeId}
+                                    fullWidth={true}
                                 >
                                     Go to Recipe
                                 </Button>
