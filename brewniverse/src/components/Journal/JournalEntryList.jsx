@@ -13,7 +13,7 @@ function JournalEntryList({ brewLogId }) {
         <div>
             {journalEntries.length === 0 ? (
                 <div className="empty-state-small">
-                    <p>No journal entries for this brew log yet.</p>
+                    <p>No journal entries for this brew log yet. Add an entry to record tasting notes and impressions.</p>
                 </div>
             ) : (
                 <div className="recent-items">

@@ -1,4 +1,4 @@
-import { Activity as ActivityIcon, BottleWine, CirclePlus, FlaskConical, FlaskRound,
+import { Activity as ActivityIcon, BottleWine, Check, CirclePlus, FlaskConical, FlaskRound,
     Leaf, MoveVertical, Pill, PlayCircle, Scale, Shield, Sparkles, TestTubeDiagonal,
 } from 'lucide-react';
 
@@ -15,6 +15,7 @@ export const ActivityTopicEnum = {
     PecticEnzyme: 'pecticenzyme',
     PH: 'ph',
     Tannin: 'tannin',
+    ToDo: 'todo',
     Yeast: 'yeast',
     Other: 'other'
 };
@@ -80,16 +81,6 @@ export const ActivityTopicConfiguration = {
         icon: FlaskRound,
         label: 'Bases'
     },
-    [ActivityTopicEnum.Tannin]: {
-        key: ActivityTopicEnum.Tannin,
-        color: '#a16707',
-        rgb: '161,103,7',
-        description: 'Tannin additions for body and mouthfeel',
-        displayName: 'Tannin Added',
-        displayName_Alert: 'Add Tannin',
-        icon: Leaf,
-        label: 'Tannins'
-    },
     [ActivityTopicEnum.PH]: {
         key: ActivityTopicEnum.PH,
         color: '#ec4899',
@@ -149,6 +140,26 @@ export const ActivityTopicConfiguration = {
         displayName_Alert: 'Make an addition',
         icon: CirclePlus,
         label: 'Addition Added'
+    },
+    [ActivityTopicEnum.Tannin]: {
+        key: ActivityTopicEnum.Tannin,
+        color: '#a16707',
+        rgb: '161,103,7',
+        description: 'Tannin additions for body and mouthfeel',
+        displayName: 'Tannin Added',
+        displayName_Alert: 'Add Tannin',
+        icon: Leaf,
+        label: 'Tannins'
+    },
+    [ActivityTopicEnum.ToDo]: {
+        key: ActivityTopicEnum.ToDo,
+        color: '#ffed00',
+        rgb: '255,237,0',
+        description: 'Tasks',
+        displayName: 'To Do',
+        displayName_Alert: 'To Do Task Due',
+        icon: Check,
+        label: 'To Do'
     },
     [ActivityTopicEnum.Other]: {
         key: ActivityTopicEnum.Other,
