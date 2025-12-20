@@ -44,7 +44,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
-        'abv', 'additions', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'additionsInstructions', 'importantDates', 'otherActivities', 'notes', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -247,7 +247,7 @@ function BrewLogForm() {
     }, [formState.activity]);
 
     // Addition
-    const additionActivities = getActivitiesByTopic(formState, ActivityTopicEnum.Addition); 
+    const additionActivities = getActivitiesByTopic(formState, ActivityTopicEnum.Addition);
     const totalAddedVolume = additionActivities.reduce(
         (sum, activity) => sum + (parseFloat(activity.addedVolume) || 0),
         0
@@ -961,15 +961,29 @@ function BrewLogForm() {
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
+
                         <div className="form-group">
-                            <p className="section-description">
-                                Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.
-                                <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally. 
-                                <br/>
-                                <br/><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
-                                <br/>
-                                <br/>Please note: An entry here will create a new gravity reading once all fields have been filled out. You can edit that estimated reading, as needed. If you accidentally delete it, you can edit the addition and a new gravity reading will appear.
-                            </p>
+                            <div className="section-header collapsible" onClick={() => toggleSection('additionsInstructions')}>
+                                <label className="form-label">
+                                    Instructions & Info
+                                    <ChevronDown
+                                        size={14}
+                                        className={`section-toggle-icon ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}
+                                    />
+                                </label>
+                            </div>
+                            <div className={`section-content ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}>
+                                <div className="form-group">
+                                    <p className="section-description">
+                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.
+                                        <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
+                                        <br />
+                                        <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
+                                        <br />
+                                        <br />An entry here will create a new estimated gravity reading once all fields have been filled out - provided that added volume and added gravity are greater than 0. You can edit that gravity reading from the Gravity Readings section, or by changing the values entered here. If you accidentally delete the gravity reading, you can edit the addition here and a new gravity reading will appear. 
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         <div className="form-group">
