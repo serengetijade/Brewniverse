@@ -93,6 +93,11 @@
         height: 100%;
     }
 
+    .activity-addition .activity-editor-actions {
+        flex-direction: row;
+        padding-bottom: .5rem;
+    }
+
     .activity .btn {
         padding: 0rem .25rem 0rem .75rem;
         min-width: fit-content;

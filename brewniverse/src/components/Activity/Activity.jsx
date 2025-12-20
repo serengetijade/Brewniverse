@@ -152,7 +152,7 @@ function Activity({
 
     if (activity.topic === ActivityTopicEnum.Addition) {
         return (
-            <div className="activity">
+            <div className="activity activity-addition">
                 <div className="activity-inputs">
                     <div className="form-group">
                         <label className="form-label">Date</label>
@@ -173,12 +173,12 @@ function Activity({
                             onChange={(e) => {
                                 handleChange(activityState.id, 'description', e.target.value);
                             }}
-                            rows={4}
+                            rows={3}
                         />
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label">Added Volume</label>
+                        <label className="form-label">Added Volume*</label>
                         <input
                             type="number"
                             className="form-input"
@@ -215,29 +215,30 @@ function Activity({
                             step=".001"
                         />
                     </div>
-                </div>
 
-                <div className="activity-editor-actions">
-                    {showAlertButton && (
+                    <div className="activity-editor-actions">
+                        {showAlertButton && (
+                            <Button
+                                type="button"
+                                variant={alertExists ? "primary" : "ghost"}
+                                size="small"
+                                onClick={handleAlertButtonClick}
+                                title={alertExists ? "Alert exists - click to view" : "Create alert for this activity"}
+                            >
+                                {alertExists ? <Bell size={buttonSize} /> : <BellPlus size={buttonSize} />}
+                            </Button>
+                        )}
                         <Button
                             type="button"
-                            variant={alertExists ? "primary" : "ghost"}
+                            variant="ghost"
                             size="small"
-                            onClick={handleAlertButtonClick}
-                            title={alertExists ? "Alert exists - click to view" : "Create alert for this activity"}
+                            onClick={handleDelete}
+                            title="Delete addition"
                         >
-                            {alertExists ? <Bell size={buttonSize} /> : <BellPlus size={buttonSize} />}
+                            <Trash2 size={buttonSize} />
                         </Button>
-                    )}
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="small"
-                        onClick={handleDelete}
-                        title="Delete addition"
-                    >
-                        <Trash2 size={buttonSize} />
-                    </Button>
+                    </div>
+
                 </div>
             </div>
         );
@@ -351,12 +352,12 @@ export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
         const prevData = prev.toJSON ? prev.toJSON() : prev;
 
-        const additionUpdate = handleAdditionUpdates(prevData, id, field, value);
+        const additionUpdate = updateAdditionActivities(prevData, id, field, value);
         if (additionUpdate !== null) {
             return additionUpdate;
         }
 
-        const gravityUpdate = handleGravityUpdates(prevData, id, field, value);
+        const gravityUpdate = updateGravityActivities(prevData, id, field, value);
         if (gravityUpdate !== null) {
             return gravityUpdate;
         }
@@ -383,7 +384,7 @@ export default Activity;
 
 
 // Helper functions - not exported
-function handleAdditionUpdates(prevData, id, field, value) {
+function updateAdditionActivities(prevData, id, field, value) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
     if (thisActivity?.topic == ActivityTopicEnum.Addition) {
@@ -454,9 +455,9 @@ function handleAdditionUpdates(prevData, id, field, value) {
         }
         else if (linkedGravityActivities.length > 0) {
             const linkedGravity = linkedGravityActivities[0];
-            
+
             const gravityActivityToUpdate = gravityActivities.find(g => g.id === linkedGravity.id);
-            
+
             if (gravityActivityToUpdate) {
                 const currentInputs = {
                     addedAbv: updatedAddition.addedAbv,
@@ -498,7 +499,7 @@ function handleAdditionUpdates(prevData, id, field, value) {
     return null;
 }
 
-function handleGravityUpdates(prevData, id, field, value) {
+function updateGravityActivities(prevData, id, field, value) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
     if (thisActivity?.topic == ActivityTopicEnum.Gravity && field == "description") {
