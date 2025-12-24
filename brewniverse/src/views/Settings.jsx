@@ -27,11 +27,11 @@ function Settings() {
                 setTestNotificationSent(true);
                 alert('Test notification scheduled! You should receive it in 5 seconds.');
                 setTimeout(() => setTestNotificationSent(false), 10000);
-            } 
+            }
             else {
                 alert('Unable to send test notification. Make sure notifications are enabled.');
             }
-        } 
+        }
         catch (error) {
             alert('Error sending test notification: ' + error.message);
         }
@@ -51,227 +51,241 @@ function Settings() {
         <div className="main-content-container settings">
             <div className="main-content-section">
                 <div className="settings-header">
-                <h1>Settings</h1>
-                <div className="settings-logo">
-                    <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
-                </div>
-                <p>Customize your Brewniverse experience</p>
-            </div>
-
-
-            {/* Themes */}
-            <div className="settings-sections">
-                <div className="settings-section">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2 className="card-title">Appearance</h2>
-                        </div>
-                        <div className="card-content">
-                            <div className="form-group">
-                                <label className="form-label" htmlFor="theme-select">
-                                    Color Theme
-                                </label>
-                                <select
-                                    id="theme-select"
-                                    className="form-select"
-                                    value={currentTheme}
-                                    onChange={(e) => handleThemeChange(e.target.value)}
-                                >
-                                    {themeOptions.map((option) => (
-                                        <option key={option.value} value={option.value}>
-                                            {option.label}
-                                        </option>
-                                    ))}
-                                </select>
-                                <p className="setting-description">
-                                    Choose your preferred color scheme.
-                                </p>
-                            </div>
-                        </div>
+                    <h1>Settings</h1>
+                    <div className="settings-logo">
+                        <img src="/BrewniverseLogo.png" alt="Brewniverse Logo" />
                     </div>
+                    <p>Customize your Brewniverse experience</p>
                 </div>
 
-                {/* Data */}
-                <div className="settings-section">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2 className="card-title">Data Management</h2>
-                        </div>
-                        <div className="card-content">
-                            <div className="data-stats">
-                                <div className="stat-item">
-                                    <span className="stat-label">Brew Logs:</span>
-                                    <span className="stat-value">{state.brewLogs.length}</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">Recipes:</span>
-                                    <span className="stat-value">{state.recipes.length}</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">Alerts:</span>
-                                    <span className="stat-value">{state.alerts.length}</span>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">Journal:</span>
-                                    <span className="stat-value">{state.journalEntries.length}</span>
-                                </div>
-                            </div>
 
-                            <div className="data-actions">
-                                <Button
-                                    variant="outline"
-                                    onClick={async () => {
-                                        try {
-                                            const result = await StorageService.exportToFile(state);
-                                            alert(result.message || 'Data exported successfully!');
-                                        } catch (error) {
-                                            alert('Error exporting data: ' + error.message);
-                                        }
-                                    }}
-                                >
-                                    Export Data
-                                </Button>
-
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        const input = document.createElement('input');
-                                        input.type = 'file';
-                                        input.accept = '.json';
-                                        input.onchange = async (e) => {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                try {
-                                                    const importedData = await StorageService.importFromFile(file);
-
-                                                    // MERGE: Add to existing data without removing anything
-                                                    const mergedData = StorageService.mergeData(state, importedData);
-
-                                                    dispatch({
-                                                        type: ActionTypes.loadData,
-                                                        payload: mergedData
-                                                    });
-                                                    alert('Data imported successfully! New items added, duplicates skipped.');
-                                                } catch (error) {
-                                                    alert('Error importing data: ' + error.message);
-                                                }
-                                            }
-                                        };
-                                        input.click();
-                                    }}
-                                >
-                                    Import Data
-                                </Button>
-
-                                <Button
-                                    variant="outline"
-                                    onClick={() => {
-                                        const input = document.createElement('input');
-                                        input.type = 'file';
-                                        input.accept = '.json';
-                                        input.onchange = async (e) => {
-                                            const file = e.target.files[0];
-                                            if (file) {
-                                                try {
-                                                    const importedData = await StorageService.importFromFile(file);
-
-                                                    // REPLACE: Warn user before overwriting all data
-                                                    const confirmReplace = confirm(
-                                                        '⚠️ WARNING: This will REPLACE ALL your current data!\n\n' +
-                                                        'All existing brew logs, recipes, alerts, and settings will be deleted and replaced with the imported data.\n\n' +
-                                                        'Are you sure you want to continue?'
-                                                    );
-
-                                                    if (confirmReplace) {
-                                                        dispatch({
-                                                            type: ActionTypes.loadData,
-                                                            payload: importedData
-                                                        });
-                                                        alert('Data imported successfully!');
-                                                    }
-                                                } catch (error) {
-                                                    alert('Error importing data: ' + error.message);
-                                                }
-                                            }
-                                        };
-                                        input.click();
-                                    }}
-                                >
-                                    Replace All Data
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Notifications */}
-                {isNative && (
+                {/* Themes */}
+                <div className="settings-sections">
                     <div className="settings-section">
                         <div className="card">
                             <div className="card-header">
-                                <h2 className="card-title">Notifications</h2>
+                                <h2 className="card-title">Appearance</h2>
                             </div>
                             <div className="card-content">
                                 <div className="form-group">
-                                    <label className="form-label">
-                                        <input
-                                            type="checkbox"
-                                            checked={state.settings.disableNotifications || false}
-                                            onChange={(e) => handleSettingChange('disableNotifications', e.target.checked)}
-                                            style={{ marginRight: '10px' }}
-                                        />
-                                        Disable Push Notifications
+                                    <label className="form-label" htmlFor="theme-select">
+                                        Color Theme
                                     </label>
-                                    <p className="setting-description">
-                                        When enabled, you will not receive notifications for your alerts
-                                    </p>
-                                </div>
-
-                                <div className="form-group">
-                                    <Button
-                                        variant="outline"
-                                        onClick={handleTestNotification}
-                                        disabled={state.settings.disableNotifications || testNotificationSent}
+                                    <select
+                                        id="theme-select"
+                                        className="form-select"
+                                        value={currentTheme}
+                                        onChange={(e) => handleThemeChange(e.target.value)}
                                     >
-                                        {testNotificationSent ? 'Test Sent!' : 'Send Test Notification'}
-                                    </Button>
+                                        {themeOptions.map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
                                     <p className="setting-description">
-                                        Test your notification settings with a sample notification
+                                        Choose your preferred color scheme.
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                )}
 
-                {/* About */}
-                <div className="settings-section">
-                    <div className="card">
-                        <div className="card-header">
-                            <h2 className="card-title">About</h2>
+                    {/* Data */}
+                    <div className="settings-section">
+                        <div className="card">
+                            <div className="card-header">
+                                <h2 className="card-title">Data Management</h2>
+                            </div>
+                            <div className="card-content">
+                                <div className="data-stats">
+                                    <div className="stat-item">
+                                        <span className="stat-label">Brew Logs:</span>
+                                        <span className="stat-value">{state.brewLogs.length}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Recipes:</span>
+                                        <span className="stat-value">{state.recipes.length}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Alerts:</span>
+                                        <span className="stat-value">{state.alerts.length}</span>
+                                    </div>
+                                    <div className="stat-item">
+                                        <span className="stat-label">Journal:</span>
+                                        <span className="stat-value">{state.journalEntries.length}</span>
+                                    </div>
+                                </div>
+
+                                <div className="data-actions">
+                                    <Button
+                                        variant="outline"
+                                        onClick={async () => {
+                                            try {
+                                                const result = await StorageService.exportToDocuments(state);
+                                                alert(result.message || 'Data exported successfully!');
+                                            } catch (error) {
+                                                alert('Error exporting data: ' + error.message);
+                                            }
+                                        }}
+                                    >
+                                        Save Data
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={async () => {
+                                            try {
+                                                const result = await StorageService.exportToFile(state);
+                                                alert(result.message || 'Data exported successfully!');
+                                            } catch (error) {
+                                                alert('Error exporting data: ' + error.message);
+                                            }
+                                        }}
+                                    >
+                                        Export Data
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            const input = document.createElement('input');
+                                            input.type = 'file';
+                                            input.accept = '.json';
+                                            input.onchange = async (e) => {
+                                                const file = e.target.files[0];
+                                                if (file) {
+                                                    try {
+                                                        const importedData = await StorageService.importFromFile(file);
+
+                                                        // MERGE: Add to existing data without removing anything
+                                                        const mergedData = StorageService.mergeData(state, importedData);
+
+                                                        dispatch({
+                                                            type: ActionTypes.loadData,
+                                                            payload: mergedData
+                                                        });
+                                                        alert('Data imported successfully! New items added, duplicates skipped.');
+                                                    } catch (error) {
+                                                        alert('Error importing data: ' + error.message);
+                                                    }
+                                                }
+                                            };
+                                            input.click();
+                                        }}
+                                    >
+                                        Import Data
+                                    </Button>
+
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => {
+                                            const input = document.createElement('input');
+                                            input.type = 'file';
+                                            input.accept = '.json';
+                                            input.onchange = async (e) => {
+                                                const file = e.target.files[0];
+                                                if (file) {
+                                                    try {
+                                                        const importedData = await StorageService.importFromFile(file);
+
+                                                        // REPLACE: Warn user before overwriting all data
+                                                        const confirmReplace = confirm(
+                                                            '⚠️ WARNING: This will REPLACE ALL your current data!\n\n' +
+                                                            'All existing brew logs, recipes, alerts, and settings will be deleted and replaced with the imported data.\n\n' +
+                                                            'Are you sure you want to continue?'
+                                                        );
+
+                                                        if (confirmReplace) {
+                                                            dispatch({
+                                                                type: ActionTypes.loadData,
+                                                                payload: importedData
+                                                            });
+                                                            alert('Data imported successfully!');
+                                                        }
+                                                    } catch (error) {
+                                                        alert('Error importing data: ' + error.message);
+                                                    }
+                                                }
+                                            };
+                                            input.click();
+                                        }}
+                                    >
+                                        Replace All Data
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                        <div className="card-content">
-                            <div className="about-info">
-                                <h3>Brewniverse</h3>
-                                <p>Your comprehensive brewing companion for tracking batches, managing recipes, and staying organized throughout your brewing journey.</p>
+                    </div>
 
-                                <div className="features-list">
-                                    <h4>Features:</h4>
-                                    <ul>
-                                        <li>Track brew logs with detailed information</li>
-                                        <li>Automatically calculate ABV and consumed sugars</li>
-                                        <li>Record tasting experiences</li>
-                                        <li>Manage and reference recipes</li>
-                                        <li>Set up alerts and reminders</li>
-                                        <li>Calculate brew outcomes</li>
-                                        <li>Customizable themes and settings</li>
-                                    </ul>
+                    {/* Notifications */}
+                    {isNative && (
+                        <div className="settings-section">
+                            <div className="card">
+                                <div className="card-header">
+                                    <h2 className="card-title">Notifications</h2>
+                                </div>
+                                <div className="card-content">
+                                    <div className="form-group">
+                                        <label className="form-label">
+                                            <input
+                                                type="checkbox"
+                                                checked={state.settings.disableNotifications || false}
+                                                onChange={(e) => handleSettingChange('disableNotifications', e.target.checked)}
+                                                style={{ marginRight: '10px' }}
+                                            />
+                                            Disable Push Notifications
+                                        </label>
+                                        <p className="setting-description">
+                                            When enabled, you will not receive notifications for your alerts
+                                        </p>
+                                    </div>
+
+                                    <div className="form-group">
+                                        <Button
+                                            variant="outline"
+                                            onClick={handleTestNotification}
+                                            disabled={state.settings.disableNotifications || testNotificationSent}
+                                        >
+                                            {testNotificationSent ? 'Test Sent!' : 'Send Test Notification'}
+                                        </Button>
+                                        <p className="setting-description">
+                                            Test your notification settings with a sample notification
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* About */}
+                    <div className="settings-section">
+                        <div className="card">
+                            <div className="card-header">
+                                <h2 className="card-title">About</h2>
+                            </div>
+                            <div className="card-content">
+                                <div className="about-info">
+                                    <h3>Brewniverse</h3>
+                                    <p>Your comprehensive brewing companion for tracking batches, managing recipes, and staying organized throughout your brewing journey.</p>
+
+                                    <div className="features-list">
+                                        <h4>Features:</h4>
+                                        <ul>
+                                            <li>Track brew logs with detailed information</li>
+                                            <li>Automatically calculate ABV and consumed sugars</li>
+                                            <li>Record tasting experiences</li>
+                                            <li>Manage and reference recipes</li>
+                                            <li>Set up alerts and reminders</li>
+                                            <li>Calculate brew outcomes</li>
+                                            <li>Customizable themes and settings</li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
     );
