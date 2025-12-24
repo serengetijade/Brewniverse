@@ -19,7 +19,7 @@ class StorageService {
             platform: platform,
             hasLocalStorage: typeof window !== 'undefined' && window.localStorage
         });
-        
+
         if (isNative) {
             console.log('✅ Using Capacitor Filesystem storage');
             return 'capacitor';
@@ -119,6 +119,57 @@ class StorageService {
         }
     }
 
+    async exportToDocuments(data) {
+        try {
+            const exportData = {
+                version: STORAGE_VERSION,
+                exportDate: new Date().toISOString(),
+                data: data,
+            };
+
+            const jsonContent = JSON.stringify(exportData, null, 2);
+            const fileName = `brewniverse-backup-${new Date().toISOString().slice(0, 10)}.json`;
+
+            // Use Capacitor Filesystem for mobile, blob download for web
+            if (Capacitor.isNativePlatform()) {
+                await Filesystem.writeFile({
+                    path: fileName,
+                    data: jsonContent,
+                    directory: Directory.Documents,
+                    encoding: 'utf8'
+                });
+
+                return {
+                    success: true,
+                    message: `File saved to Documents folder:\n${fileName}\n\nYou can find it using a file manager app.`
+                };
+            }
+
+            // Web browser - use blob download
+            const blob = new Blob([jsonContent], {
+                type: 'application/json',
+            });
+
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            return {
+                success: true,
+                message: `File downloaded successfully:\n${fileName}`
+            }
+        }
+        catch (error) {
+            console.error('Error exporting data:', error);
+            throw error;
+        }
+    }
+
     async exportToFile(data) {
         try {
             const exportData = {
@@ -158,9 +209,10 @@ class StorageService {
                         success: true,
                         message: 'Export initiated! Your data has been saved.'
                     };
-                } catch (shareError) {
+                }
+                catch (shareError) {
                     console.log('Share failed, saving to Documents instead:', shareError);
-                    
+
                     await Filesystem.writeFile({
                         path: fileName,
                         data: jsonContent,
