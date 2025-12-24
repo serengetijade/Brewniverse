@@ -6,7 +6,7 @@ import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } 
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
-import { UpdateAllGravityActivity, UpdateGravityActivityData, getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations';
+import { UpdateAllGravityActivityData, UpdateGravityActivityData, getGravityActivities } from '../../utils/GravityCalculations';
 import Button from '../UI/Button';
 
 function Activity({
@@ -81,8 +81,7 @@ function Activity({
         const field = e.target.name;
 
         if (setFormData &&
-            (activity.topic === ActivityTopicEnum.Gravity || activity.topic === ActivityTopicEnum.Addition))
-        {
+            (activity.topic === ActivityTopicEnum.Gravity || activity.topic === ActivityTopicEnum.Addition)) {
             updateSubsequentActivities(setFormData, activityState.id, field, value);
         }
     };
@@ -356,11 +355,23 @@ export const getActivitiesByTopic = (formData, topic) => {
 
 export function deleteActivity(setFormData, id) {
     setFormData(prev => {
-        // Handle both BrewLog instances and plain objects.
+        // Handle both BrewLog instances and plain objects
         const prevData = prev.toJSON ? prev.toJSON() : prev;
+
+        let thisActivity = prevData.activity.find(x => String(x.id) === String(id));
+        if (thisActivity?.topic === ActivityTopicEnum.Gravity) {
+            prevData.activity = prevData.activity.filter(x => x.id !== id);
+
+            const gravityActivities = getGravityActivities(prevData.activity);
+            if (0 < gravityActivities.length) {
+                const firstGravityActivityId = gravityActivities[0].id;
+                return updateGravityActivities(prevData, firstGravityActivityId);
+            }
+        }
+
         return {
             ...prevData,
-            activity: prevData.activity.filter(item => item.id !== id),
+            activity: prevData.activity.filter(x => x.id !== id)
         };
     });
 };
@@ -471,8 +482,7 @@ function updateAdditionActivities(prevData, id, field, value) {
         && parseFloat(updatedAddition.addedAbv) >= 0
         && parseFloat(updatedAddition.addedGravity) > 0
 
-    if (hasRequiredFields && linkedGravityActivities.length === 0)
-    {
+    if (hasRequiredFields && linkedGravityActivities.length === 0) {
         // Create new gravity activity linked to this addition
         const newGravityActivity = new ActivityModel({
             date: getDate(updatedAddition.date) ?? getDate(),
@@ -505,8 +515,7 @@ function updateAdditionActivities(prevData, id, field, value) {
 
         return {
             ...prevData,
-            activity: updatedActivities,
-            currentAbv: getCurrentAbv(gravityActivities)
+            activity: updatedActivities
         };
     }
     else if (linkedGravityActivities.length > 0) {
@@ -524,7 +533,7 @@ function updateAdditionActivities(prevData, id, field, value) {
                 id: linkedGravity.id
             };
 
-            const recalculatedGravities = UpdateAllGravityActivity(
+            const recalculatedGravities = UpdateAllGravityActivityData(
                 gravityActivityToUpdate,
                 currentInputs,
                 gravityActivities,
@@ -541,8 +550,7 @@ function updateAdditionActivities(prevData, id, field, value) {
 
         return {
             ...prevData,
-            activity: updatedActivities,
-            currentAbv: getCurrentAbv(gravityActivities)
+            activity: updatedActivities
         };
     }
 
@@ -552,14 +560,14 @@ function updateAdditionActivities(prevData, id, field, value) {
     };
 }
 
-function updateGravityActivities(prevData, id, field, value) {
+function updateGravityActivities(prevData, id) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
-    if (thisActivity?.topic != ActivityTopicEnum.Gravity && field != "description") return null;
+    if (thisActivity?.topic != ActivityTopicEnum.Gravity) return null;
 
     let gravityActivities = getGravityActivities(prevData.activity);
 
-    const updatedGravityActivities = UpdateAllGravityActivity(
+    const updatedGravityActivities = UpdateAllGravityActivityData(
         thisActivity,
         thisActivity,
         gravityActivities,
@@ -574,7 +582,6 @@ function updateGravityActivities(prevData, id, field, value) {
 
     return {
         ...prevData,
-        activity: updatedActivityArray,
-        currentAbv: getCurrentAbv(updatedGravityActivities)
+        activity: updatedActivityArray
     };
 }
