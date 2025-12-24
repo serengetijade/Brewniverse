@@ -140,6 +140,8 @@ export const formatGravityDataForChart = (gravityActivities) => {
 };
 
 export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initialVolume = 1) => {
+    gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     const parsedAbv = parseFloat(currentInputs?.addedAbv);
     const parsedAddedGravity = parseFloat(currentInputs?.addedGravity);
     const parsedVolume = parseFloat(currentInputs?.addedVolume);
@@ -201,7 +203,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     };
 };
 
-export const UpdateGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
+export const UpdateGravityActivityData = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
     let data = getGravityAbvVolumeData(currentInputs, gravityActivities, initialVolume);
 
     activity.abv = data.abv;
@@ -216,13 +218,11 @@ export const UpdateGravityActivity = (activity, currentInputs, gravityActivities
 }
 
 export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
-    let activeActivity = UpdateGravityActivity(activity, currentInputs, gravityActivities, initialVolume);
+    gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date)); 
+    
+    let activeActivity = UpdateGravityActivityData(activity, currentInputs, gravityActivities, initialVolume);
 
-    let activeIndex = gravityActivities.findIndex(a => a.id === activity.id);
-    gravityActivities[activeIndex] = activeActivity;
-    gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));  
-
-    let updatedActivities = []
+    let result = []
 
     for (let i = 0; i < gravityActivities.length; i++) {
         if (i < activeIndex) {
@@ -230,12 +230,12 @@ export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivit
         }
 
         if (i == activeIndex) {
-            updatedActivities.push(activeActivity);
+            result.push(activeActivity);
             continue;
         }
 
         let item = gravityActivities[i];
-        var updatedActivity = UpdateGravityActivity(
+        var updatedActivity = UpdateGravityActivityData(
             item,
             {
                 addedAbv: item.addedAbv,
@@ -245,12 +245,12 @@ export const UpdateAllGravityActivity = (activity, currentInputs, gravityActivit
                 date: item.date,
                 id: item.id
             },
-            updatedActivities,
+            result,
             item.volume - item.addedVolume
         )
 
-        updatedActivities.push(updatedActivity);
+        result.push(updatedActivity);
     };
 
-    return updatedActivities;
+    return result;
 }

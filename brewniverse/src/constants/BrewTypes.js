@@ -67,7 +67,7 @@ export const BrewTypeConfiguration = {
         name: 'Melomel',
         icon: '🍹',
         description: 'Fermented fruit & honey',
-        color: '#FFCFDF' // light pink
+        color: '#fe8f38'// orange
     },
     [BrewTypeEnum.Sake]: {
         id: 5,

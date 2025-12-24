@@ -6,8 +6,8 @@ import { ActivityTopicEnum, getTopicDisplayName, getTopicDisplayNameForAlerts } 
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import ActivityModel from '../../models/Activity';
+import { UpdateAllGravityActivity, UpdateGravityActivityData, getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations';
 import Button from '../UI/Button';
-import { getCurrentAbv, getGravityAbvVolumeData, getGravityActivities, UpdateAllGravityActivity, UpdateGravityActivity } from '../../utils/GravityCalculations';
 
 function Activity({
     activity,
@@ -49,8 +49,14 @@ function Activity({
     };
 
     const handleChange = (id, field, value) => {
-        const updatedData = ActivityModel.fromJSON({ ...activityState.toJSON(), [field]: value });
-        setActivityState(updatedData);
+        if (activity.topic === ActivityTopicEnum.Gravity && field == "description") {
+            const numValue = parseFloat(value);
+            if (isNaN(numValue) && numValue < 0) {
+                alert("Please enter a valid number.");
+                return;
+            }
+        }
+
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
         }
@@ -70,22 +76,14 @@ function Activity({
         }
     };
 
-    const handleDescriptionChange = (e) => {
+    const handleBlur = (e) => {
         const value = e.target.value;
-        // For gravity readings (numeric), validate positive numbers
-        if (activity.topic === ActivityTopicEnum.Gravity) {
-            if (value === '') {
-                handleChange(activityState.id, 'description', '');
-                return;
-            }
-            const numValue = parseFloat(value);
-            if (!isNaN(numValue) && numValue >= 0) {
-                handleChange(activityState.id, 'description', value);
-            }
-        }
-        else {
-            // For text fields, update directly
-            handleChange(activityState.id, 'description', value);
+        const field = e.target.name;
+
+        if (setFormData &&
+            (activity.topic === ActivityTopicEnum.Gravity || activity.topic === ActivityTopicEnum.Addition))
+        {
+            updateSubsequentActivities(setFormData, activityState.id, field, value);
         }
     };
 
@@ -159,10 +157,12 @@ function Activity({
                         <input
                             type="datetime-local"
                             className="form-input"
+                            name="date"
                             value={activityState.date}
                             onChange={(e) => {
                                 handleChange(activityState.id, 'date', e.target.value);
                             }}
+                            onBlur={handleBlur}
                         />
 
                         <label className="form-label">Description</label>
@@ -182,10 +182,12 @@ function Activity({
                         <input
                             type="number"
                             className="form-input"
+                            name="addedVolume"
                             value={activityState.addedVolume || ''}
                             onChange={(e) => {
                                 handleChange(activityState.id, 'addedVolume', e.target.value);
                             }}
+                            onBlur={handleBlur}
                             step=".001"
                         />
 
@@ -193,10 +195,12 @@ function Activity({
                         <input
                             type="number"
                             className="form-input"
+                            name="addedAbv"
                             value={activityState.addedAbv || ''}
                             onChange={(e) => {
                                 handleChange(activityState.id, 'addedAbv', e.target.value);
                             }}
+                            onBlur={handleBlur}
                             min="0"
                             max="100"
                             step=".01"
@@ -206,10 +210,12 @@ function Activity({
                         <input
                             type="number"
                             className="form-input"
+                            name="addedGravity"
                             value={activityState.addedGravity || ''}
                             onChange={(e) => {
                                 handleChange(activityState.id, 'addedGravity', e.target.value);
                             }}
+                            onBlur={handleBlur}
                             min="0.6"
                             max="2"
                             step=".001"
@@ -256,9 +262,13 @@ function Activity({
                         step="0.001"
                         min={(activity.topic === ActivityTopicEnum.Gravity) ? Validation.NumberMin : undefined}
                         className="form-input"
+                        name="description"
                         placeholder="Item details"
                         value={activityState.description}
-                        onChange={handleDescriptionChange}
+                        onChange={(e) => {
+                            handleChange(activityState.id, 'description', e.target.value);
+                        }}
+                        onBlur={handleBlur}
                         maxLength={(activity.topic === ActivityTopicEnum.Gravity) ? undefined : Validation.InputMaxLength}
                     />
                 </div>
@@ -266,8 +276,10 @@ function Activity({
                     <input
                         type="datetime-local"
                         className="form-input"
+                        name="date"
                         value={activityState.date}
                         onChange={(e) => handleChange(activityState.id, 'date', e.target.value)}
+                        onBlur={handleBlur}
                     />
                 </div>
             </div>
@@ -357,6 +369,24 @@ export function updateActivity(setFormData, id, field, value) {
     setFormData(prev => {
         const prevData = prev.toJSON ? prev.toJSON() : prev;
 
+        return {
+            ...prevData,
+            activity: prevData.activity.map(item =>
+                item.id === id
+                    ? {
+                        ...item,
+                        [field]: value
+                    }
+                    : item
+            )
+        };
+    });
+};
+
+export function updateAllActivities(setFormData, id, field, value) {
+    setFormData(prev => {
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+
         const additionUpdate = updateAdditionActivities(prevData, id, field, value);
         if (additionUpdate !== null) {
             return additionUpdate;
@@ -381,6 +411,24 @@ export function updateActivity(setFormData, id, field, value) {
     });
 };
 
+export function updateSubsequentActivities(setFormData, id, field, value) {
+    setFormData(prev => {
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+
+        const additionUpdate = updateAdditionActivities(prevData, id, field, value);
+        if (additionUpdate !== null) {
+            return additionUpdate;
+        }
+
+        const gravityUpdate = updateGravityActivities(prevData, id, field, value);
+        if (gravityUpdate !== null) {
+            return gravityUpdate;
+        }
+
+        return null;
+    });
+};
+
 export { ActivityTopicEnum, getTopicDisplayName } from '../../constants/ActivityTopics.jsx';
 
 export const ACTIVITY_STATUSES = ["Pending", "Complete"];
@@ -392,155 +440,141 @@ export default Activity;
 function updateAdditionActivities(prevData, id, field, value) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
-    if (thisActivity?.topic == ActivityTopicEnum.Addition) {
-        let updatedActivities = prevData.activity.map(item => {
-            if (item.id === id) {
-                const updated = { ...item };
-                updated[field] = value;
+    if (thisActivity?.topic != ActivityTopicEnum.Addition) return null;
 
-                if (updated.addedAbv === undefined) updated.addedAbv = 0;
-                if (updated.addedVolume === undefined) updated.addedVolume = 0;
-                if (updated.addedGravity === undefined) updated.addedGravity = 0;
+    let updatedAddition;
 
-                return updated;
-            }
-            return item;
+    let updatedActivities = prevData.activity.map(item => {
+        if (item.id === id) {
+            const updated = { ...item };
+            updated[field] = value;
+
+            if (updated.addedAbv === undefined) updated.addedAbv = 0;
+            if (updated.addedVolume === undefined) updated.addedVolume = 0;
+            if (updated.addedGravity === undefined) updated.addedGravity = 0;
+
+            updatedAddition = updated;
+
+            return updated;
+        }
+        return item;
+    });
+
+    let gravityActivities = getGravityActivities(updatedActivities);
+
+    const linkedGravityActivities = updatedActivities.filter(
+        activity => activity.additionActivityId === id && activity.topic === ActivityTopicEnum.Gravity
+    );
+
+    // Check if we have the required fields to create/update a gravity activity
+    const hasRequiredFields = parseFloat(updatedAddition.addedVolume) > 0
+        && parseFloat(updatedAddition.addedAbv) >= 0
+        && parseFloat(updatedAddition.addedGravity) > 0
+
+    if (hasRequiredFields && linkedGravityActivities.length === 0)
+    {
+        // Create new gravity activity linked to this addition
+        const newGravityActivity = new ActivityModel({
+            date: getDate(updatedAddition.date) ?? getDate(),
+            name: getTopicDisplayName(ActivityTopicEnum.Gravity),
+            topic: ActivityTopicEnum.Gravity,
+            brewLogId: updatedAddition.brewLogId,
+            additionActivityId: id,
+            addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
+            addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+            addedGravity: parseFloat(updatedAddition.addedGravity) || 0
         });
 
-        const updatedAddition = updatedActivities.find(x => x.id === id);
+        const currentInputs = {
+            addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
+            addedGravity: parseFloat(updatedAddition.addedGravity) || 0,
+            addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+            date: updatedAddition.date,
+            id: newGravityActivity.id
+        };
 
-        const linkedGravityActivities = updatedActivities.filter(
-            activity => activity.additionActivityId === id && activity.topic === ActivityTopicEnum.Gravity
+        const calculatedGravity = UpdateGravityActivityData(
+            newGravityActivity,
+            currentInputs,
+            gravityActivities,
+            parseFloat(prevData.volume) || 0
         );
 
-        // Check if we have the required fields to create/update a gravity activity
-        const hasRequiredFields = parseFloat(updatedAddition.addedVolume) > 0
-            && parseFloat(updatedAddition.addedAbv) >= 0
-            && parseFloat(updatedAddition.addedGravity) > 0;
+        updatedActivities.push(calculatedGravity.toJSON());
+        gravityActivities = getGravityActivities(updatedActivities);
 
-        let gravityActivities = getGravityActivities(updatedActivities);
+        return {
+            ...prevData,
+            activity: updatedActivities,
+            currentAbv: getCurrentAbv(gravityActivities)
+        };
+    }
+    else if (linkedGravityActivities.length > 0) {
+        const linkedGravity = linkedGravityActivities[0];
 
-        if (hasRequiredFields && linkedGravityActivities.length === 0) {
-            // Create new gravity activity linked to this addition
+        const gravityActivityToUpdate = gravityActivities.find(g => g.id === linkedGravity.id);
 
-            const newGravityActivity = new ActivityModel({
-                date: getDate(updatedAddition.date) ?? getDate(),
-                name: getTopicDisplayName(ActivityTopicEnum.Gravity),
-                topic: ActivityTopicEnum.Gravity,
-                brewLogId: updatedAddition.brewLogId,
-                additionActivityId: id,
-                addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
-                addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
-                addedGravity: parseFloat(updatedAddition.addedGravity) || 0
-            });
-
+        if (gravityActivityToUpdate) {
             const currentInputs = {
-                addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
-                addedGravity: parseFloat(updatedAddition.addedGravity) || 0,
-                addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+                addedAbv: updatedAddition.addedAbv,
+                addedGravity: updatedAddition.addedGravity,
+                addedVolume: updatedAddition.addedVolume,
                 date: updatedAddition.date,
-                id: newGravityActivity.id
+                description: linkedGravity.description,
+                id: linkedGravity.id
             };
 
-            const calculatedGravity = UpdateGravityActivity(
-                newGravityActivity,
+            const recalculatedGravities = UpdateAllGravityActivity(
+                gravityActivityToUpdate,
                 currentInputs,
                 gravityActivities,
                 parseFloat(prevData.volume) || 0
             );
 
-            updatedActivities.push(calculatedGravity.toJSON());
+            updatedActivities = updatedActivities.map(item => {
+                const recalculated = recalculatedGravities.find(rg => rg.id === item.id);
+                return recalculated ? recalculated : item;
+            });
+
             gravityActivities = getGravityActivities(updatedActivities);
-
-            return {
-                ...prevData,
-                activity: updatedActivities,
-                currentAbv: getCurrentAbv(gravityActivities)
-            };
-        }
-        else if (linkedGravityActivities.length > 0) {
-            const linkedGravity = linkedGravityActivities[0];
-
-            const gravityActivityToUpdate = gravityActivities.find(g => g.id === linkedGravity.id);
-
-            if (gravityActivityToUpdate) {
-                const currentInputs = {
-                    addedAbv: updatedAddition.addedAbv,
-                    addedGravity: updatedAddition.addedGravity,
-                    addedVolume: updatedAddition.addedVolume,
-                    date: updatedAddition.date,
-                    description: linkedGravity.description,
-                    id: linkedGravity.id
-                };
-
-                const recalculatedGravities = UpdateAllGravityActivity(
-                    gravityActivityToUpdate,
-                    currentInputs,
-                    gravityActivities,
-                    parseFloat(prevData.volume) || 0
-                );
-
-                updatedActivities = updatedActivities.map(item => {
-                    const recalculated = recalculatedGravities.find(rg => rg.id === item.id);
-                    return recalculated ? recalculated : item;
-                });
-
-                gravityActivities = getGravityActivities(updatedActivities);
-            }
-
-            return {
-                ...prevData,
-                activity: updatedActivities,
-                currentAbv: getCurrentAbv(gravityActivities)
-            };
         }
 
         return {
             ...prevData,
-            activity: updatedActivities
+            activity: updatedActivities,
+            currentAbv: getCurrentAbv(gravityActivities)
         };
     }
 
-    return null;
+    return {
+        ...prevData,
+        activity: updatedActivities
+    };
 }
 
 function updateGravityActivities(prevData, id, field, value) {
     const thisActivity = prevData.activity.find(x => String(x.id) === String(id));
 
-    if (thisActivity?.topic == ActivityTopicEnum.Gravity && field == "description") {
-        let gravityActivities = getGravityActivities(prevData.activity);
+    if (thisActivity?.topic != ActivityTopicEnum.Gravity && field != "description") return null;
 
-        var currentInputs = {
-            addedAbv: thisActivity.abv,
-            addedGravity: thisActivity.addedGravity,
-            addedVolume: thisActivity.addedVolume,
-            date: thisActivity.date,
-            description: thisActivity.description,
-            id: thisActivity.id
-        }
+    let gravityActivities = getGravityActivities(prevData.activity);
 
-        currentInputs[field] = value;
+    const updatedGravityActivities = UpdateAllGravityActivity(
+        thisActivity,
+        thisActivity,
+        gravityActivities,
+        parseFloat(prevData.volume)
+    )
 
-        const updatedActivities = UpdateAllGravityActivity(
-            thisActivity,
-            currentInputs,
-            gravityActivities,
-            parseFloat(prevData.volume)
-        )
+    // Update all gravity activities with the recalculated values
+    const updatedActivityArray = prevData.activity.map(item => {
+        const updatedActivity = updatedGravityActivities.find(x => x.id === item.id);
+        return updatedActivity ? updatedActivity : item;
+    });
 
-        // Update all gravity activities with the recalculated values
-        const updatedActivityArray = prevData.activity.map(item => {
-            const updatedActivity = updatedActivities.find(ua => ua.id === item.id);
-            return updatedActivity ? updatedActivity : item;
-        });
-
-        return {
-            ...prevData,
-            activity: updatedActivityArray,
-            currentAbv: getCurrentAbv(updatedActivities)
-        };
-    }
-
-    // Return null if not a gravity update, so caller knows to handle it differently
-    return null;
+    return {
+        ...prevData,
+        activity: updatedActivityArray,
+        currentAbv: getCurrentAbv(updatedGravityActivities)
+    };
 }
