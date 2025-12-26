@@ -131,13 +131,13 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
                                 <h3 className="item-title">{recipe.name}</h3>
                             </div>
                         </div>
-                        <div className="item-content">
-                            <div className="item-date">
-                                <Calendar size={14} />
-                                <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>
-                            </div>
-                            <Rating value={recipe.rating || 0} isEditing={false} />
-                        </div>
+                        {/*<div className="item-content">*/}
+                        {/*    <div className="item-date">*/}
+                        {/*        <Calendar size={14} />*/}
+                        {/*        <span>{new Date(recipe.dateCreated).toLocaleDateString()}</span>*/}
+                        {/*    </div>*/}
+                        {/*    <Rating value={recipe.rating || 0} isEditing={false} />*/}
+                        {/*</div>*/}
                     </div>
 
                     <div className="list-view-actions item-card-actions">

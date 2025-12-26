@@ -143,13 +143,13 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
                             </h3>
                         </div>
                     </div>
-                    <div className="item-content">
-                        <div className="item-date brewlog-date">
-                            <Calendar size={14} />
-                            <span>{new Date(brewLog.dateCreated).toLocaleDateString()}</span>
-                        </div>
-                        <Rating value={brewLog.rating || 0} isEditing={false} />
-                    </div>
+                    {/*<div className="item-content">*/}
+                    {/*    <div className="item-date brewlog-date">*/}
+                    {/*        <Calendar size={14} />*/}
+                    {/*        <span>{new Date(brewLog.dateCreated).toLocaleDateString()}</span>*/}
+                    {/*    </div>*/}
+                    {/*    <Rating value={brewLog.rating || 0} isEditing={false} />*/}
+                    {/*</div>*/}
                 </div>
                 <div className="list-view-actions item-card-actions">
                     <Button
