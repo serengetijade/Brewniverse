@@ -1027,7 +1027,7 @@ function BrewLogForm() {
                                         <br />
                                         <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                         <br />
-                                        <br />An entry here will create a new estimated gravity reading once all fields have been filled out - provided that added volume and added gravity are greater than 0. You can edit that gravity reading from the Gravity Readings section, or by changing the values entered here. If you accidentally delete the gravity reading, you can edit the addition here and a new gravity reading will appear.
+                                        <br />An entry here will create a new estimated gravity reading. When adding volume, all fields must filled out before the gravity reading is created. You cannot edit that gravity reading from the Gravity Readings section, but you can change the values entered here. 
                                     </p>
                                 </div>
                             </div>

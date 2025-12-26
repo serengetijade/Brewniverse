@@ -360,6 +360,18 @@ export function deleteActivity(setFormData, id) {
 
         let thisActivity = prevData.activity.find(x => String(x.id) === String(id));
         if (thisActivity?.topic === ActivityTopicEnum.Gravity) {
+            //Do NOT delete if a gravity activity is tied to an addition - unless the addition has been deleted
+            const additionId = thisActivity?.additionActivityId;
+            if (additionId) {
+                const additionActivity = prevData.activity.find(x => String(x.id) === String(additionId));
+                if (additionActivity) {
+                    alert("Cannot delete - this is associated with an addition. Delete that addition and try again.");
+                    return {
+                        ...prevData,
+                    };
+                }
+            };
+
             prevData.activity = prevData.activity.filter(x => x.id !== id);
 
             const gravityActivities = getGravityActivities(prevData.activity);
@@ -478,9 +490,10 @@ function updateAdditionActivities(prevData, id, field, value) {
     );
 
     // Check if we have the required fields to create/update a gravity activity
-    const hasRequiredFields = parseFloat(updatedAddition.addedVolume) > 0
+    const hasRequiredFields = (parseFloat(updatedAddition.addedVolume) > 0
         && parseFloat(updatedAddition.addedAbv) >= 0
-        && parseFloat(updatedAddition.addedGravity) > 0
+        && parseFloat(updatedAddition.addedGravity) > 0)
+        || parseFloat(updatedAddition.addedVolume) < 0;
 
     if (hasRequiredFields && linkedGravityActivities.length === 0) {
         // Create new gravity activity linked to this addition
@@ -490,15 +503,15 @@ function updateAdditionActivities(prevData, id, field, value) {
             topic: ActivityTopicEnum.Gravity,
             brewLogId: updatedAddition.brewLogId,
             additionActivityId: id,
-            addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
-            addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
-            addedGravity: parseFloat(updatedAddition.addedGravity) || 0
+            addedAbv: updatedAddition.addedAbv,
+            addedVolume: updatedAddition.addedVolume,
+            addedGravity: updatedAddition.addedGravity
         });
 
         const currentInputs = {
-            addedAbv: parseFloat(updatedAddition.addedAbv) || 0,
-            addedGravity: parseFloat(updatedAddition.addedGravity) || 0,
-            addedVolume: parseFloat(updatedAddition.addedVolume) || 0,
+            addedAbv: updatedAddition.addedAbv,
+            addedGravity: updatedAddition.addedGravity,
+            addedVolume: updatedAddition.addedVolume,
             date: updatedAddition.date,
             id: newGravityActivity.id
         };
@@ -518,7 +531,7 @@ function updateAdditionActivities(prevData, id, field, value) {
             activity: updatedActivities
         };
     }
-    else if (linkedGravityActivities.length > 0) {
+    else if (0 < linkedGravityActivities.length) {
         const linkedGravity = linkedGravityActivities[0];
 
         const gravityActivityToUpdate = gravityActivities.find(g => g.id === linkedGravity.id);
