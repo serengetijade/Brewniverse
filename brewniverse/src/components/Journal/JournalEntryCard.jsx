@@ -105,13 +105,13 @@ function JournalEntryCard({ entry, displayOption = 'grid' }) {
                                 <h3 className="item-title">{entry.name}</h3>
                             </div>
                         </div>
-                        <div className="item-content">
-                            <div className="item-date journal-date">
-                                <Calendar size={14} />
-                                <span>{new Date(entry.date).toLocaleDateString()}</span>
-                            </div>
-                            <Rating value={entry.rating || 0} isEditing={false} />
-                        </div>
+                        {/*<div className="item-content">*/}
+                        {/*    <div className="item-date journal-date">*/}
+                        {/*        <Calendar size={14} />*/}
+                        {/*        <span>{new Date(entry.date).toLocaleDateString()}</span>*/}
+                        {/*    </div>*/}
+                        {/*    <Rating value={entry.rating || 0} isEditing={false} />*/}
+                        {/*</div>*/}
                     </div>
                     <div className="list-view-actions item-card-actions">
                         {entry.brewLogId &&
