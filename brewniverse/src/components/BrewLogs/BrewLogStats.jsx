@@ -168,4 +168,3 @@ function BrewLogStats({ brewLog }) {
 }
 
 export default BrewLogStats;
-

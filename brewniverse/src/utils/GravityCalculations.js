@@ -155,7 +155,8 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     const gravityReading = isNaN(parsedGravityReading) ? 0 : parsedGravityReading;
 
     const previousGravityActivity = getPreviousActivity(currentInputs?.id, gravityActivities);
-
+    const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
+    const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
     let startingAbv = previousGravityActivity ?
         parseFloat(previousGravityActivity?.abv ?? getCurrentAbv(gravityActivities)) ?? 0
         : 0;
@@ -166,17 +167,17 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
     // VOLUME
     const volumeResult = startingVolume + addedVolume;
     if (volumeResult < 0) {
-        volumeResult = 0; // Volume cannot be negative
+        volumeResult = 0; // Final volume cannot be negative
     };
 
     // GRAVITY - Calculate the weighted average current gravity
-    const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
-    const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
-
     let gravityResult = gravityReading;
     if (0 < addedVolume && 0 < volumeResult) { // Handle additions
         let totalGravity = (previousGravity * previousFinalVolume) + (addedGravity * addedVolume);
         gravityResult = totalGravity / volumeResult;
+    }
+    else if (addedVolume < 0 && previousGravityActivity != null) {
+        gravityResult = previousGravity;
     }
 
     // ABV - Calculate weighted average ABV or from gravity drop
@@ -191,6 +192,9 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
         abvResult += abvFromGravityDrop;
     }
 
+    // Date
+    let dateResult = currentInputs.date ?? getDate();
+
     return {
         startingAbv: startingAbv?.toFixed(2) || 0,
         startingGravity: previousGravity.toFixed(3) || 1.000,
@@ -201,6 +205,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
         addedVolume: addedVolume?.toFixed(3) || 0,
 
         abv: abvResult?.toFixed(2) || 0,
+        date: dateResult,
         gravity: gravityResult?.toFixed(3) || 1.000,
         volume: volumeResult?.toFixed(3)
     };
