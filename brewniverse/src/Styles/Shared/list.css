@@ -152,7 +152,7 @@
 
 .list-view .item-card-actions {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     height: 100%;
 }

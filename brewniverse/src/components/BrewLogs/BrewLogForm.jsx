@@ -1022,12 +1022,12 @@ function BrewLogForm() {
                             <div className={`section-content ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}>
                                 <div className="form-group">
                                     <p className="section-description">
-                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution.
+                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created. 
                                         <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
                                         <br />
                                         <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                         <br />
-                                        <br />An entry here will create a new estimated gravity reading. When adding volume, all fields must filled out before the gravity reading is created. You cannot edit that gravity reading from the Gravity Readings section, but you can change the values entered here. 
+                                        <br />You cannot edit the associated gravity reading from the Gravity Readings section, but you can change the values entered here. 
                                     </p>
                                 </div>
                             </div>
