@@ -448,7 +448,7 @@ function BrewLogForm() {
                             />
                         </div>
 
-                        <div className="form-group col-2">
+                        <div className="form-group">
                             <div>
                                 <label htmlFor="volume" className="form-label">
                                     Starting Volume *
@@ -469,7 +469,7 @@ function BrewLogForm() {
                             </div>
                             <div>
                                 <label htmlFor="volumeUnit" className="form-label">
-                                    Unit
+                                    Volume Unit
                                 </label>
                                 <input
                                     type="text"
@@ -479,7 +479,7 @@ function BrewLogForm() {
                                     value={formState.volumeUnit}
                                     onChange={handleChange}
                                     maxLength={15}
-                                    placeholder="gallons, liters, oz"
+                                    placeholder="gallons, liters, litres, oz"
                                     min={0}
                                     step="0.001"
                                 />
