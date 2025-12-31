@@ -469,7 +469,7 @@ function BrewLogForm() {
                             </div>
                             <div>
                                 <label htmlFor="volumeUnit" className="form-label">
-                                    Volume Unit
+                                    Unit
                                 </label>
                                 <input
                                     type="text"
