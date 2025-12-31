@@ -193,11 +193,11 @@ function BrewLogForm() {
             }
         }
         else if (name === 'volume') {
+            updateBrewLog(name, value);
+
             if (gravityActivities == undefined) return;
 
             UpdateAllGravityActivityData(gravityActivities[0], gravityActivities[0], gravityActivities, value);
-
-            updateBrewLog(name, value);
         }
         else {
             updateBrewLog(name, value);
@@ -448,24 +448,42 @@ function BrewLogForm() {
                             />
                         </div>
 
-
-                        <div className="form-group">
-                            <label htmlFor="volume" className="form-label">
-                                Starting Volume *
-                            </label>
-                            <input
-                                type="number"
-                                id="volume"
-                                name="volume"
-                                className="form-input"
-                                value={formState.volume}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
-                                required={true}
-                                min={0}
-                                step="0.001"
-                            />
+                        <div className="form-group col-2">
+                            <div>
+                                <label htmlFor="volume" className="form-label">
+                                    Starting Volume *
+                                </label>
+                                <input
+                                    type="number"
+                                    id="volume"
+                                    name="volume"
+                                    className="form-input"
+                                    value={formState.volume}
+                                    onChange={handleChange}
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="1..."
+                                    required={true}
+                                    min={0}
+                                    step="0.001"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="volumeUnit" className="form-label">
+                                    Volume Unit
+                                </label>
+                                <input
+                                    type="text"
+                                    id="volumeUnit"
+                                    name="volumeUnit"
+                                    className="form-input"
+                                    value={formState.volumeUnit}
+                                    onChange={handleChange}
+                                    maxLength={15}
+                                    placeholder="gallons, liters, oz"
+                                    min={0}
+                                    step="0.001"
+                                />
+                            </div>
                         </div>
 
 

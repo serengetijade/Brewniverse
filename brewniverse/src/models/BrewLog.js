@@ -29,6 +29,7 @@ class BrewLog {
         this.tannins = data.tannins || '';
         this.type = data.type || 'Mead';
         this.volume = data.volume || '';
+        this.volumeUnit = data.volumeUnit || '';
         this.yeast = data.yeast || '';
     }
 
@@ -72,6 +73,7 @@ class BrewLog {
             tannins: this.tannins,
             type: this.type,
             volume: this.volume,
+            volumeUnit: this.volumeUnit,
             yeast: this.yeast,
         };
     }
