@@ -54,7 +54,7 @@ function RecipeForm() {
     const [formState, setFormState] = useState(() => new Recipe());
 
     useEffect(() => {
-        const recipe = state.recipes.find(r => r.id === id);
+        const recipe = state.recipes?.find(r => r.id === id);
         if (recipe) {
             setFormState(Recipe.fromJSON({
                 ...recipe,
@@ -66,8 +66,8 @@ function RecipeForm() {
     const onDelete = (e) => {
         e.preventDefault();
 
-        const brewLogs = state.brewLogs.filter(b => b.recipeId === id);
-        if (brewLogs.length > 0) {
+        const brewLogs = state.brewLogs?.filter(b => b.recipeId === id);
+        if (brewLogs && brewLogs.length > 0) {
             // Delete from connected brew logs
             brewLogs.forEach(brewLog => {
                 dispatch({
@@ -128,7 +128,7 @@ function RecipeForm() {
     };
 
     const getConnectedBrewLogs = () => {
-        return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
+        return state.brewLogs?.filter(brewLog => brewLog.recipeId === id) ?? [];
     };
 
     const makeCopy = (e) => {

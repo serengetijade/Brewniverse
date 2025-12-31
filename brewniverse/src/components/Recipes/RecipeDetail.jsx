@@ -13,7 +13,7 @@ function RecipeDetail() {
     const navigate = useNavigate();
     const { state, dispatch } = useApp();
 
-    const recipe = state.recipes.find(r => r.id === id);
+    const recipe = state.recipes?.find(r => r.id === id);
     const recipeProgress = state.recipeProgress[id] || { completedSteps: [] };
 
     if (!recipe) {
@@ -69,7 +69,7 @@ function RecipeDetail() {
 
     // Get brew logs that use this recipe
     const getConnectedBrewLogs = () => {
-        return state.brewLogs.filter(brewLog => brewLog.recipeId === id);
+        return (state.brewLogs || []).filter(brewLog => brewLog.recipeId === id);
     };
 
     const hasIngredients =

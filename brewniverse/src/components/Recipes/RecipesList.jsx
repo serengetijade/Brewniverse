@@ -30,7 +30,7 @@ function RecipesList() {
 
     // Process and filter recipes based on search and sort criteria
     const sortedRecipes = useMemo(() => {
-        let filteredRecipes = state.recipes.filter(recipe =>
+        let filteredRecipes = (state.recipes || []).filter(recipe =>
             (recipe.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (recipe.description || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -65,7 +65,7 @@ function RecipesList() {
         else if (sortBy === 'brewlog') {
             const grouped = {};
             filteredRecipes.forEach(recipe => {
-                const brewLogsUsingRecipe = state.brewLogs.filter(bl => bl.recipeId === recipe.id);
+                const brewLogsUsingRecipe = (state.brewLogs || []).filter(bl => bl.recipeId === recipe.id);
                 const groupKey = brewLogsUsingRecipe.length > 0 ? 'used' : 'unused';
                 if (!grouped[groupKey]) {
                     grouped[groupKey] = [];
@@ -120,7 +120,7 @@ function RecipesList() {
             payload: recipeData
         });
 
-        return recipeData.id;
+        navigate(`/recipes/${newRecipe.id}/edit`);
     };
 
     return (
@@ -130,7 +130,6 @@ function RecipesList() {
                     h1="Recipes"
                     description="Manage your brewing recipes and ingredients"
                     buttonText="New Recipe"
-                    url="/recipes/new"
                     onCreate={handleCreateRecipe}
                 >
                 </ListHeader>
@@ -169,7 +168,7 @@ function RecipesList() {
                         <Button
                             variant="primary"
                             size="large"
-                            onClick={() => navigate('/recipes/new')}
+                            onClick={handleCreateRecipe}
                         >
                             <Plus size={20} />
                             Create Your First Recipe

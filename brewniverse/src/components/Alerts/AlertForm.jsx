@@ -17,7 +17,7 @@ function AlertForm() {
     const [formState, setFormState] = useState(() => new Alert());
 
     useEffect(() => {
-        const alert = state.alerts.find(a => a.id === id);
+        const alert = state.alerts?.find(a => a.id === id);
         if (alert) {
             setFormState(Alert.fromJSON(alert));
         }
@@ -235,7 +235,7 @@ function AlertForm() {
                                 onChange={handleChange}
                             >
                                 <option value="">No brew log</option>
-                                {state.brewLogs.map(brewLog => (
+                                {(state.brewLogs || []).map(brewLog => (
                                     <option key={brewLog.id} value={brewLog.id}>
                                         {brewLog.name} ({brewLog.type})
                                     </option>

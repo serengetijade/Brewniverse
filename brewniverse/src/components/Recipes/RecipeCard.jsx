@@ -27,7 +27,7 @@ function RecipeCard({ recipe, displayOption = 'grid' }) {
     };
 
     // Count how many brew logs use this recipe
-    const brewLogCount = state.brewLogs.filter(bl => bl.recipeId === recipe.id).length;
+    const brewLogCount = (state.brewLogs || []).filter(bl => bl.recipeId === recipe.id).length;
 
     const breakdown = getIngredientBreakdown();
 

@@ -10,7 +10,7 @@ import Button from '../UI/Button';
 function AlertCard({ alert, editUrl, displayOption = 'grid' }) {
     const navigate = useNavigate();
     const { state, dispatch } = useApp();
-    const brewLog = state.brewLogs.find(x => x.id === alert.brewLogId);
+    const brewLog = state.brewLogs?.find(x => x.id === alert.brewLogId);
     const topicConfig = getTopicConfig(alert.topic);
     const TopicIcon = topicConfig.icon;
     const priorityConfig = getPriorityConfig(alert.priority);

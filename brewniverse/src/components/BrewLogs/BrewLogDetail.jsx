@@ -20,7 +20,7 @@ function BrewLogDetail() {
     const navigate = useNavigate();
     const { state, dispatch } = useApp();
 
-    const brewLog = state.brewLogs.find(log => log.id === id);
+    const brewLog = state.brewLogs?.find(log => log.id === id);
 
     if (!brewLog) {
         return (
@@ -48,7 +48,7 @@ function BrewLogDetail() {
     };
 
     const gravityActivities = getGravityActivities(brewLog.activity || []);
-    const journalEntriesCount = state.journalEntries.filter(entry => entry.brewLogId === id).length;
+    const journalEntriesCount = (state.journalEntries || []).filter(entry => entry.brewLogId === id).length;
 
     return (
         <div className="brewlog-detail main-content-container">

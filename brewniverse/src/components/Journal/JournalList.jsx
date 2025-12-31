@@ -26,7 +26,7 @@ function JournalList() {
     };
 
     const sortedEntries = useMemo(() => {
-        let filteredEntries = state.journalEntries.filter(entry =>
+        let filteredEntries = (state.journalEntries || []).filter(entry =>
             (entry.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (entry.brand || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (entry.notes || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -118,7 +118,7 @@ function JournalList() {
             payload: entryData
         });
 
-        return entryData.id;
+        navigate(`/journal/${newEntry.id}/edit`);
     };
 
     return (
@@ -128,7 +128,6 @@ function JournalList() {
                     h1="Journal"
                     description="Track and rate beverages you've tasted"
                     buttonText="New Entry"
-                    url="/journal/new"
                     onCreate={handleCreateJournalEntry}
                 />
 
@@ -155,7 +154,7 @@ function JournalList() {
                 </div>
 
                 <div className="main-content-section">
-                    {state.journalEntries.length === 0 ? (
+                    {(state.journalEntries || []).length === 0 ? (
                         <div className="empty-state">
                             <div className="empty-icon">
                                 <BookOpen size={64} />
@@ -165,7 +164,7 @@ function JournalList() {
                             <Button
                                 variant="primary"
                                 size="large"
-                                onClick={() => navigate('/journal/new')}
+                                onClick={handleCreateJournalEntry}
                             >
                                 <Plus size={20} />
                                 Create Your First Entry

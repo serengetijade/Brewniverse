@@ -34,7 +34,7 @@ function Activity({
         }));
     }, [activity, brewLogId, activity.date, activity.description, activity.addedVolume, activity.addedAbv, activity.addedGravity]);
 
-    const alertExists = activityState.alertId && state.alerts.some(alert => alert.id === activityState.alertId);
+    const alertExists = activityState.alertId && (state.alerts || []).some(alert => alert.id === activityState.alertId);
 
     const handleDelete = () => {
         // Cascade delete alerts
@@ -63,7 +63,7 @@ function Activity({
 
         // If the date field is changed and this activity has an alert, update the alert's date
         if (field === 'date' && activityState.alertId) {
-            const alert = state.alerts.find(alert => alert.id === activityState.alertId);
+            const alert = (state.alerts || []).find(alert => alert.id === activityState.alertId);
             if (alert) {
                 dispatch({
                     type: ActionTypes.updateAlert,

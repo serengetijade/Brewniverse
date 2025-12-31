@@ -55,9 +55,9 @@ function JournalEntryForm() {
 
     useEffect(() => {
         const entry = state.journalEntries.find(e => e.id === id);
-        if (entry) {
-            setFormState(JournalEntry.fromJSON(entry));
-        }
+            if (entry) {
+                setFormState(JournalEntry.fromJSON(entry));
+            }
     }, [id, state.journalEntries]);
         
     useEffect(() => {
@@ -109,15 +109,17 @@ function JournalEntryForm() {
         const { name, value } = e.target;
         if (name === "brewLogId" && value != '') {
             const selectedText = e.target.options[e.target.selectedIndex].text;
-            const selectedBrewLog = state.brewLogs.find(x => x.id === value);
-            const currentAbv = getCurrentAbv(getGravityActivities(selectedBrewLog.activity));
-            updateFormData({
-                [name]: value,
-                abv: currentAbv,
-                brand: "Brewniverse",
-                name: selectedText,
-                type: selectedBrewLog.type
-            });
+            const selectedBrewLog = state.brewLogs?.find(x => x.id === value);
+            if (selectedBrewLog) {
+                const currentAbv = getCurrentAbv(getGravityActivities(selectedBrewLog.activity));
+                updateFormData({
+                    [name]: value,
+                    abv: currentAbv,
+                    brand: "Brewniverse",
+                    name: selectedText,
+                    type: selectedBrewLog.type
+                });
+            }
         }
         else {
             updateFormData({
@@ -204,7 +206,7 @@ function JournalEntryForm() {
                                 onChange={handleChange}
                             >
                                 <option value="">No brew log</option>
-                                {state.brewLogs.map(brewLog => (
+                                {(state.brewLogs || []).map(brewLog => (
                                     <option key={brewLog.id} value={brewLog.id}>
                                         {brewLog.name} ({brewLog.type})
                                     </option>

@@ -16,7 +16,7 @@ function BrewLogCard({ brewLog, displayOption = 'grid' }) {
     const brewTypeConfig = getBrewTypeConfig(brewLog.type);
 
     // Check if this brew log has any associated alerts
-    const hasAnyAlerts = state.alerts.some(alert => alert.brewLogId === brewLog.id);
+    const hasAnyAlerts = (state.alerts || []).some(alert => alert.brewLogId === brewLog.id);
 
     // Calculate gravity-based values
     const gravityActivities = getGravityActivities(brewLog.activity || []);

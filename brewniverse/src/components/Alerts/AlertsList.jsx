@@ -29,7 +29,7 @@ function AlertsList() {
 
     // Process and filter alerts based on search and sort criteria
     const processedAlerts = useMemo(() => {
-        let filteredAlerts = state.alerts.filter(alert =>
+        let filteredAlerts = (state.alerts || []).filter(alert =>
             (alert.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
             (alert.description || '').toLowerCase().includes(searchTerm.toLowerCase())
         );
@@ -80,7 +80,7 @@ function AlertsList() {
             // Group by recipe (through brewLog), then sort by date within each group
             const grouped = {};
             filteredAlerts.forEach(alert => {
-                const brewLog = state.brewLogs.find(bl => bl.id === alert.brewLogId);
+                const brewLog = (state.brewLogs || []).find(bl => bl.id === alert.brewLogId);
                 const recipeId = brewLog?.recipeId || 'no-recipe';
                 if (!grouped[recipeId]) {
                     grouped[recipeId] = [];
@@ -116,7 +116,7 @@ function AlertsList() {
             payload: alertData
         });
 
-        return alertData.id;
+        navigate(`/alerts/${newAlert.id}/edit`);
     };
 
     return (
@@ -126,7 +126,6 @@ function AlertsList() {
                     h1="Alerts & Reminders"
                     description="Manage your brewing alerts and reminders - never miss a step!"
                     buttonText="New Alert"
-                    url="/alerts/new"
                     onCreate={handleCreateAlert}
                 >
                 </ListHeader>
@@ -165,7 +164,7 @@ function AlertsList() {
                         <Button
                             variant="primary"
                             size="large"
-                            onClick={() => navigate('/alerts/new')}
+                            onClick={handleCreateAlert}
                         >
                             <Plus size={20} />
                             Create Your First Alert
@@ -191,7 +190,7 @@ function AlertsList() {
                                     // Grouped by BrewLog
                                     <div className="items-grouped">
                                         {Object.entries(processedAlerts).map(([brewLogId, alerts]) => {
-                                            const brewLog = state.brewLogs.find(bl => bl.id === brewLogId);
+                                            const brewLog = (state.brewLogs || []).find(bl => bl.id === brewLogId);
                                             const brewLogName = brewLog ? brewLog.name : 'No Brew Log';
 
                                             return (
@@ -213,7 +212,7 @@ function AlertsList() {
                                         // Grouped by Recipe
                                         <div className="items-grouped">
                                             {Object.entries(processedAlerts).map(([recipeId, alerts]) => {
-                                                const recipe = state.recipes.find(r => r.id === recipeId);
+                                                const recipe = (state.recipes || []).find(r => r.id === recipeId);
                                                 const recipeName = recipe ? recipe.name : 'No Recipe';
 
                                                 return (

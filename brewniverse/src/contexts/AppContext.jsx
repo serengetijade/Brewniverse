@@ -297,7 +297,15 @@ function appReducer(state, action) {
             }
 
         case ActionTypes.loadData:
-            return { ...state, ...action.payload };
+            return {
+                ...state,
+                ...action.payload,
+                // Ensure arrays are never null/undefined
+                brewLogs: action.payload.brewLogs || [],
+                recipes: action.payload.recipes || [],
+                alerts: action.payload.alerts || [],
+                journalEntries: action.payload.journalEntries || [],
+            };
 
         default:
             return state;

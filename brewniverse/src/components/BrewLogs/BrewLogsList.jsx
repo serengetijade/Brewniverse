@@ -37,7 +37,7 @@ function BrewLogsList() {
     };
 
     const processedBrewLogs = useMemo(() => {
-        let filteredBrewLogs = state.brewLogs.filter(brewLog => {
+        let filteredBrewLogs = (state.brewLogs || []).filter(brewLog => {
             // Filter by archive status
             const isArchived = brewLog.archived && brewLog.archived !== '';
             let matchesArchiveFilter = true;
@@ -144,13 +144,13 @@ function BrewLogsList() {
         });
 
         const brewLogData = newBrewLog.toJSON();
-        
+
         dispatch({
             type: ActionTypes.addBrewLog,
             payload: brewLogData
         });
 
-        return brewLogData.id;
+        navigate(`/brewlogs/${newBrewLog.id}/edit`);
     };
 
     return (
@@ -160,7 +160,6 @@ function BrewLogsList() {
                     h1="Brew Logs"
                     description="Track your brewing batches and progress"
                     buttonText="New Brew Log"
-                    url="/brewlogs/new"
                     onCreate={handleCreateBrewLog}
                 >
                 </ListHeader>
@@ -203,7 +202,7 @@ function BrewLogsList() {
                         <Button
                             variant="primary"
                             size="large"
-                            onClick={() => navigate('/brewlogs/new')}
+                            onClick={handleCreateBrewLog}
                         >
                             <Plus size={20} />
                             Create Your First Brew Log
@@ -225,7 +224,7 @@ function BrewLogsList() {
                             // Grouped by Recipe
                             <div className="items-grouped">
                                 {Object.entries(processedBrewLogs).map(([recipeId, brewLogs]) => {
-                                    const recipe = state.recipes.find(r => r.id === recipeId);
+                                    const recipe = (state.recipes || []).find(r => r.id === recipeId);
                                     const recipeName = recipe ? recipe.name : 'No Recipe';
 
                                     return (

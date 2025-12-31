@@ -63,7 +63,7 @@ function BrewLogForm() {
     const [formState, setFormState] = useState(() => new BrewLog());
 
     useEffect(() => {
-        const brewLog = state.brewLogs.find(log => log.id === id);
+        const brewLog = state.brewLogs?.find(log => log.id === id);
         if (brewLog) {
             setFormState(BrewLog.fromJSON({
                 ...brewLog,
@@ -331,7 +331,7 @@ function BrewLogForm() {
             return;
         }
 
-        const recipe = state.recipes.find(r => r.id === formState.recipeId);
+        const recipe = state.recipes?.find(r => r.id === formState.recipeId);
         if (!recipe) {
             alert('Selected recipe not found.');
             return;
@@ -448,8 +448,29 @@ function BrewLogForm() {
                             />
                         </div>
 
+
                         <div className="form-group">
-                            <label htmlFor="name" className="form-label">
+                            <label htmlFor="volume" className="form-label">
+                                Starting Volume *
+                            </label>
+                            <input
+                                type="number"
+                                id="volume"
+                                name="volume"
+                                className="form-input"
+                                value={formState.volume}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="e.g., 5 gallons, 1 gallon"
+                                required={true}
+                                min={0}
+                                step="0.001"
+                            />
+                        </div>
+
+
+                        <div className="form-group">
+                            <label htmlFor="description" className="form-label">
                                 Description
                             </label>
                             <textarea
@@ -487,7 +508,7 @@ function BrewLogForm() {
                                     style={{ flex: 1 }}
                                 >
                                     <option value="">Select a recipe (optional)</option>
-                                    {[...state.recipes]
+                                    {[...(state.recipes || [])]
                                         .sort((a, b) => a.name.localeCompare(b.name))
                                         .map(recipe => (
                                             <option key={recipe.id} value={recipe.id}>
@@ -959,7 +980,7 @@ function BrewLogForm() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="name" className="form-label">
+                            <label htmlFor="volume" className="form-label">
                                 Starting Volume <small>(Required)</small>
                             </label>
                             <input
@@ -1022,19 +1043,19 @@ function BrewLogForm() {
                             <div className={`section-content ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}>
                                 <div className="form-group">
                                     <p className="section-description">
-                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created. 
+                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created.
                                         <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
                                         <br />
                                         <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                         <br />
-                                        <br />You cannot edit the associated gravity reading from the Gravity Readings section, but you can change the values entered here. 
+                                        <br />You cannot edit the associated gravity reading from the Gravity Readings section, but you can change the values entered here.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="name" className="form-label">
+                            <label htmlFor="volume" className="form-label">
                                 Starting Volume <small>(Required)</small>
                             </label>
                             <input
@@ -1057,7 +1078,7 @@ function BrewLogForm() {
 
                         {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
                             <div className="form-group">
-                                <label htmlFor="name" className="form-label">
+                                <label htmlFor="finalVolume" className="form-label">
                                     Final Volume
                                 </label>
                                 <input
