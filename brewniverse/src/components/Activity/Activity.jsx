@@ -45,6 +45,12 @@ function Activity({
             });
         }
 
+        // Cascade delete gravity readings associated with an addition
+        if (activityState.topic == ActivityTopicEnum.Addition) {
+            deleteAdditionAndGravityReading(setFormData, activityState.id);
+            return;
+        }
+
         deleteActivity(setFormData, activityState.id);
     };
 
@@ -353,6 +359,54 @@ export const getActivitiesByTopic = (formData, topic) => {
     });
 };
 
+export function deleteAdditionAndGravityReading(setFormData, additionId) {
+    setFormData(prev => {
+        const prevData = prev.toJSON ? prev.toJSON() : prev;
+
+        const linkedGravityReadings = prevData.activity.filter(
+            activity => activity.additionActivityId === additionId &&
+                activity.topic === ActivityTopicEnum.Gravity
+        );
+
+        if (linkedGravityReadings.length > 0) {
+            const confirmDelete = window.confirm(
+                `Warning: Deleting this addition will also delete associated gravity reading.\n\nDo you want to continue?`
+            );
+
+            if (!confirmDelete) {
+                return prevData;
+            }
+
+            const updatedActivities = prevData.activity.filter(
+                activity => activity.id !== additionId
+                    && !(activity.additionActivityId === additionId
+                        && activity.topic === ActivityTopicEnum.Gravity)
+            );
+
+            // Recalculate gravity activities
+            const gravityActivities = getGravityActivities(updatedActivities);
+            if (gravityActivities.length > 0) {
+                const firstGravityActivityId = gravityActivities[0].id;
+                const recalculatedData = updateGravityActivities(
+                    { ...prevData, activity: updatedActivities },
+                    firstGravityActivityId
+                );
+                return recalculatedData;
+            }
+
+            return {
+                ...prevData,
+                activity: updatedActivities
+            };
+        }
+
+        return {
+            ...prevData,
+            activity: prevData.activity.filter(x => x.id !== additionId)
+        };
+    });
+}
+
 export function deleteActivity(setFormData, id) {
     setFormData(prev => {
         // Handle both BrewLog instances and plain objects
@@ -374,6 +428,7 @@ export function deleteActivity(setFormData, id) {
 
             prevData.activity = prevData.activity.filter(x => x.id !== id);
 
+            // Recalculate gravity activities
             const gravityActivities = getGravityActivities(prevData.activity);
             if (0 < gravityActivities.length) {
                 const firstGravityActivityId = gravityActivities[0].id;

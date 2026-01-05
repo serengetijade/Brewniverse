@@ -156,7 +156,7 @@ export const getGravityAbvVolumeData = (currentInputs, gravityActivities, initia
 
     const previousGravityActivity = getPreviousActivity(currentInputs?.id, gravityActivities);
     const previousFinalVolume = parseFloat(previousGravityActivity?.volume ?? initialVolume);
-    const previousGravity = parseFloat(previousGravityActivity?.description ?? 0);
+    const previousGravity = parseFloat(previousGravityActivity?.description ?? addedGravity ?? 0);
     let startingAbv = previousGravityActivity ?
         parseFloat(previousGravityActivity?.abv ?? getCurrentAbv(gravityActivities)) ?? 0
         : 0;
