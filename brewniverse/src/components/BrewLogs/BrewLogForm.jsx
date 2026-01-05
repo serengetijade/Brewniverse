@@ -940,6 +940,104 @@ function BrewLogForm() {
                     </div>
                 </div>
 
+                {/* Additions */}
+                <div className="form-section">
+                    <div className="section-header collapsible" onClick={() => toggleSection('additions')}>
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.additions ? 'collapsed' : ''}`}
+                            />
+                            Additions
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
+
+                        <div className="form-group">
+                            <div className="section-header collapsible" onClick={() => toggleSection('additionsInstructions')}>
+                                <label className="form-label">
+                                    Instructions & Info
+                                    <ChevronDown
+                                        size={14}
+                                        className={`section-toggle-icon ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}
+                                    />
+                                </label>
+                            </div>
+                            <div className={`section-content ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}>
+                                <div className="form-group">
+                                    <p className="section-description">
+                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created.
+                                        <br />- If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
+                                        <br />- If removing volume, you do not need to provide an ABV or gravity value.
+                                        <br />
+                                        <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
+                                        <br />
+                                        <br />You cannot edit the associated gravity reading from the Gravity Readings section, but you can change the values entered here.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="volume" className="form-label">
+                                Starting Volume <small>(Required)</small>
+                            </label>
+                            <input
+                                type="number"
+                                id="volume"
+                                name="volume"
+                                className="form-input"
+                                value={formState.volume}
+                                onChange={handleChange}
+                                maxLength={Validation.InputMaxLength}
+                                placeholder="e.g., 5 gallons, 1 gallon"
+                                required={true}
+                                min={0}
+                                step="0.001"
+                            />
+                            <p className="section-description">
+                                In order to calculate gravity, you must provide a starting volume.
+                            </p>
+                        </div>
+
+                        {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
+                            <div className="form-group">
+                                <label htmlFor="finalVolume" className="form-label">
+                                    Final Volume
+                                </label>
+                                <input
+                                    type="number"
+                                    id="finalVolume"
+                                    name="finalVolume"
+                                    className="form-input"
+                                    value={finalVolume.toFixed(3)}
+                                    onChange={handleChange}
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="Final volume after additions"
+                                    required={true}
+                                    readOnly={true}
+                                />
+                                <p className="section-description">
+                                    Starting volume + total additions ({totalAddedVolume.toFixed(3)})
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="additions-container">
+                            <ActivityList
+                                formData={formState}
+                                setFormData={updateFormDataCallback}
+                                topic={ActivityTopicEnum.Addition}
+                                sectionInfoMessage=""
+                                brewLogId={id}
+                                showTopButton={true}
+                                showBottomButton={true}
+                                headerLabel="*Added Volume must be in the same unit as the Starting Volume"
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Gravity Readings */}
                 <div className="form-section">
                     <div
@@ -1048,103 +1146,6 @@ function BrewLogForm() {
                         </ActivityList>
 
                         <GravityChart gravityActivities={gravityActivities} />
-                    </div>
-                </div>
-
-                {/* Additions */}
-                <div className="form-section">
-                    <div className="section-header collapsible" onClick={() => toggleSection('additions')}>
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.additions ? 'collapsed' : ''}`}
-                            />
-                            Additions
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
-
-                        <div className="form-group">
-                            <div className="section-header collapsible" onClick={() => toggleSection('additionsInstructions')}>
-                                <label className="form-label">
-                                    Instructions & Info
-                                    <ChevronDown
-                                        size={14}
-                                        className={`section-toggle-icon ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}
-                                    />
-                                </label>
-                            </div>
-                            <div className={`section-content ${collapsedSections.additionsInstructions ? 'collapsed' : ''}`}>
-                                <div className="form-group">
-                                    <p className="section-description">
-                                        Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created.
-                                        <br />If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
-                                        <br />
-                                        <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
-                                        <br />
-                                        <br />You cannot edit the associated gravity reading from the Gravity Readings section, but you can change the values entered here.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="volume" className="form-label">
-                                Starting Volume <small>(Required)</small>
-                            </label>
-                            <input
-                                type="number"
-                                id="volume"
-                                name="volume"
-                                className="form-input"
-                                value={formState.volume}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
-                                required={true}
-                                min={0}
-                                step="0.001"
-                            />
-                            <p className="section-description">
-                                In order to calculate gravity, you must provide a starting volume.
-                            </p>
-                        </div>
-
-                        {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
-                            <div className="form-group">
-                                <label htmlFor="finalVolume" className="form-label">
-                                    Final Volume
-                                </label>
-                                <input
-                                    type="number"
-                                    id="finalVolume"
-                                    name="finalVolume"
-                                    className="form-input"
-                                    value={finalVolume.toFixed(3)}
-                                    onChange={handleChange}
-                                    maxLength={Validation.InputMaxLength}
-                                    placeholder="Final volume after additions"
-                                    required={true}
-                                    readOnly={true}
-                                />
-                                <p className="section-description">
-                                    Starting volume + total additions ({totalAddedVolume.toFixed(3)})
-                                </p>
-                            </div>
-                        )}
-
-                        <div className="additions-container">
-                            <ActivityList
-                                formData={formState}
-                                setFormData={updateFormDataCallback}
-                                topic={ActivityTopicEnum.Addition}
-                                sectionInfoMessage=""
-                                brewLogId={id}
-                                showTopButton={true}
-                                showBottomButton={true}
-                                headerLabel="*Added Volume must be in the same unit as the Starting Volume"
-                            />
-                        </div>
                     </div>
                 </div>
 
