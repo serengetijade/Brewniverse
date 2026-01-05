@@ -621,11 +621,17 @@ function BrewLogForm() {
                                 size={20}
                                 className={`section-toggle-icon ${collapsedSections.ingredients ? 'collapsed' : ''}`}
                             />
-                            All Ingredients
+                            Ingredients
                         </h3>
                     </div>
 
                     <div className={`section-content ${collapsedSections.ingredients ? 'collapsed' : ''}`}>
+                        <div className="form-group">
+                            <p className="section-description">
+                                Record everything that goes into your brew here. You can track exactly when you pitch yeast, record your nutrient shedule, and keep track of if/when you decide to something extra.
+                            </p>
+                        </div>
+
                         {/* Primary Ingredients */}
                         <div className="form-section">
                             <IngredientList
@@ -802,7 +808,7 @@ function BrewLogForm() {
                                         onChange={handleChange}
                                         maxLength={Validation.TextareaMaxLength}
                                         placeholder="General acid information and notes"
-                                        rows={3}
+                                        rows={2}
                                     />
                                 </div>
 
@@ -814,8 +820,7 @@ function BrewLogForm() {
                                     itemLabel="Acid Details"
                                     sectionInfoMessage=""
                                     brewLogId={id}
-                                >
-                                </ActivityList>
+                                />
 
                                 {/* Bases */}
                                 <div className="form-group">
@@ -831,7 +836,7 @@ function BrewLogForm() {
                                         onChange={handleChange}
                                         maxLength={Validation.TextareaMaxLength}
                                         placeholder="General base information and notes"
-                                        rows={3}
+                                        rows={2}
                                     />
                                 </div>
 
@@ -843,8 +848,7 @@ function BrewLogForm() {
                                     itemLabel="Base Details"
                                     sectionInfoMessage=""
                                     brewLogId={id}
-                                >
-                                </ActivityList>
+                                />
                             </div>
                         </div>
 
@@ -876,7 +880,7 @@ function BrewLogForm() {
                                         onChange={handleChange}
                                         maxLength={Validation.TextareaMaxLength}
                                         placeholder="General tannin information and notes"
-                                        rows={3}
+                                        rows={2}
                                     />
                                 </div>
 
@@ -888,8 +892,7 @@ function BrewLogForm() {
                                     itemLabel="Tannin Details"
                                     sectionInfoMessage=""
                                     brewLogId={id}
-                                >
-                                </ActivityList>
+                                />
                             </div>
                         </div>
 
@@ -921,7 +924,7 @@ function BrewLogForm() {
                                         onChange={handleChange}
                                         maxLength={Validation.TextareaMaxLength}
                                         placeholder="General pectic enzyme information and notes"
-                                        rows={3}
+                                        rows={2}
                                     />
                                 </div>
 
@@ -948,7 +951,7 @@ function BrewLogForm() {
                                 size={20}
                                 className={`section-toggle-icon ${collapsedSections.additions ? 'collapsed' : ''}`}
                             />
-                            Additions
+                            Volume +/- Additions
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
@@ -967,8 +970,8 @@ function BrewLogForm() {
                                 <div className="form-group">
                                     <p className="section-description">
                                         Use this to record step feeds or backsweetening. It will automatically calculate the ABV and gravity after blending a solution. When adding volume, all fields must filled out before the gravity reading is created.
-                                        <br />- If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken normally.
-                                        <br />- If removing volume, you do not need to provide an ABV or gravity value.
+                                        <br />- If adding a solid or soluble granule (such as sugar) with a negligible volume, a gravity reading must be taken manually.
+                                        <br />- If removing volume, you do not need to provide an ABV or gravity reading.
                                         <br />
                                         <br /><strong>It is recommended to take a gravity reading prior to any addition(s).</strong>
                                         <br />
