@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Scale } from 'lucide-react';
 import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Area, AreaChart } from 'recharts';
 import { useTheme } from '../../contexts/ThemeContext';
-import { formatGravityDataForChart, getGravity13Break, getGravityDrop } from '../../utils/GravityCalculations';
+import { formatGravityDataForChart, getGravity13Break, getGravityDrop, getCurrentAbv } from '../../utils/GravityCalculations';
 import '../../Styles/GravityChart.css';
 
 function GravityChart({ gravityActivities }) {
@@ -84,11 +84,6 @@ function GravityChart({ gravityActivities }) {
                 {chartData.length > 0 && (
                     <div className="gravity-chart-stats">
 
-                        <span className="stat">
-                            <span className="stat-label">OG:</span>
-                            <span className="stat-value">{chartData[0].gravity.toFixed(3)}</span>
-                        </span>
-
                         {chartData.length > 1 && (
                             <>
                                 <span className="stat">
@@ -99,7 +94,7 @@ function GravityChart({ gravityActivities }) {
                                 <span className="stat">
                                     <span className="stat-label">Drop:</span>
                                     <span className="stat-value">
-                                        {getGravityDrop(gravityActivities)}
+                                        {getGravityDrop(gravityActivities) ?? "0"}
                                     </span>
                                 </span>
                             </>
@@ -111,6 +106,11 @@ function GravityChart({ gravityActivities }) {
                                 <span className="stat-value">{oneThirdBreakValue.toFixed(3)}</span>
                             </span>
                         )}
+
+                        <span className="stat">
+                            <span className="stat-label">Current ABV:</span>
+                            <span className="stat-value">{getCurrentAbv(gravityActivities)}%</span>
+                        </span>
                     </div>
                 )}
             </div>
