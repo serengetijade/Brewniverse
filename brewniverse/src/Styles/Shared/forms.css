@@ -175,6 +175,13 @@
         opacity: 0;
     }
 
+    .section-content .section-header,
+    .section-content .section-content
+    {
+        margin-left: 0rem;
+        margin-bottom: 0rem;
+    }
+
 .form-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -295,7 +302,8 @@
     }
 
     .form-section {
-        margin-bottom: 1rem;
+        margin-bottom: 0rem;
+        margin-top: 1rem;
     }
         .form-section h3 {
             font-size: 1.125rem;

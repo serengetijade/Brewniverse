@@ -42,8 +42,8 @@ function BrewLogForm() {
     };
 
     const allSections = [
-        'basicInfo', 'primaryIngredients', 'secondaryIngredients', 'yeast',
-        'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases', 'tannins',
+        'basicInfo', 'ingredients', 'primaryIngredients', 'secondaryIngredients', 'yeast',
+        'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases',
         'abv', 'additions', 'additionsInstructions', 'importantDates', 'otherActivities', 'notes', 'todo', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
@@ -564,38 +564,6 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Primary Ingredients */}
-                <div className="form-section">
-                    <IngredientList
-                        formData={formState}
-                        setFormData={updateFormDataCallback}
-                        ingredientType="ingredientsPrimary"
-                        sectionName="Primary Ingredients"
-                        sectionDescription=""
-                        sectionInfoMessage="Primary ingredients contribute to the flavor, color, and alcohol content of the brew. These are things such as malted grains, sugar, honey, molasses, agave, fruit, and other fermentables. No primary ingredients added yet."
-                        isCollapsible={true}
-                        isCollapsed={collapsedSections.primaryIngredients}
-                        onToggle={() => toggleSection('primaryIngredients')}
-                    >
-                    </IngredientList>
-                </div>
-
-                {/* Secondary Ingredients */}
-                <div className="form-section">
-                    <IngredientList
-                        formData={formState}
-                        setFormData={updateFormDataCallback}
-                        ingredientType="ingredientsSecondary"
-                        sectionName="Secondary Ingredients"
-                        sectionDescription=""
-                        sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. These are optional additions added after primary fermentation has finished. No secondary ingredients added yet."
-                        isCollapsible={true}
-                        isCollapsed={collapsedSections.secondaryIngredients}
-                        onToggle={() => toggleSection('secondaryIngredients')}
-                    >
-                    </IngredientList>
-                </div>
-
                 {/* To Do List */}
                 <div className="form-section">
                     <div
@@ -643,284 +611,332 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Yeast */}
                 <div className="form-section">
                     <div
                         className="section-header collapsible"
-                        onClick={() => toggleSection('yeast')}
+                        onClick={() => toggleSection('ingredients')}
                     >
                         <h3>
                             <ChevronDown
                                 size={20}
-                                className={`section-toggle-icon ${collapsedSections.yeast ? 'collapsed' : ''}`}
+                                className={`section-toggle-icon ${collapsedSections.ingredients ? 'collapsed' : ''}`}
                             />
-                            Yeast
+                            All Ingredients
                         </h3>
                     </div>
-                    <div className={`section-content ${collapsedSections.yeast ? 'collapsed' : ''}`}>
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Yeast}
-                            headerLabel=""
-                            itemLabel="Yeast Details"
-                            sectionInfoMessage="Wild or cultured, record your yeast here. No yeast additions recorded."
-                            brewLogId={id}
-                        >
-                        </ActivityList>
-                    </div>
-                </div>
 
-                {/* Nutrients */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('nutrients')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.nutrients ? 'collapsed' : ''}`}
-                            />
-                            Nutrients
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.nutrients ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <label htmlFor="nutrients" className="form-label">
-                                Nutrient Details
-                            </label>
-                            <input
-                                type="text"
-                                id="nutrients"
-                                name="nutrients"
-                                className="form-input"
-                                value={formState.nutrients}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="Nutrient details"
-                            />
+                    <div className={`section-content ${collapsedSections.ingredients ? 'collapsed' : ''}`}>
+                        {/* Primary Ingredients */}
+                        <div className="form-section">
+                            <IngredientList
+                                formData={formState}
+                                setFormData={updateFormDataCallback}
+                                ingredientType="ingredientsPrimary"
+                                sectionName="Primary Ingredients"
+                                sectionDescription=""
+                                sectionInfoMessage="Primary ingredients contribute to the flavor, color, and alcohol content of the brew. These are things such as malted grains, sugar, honey, molasses, agave, fruit, and other fermentables. No primary ingredients added yet."
+                                isCollapsible={true}
+                                isCollapsed={collapsedSections.primaryIngredients}
+                                onToggle={() => toggleSection('primaryIngredients')}
+                            >
+                            </IngredientList>
                         </div>
 
-                        {/* Nutrient Schedule Option Buttons*/}
-                        <div className="form-group">
-                            <label htmlFor="nutrients" className="form-label">
-                                Nutrient Schedule
-                            </label>
-                            <div className="nutrient-schedule-buttons">
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="small"
-                                    onClick={() => { addNutrientActivitiesByOption('2days') }}
+                        {/* Secondary Ingredients */}
+                        <div className="form-section">
+                            <IngredientList
+                                formData={formState}
+                                setFormData={updateFormDataCallback}
+                                ingredientType="ingredientsSecondary"
+                                sectionName="Secondary Ingredients"
+                                sectionDescription=""
+                                sectionInfoMessage="List ingredients used during secondary fermentation or any used to backsweeten your brew. These are optional additions added after primary fermentation has finished. No secondary ingredients added yet."
+                                isCollapsible={true}
+                                isCollapsed={collapsedSections.secondaryIngredients}
+                                onToggle={() => toggleSection('secondaryIngredients')}
+                            >
+                            </IngredientList>
+                        </div>
+
+                        {/* Yeast */}
+                        <div className="form-section">
+                            <div
+                                className="section-header collapsible"
+                                onClick={() => toggleSection('yeast')}
+                            >
+                                <h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`section-toggle-icon ${collapsedSections.yeast ? 'collapsed' : ''}`}
+                                    />
+                                    Yeast
+                                </h3>
+                            </div>
+                            <div className={`section-content ${collapsedSections.yeast ? 'collapsed' : ''}`}>
+                                <ActivityList
+                                    formData={formState}
+                                    setFormData={updateFormDataCallback}
+                                    topic={ActivityTopicEnum.Yeast}
+                                    headerLabel=""
+                                    itemLabel="Yeast Details"
+                                    sectionInfoMessage="Wild or cultured, record your yeast here. No yeast additions recorded."
+                                    brewLogId={id}
                                 >
-                                    Split Schedule (2 days)
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="small"
-                                    onClick={() => { addNutrientActivitiesByOption('3days') }}
-                                >
-                                    Staggered (3 days)
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="small"
-                                    onClick={() => { addNutrientActivitiesByOption('4days') }}
-                                >
-                                    Staggered (4 days)
-                                </Button>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="small"
-                                    onClick={addNutrientScheduleEntry}
-                                >
-                                    <Plus size={buttonSize} />
-                                    Add Entry
-                                </Button>
+                                </ActivityList>
                             </div>
                         </div>
 
-                        <div>
-                            {getActivitiesByTopic(formState, ActivityTopicEnum.Nutrient).map((activity) => (
-                                <Activity
-                                    key={activity.id}
-                                    activity={activity}
-                                    itemLabel="Nutrient Details"
-                                    brewLogId={formState.id}
+                        {/* Nutrients */}
+                        <div className="form-section">
+                            <div
+                                className="section-header collapsible"
+                                onClick={() => toggleSection('nutrients')}
+                            >
+                                <h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`section-toggle-icon ${collapsedSections.nutrients ? 'collapsed' : ''}`}
+                                    />
+                                    Nutrients
+                                </h3>
+                            </div>
+                            <div className={`section-content ${collapsedSections.nutrients ? 'collapsed' : ''}`}>
+                                <div className="form-group">
+                                    <label htmlFor="nutrients" className="form-label">
+                                        Nutrient Details
+                                    </label>
+                                    <input
+                                        type="text"
+                                        id="nutrients"
+                                        name="nutrients"
+                                        className="form-input"
+                                        value={formState.nutrients}
+                                        onChange={handleChange}
+                                        maxLength={Validation.InputMaxLength}
+                                        placeholder="Nutrient details"
+                                    />
+                                </div>
+
+                                {/* Nutrient Schedule Option Buttons*/}
+                                <div className="form-group">
+                                    <label htmlFor="nutrients" className="form-label">
+                                        Nutrient Schedule
+                                    </label>
+                                    <div className="nutrient-schedule-buttons">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="small"
+                                            onClick={() => { addNutrientActivitiesByOption('2days') }}
+                                        >
+                                            Split Schedule (2 days)
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="small"
+                                            onClick={() => { addNutrientActivitiesByOption('3days') }}
+                                        >
+                                            Staggered (3 days)
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="small"
+                                            onClick={() => { addNutrientActivitiesByOption('4days') }}
+                                        >
+                                            Staggered (4 days)
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            size="small"
+                                            onClick={addNutrientScheduleEntry}
+                                        >
+                                            <Plus size={buttonSize} />
+                                            Add Entry
+                                        </Button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    {getActivitiesByTopic(formState, ActivityTopicEnum.Nutrient).map((activity) => (
+                                        <Activity
+                                            key={activity.id}
+                                            activity={activity}
+                                            itemLabel="Nutrient Details"
+                                            brewLogId={formState.id}
+                                            setFormData={updateFormDataCallback}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Acids and Bases */}
+                        <div className="form-section">
+                            <div
+                                className="section-header collapsible"
+                                onClick={() => toggleSection('acidsAndBases')}
+                            >
+                                <h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`section-toggle-icon ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}
+                                    />
+                                    Acids and Bases
+                                </h3>
+                            </div>
+                            <div className={`section-content ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}>
+                                {/* Acids */}
+                                <div className="form-group">
+                                    <label htmlFor="acids" className="form-label">
+                                        Acids
+                                    </label>
+
+                                    <textarea
+                                        id="acids"
+                                        name="acids"
+                                        className="form-textarea"
+                                        value={formState.acids}
+                                        onChange={handleChange}
+                                        maxLength={Validation.TextareaMaxLength}
+                                        placeholder="General acid information and notes"
+                                        rows={3}
+                                    />
+                                </div>
+
+                                <ActivityList
+                                    formData={formState}
                                     setFormData={updateFormDataCallback}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                                    topic={ActivityTopicEnum.Acid}
+                                    headerLabel="Acid Additions"
+                                    itemLabel="Acid Details"
+                                    sectionInfoMessage=""
+                                    brewLogId={id}
+                                >
+                                </ActivityList>
 
-                {/* Acids and Bases */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('acidsAndBases')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}
-                            />
-                            Acids and Bases
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}>
+                                {/* Bases */}
+                                <div className="form-group">
+                                    <label htmlFor="bases" className="form-label">
+                                        Bases
+                                    </label>
 
-                        {/* Acids */}
-                        <div className="form-group">
-                            <label htmlFor="acids" className="form-label">
-                                Acids
-                            </label>
+                                    <textarea
+                                        id="bases"
+                                        name="bases"
+                                        className="form-textarea"
+                                        value={formState.bases}
+                                        onChange={handleChange}
+                                        maxLength={Validation.TextareaMaxLength}
+                                        placeholder="General base information and notes"
+                                        rows={3}
+                                    />
+                                </div>
 
-                            <textarea
-                                id="acids"
-                                name="acids"
-                                className="form-textarea"
-                                value={formState.acids}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="General acid information and notes"
-                                rows={3}
-                            />
-                        </div>
-
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Acid}
-                            headerLabel="Acid Additions"
-                            itemLabel="Acid Details"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                        >
-                        </ActivityList>
-
-                        {/* Bases */}
-                        <div className="form-group">
-                            <label htmlFor="bases" className="form-label">
-                                Bases
-                            </label>
-
-                            <textarea
-                                id="bases"
-                                name="bases"
-                                className="form-textarea"
-                                value={formState.bases}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="General base information and notes"
-                                rows={3}
-                            />
+                                <ActivityList
+                                    formData={formState}
+                                    setFormData={updateFormDataCallback}
+                                    topic={ActivityTopicEnum.Base}
+                                    headerLabel="Base Additions"
+                                    itemLabel="Base Details"
+                                    sectionInfoMessage=""
+                                    brewLogId={id}
+                                >
+                                </ActivityList>
+                            </div>
                         </div>
 
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Base}
-                            headerLabel="Base Additions"
-                            itemLabel="Base Details"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                        >
-                        </ActivityList>
-                    </div>
-                </div>
+                        {/* Tannins */}
+                        <div className="form-section">
+                            <div
+                                className="section-header collapsible"
+                                onClick={() => toggleSection('tannins')}
+                            >
+                                <h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`section-toggle-icon ${collapsedSections.tannins ? 'collapsed' : ''}`}
+                                    />
+                                    Tannins
+                                </h3>
+                            </div>
+                            <div className={`section-content ${collapsedSections.tannins ? 'collapsed' : ''}`}>
 
-                {/* Tannins */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('tannins')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.tannins ? 'collapsed' : ''}`}
-                            />
-                            Tannins
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.tannins ? 'collapsed' : ''}`}>
+                                <div className="form-group">
+                                    <label htmlFor="tannins" className="form-label">
+                                        Tannins
+                                    </label>
+                                    <textarea
+                                        id="tannins"
+                                        name="tannins"
+                                        className="form-textarea"
+                                        value={formState.tannins}
+                                        onChange={handleChange}
+                                        maxLength={Validation.TextareaMaxLength}
+                                        placeholder="General tannin information and notes"
+                                        rows={3}
+                                    />
+                                </div>
 
-                        <div className="form-group">
-                            <label htmlFor="tannins" className="form-label">
-                                Tannins
-                            </label>
-                            <textarea
-                                id="tannins"
-                                name="tannins"
-                                className="form-textarea"
-                                value={formState.tannins}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="General tannin information and notes"
-                                rows={3}
-                            />
+                                <ActivityList
+                                    formData={formState}
+                                    setFormData={updateFormDataCallback}
+                                    topic={ActivityTopicEnum.Tannin}
+                                    headerLabel="Tannin Additions"
+                                    itemLabel="Tannin Details"
+                                    sectionInfoMessage=""
+                                    brewLogId={id}
+                                >
+                                </ActivityList>
+                            </div>
                         </div>
 
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Tannin}
-                            headerLabel="Tannin Additions"
-                            itemLabel="Tannin Details"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                        >
-                        </ActivityList>
-                    </div>
-                </div>
+                        {/* Pectic Enzyme */}
+                        <div className="form-section">
+                            <div
+                                className="section-header collapsible"
+                                onClick={() => toggleSection('pecticEnzyme')}
+                            >
+                                <h3>
+                                    <ChevronDown
+                                        size={20}
+                                        className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
+                                    />
+                                    Pectic Enzyme
+                                </h3>
+                            </div>
+                            <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
+                                <div className="form-group">
+                                    <label htmlFor="pecticEnzyme" className="form-label">
+                                        Pectic Enzyme
+                                    </label>
 
-                {/* Pectic Enzyme */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('pecticEnzyme')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
-                            />
-                            Pectic Enzyme
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <label htmlFor="pecticEnzyme" className="form-label">
-                                Pectic Enzyme
-                            </label>
+                                    <textarea
+                                        id="pecticEnzyme"
+                                        name="pecticEnzyme"
+                                        className="form-textarea"
+                                        value={formState.pecticEnzyme}
+                                        onChange={handleChange}
+                                        maxLength={Validation.TextareaMaxLength}
+                                        placeholder="General pectic enzyme information and notes"
+                                        rows={3}
+                                    />
+                                </div>
 
-                            <textarea
-                                id="pecticEnzyme"
-                                name="pecticEnzyme"
-                                className="form-textarea"
-                                value={formState.pecticEnzyme}
-                                onChange={handleChange}
-                                maxLength={Validation.TextareaMaxLength}
-                                placeholder="General pectic enzyme information and notes"
-                                rows={3}
-                            />
+                                <ActivityList
+                                    formData={formState}
+                                    setFormData={updateFormDataCallback}
+                                    topic={ActivityTopicEnum.PecticEnzyme}
+                                    headerLabel="Pectic Enzyme Additions"
+                                    itemLabel="Enzyme Details"
+                                    sectionInfoMessage=""
+                                    brewLogId={id}
+                                >
+                                </ActivityList>
+                            </div>
                         </div>
-
-                        <ActivityList
-                            formData={formState}
-                            setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.PecticEnzyme}
-                            headerLabel="Pectic Enzyme Additions"
-                            itemLabel="Enzyme Details"
-                            sectionInfoMessage=""
-                            brewLogId={id}
-                        >
-                        </ActivityList>
                     </div>
                 </div>
 

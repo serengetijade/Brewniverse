@@ -370,7 +370,7 @@ export function deleteAdditionAndGravityReading(setFormData, additionId) {
 
         if (linkedGravityReadings.length > 0) {
             const confirmDelete = window.confirm(
-                `Warning: Deleting this addition will also delete associated gravity reading.\n\nDo you want to continue?`
+                `Deleting this addition will also delete associated gravity reading.\n\nDo you want to continue?`
             );
 
             if (!confirmDelete) {
