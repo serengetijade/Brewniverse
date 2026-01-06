@@ -44,7 +44,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'ingredients', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases',
-        'abv', 'additions', 'additionsInstructions', 'importantDates', 'otherActivities', 'notes', 'todo', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'additionsInstructions', 'additionStartingVolume', 'importantDates', 'otherActivities', 'notes', 'todo', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -486,7 +486,6 @@ function BrewLogForm() {
                             </div>
                         </div>
 
-
                         <div className="form-group">
                             <label htmlFor="description" className="form-label">
                                 Description
@@ -611,6 +610,7 @@ function BrewLogForm() {
                     </div>
                 </div>
 
+                {/* Ingredients */}
                 <div className="form-section">
                     <div
                         className="section-header collapsible"
@@ -628,7 +628,7 @@ function BrewLogForm() {
                     <div className={`section-content ${collapsedSections.ingredients ? 'collapsed' : ''}`}>
                         <div className="form-group">
                             <p className="section-description">
-                                Record everything that goes into your brew here. You can track exactly when you pitch yeast, record your nutrient shedule, and keep track of if/when you decide to something extra.
+                                Record everything that goes into your brew. Track exactly when you pitch yeast, add nutrients, or decide to add a little extra.
                             </p>
                         </div>
 
@@ -951,12 +951,13 @@ function BrewLogForm() {
                                 size={20}
                                 className={`section-toggle-icon ${collapsedSections.additions ? 'collapsed' : ''}`}
                             />
-                            Volume +/- Additions
+                            Volume +/- Changes
                         </h3>
                     </div>
+
                     <div className={`section-content ${collapsedSections.additions ? 'collapsed' : ''}`}>
 
-                        <div className="form-group">
+                        <div>
                             <div className="section-header collapsible" onClick={() => toggleSection('additionsInstructions')}>
                                 <label className="form-label">
                                     Instructions & Info
@@ -982,31 +983,56 @@ function BrewLogForm() {
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor="volume" className="form-label">
-                                Starting Volume <small>(Required)</small>
-                            </label>
-                            <input
-                                type="number"
-                                id="volume"
-                                name="volume"
-                                className="form-input"
-                                value={formState.volume}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
-                                required={true}
-                                min={0}
-                                step="0.001"
-                            />
-                            <p className="section-description">
-                                In order to calculate gravity, you must provide a starting volume.
-                            </p>
+                            <div className="section-header collapsible" onClick={() => toggleSection('additionStartingVolume')}>
+                                <label className="form-label">
+                                    Starting Volume <small>(Required)</small>
+                                    <ChevronDown
+                                        size={14}
+                                        className={`section-toggle-icon ${collapsedSections.additionStartingVolume ? 'collapsed' : ''}`}
+                                    />
+                                </label>
+                            </div>
+
+                            <div className={`section-content ${collapsedSections.additionStartingVolume ? 'collapsed' : ''}`}>
+                                <input
+                                    type="number"
+                                    id="volume"
+                                    name="volume"
+                                    className="form-input"
+                                    value={formState.volume}
+                                    onChange={handleChange}
+                                    maxLength={Validation.InputMaxLength}
+                                    placeholder="e.g., 5 gallons, 1 gallon"
+                                    required={true}
+                                    min={0}
+                                    step="0.001"
+                                />
+                                <p className="section-description">
+                                    In order to calculate gravity, you must provide a starting volume.
+                                </p>
+
+                                <label htmlFor="volumeUnit" className="form-label">
+                                    Volume Unit
+                                </label>
+                                <input
+                                    type="text"
+                                    id="volumeUnit"
+                                    name="volumeUnit"
+                                    className="form-input"
+                                    value={formState.volumeUnit}
+                                    onChange={handleChange}
+                                    maxLength={15}
+                                    placeholder="gallons, liters, litres, oz"
+                                    min={0}
+                                    step="0.001"
+                                />
+                            </div>
                         </div>
 
                         {formState.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0 && (
                             <div className="form-group">
                                 <label htmlFor="finalVolume" className="form-label">
-                                    Final Volume
+                                    Current Volume
                                 </label>
                                 <input
                                     type="number"
