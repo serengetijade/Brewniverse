@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/AlertForm.css';
 import { Validation } from '../../constants/ValidationConstants';
-import { ActionTypes, useApp } from '../../contexts/AppContext';
+import { ActionTypes, getDate, useApp } from '../../contexts/AppContext';
 import Alert from '../../models/Alert';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
@@ -111,7 +111,7 @@ function AlertForm() {
                             id="date"
                             name="date"
                             className="form-input"
-                            value={formState.date}
+                            value={getDate(formState.date)}
                             onChange={handleChange}
                             required
                         />

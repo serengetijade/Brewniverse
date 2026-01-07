@@ -112,7 +112,7 @@ function Activity({
         // If alert already exists, navigate to it
         if (activityState.alertId && alertExists) {
             const confirmNavigate = window.confirm(
-                'This activity already has an alert. Would you like to go to that alert?\n\nClick OK to navigate to the alert, or Cancel to stay here.'
+                'This activity has an alert set.\n\nWould you like to go to that alert?'
             );
 
             if (confirmNavigate) {
