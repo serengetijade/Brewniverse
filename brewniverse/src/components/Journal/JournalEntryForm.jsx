@@ -87,10 +87,17 @@ function JournalEntryForm() {
 
         const entryData = formState.toJSON();
 
-        dispatch({
-            type: ActionTypes.updateJournalEntry,
-            payload: { ...entryData, id }
-        });
+        if (isEditing) {
+            dispatch({
+                type: ActionTypes.updateJournalEntry,
+                payload: { ...entryData, id }
+            });
+        } else {
+            dispatch({
+                type: ActionTypes.addJournalEntry,
+                payload: entryData
+            });
+        }
 
         navigate('/journal');
     };
@@ -99,10 +106,12 @@ function JournalEntryForm() {
         const updatedData = JournalEntry.fromJSON({ ...formState.toJSON(), ...updates });
         setFormState(updatedData);
 
-        dispatch({
-            type: ActionTypes.updateJournalEntry,
-            payload: { ...updatedData.toJSON(), id }
-        });
+        if (isEditing) {
+            dispatch({
+                type: ActionTypes.updateJournalEntry,
+                payload: { ...updatedData.toJSON(), id }
+            });
+        }
     };
 
     const handleChange = (e) => {
