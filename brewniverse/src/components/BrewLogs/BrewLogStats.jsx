@@ -8,6 +8,8 @@ import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 
 function BrewLogStats({ brewLog }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);
+    let currentAbv = getCurrentAbv(gravityActivities);
+    currentAbv = currentAbv ? currentAbv + "%" : "N/A"
 
     const stabilizedActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateStabilized);
     const dateStabilized = stabilizedActivities ?
@@ -90,7 +92,7 @@ function BrewLogStats({ brewLog }) {
             id: 'abv',
             icon: <Zap size={20} />,
             label: 'Current ABV',
-            value: (brewLog.currentAbv ? `${brewLog.currentAbv}%` : (gravityActivities.length > 0 ? `${getCurrentAbv(gravityActivities)}%` : 'N/A')),
+            value: currentAbv,
             subtext: brewLog.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0
                 ? 'After dilution/blending'
                 : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
