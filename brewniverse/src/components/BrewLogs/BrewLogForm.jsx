@@ -1108,11 +1108,11 @@ function BrewLogForm() {
                             </div>
 
                             <div className="gravity-stat-card accent10">
-                                <div className="gravity-stat-label">Final Gravity</div>
+                                <div className="gravity-stat-label">Current Gravity</div>
                                 <div className="gravity-stat-value">
                                     {getGravityFinal(gravityActivities) || '—'}
                                 </div>
-                                {getGravityFinal(gravityActivities) && (
+                                {getGravityFinal(gravityActivities) <= 1 && (
                                     <div className="gravity-stat-subtitle">Fermentation complete</div>
                                 )}
                             </div>

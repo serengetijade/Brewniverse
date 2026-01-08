@@ -11,7 +11,7 @@ export const getGravityOriginal = (gravityActivities) => {
 };
 
 export const getPreviousActivity = (currentReadingId, gravityActivities = []) => {
-    if (!gravityActivities || gravityActivities.length == 0) return null; 
+    if (!gravityActivities || gravityActivities.length == 0) return null;
 
     gravityActivities.sort((a, b) => new Date(a.date) - new Date(b.date));
 
@@ -100,11 +100,30 @@ export const getCurrentAbv = (gravityActivities) => {
 };
 
 export const getPotentialAbv = (gravityActivities) => {
-    if (gravityActivities.length < 1) return '';
+    if (gravityActivities.length == 0) return '';
+
+    gravityActivities?.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     const originalGravity = parseFloat(gravityActivities[0].description);
     if (!originalGravity) return '';
+    if (originalGravity <= 1) return 0.00;
 
-    const result = ((originalGravity - 1) * 131.25).toFixed(2);
+    let result = ((originalGravity - 1) * 131.25).toFixed(2);
+
+    if (gravityActivities.length == 1) {
+        return result;
+    }
+
+    if (1 < gravityActivities.length) {
+        const currentGravity = parseFloat(gravityActivities[gravityActivities.length - 1].description)
+        if (!currentGravity || currentGravity < 1) return result;
+
+        let currentAbv = getCurrentAbv(gravityActivities);
+        const potential = ((currentGravity - 1) * 131.25).toFixed(2);
+        result = (parseFloat(currentAbv) + parseFloat(potential)).toFixed(2);
+        return result;
+    }
+
     return result;
 };
 
@@ -228,8 +247,8 @@ export const UpdateGravityActivityData = (activity, currentInputs, gravityActivi
 }
 
 export const UpdateAllGravityActivityData = (activity, currentInputs, gravityActivities, initialVolume = 1) => {
-    gravityActivities?.sort((a, b) => new Date(a.date) - new Date(b.date)); 
-    
+    gravityActivities?.sort((a, b) => new Date(a.date) - new Date(b.date));
+
     let activeActivity = UpdateGravityActivityData(activity, currentInputs, gravityActivities, initialVolume);
     let activeIndex = gravityActivities.findIndex(a => a.id === activity.id);
 
