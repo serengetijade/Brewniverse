@@ -2,6 +2,7 @@ import React from 'react';
 import {
     Atom,
     Barrel,
+    CirclePlus,
     Pill,
     Sparkles,
     TestTubeDiagonal,
@@ -33,6 +34,7 @@ function IngredientsSummary({ brewLog }) {
     const acidActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Acid);
     const baseActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Base);
     const tanninActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Tannin);
+    const additionActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.Addition);
 
     // Check if we have any content to display
     const hasContent =
@@ -43,7 +45,8 @@ function IngredientsSummary({ brewLog }) {
         pecticEnzymeActivities.length > 0 ||
         acidActivities.length > 0 ||
         baseActivities.length > 0 ||
-        tanninActivities.length > 0;
+        tanninActivities.length > 0 ||
+        additionActivities.length > 0;
 
     if (!hasContent) {
         return (
@@ -255,6 +258,48 @@ function IngredientsSummary({ brewLog }) {
                                 </div>
                             </div>
                         )}
+
+                        {/* Additions */}
+                        {additionActivities.length > 0 && (
+                            <div className="ingredient-section addition-section">
+                                <div className="ingredient-section-header">
+                                    <div className="ingredient-section-icon addition-icon">
+                                        <CirclePlus size={20} />
+                                    </div>
+                                    <div className="ingredient-section-title">
+                                        <h3>Volume +/-</h3>
+                                        <span className="ingredient-count">{additionActivities.length} addition{additionActivities.length !== 1 ? 's' : ''}</span>
+                                    </div>
+                                </div>
+                                <div className="ingredient-cards">
+                                    {additionActivities.map(renderActivityCard)}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </>
+            )}
+
+            {/* Volume +/- Additions Section */}
+            {additionActivities.length > 0 && (
+                <>
+                    <div className="additions-divider">
+                        <span>Volume +/- Changes</span>
+                    </div>
+
+                    <div className="ingredient-section addition-section">
+                        <div className="ingredient-section-header">
+                            <div className="ingredient-section-icon addition-icon">
+                                <CirclePlus size={20} />
+                            </div>
+                            <div className="ingredient-section-title">
+                                <h3>Volume +/-</h3>
+                                <span className="ingredient-count">{additionActivities.length} addition{additionActivities.length !== 1 ? 's' : ''}</span>
+                            </div>
+                        </div>
+                        <div className="ingredient-cards">
+                            {additionActivities.map(renderActivityCard)}
+                        </div>
                     </div>
                 </>
             )}
