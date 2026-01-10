@@ -1,40 +1,66 @@
 # Brewniverse: Brew Logging & Recipe Companion
+![Banner](https://github.com/serengetijade/Brewniverse/blob/master/media/FeatureGraphic-1024x500.png?raw=true)
 
 Brewniverse is a feature-rich brewing logbook and recipe management app crafted for homebrewers and craft beverage enthusiasts. Log every detail of your brew from start to bottle, manage recipes, set alerts, calculate ABV, and analyze fermentation with rich data visualizations. 
 
 ---
+<div style="display:inline-flex">    
+    <img alt="Dashboard" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/Dashboard.jpg" width="25%">
+    <img alt="Brew Logs" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/BrewLogs.jpg" width="25%">
+    <img alt="Grid View" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/BrewLogsDetails.jpg" width="25%">
+</div>
 
 ## Features Implemented
-
-- **Data Storage & Export**
-    - Uses a flexible StorageService that detects the optimal storage backend (Capacitor Filesystem, localStorage, or in-memory fallback).
-    - All brew log, recipe, and alert data can be exported as a backup JSON file or imported to restore data or migrate to another device.
-    - Safe, simple data export and import via mobile share or browser download, without server dependencies.
-
 - **Stats & Visualizations**
-    - See calculated stats for each log: estimated/final ABV, fermentation progress, and benchmarks.
+    - See calculated stats for each log: estimated current ABV, final ABV, fermentation progress, and benchmarks.
     - Visual charts for gravity readings, sugar use, and alcohol conversion.
     - Track ratings and journal statistics per batch.
     - Dynamically sort lists based on search criteria or provided filters.
+<details>
+  <summary>📸 Stats Screenshots (Click to Expand)</summary>
+  <br>
+  <p>
+    <img alt="Edit Gravity Chart" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/EditGravityChart.jpg" width="25%">
+    <img alt="Details Abv Converstion" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/DetailsAbvConversion.jpg" width="25%">
+    <img alt="Details Sugar Consumption" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/DetailsSugarConsumption.jpg" width="25%">
+  </p>
+</details>
 
 - **Brew Log Management**
     - Record detailed logs for every batch: from ingredients, timings, and additions to ABV tracking and fermentation milestones.
     - Robust gravity & alcohol tracking – chart, predict, and visualize fermentation and ABV over time.
     - Auto calculate 1/3 break
-    - Add activities for every stage: racking, bottling, stabilization, and more.
+    - Add activities for every stage: pitching yeast, racking, bottling, stabilization, and more.
     - Import recipe ingredients directly into logs.
     - Add custom ingredients to suit any style or experiment.
+    - Change the order of ingredients with click and drag design.
     - Jump to a linked recipe for instructions, or create your own to do list.
-    - Record step feeding or additions, then automatically calculate new ABV % and gravity.
+    - Record step feeding or additions, then automatically calculate new ABV %, volume, gravity.
     - Collapsible sections for easy mobile reading.
     - Status badges (Fermenting, Secondary, Bottled, Archived) for quick status updates.
     - Journal entries per batch, to record your tasting notes.
+<details>
+  <summary>📸 Brew Log Screenshots (Click to Expand)</summary>
+  <br>
+  <p>
+    <img alt="Basic Details" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/EditBasicDetails.jpg" width="25%">
+    <img alt="Edit Nutrient Schedule" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/EditNutrientSchedule.jpg" width="25%">    
+    <img alt="Activity Timeline" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/DetailsActivityTimeline.jpg" width="25%">
+  </p>
+</details>
 
 - **Recipes**
     - Manage a personalized recipe book for your brews.
     - Primary/secondary ingredients, detailed instructions, notes, and difficulty grading.
     - Rate recipes for personal ranking and reference.
     - See which brew logs are using each recipe.
+<details>
+  <summary>📸 Recipe Screenshots (Click to Expand)</summary>
+  <br>
+  <p>
+    <img alt="Recipe Instructions" src="https://raw.githubusercontent.com/serengetijade/Brewniverse/refs/heads/master/media/RecipeInstructions.jpg" width="25%">    
+  </p>
+</details>
 
 - **Alerts**
     - Set reminders for crucial brew events (nutrient additions, racking, stabilization, bottling, etc).
@@ -52,6 +78,11 @@ Brewniverse is a feature-rich brewing logbook and recipe management app crafted 
 
 - **Data Handling**
     - In-browser state, no server/backend required for your logs (portable, private, fast startup).
+
+- **Data Storage & Export**
+    - Uses a flexible StorageService that detects the optimal storage backend (Capacitor Filesystem, localStorage, or in-memory fallback).
+    - All brew log, recipe, and alert data can be exported as a backup JSON file or imported to restore data or migrate to another device.
+    - Safe, simple data export and import via mobile share or browser download, without server dependencies.
 
 ---
 # Technologies Used
