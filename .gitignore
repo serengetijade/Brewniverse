@@ -361,3 +361,11 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Android signing files - DO NOT COMMIT THESE
+*.keystore
+*.jks
+keystore.properties
+brewniverse/android/keystore.properties
+brewniverse/android/*.keystore
+brewniverse/android/*.jks
