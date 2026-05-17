@@ -1,5 +1,5 @@
 import { App as CapacitorApp } from '@capacitor/app';
-import { ArrowLeft, Bell, BookOpen, Calculator, FileText, Home, Menu, NotebookPen, Settings } from 'lucide-react';
+import { ArrowLeft, ArrowDownUp, Bell, BookOpen, Calculator, FileText, Home, Menu, NotebookPen, Settings } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../../Styles/Navigation.css';
@@ -15,6 +15,7 @@ function Navigation() {
         { path: '/recipes', icon: FileText, label: 'Recipes' },
         { path: '/journal', icon: NotebookPen, label: 'Journal' },
         { path: '/alerts', icon: Bell, label: 'Alerts' },
+        { path: '/inventory', icon: ArrowDownUp, label: 'Inventory' },
         { path: '/calculator', icon: Calculator, label: 'Calculator' },
         { path: '/settings', icon: Settings, label: 'Settings' },
     ];

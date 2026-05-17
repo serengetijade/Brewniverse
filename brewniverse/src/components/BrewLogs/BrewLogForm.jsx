@@ -1,4 +1,4 @@
-﻿import { Archive, ChevronDown, ChevronUp, Copy, Plus, X } from 'lucide-react';
+import { Archive, ChevronDown, ChevronUp, Copy, Plus, X } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../../Styles/BrewLogForm.css';
@@ -10,6 +10,7 @@ import { UpdateAllGravityActivityData, getCurrentAbv, getGravity13Break, getGrav
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import IngredientList from '../Ingredients/IngredientList';
+import InventoryRecord from '../Inventory/InventoryRecord';
 import JournalEntryList from '../Journal/JournalEntryList';
 import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
@@ -44,7 +45,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'ingredients', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases',
-        'abv', 'additions', 'additionsInstructions', 'additionStartingVolume', 'importantDates', 'otherActivities', 'notes', 'todo', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'additionsInstructions', 'additionStartingVolume', 'importantDates', 'otherActivities', 'notes', 'inventory', 'todo', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -134,6 +135,10 @@ function BrewLogForm() {
 
     const updateBrewLog = (fieldName, value) => {
         updateFormData({ [fieldName]: value });
+    };
+
+    const handleInventoryChange = (value) => {
+        updateFormData({ inventory: value });
     };
 
     const handleChange = (e) => {
@@ -1295,6 +1300,41 @@ function BrewLogForm() {
 
                         <div className="form-group">
                             <JournalEntryList brewLogId={id} />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Inventory */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('inventory')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.inventory ? 'collapsed' : ''}`}
+                            />
+                            Inventory
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.inventory ? 'collapsed' : ''}`}>
+                        <div className="form-group inventory-form-group">
+                            <label
+                                htmlFor={`brewlog-inventory-${formState.id}`}
+                                className="form-label"
+                            >
+                                Inventory Quantity
+                            </label>
+                            <div className="inventory-list inventory-list--single">
+                                <InventoryRecord
+                                    name={formState.name}
+                                    quantity={formState.inventory ?? ''}
+                                    showName={false}
+                                    inputId={`brewlog-inventory-${formState.id}`}
+                                    onQuantityChange={handleInventoryChange}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>

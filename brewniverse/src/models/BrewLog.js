@@ -19,6 +19,7 @@ class BrewLog {
         this.gravityOriginal = data.gravityOriginal || '';
         this.ingredientsPrimary = this._ensureIngredientOrder(data.ingredientsPrimary || []);
         this.ingredientsSecondary = this._ensureIngredientOrder(data.ingredientsSecondary || []);
+        this.inventory = data.inventory ?? 0;
         this.name = data.name || '';
         this.notes = data.notes || '';
         this.nutrients = data.nutrients || '';
@@ -62,6 +63,7 @@ class BrewLog {
             id: this.id,
             ingredientsPrimary: this.ingredientsPrimary,
             ingredientsSecondary: this.ingredientsSecondary,
+            inventory: this.inventory,
             name: this.name,
             notes: this.notes,
             nutrients: this.nutrients,

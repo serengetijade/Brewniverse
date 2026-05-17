@@ -1,4 +1,4 @@
-import { BottleWine, Calendar, ChartLine, Clock, ListTree, MoveVertical, Shield, TrendingDown, Zap } from 'lucide-react';
+import { ArrowDownUp, BottleWine, Calendar, ChartLine, Clock, ListTree, MoveVertical, Shield, TrendingDown, Zap } from 'lucide-react';
 import React from 'react';
 import '../../Styles/BrewLogStats.css';
 import { getTopicColorRgb, getTopicConfig, getTopicIcon } from '../../constants/ActivityTopics';
@@ -46,6 +46,9 @@ function BrewLogStats({ brewLog }) {
     };
 
     const topicConfig = getTopicConfig();
+    const inventoryValue = brewLog.inventory === '' || brewLog.inventory === null || brewLog.inventory === undefined
+        ? 'Not set'
+        : brewLog.inventory;
 
     const stats = [
         {
@@ -73,6 +76,16 @@ function BrewLogStats({ brewLog }) {
             color: '51,153,255'
         }] : []),
         {
+            id: 'abv',
+            icon: <Zap size={20} />,
+            label: 'Current ABV',
+            value: currentAbv,
+            subtext: brewLog.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0
+                ? 'After dilution/blending'
+                : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
+            color: '204,102,204'
+        },
+        {
             id: 'og',
             icon: getTopicIcon(ActivityTopicEnum.Gravity),
             label: 'Original Gravity',
@@ -87,41 +100,39 @@ function BrewLogStats({ brewLog }) {
             value: gravityActivities.length > 1 ? getGravityFinal(gravityActivities) : 'In progress',
             subtext: gravityActivities.length > 0 ? `${gravityActivities.length} readings` : null,
             color: '153,51,255'
-        },
-        {
-            id: 'abv',
-            icon: <Zap size={20} />,
-            label: 'Current ABV',
-            value: currentAbv,
-            subtext: brewLog.activity.filter(x => x.topic === ActivityTopicEnum.Addition && Number(x.addedVolume) > 0).length > 0
-                ? 'After dilution/blending'
-                : (gravityActivities.length > 0 ? `Potential: ${getPotentialAbv(gravityActivities)}%` : null),
-            color: '204,102,204'
-        },
-        {
+        },        
+        ...(dateRacked ? [{
             id: 'dateRacked',
             icon: getTopicIcon(ActivityTopicEnum.DateRacked),
             label: 'Racked',
-            value: formatDate( dateRacked),
-            subtext: dateRacked ? `${getDaysSinceAsDescription(dateRacked)}` : null,
+            value: formatDate(dateRacked),
+            subtext: `${getDaysSinceAsDescription(dateRacked)}`,
             color: getTopicColorRgb(ActivityTopicEnum.DateRacked)
-        },
-        {
+        }] : []),
+        ...(dateStabilized ? [{
             id: 'dateStabilized',
             icon: getTopicIcon(ActivityTopicEnum.DateStabilized),
             label: 'Stabilized',
             value: formatDate(dateStabilized),
-            subtext: dateStabilized ? `${getDaysSinceAsDescription(dateStabilized)}` : null,
+            subtext: `${getDaysSinceAsDescription(dateStabilized)}`,
             color: getTopicColorRgb(ActivityTopicEnum.DateStabilized)
-        },
-        {
+        }] : []),
+        ...(dateBottled ? [{
             id: 'dateBottled',
             icon: getTopicIcon(ActivityTopicEnum.DateBottled),
             label: 'Bottled',
             value: formatDate(dateBottled),
-            subtext: dateBottled ? `${getDaysSinceAsDescription(brewLog.dateBottled)}` : null,
+            subtext: `${getDaysSinceAsDescription(dateBottled)}`,
             color: getTopicColorRgb(ActivityTopicEnum.DateBottled)
-        }
+        }] : []),
+        {
+            id: 'inventory',
+            icon: <ArrowDownUp size={20} />,
+            label: 'Inventory',
+            value: inventoryValue,
+            subtext: null,
+            color: getTopicColorRgb(ActivityTopicEnum.Other)
+        },
     ];
 
     const getBrewStatus = () => {

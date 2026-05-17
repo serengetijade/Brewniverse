@@ -1,4 +1,4 @@
-import { Bell, Book, BookOpen, Calculator, FileText, Info } from 'lucide-react';
+import { ArrowDownUp, Bell, Book, BookOpen, Calculator, FileText, Info } from 'lucide-react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../Styles/Dashboard.css';
@@ -37,6 +37,13 @@ function Dashboard() {
             icon: Bell,
             path: '/alerts',
             count: state.alerts.length,
+            color: 'accent'
+        },
+        {
+            title: 'Inventory',
+            icon: ArrowDownUp,
+            path: '/inventory',
+            count: null,
             color: 'highlight'
         },
         {

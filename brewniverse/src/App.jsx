@@ -9,6 +9,7 @@ import BrewLogs from './views/BrewLogs';
 import Calculator from './views/Calculator';
 import Dashboard from './views/Dashboard';
 import Journal from './views/Journal';
+import Inventory from './views/Inventory';
 import Recipes from './views/Recipes';
 import Settings from './views/Settings';
 
@@ -26,6 +27,7 @@ function App() {
                                 <Route path="/recipes/*" element={<Recipes />} />
                                 <Route path="/alerts/*" element={<Alerts />} />
                                 <Route path="/calculator/*" element={<Calculator />} />
+                                <Route path="/inventory" element={<Inventory />} />
                                 <Route path="/journal/*" element={<Journal />} />
                                 <Route path="/settings" element={<Settings />} />
                             </Routes>

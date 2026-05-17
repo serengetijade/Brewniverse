@@ -4,6 +4,9 @@ Brewniverse is a feature-rich brewing logbook and recipe management app crafted 
 
 ---
 
+## New Features! 
+I added inventory management. Now you can keep track of what you've got in stock! - 5/17/26
+
 ## Features Implemented
 
 - **Data Storage & Export**
@@ -40,6 +43,11 @@ Brewniverse is a feature-rich brewing logbook and recipe management app crafted 
     - Set reminders for crucial brew events (nutrient additions, racking, stabilization, bottling, etc).
     - Active/archived alert workflows ensure you never miss a fermentation task.
     - Link alerts to specific batches or keep them general.
+
+- **Inventory Management**
+    - Track inventory numbers
+    - See a list of all brews, and update on each brew or from the list
+    - Sort display orders by name, date, rating, or counts
 
 - **Brewing Calculators**
     - Alcohol By Volume (ABV), dilution/alcohol blending, sugar/chaptalization calculator,

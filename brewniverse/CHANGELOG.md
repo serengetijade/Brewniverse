@@ -10,3 +10,11 @@ The following steps were used to generate this project:
 - Create `launch.json` to enable debugging.
 - Add project to solution.
 - Write this file.
+
+## 5/17/26
+Add inventory managment. 
+- Inventory propery on brew logs
+- InventoryRecord and InventoryList components
+- Inventory view
+- Naviagation menu item
+- Add inventory link to Dashboard

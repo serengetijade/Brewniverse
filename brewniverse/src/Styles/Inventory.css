@@ -1,0 +1,180 @@
+.inventory-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    background-color: var(--color-background);
+}
+
+.inventory-sort-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+}
+
+.inventory-sort-select {
+    min-height: 32px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-size: 0.85rem;
+}
+
+.inventory-sort-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(23, 14, 63, 0.1);
+}
+
+.inventory-sort-button {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.inventory-sort-button:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.inventory-sort-button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
+.inventory-empty {
+    font-size: 0.875rem;
+    color: var(--color-textLight);
+    font-style: italic;
+    padding: 0.75rem 0.6rem;
+    text-align: center;
+}
+
+.inventory-form-group {
+    margin-bottom: 0.75rem;
+}
+
+.inventory-list--single .inventory-row {
+    border-bottom: none;
+}
+
+.inventory-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.4rem 0.6rem;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-textLight);
+}
+
+.inventory-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.35rem 0.6rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.inventory-row--no-name {
+    grid-template-columns: auto;
+    justify-content: start;
+}
+
+.inventory-name {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: normal;
+    word-break: break-word;
+}
+
+.inventory-name-text {
+    font-weight: 600;
+}
+
+.inventory-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.inventory-rating-empty {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-textLight);
+}
+
+.inventory-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.inventory-input {
+    width: 90px;
+    min-height: 32px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    background-color: var(--color-background);
+    color: var(--color-text);
+}
+
+.inventory-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(23, 14, 63, 0.1);
+}
+
+.inventory-step-button {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.inventory-step-button:hover {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.inventory-step-button:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+}
+
