@@ -40,6 +40,60 @@
   font-size: 0.875rem;
 }
 
+.timeline-filter {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.timeline-filter-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 280px;
+}
+
+.timeline-filter-icon {
+  position: absolute;
+  left: 1rem;
+  color: white;
+  pointer-events: none;
+}
+
+.timeline-filter-select {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.75rem 1.5rem 0.75rem 2.75rem;
+  border: none;
+  border-radius: var(--border-radius-med);
+  background-color: var(--color-secondary);
+  color: white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timeline-filter-select:hover {
+  background-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-filter-select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15);
+}
+
+.timeline-filter-select option {
+  background-color: var(--color-cardBackground);
+  color: var(--color-text);
+}
+
 .brewlog-timeline-content {
   position: relative;
 }

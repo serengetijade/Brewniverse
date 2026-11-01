@@ -369,3 +369,4 @@ keystore.properties
 brewniverse/android/keystore.properties
 brewniverse/android/*.keystore
 brewniverse/android/*.jks
+/.claude/launch.json

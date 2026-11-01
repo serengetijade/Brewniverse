@@ -1,4 +1,4 @@
-import { Activity as ActivityIcon, BottleWine, Check, CirclePlus, FlaskConical, FlaskRound,
+import { Activity as ActivityIcon, BottleWine, Bubbles, Check, CirclePlus, FlaskConical, FlaskRound,
     Leaf, MoveVertical, Pill, PlayCircle, Scale, Shield, Sparkles, TestTubeDiagonal,
 } from 'lucide-react';
 
@@ -10,6 +10,7 @@ export const ActivityTopicEnum = {
     DateCreated: 'datecreated',
     DateRacked: 'dateracked',
     DateStabilized: 'datestabilized',
+    Degass: 'degass',
     Gravity: 'gravity',
     Nutrient: 'nutrient',
     PecticEnzyme: 'pecticenzyme',
@@ -29,6 +30,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Gravity Reading',
         displayName_Alert: 'Take Gravity Reading',
         icon: Scale,
+        isOption: true,
         label: 'Gravity'
     },
     [ActivityTopicEnum.Yeast]: {
@@ -39,6 +41,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Yeast Added',
         displayName_Alert: 'Add Yeast',
         icon: Sparkles,
+        isOption: true,
         label: 'Yeast'
     },
     [ActivityTopicEnum.Nutrient]: {
@@ -49,6 +52,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Nutrients Added',
         displayName_Alert: 'Add Nutrients',
         icon: Pill,
+        isOption: true,
         label: 'Nutrients'
     },
     [ActivityTopicEnum.PecticEnzyme]: {
@@ -59,6 +63,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Pectic Enzyme Added',
         displayName_Alert: 'Add Pectic Enzyme',
         icon: TestTubeDiagonal,
+        isOption: true,
         label: 'Pectic Enzyme'
     },
     [ActivityTopicEnum.Acid]: {
@@ -69,6 +74,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Acid Added',
         displayName_Alert: 'Add Acid',
         icon: FlaskConical,
+        isOption: true,
         label: 'Acids'
     },
     [ActivityTopicEnum.Base]: {
@@ -79,16 +85,18 @@ export const ActivityTopicConfiguration = {
         displayName: 'Base Added',
         displayName_Alert: 'Add Base',
         icon: FlaskRound,
+        isOption: true,
         label: 'Bases'
     },
     [ActivityTopicEnum.PH]: {
         key: ActivityTopicEnum.PH,
         color: '#ec4899',
         rgb: '236,72,153',
-        description: 'pH measurements and adjustments',
-        displayName: 'pH Measured/Adjusted',
-        displayName_Alert: 'Take pH Reading and/or Adjust pH',
+        description: 'pH measurements',
+        displayName: 'pH Measured',
+        displayName_Alert: 'Take pH Reading',
         icon: ActivityIcon,
+        isOption: true,
         label: 'pH'
     },
     [ActivityTopicEnum.DateCreated]: {
@@ -99,6 +107,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Date Created',
         displayName_Alert: 'Start a new brew',
         icon: PlayCircle,
+        isOption: false,
         label: 'Created'
     },
     [ActivityTopicEnum.DateRacked]: {
@@ -106,9 +115,10 @@ export const ActivityTopicConfiguration = {
         color: '#0066ff',
         rgb: '0,102,255',
         description: 'Date when brew was transferred to secondary',
-        displayName: 'Brew Racked',
+        displayName: 'Racked',
         displayName_Alert: 'Time to Rack Your Brew',
         icon: MoveVertical,
+        isOption: true,
         label: 'Racked'
     },
     [ActivityTopicEnum.DateStabilized]: {
@@ -119,6 +129,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Stabilization',
         displayName_Alert: 'Stabilize your brew',
         icon: Shield,
+        isOption: true,
         label: 'Stabilized'
     },
     [ActivityTopicEnum.DateBottled]: {
@@ -126,19 +137,32 @@ export const ActivityTopicConfiguration = {
         color: '#67ad34',
         rgb: '103,173,52',
         description: 'Date when brew was bottled',
-        displayName: 'Brew Bottled',
+        displayName: 'Bottled',
         displayName_Alert: 'Time to Bottle',
         icon: BottleWine,
+        isOption: true,
         label: 'Bottled'
+    },
+    [ActivityTopicEnum.Degass]: {
+        key: ActivityTopicEnum.Degass,
+        color: '#8dbed8',
+        rgb: '141,190,216',
+        description: 'Date when brew was degassed',
+        displayName: 'Degassed',
+        displayName_Alert: 'Time to Degass',
+        icon: Bubbles,
+        isOption: true,
+        label: 'Degassed'
     },
     [ActivityTopicEnum.Addition]: {
         key: ActivityTopicEnum.Addition,
         color: '#000000',
         rgb: '0, 0, 0',
         description: 'Addition',
-        displayName: 'Addition',
+        displayName: 'Volume +/- Changes',
         displayName_Alert: 'Make an addition',
         icon: CirclePlus,
+        isOption: false,
         label: 'Addition Added'
     },
     [ActivityTopicEnum.Tannin]: {
@@ -149,6 +173,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'Tannin Added',
         displayName_Alert: 'Add Tannin',
         icon: Leaf,
+        isOption: true,
         label: 'Tannins'
     },
     [ActivityTopicEnum.ToDo]: {
@@ -159,6 +184,7 @@ export const ActivityTopicConfiguration = {
         displayName: 'To Do',
         displayName_Alert: 'To Do Task Due',
         icon: Check,
+        isOption: false,
         label: 'To Do'
     },
     [ActivityTopicEnum.Other]: {
@@ -166,9 +192,10 @@ export const ActivityTopicConfiguration = {
         color: '#6b7280',
         rgb: '107, 114, 128',
         description: 'Other miscellaneous activities',
-        displayName: 'Activity',
+        displayName: 'Other Activity',
         displayName_Alert: 'Time for action!',
         icon: ActivityIcon,
+        isOption: true,
         label: 'Other'
     }
 };
@@ -185,6 +212,12 @@ export const getTopicConfig = (topic) => {
 
 export const getAllTopics = () => {
     return Object.values(ActivityTopicConfiguration);
+};
+
+export const getOptionTopics = () => {
+    return getAllTopics()
+        .filter(topic => topic.isOption)
+        .sort((a, b) => a.displayName.localeCompare(b.displayName));
 };
 
 export const getAllTopicKeys = () => {

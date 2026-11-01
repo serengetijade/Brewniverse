@@ -1,11 +1,12 @@
-import { ArrowDown, ArrowUp, Bell, Clock, ListOrdered } from 'lucide-react';
+import { ArrowDown, ArrowUp, Bell, Clock, Filter, ListOrdered } from 'lucide-react';
 import React, { useState } from 'react';
 import '../../Styles/ActivityTimeline.css';
-import { getTopicColor, getTopicIcon } from '../../constants/ActivityTopics.jsx';
+import { getTopicColor, getTopicConfig, getTopicIcon } from '../../constants/ActivityTopics.jsx';
 import Button from '../UI/Button';
 
 function BrewLogTimeline({ activity = [] }) {
     const [sortOrder, setSortOrder] = useState('desc'); // Start with newest first for detail view
+    const [topicFilter, setTopicFilter] = useState('all');
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -33,7 +34,20 @@ function BrewLogTimeline({ activity = [] }) {
         setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc');
     };
 
-    const sortedActivities = [...activity].sort((a, b) => {
+    const availableTopics = [...new Map(
+        activity.map(item => {
+            const config = getTopicConfig(item.topic);
+            return [config.key, config];
+        })
+    ).values()].sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    const activeTopicFilter = availableTopics.some(topic => topic.key === topicFilter) ? topicFilter : 'all';
+
+    const filteredActivities = activeTopicFilter === 'all'
+        ? activity
+        : activity.filter(item => getTopicConfig(item.topic).key === activeTopicFilter);
+
+    const sortedActivities = [...filteredActivities].sort((a, b) => {
         const dateA = new Date(a.date);
         const dateB = new Date(b.date);
         return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
@@ -60,9 +74,12 @@ function BrewLogTimeline({ activity = [] }) {
                     Activity Timeline
                 </h3>
                 <div className="timeline-controls">
-                    <span className="timeline-count">{activity.length} events</span>
+                    <span className="timeline-count">
+                        {activeTopicFilter === 'all'
+                            ? `${activity.length} events`
+                            : `${filteredActivities.length} of ${activity.length} events`}
+                    </span>
                     <Button
-
                         variant="secondary"
                         className="sort-toggle-btn"
                         onClick={toggleSortOrder}
@@ -70,6 +87,22 @@ function BrewLogTimeline({ activity = [] }) {
                         {sortOrder === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                         <span>{sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}</span>
                     </Button>
+                </div>
+                <div className="timeline-filter">
+                    <div className="timeline-filter-field">
+                        <Filter size={16} className="timeline-filter-icon" />
+                        <select
+                            className="timeline-filter-select"
+                            value={activeTopicFilter}
+                            onChange={(event) => setTopicFilter(event.target.value)}
+                            aria-label="Filter activity by topic"
+                        >
+                            <option value="all">All Topics</option>
+                            {availableTopics.map(topic => (
+                                <option key={topic.key} value={topic.key}>{topic.displayName}</option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </div>
 

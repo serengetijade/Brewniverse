@@ -9,6 +9,7 @@ import BrewLog from '../../models/BrewLog';
 import { UpdateAllGravityActivityData, getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
+import ActivityTopicList from '../Activity/ActivityTopicList';
 import IngredientList from '../Ingredients/IngredientList';
 import InventoryRecord from '../Inventory/InventoryRecord';
 import JournalEntryList from '../Journal/JournalEntryList';
@@ -45,7 +46,7 @@ function BrewLogForm() {
     const allSections = [
         'basicInfo', 'ingredients', 'primaryIngredients', 'secondaryIngredients', 'yeast',
         'gravity', 'nutrients', 'pecticEnzyme', 'acidsAndBases',
-        'abv', 'additions', 'additionsInstructions', 'additionStartingVolume', 'importantDates', 'otherActivities', 'notes', 'inventory', 'todo', 'journal', 'copy', 'archived'
+        'abv', 'additions', 'additionsInstructions', 'additionStartingVolume', 'importantDates', 'activities', 'otherActivities', 'notes', 'inventory', 'todo', 'journal', 'copy', 'archived'
     ];
     const collapseAll = () => {
         const newState = {};
@@ -62,6 +63,7 @@ function BrewLogForm() {
     };
 
     const [formState, setFormState] = useState(() => new BrewLog());
+    const [isEditingActivityVolume, setIsEditingActivityVolume] = useState(false);
 
     useEffect(() => {
         const brewLog = state.brewLogs?.find(log => log.id === id);
@@ -362,6 +364,103 @@ function BrewLogForm() {
         }));
     };
 
+    const renderActivityTopicTools = (topic) => {
+        const isVolumeMissing = !Number(formState.volume); // || finalVolume <= 0; //Currently only show if the starting volume is missing
+        const isVolumeTopic = topic === ActivityTopicEnum.Gravity || topic === ActivityTopicEnum.Addition;
+
+        // Show staring volume input if it is missing - cannot calculate gravity without it!
+        // Stay visible while editing so the inputs don't vanish mid-typing once a volume is entered
+        if (isVolumeTopic && (isVolumeMissing || isEditingActivityVolume)) {
+            return (
+                <div
+                    className="form-group"
+                    onFocus={() => setIsEditingActivityVolume(true)}
+                    onBlur={(event) => {
+                        if (!event.currentTarget.contains(event.relatedTarget)) {
+                            setIsEditingActivityVolume(false);
+                        }
+                    }}
+                >
+                    <div>
+                        <label htmlFor="activityVolume" className="form-label">
+                            Starting Volume *
+                        </label>
+                        <input
+                            type="number"
+                            id="activityVolume"
+                            name="volume"
+                            className="form-input"
+                            value={formState.volume}
+                            onChange={handleChange}
+                            maxLength={Validation.InputMaxLength}
+                            placeholder="1..."
+                            required={true}
+                            min={0}
+                            step="0.001"
+                        />
+                        {!Number(formState.volume) && (
+                            <p className="form-error">In order to calculate gravity, you must provide a starting volume.</p>
+                        )}
+                    </div>
+                    <div>
+                        <label htmlFor="activityVolumeUnit" className="form-label">
+                            Unit
+                        </label>
+                        <input
+                            type="text"
+                            id="activityVolumeUnit"
+                            name="volumeUnit"
+                            className="form-input"
+                            value={formState.volumeUnit}
+                            onChange={handleChange}
+                            maxLength={15}
+                            placeholder="gallons, liters, litres, oz"
+                        />
+                    </div>
+                </div>
+            );
+        }
+
+        {/*Nutrient Schedule Buttons*/ }
+        if (topic === ActivityTopicEnum.Nutrient) {
+            return (
+                <div className="form-group">
+                    <label className="form-label">
+                        Nutrient Schedule
+                    </label>
+                    <div className="nutrient-schedule-buttons">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="small"
+                            onClick={() => { addNutrientActivitiesByOption('2days') }}
+                        >
+                            Split Schedule (2 days)
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="small"
+                            onClick={() => { addNutrientActivitiesByOption('3days') }}
+                        >
+                            Staggered (3 days)
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="small"
+                            onClick={() => { addNutrientActivitiesByOption('4days') }}
+                        >
+                            Staggered (4 days)
+                        </Button>
+                    </div>
+                </div>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <div className="main-content-container form-container form-with-footer">
             <FormHeader
@@ -472,6 +571,9 @@ function BrewLogForm() {
                                     step="0.001"
                                 />
                             </div>
+                        </div>
+
+                        <div className="form-group">
                             <div>
                                 <label htmlFor="volumeUnit" className="form-label">
                                     Unit
@@ -514,56 +616,6 @@ function BrewLogForm() {
                                 isEditing={true}
                                 label="Rating"
                             />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="recipeId" className="form-label">
-                                Recipe
-                            </label>
-                            <div className="form-group">
-                                <select
-                                    id="recipeId"
-                                    name="recipeId"
-                                    className="form-select"
-                                    value={formState.recipeId}
-                                    onChange={handleChange}
-                                    style={{ flex: 1 }}
-                                >
-                                    <option value="">Select a recipe (optional)</option>
-                                    {[...(state.recipes || [])]
-                                        .sort((a, b) => a.name.localeCompare(b.name))
-                                        .map(recipe => (
-                                            <option key={recipe.id} value={recipe.id}>
-                                                {recipe.name}
-                                            </option>
-                                        ))}
-                                </select>
-                            </div>
-
-                            {(formState.recipeId) ? (
-                                <div className="recipe-buttons">
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="small"
-                                        onClick={() => navigate(`/recipes/${formState.recipeId}`)}
-                                        disabled={!formState.recipeId}
-                                    >
-                                        Go to Recipe
-                                    </Button>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="small"
-                                        onClick={importIngredientsFromRecipe}
-                                        disabled={!formState.recipeId}
-                                    >
-                                        <Plus size={buttonSize} />
-                                        Import Ingredients
-                                    </Button>
-                                </div>
-                            ) : null
-                            }
                         </div>
                     </div>
                 </div>
@@ -635,6 +687,56 @@ function BrewLogForm() {
                             <p className="section-description">
                                 Record everything that goes into your brew. Track exactly when you pitch yeast, add nutrients, or decide to add a little extra.
                             </p>
+                        </div>         
+
+                        <div className="form-group">
+                            <label htmlFor="recipeId" className="form-label">
+                                Recipe
+                            </label>
+                            <div className="form-group">
+                                <select
+                                    id="recipeId"
+                                    name="recipeId"
+                                    className="form-select"
+                                    value={formState.recipeId}
+                                    onChange={handleChange}
+                                    style={{ flex: 1 }}
+                                >
+                                    <option value="">Select a recipe (optional)</option>
+                                    {[...(state.recipes || [])]
+                                        .sort((a, b) => a.name.localeCompare(b.name))
+                                        .map(recipe => (
+                                            <option key={recipe.id} value={recipe.id}>
+                                                {recipe.name}
+                                            </option>
+                                        ))}
+                                </select>
+                            </div>
+
+                            {(formState.recipeId) ? (
+                                <div className="recipe-buttons">
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="small"
+                                        onClick={() => navigate(`/recipes/${formState.recipeId}`)}
+                                        disabled={!formState.recipeId}
+                                    >
+                                        Go to Recipe
+                                    </Button>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="small"
+                                        onClick={importIngredientsFromRecipe}
+                                        disabled={!formState.recipeId}
+                                    >
+                                        <Plus size={buttonSize} />
+                                        Import Ingredients
+                                    </Button>
+                                </div>
+                            ) : null
+                            }
                         </div>
 
                         {/* Primary Ingredients */}
@@ -668,287 +770,87 @@ function BrewLogForm() {
                             >
                             </IngredientList>
                         </div>
-
-                        {/* Yeast */}
-                        <div className="form-section">
-                            <div
-                                className="section-header collapsible"
-                                onClick={() => toggleSection('yeast')}
-                            >
-                                <h3>
-                                    <ChevronDown
-                                        size={20}
-                                        className={`section-toggle-icon ${collapsedSections.yeast ? 'collapsed' : ''}`}
-                                    />
-                                    Yeast
-                                </h3>
-                            </div>
-                            <div className={`section-content ${collapsedSections.yeast ? 'collapsed' : ''}`}>
-                                <ActivityList
-                                    formData={formState}
-                                    setFormData={updateFormDataCallback}
-                                    topic={ActivityTopicEnum.Yeast}
-                                    headerLabel=""
-                                    itemLabel="Yeast Details"
-                                    sectionInfoMessage="Wild or cultured, record your yeast here. No yeast additions recorded."
-                                    brewLogId={id}
-                                >
-                                </ActivityList>
-                            </div>
-                        </div>
-
-                        {/* Nutrients */}
-                        <div className="form-section">
-                            <div
-                                className="section-header collapsible"
-                                onClick={() => toggleSection('nutrients')}
-                            >
-                                <h3>
-                                    <ChevronDown
-                                        size={20}
-                                        className={`section-toggle-icon ${collapsedSections.nutrients ? 'collapsed' : ''}`}
-                                    />
-                                    Nutrients
-                                </h3>
-                            </div>
-                            <div className={`section-content ${collapsedSections.nutrients ? 'collapsed' : ''}`}>
-                                <div className="form-group">
-                                    <label htmlFor="nutrients" className="form-label">
-                                        Nutrient Details
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="nutrients"
-                                        name="nutrients"
-                                        className="form-input"
-                                        value={formState.nutrients}
-                                        onChange={handleChange}
-                                        maxLength={Validation.InputMaxLength}
-                                        placeholder="Nutrient details"
-                                    />
-                                </div>
-
-                                {/* Nutrient Schedule Option Buttons*/}
-                                <div className="form-group">
-                                    <label htmlFor="nutrients" className="form-label">
-                                        Nutrient Schedule
-                                    </label>
-                                    <div className="nutrient-schedule-buttons">
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="small"
-                                            onClick={() => { addNutrientActivitiesByOption('2days') }}
-                                        >
-                                            Split Schedule (2 days)
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="small"
-                                            onClick={() => { addNutrientActivitiesByOption('3days') }}
-                                        >
-                                            Staggered (3 days)
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="small"
-                                            onClick={() => { addNutrientActivitiesByOption('4days') }}
-                                        >
-                                            Staggered (4 days)
-                                        </Button>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            size="small"
-                                            onClick={addNutrientScheduleEntry}
-                                        >
-                                            <Plus size={buttonSize} />
-                                            Add Entry
-                                        </Button>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    {getActivitiesByTopic(formState, ActivityTopicEnum.Nutrient).map((activity) => (
-                                        <Activity
-                                            key={activity.id}
-                                            activity={activity}
-                                            itemLabel="Nutrient Details"
-                                            brewLogId={formState.id}
-                                            setFormData={updateFormDataCallback}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Acids and Bases */}
-                        <div className="form-section">
-                            <div
-                                className="section-header collapsible"
-                                onClick={() => toggleSection('acidsAndBases')}
-                            >
-                                <h3>
-                                    <ChevronDown
-                                        size={20}
-                                        className={`section-toggle-icon ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}
-                                    />
-                                    Acids and Bases
-                                </h3>
-                            </div>
-                            <div className={`section-content ${collapsedSections.acidsAndBases ? 'collapsed' : ''}`}>
-                                {/* Acids */}
-                                <div className="form-group">
-                                    <label htmlFor="acids" className="form-label">
-                                        Acids
-                                    </label>
-
-                                    <textarea
-                                        id="acids"
-                                        name="acids"
-                                        className="form-textarea"
-                                        value={formState.acids}
-                                        onChange={handleChange}
-                                        maxLength={Validation.TextareaMaxLength}
-                                        placeholder="General acid information and notes"
-                                        rows={2}
-                                    />
-                                </div>
-
-                                <ActivityList
-                                    formData={formState}
-                                    setFormData={updateFormDataCallback}
-                                    topic={ActivityTopicEnum.Acid}
-                                    headerLabel="Acid Additions"
-                                    itemLabel="Acid Details"
-                                    sectionInfoMessage=""
-                                    brewLogId={id}
-                                />
-
-                                {/* Bases */}
-                                <div className="form-group">
-                                    <label htmlFor="bases" className="form-label">
-                                        Bases
-                                    </label>
-
-                                    <textarea
-                                        id="bases"
-                                        name="bases"
-                                        className="form-textarea"
-                                        value={formState.bases}
-                                        onChange={handleChange}
-                                        maxLength={Validation.TextareaMaxLength}
-                                        placeholder="General base information and notes"
-                                        rows={2}
-                                    />
-                                </div>
-
-                                <ActivityList
-                                    formData={formState}
-                                    setFormData={updateFormDataCallback}
-                                    topic={ActivityTopicEnum.Base}
-                                    headerLabel="Base Additions"
-                                    itemLabel="Base Details"
-                                    sectionInfoMessage=""
-                                    brewLogId={id}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Tannins */}
-                        <div className="form-section">
-                            <div
-                                className="section-header collapsible"
-                                onClick={() => toggleSection('tannins')}
-                            >
-                                <h3>
-                                    <ChevronDown
-                                        size={20}
-                                        className={`section-toggle-icon ${collapsedSections.tannins ? 'collapsed' : ''}`}
-                                    />
-                                    Tannins
-                                </h3>
-                            </div>
-                            <div className={`section-content ${collapsedSections.tannins ? 'collapsed' : ''}`}>
-
-                                <div className="form-group">
-                                    <label htmlFor="tannins" className="form-label">
-                                        Tannins
-                                    </label>
-                                    <textarea
-                                        id="tannins"
-                                        name="tannins"
-                                        className="form-textarea"
-                                        value={formState.tannins}
-                                        onChange={handleChange}
-                                        maxLength={Validation.TextareaMaxLength}
-                                        placeholder="General tannin information and notes"
-                                        rows={2}
-                                    />
-                                </div>
-
-                                <ActivityList
-                                    formData={formState}
-                                    setFormData={updateFormDataCallback}
-                                    topic={ActivityTopicEnum.Tannin}
-                                    headerLabel="Tannin Additions"
-                                    itemLabel="Tannin Details"
-                                    sectionInfoMessage=""
-                                    brewLogId={id}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Pectic Enzyme */}
-                        <div className="form-section">
-                            <div
-                                className="section-header collapsible"
-                                onClick={() => toggleSection('pecticEnzyme')}
-                            >
-                                <h3>
-                                    <ChevronDown
-                                        size={20}
-                                        className={`section-toggle-icon ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}
-                                    />
-                                    Pectic Enzyme
-                                </h3>
-                            </div>
-                            <div className={`section-content ${collapsedSections.pecticEnzyme ? 'collapsed' : ''}`}>
-                                <div className="form-group">
-                                    <label htmlFor="pecticEnzyme" className="form-label">
-                                        Pectic Enzyme
-                                    </label>
-
-                                    <textarea
-                                        id="pecticEnzyme"
-                                        name="pecticEnzyme"
-                                        className="form-textarea"
-                                        value={formState.pecticEnzyme}
-                                        onChange={handleChange}
-                                        maxLength={Validation.TextareaMaxLength}
-                                        placeholder="General pectic enzyme information and notes"
-                                        rows={2}
-                                    />
-                                </div>
-
-                                <ActivityList
-                                    formData={formState}
-                                    setFormData={updateFormDataCallback}
-                                    topic={ActivityTopicEnum.PecticEnzyme}
-                                    headerLabel="Pectic Enzyme Additions"
-                                    itemLabel="Enzyme Details"
-                                    sectionInfoMessage=""
-                                    brewLogId={id}
-                                >
-                                </ActivityList>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                {/* Additions */}
+                {/* Gravity Stats */}
+                <div className="form-section">
+                    <div
+                        className="section-header collapsible"
+                        onClick={() => toggleSection('gravity')}
+                    >
+                        <h3>
+                            <ChevronDown
+                                size={20}
+                                className={`section-toggle-icon ${collapsedSections.gravity ? 'collapsed' : ''}`}
+                            />
+                            Gravity Stats
+                        </h3>
+                    </div>
+                    <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
+                        {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
+                            <p className="section-description">Please add gravity entries below to see calculated values</p>
+                        )}
+
+                        <div className="gravity-stats-container">
+                            <div className="gravity-stat-card accent20">
+                                <div className="gravity-stat-label">Original Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravityOriginal(gravityActivities) || '—'}
+                                </div>
+                                {getGravityOriginal(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Starting point</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent15">
+                                <div className="gravity-stat-label">1/3 Break Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravity13Break(gravityActivities) || '—'}
+                                </div>
+                                {getGravity13Break(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Add nutrient at this point</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent10">
+                                <div className="gravity-stat-label">Current Gravity</div>
+                                <div className="gravity-stat-value">
+                                    {getGravityFinal(gravityActivities) || '—'}
+                                </div>
+                                {getGravityFinal(gravityActivities) <= 1 && (
+                                    <div className="gravity-stat-subtitle">Fermentation complete</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent08">
+                                <div className="gravity-stat-label">Current ABV</div>
+                                <div className="gravity-stat-value">
+                                    {getCurrentAbv(gravityActivities) || '—'}
+                                    {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                                </div>
+                                {getCurrentAbv(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Present alcohol content</div>
+                                )}
+                            </div>
+
+                            <div className="gravity-stat-card accent05">
+                                <div className="gravity-stat-label">Potential Final ABV</div>
+                                <div className="gravity-stat-value">
+                                    {getPotentialAbv(gravityActivities) || '—'}
+                                    {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
+                                </div>
+                                {getPotentialAbv(gravityActivities) && (
+                                    <div className="gravity-stat-subtitle">Estimated at completion</div>
+                                )}
+                            </div>
+                        </div>
+
+                        <GravityChart gravityActivities={gravityActivities} />
+                    </div>
+                </div>
+
+                {/* Volume +/- Changes (Additions) */}
                 <div className="form-section">
                     <div className="section-header collapsible" onClick={() => toggleSection('additions')}>
                         <h3>
@@ -1072,200 +974,27 @@ function BrewLogForm() {
                     </div>
                 </div>
 
-                {/* Gravity Readings */}
+                {/*Activities*/}
                 <div className="form-section">
                     <div
                         className="section-header collapsible"
-                        onClick={() => toggleSection('gravity')}
+                        onClick={() => toggleSection('activities')}
                     >
                         <h3>
                             <ChevronDown
                                 size={20}
-                                className={`section-toggle-icon ${collapsedSections.gravity ? 'collapsed' : ''}`}
+                                className={`section-toggle-icon ${collapsedSections.activities ? 'collapsed' : ''}`}
                             />
-                            Gravity Readings
+                            Activities
                         </h3>
                     </div>
-                    <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
-                        {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
-                            <p className="section-description">Please add gravity entries below to see calculated values</p>
-                        )}
-
-                        <div className="gravity-stats-container">
-                            <div className="gravity-stat-card accent20">
-                                <div className="gravity-stat-label">Original Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityOriginal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityOriginal(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Starting point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent15">
-                                <div className="gravity-stat-label">1/3 Break Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravity13Break(gravityActivities) || '—'}
-                                </div>
-                                {getGravity13Break(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Add nutrient at this point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent10">
-                                <div className="gravity-stat-label">Current Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityFinal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityFinal(gravityActivities) <= 1 && (
-                                    <div className="gravity-stat-subtitle">Fermentation complete</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent08">
-                                <div className="gravity-stat-label">Current ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getCurrentAbv(gravityActivities) || '—'}
-                                    {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getCurrentAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Present alcohol content</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent05">
-                                <div className="gravity-stat-label">Potential Final ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getPotentialAbv(gravityActivities) || '—'}
-                                    {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getPotentialAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Estimated at completion</div>
-                                )}
-                            </div>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="volume" className="form-label">
-                                Starting Volume <small>(Required)</small>
-                            </label>
-                            <input
-                                type="number"
-                                id="volume"
-                                name="volume"
-                                className="form-input"
-                                value={formState.volume}
-                                onChange={handleChange}
-                                maxLength={Validation.InputMaxLength}
-                                placeholder="e.g., 5 gallons, 1 gallon"
-                                required={true}
-                                min={0}
-                                step="0.001"
-                            />
-                            <p className="section-description">
-                                In order to calculate gravity, you must provide a starting volume.
-                            </p>
-                        </div>
-
-                        <ActivityList
+                    <div className={`section-content ${collapsedSections.activities ? 'collapsed' : ''}`}>
+                        <ActivityTopicList
                             formData={formState}
                             setFormData={updateFormDataCallback}
-                            topic={ActivityTopicEnum.Gravity}
-                            headerLabel="Gravity Readings"
-                            itemLabel="Gravity Reading"
-                            sectionInfoMessage=""
                             brewLogId={id}
-                            showBottomButton={true}
-                        >
-                        </ActivityList>
-
-                        <GravityChart gravityActivities={gravityActivities} />
-                    </div>
-                </div>
-
-                {/* Important Dates */}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('importantDates')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.importantDates ? 'collapsed' : ''}`}
-                            />
-                            Important Dates
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.importantDates ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <ActivityList
-                                formData={formState}
-                                setFormData={updateFormDataCallback}
-                                topic={ActivityTopicEnum.DateRacked}
-                                headerLabel="Date Racked"
-                                itemLabel="Racking Details"
-                                sectionInfoMessage=""
-                                brewLogId={id}
-                            >
-                            </ActivityList>
-                        </div>
-
-                        <div className="form-group">
-                            <ActivityList
-                                formData={formState}
-                                setFormData={updateFormDataCallback}
-                                topic={ActivityTopicEnum.DateStabilized}
-                                headerLabel="Date Stabilized"
-                                itemLabel="Stabilization Details"
-                                sectionInfoMessage=""
-                                brewLogId={id}
-                            >
-                            </ActivityList>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="dateBottled" className="form-label">
-                                Date Bottled
-                            </label>
-                            <input
-                                type="datetime-local"
-                                name="dateBottled"
-                                className="form-input"
-                                value={formState.dateBottled}
-                                onChange={handleChange}
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/*Other Activities*/}
-                <div className="form-section">
-                    <div
-                        className="section-header collapsible"
-                        onClick={() => toggleSection('otherActivities')}
-                    >
-                        <h3>
-                            <ChevronDown
-                                size={20}
-                                className={`section-toggle-icon ${collapsedSections.otherActivities ? 'collapsed' : ''}`}
-                            />
-                            Other Activities
-                        </h3>
-                    </div>
-                    <div className={`section-content ${collapsedSections.otherActivities ? 'collapsed' : ''}`}>
-                        <div className="form-group">
-                            <ActivityList
-                                formData={formState}
-                                setFormData={updateFormDataCallback}
-                                topic={ActivityTopicEnum.Other}
-                                headerLabel=""
-                                itemLabel="Activity Details"
-                                sectionInfoMessage="Log any other activities you want to keep track of, such as pH measurements, filtering, backsweetening, degassing, tastings, and more."
-                                brewLogId={id}
-                            >
-                            </ActivityList>
-                        </div>
+                            renderTopicTools={renderActivityTopicTools}
+                        />
                     </div>
                 </div>
 
@@ -1364,6 +1093,88 @@ function BrewLogForm() {
                                 maxLength={Validation.TextareaMaxLength}
                                 placeholder="Additional notes about this brew"
                                 rows={4}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="acids" className="form-label">
+                                Acid Details
+                            </label>
+
+                            <textarea
+                                id="acids"
+                                name="acids"
+                                className="form-textarea"
+                                value={formState.acids}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="General acid information and notes"
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="bases" className="form-label">
+                                Base Details
+                            </label>
+
+                            <textarea
+                                id="bases"
+                                name="bases"
+                                className="form-textarea"
+                                value={formState.bases}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="General base information and notes"
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="nutrients" className="form-label">
+                                Nutrient Details
+                            </label>
+                            <textarea
+                                id="nutrients"
+                                name="nutrients"
+                                className="form-textarea"
+                                value={formState.nutrients}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="Nutrient details"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="pecticEnzyme" className="form-label">
+                                Pectic Enzyme Details
+                            </label>
+
+                            <textarea
+                                id="pecticEnzyme"
+                                name="pecticEnzyme"
+                                className="form-textarea"
+                                value={formState.pecticEnzyme}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="General pectic enzyme information and notes"
+                                rows={2}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="tannins" className="form-label">
+                                Tannin Details
+                            </label>
+                            <textarea
+                                id="tannins"
+                                name="tannins"
+                                className="form-textarea"
+                                value={formState.tannins}
+                                onChange={handleChange}
+                                maxLength={Validation.TextareaMaxLength}
+                                placeholder="General tannin information and notes"
+                                rows={2}
                             />
                         </div>
                     </div>
