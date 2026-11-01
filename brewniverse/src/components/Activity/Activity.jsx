@@ -63,6 +63,9 @@ function Activity({
             }
         }
 
+        // Update the displayed value immediately so the controlled input never re-renders with the old value (which moves the cursor to the end)
+        setActivityState(prev => ActivityModel.fromJSON({ ...prev, [field]: value }));
+
         if (setFormData) {
             updateActivity(setFormData, id, field, value);
         }
