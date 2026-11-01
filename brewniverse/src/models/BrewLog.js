@@ -29,7 +29,7 @@ class BrewLog {
         this.recipeId = data.recipeId || '';
         this.tannins = data.tannins || '';
         this.type = data.type || 'Mead';
-        this.volume = data.volume || '';
+        this.volume = data.volume ?? '';
         this.volumeUnit = data.volumeUnit || '';
         this.yeast = data.yeast || '';
     }

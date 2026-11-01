@@ -1,18 +1,45 @@
 import React, { useState } from 'react';
 import '../../Styles/Activity.css';
-import { ActivityTopicEnum, getOptionTopics, getTopicConfig } from '../../constants/ActivityTopics.jsx';
+import { getOptionTopics, getTopicConfig, getTopicDisplayName } from '../../constants/ActivityTopics.jsx';
+import Activity from './Activity';
 import ActivityList from './ActivityList';
+
+const AllTopicsValue = 'all';
 
 export function ActivityTopicList({
     formData,
     setFormData,
     brewLogId,
-    defaultTopic = ActivityTopicEnum.Other,
+    defaultTopic = AllTopicsValue,
     modeAction,
     renderTopicTools
 }) {
     const [selectedTopic, setSelectedTopic] = useState(defaultTopic);
     const topicConfig = getTopicConfig(selectedTopic);
+
+    // View-only list of every activity (no Add Entry), oldest first to match ActivityList
+    const renderAllActivities = () => {
+        const allActivities = [...(formData?.activity || [])]
+            .sort((a, b) => (Date.parse(a?.date) || 0) - (Date.parse(b?.date) || 0));
+
+        return (
+            <div className="form-group">
+                {allActivities.length === 0
+                    ? (<p className="empty-message">No activities recorded.</p>)
+                    : allActivities.map(item => (
+                        <Activity
+                            key={item.id}
+                            activity={item}
+                            itemLabel={getTopicDisplayName(item.topic)}
+                            brewLogId={brewLogId}
+                            setFormData={setFormData}
+                            modeAction={modeAction}
+                        />
+                    ))
+                }
+            </div>
+        );
+    };
 
     return (
         <div className="activity-topic-list">
@@ -24,6 +51,7 @@ export function ActivityTopicList({
                     value={selectedTopic}
                     onChange={(event) => setSelectedTopic(event.target.value)}
                 >
+                    <option value={AllTopicsValue}>All Activities</option>
                     {getOptionTopics().map(topic => (
                         <option key={topic.key} value={topic.key}>{topic.displayName}</option>
                     ))}
@@ -32,17 +60,22 @@ export function ActivityTopicList({
 
             {renderTopicTools?.(selectedTopic)}
 
-            <ActivityList
-                formData={formData}
-                setFormData={setFormData}
-                topic={selectedTopic}
-                headerLabel=""
-                itemLabel={topicConfig.displayName}
-                sectionInfoMessage={`${topicConfig.description}. No entries recorded.`}
-                brewLogId={brewLogId}
-                showBottomButton={true}
-                modeAction={modeAction}
-            />
+            {selectedTopic === AllTopicsValue
+                ? renderAllActivities()
+                : (
+                    <ActivityList
+                        formData={formData}
+                        setFormData={setFormData}
+                        topic={selectedTopic}
+                        headerLabel=""
+                        itemLabel={topicConfig.displayName}
+                        sectionInfoMessage={`${topicConfig.description}. No entries recorded.`}
+                        brewLogId={brewLogId}
+                        showBottomButton={true}
+                        modeAction={modeAction}
+                    />
+                )
+            }
         </div>
     );
 }

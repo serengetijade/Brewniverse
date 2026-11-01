@@ -365,7 +365,8 @@ function BrewLogForm() {
     };
 
     const renderActivityTopicTools = (topic) => {
-        const isVolumeMissing = !Number(formState.volume); // || finalVolume <= 0; //Currently only show if the starting volume is missing
+        // 0 is a valid starting volume; only an empty value counts as missing
+        const isVolumeMissing = (formState.volume === '' || formState.volume === null || formState.volume === undefined) || finalVolume <= 0;
         const isVolumeTopic = topic === ActivityTopicEnum.Gravity || topic === ActivityTopicEnum.Addition;
 
         // Show staring volume input if it is missing - cannot calculate gravity without it!
@@ -398,7 +399,7 @@ function BrewLogForm() {
                             min={0}
                             step="0.001"
                         />
-                        {!Number(formState.volume) && (
+                        {isVolumeMissing && (
                             <p className="form-error">In order to calculate gravity, you must provide a starting volume.</p>
                         )}
                     </div>
