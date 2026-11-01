@@ -1,6 +1,7 @@
 ﻿import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import StorageService from '../utils/StorageService';
 import NotificationService from '../utils/NotificationService';
+import { setCustomTopics } from '../constants/ActivityTopics.jsx';
 
 // Initial state
 const initialState = {
@@ -8,6 +9,7 @@ const initialState = {
     recipes: [],
     alerts: [],
     alertGroups: [],
+    customActivityTopics: [],
     instructions: [],
     journalEntries: [],
     recipeProgress: {},
@@ -49,6 +51,11 @@ export const ActionTypes = {
     addJournalEntry: 'addJournalEntry',
     updateJournalEntry: 'updateJournalEntry',
     deleteJournalEntry: 'deleteJournalEntry',
+
+    // Custom Activity Topics
+    addCustomActivityTopic: 'addCustomActivityTopic',
+    updateCustomActivityTopic: 'updateCustomActivityTopic',
+    deleteCustomActivityTopic: 'deleteCustomActivityTopic',
 
     // Settings
     updateSettings: 'updateSettings',
@@ -271,6 +278,26 @@ function appReducer(state, action) {
                 journalEntries: state.journalEntries.filter(entry => entry.id !== action.payload),
             };
 
+        case ActionTypes.addCustomActivityTopic:
+            return {
+                ...state,
+                customActivityTopics: [...state.customActivityTopics, action.payload],
+            };
+
+        case ActionTypes.updateCustomActivityTopic:
+            return {
+                ...state,
+                customActivityTopics: state.customActivityTopics.map(topic =>
+                    topic.key === action.payload.key ? { ...topic, ...action.payload } : topic
+                ),
+            };
+
+        case ActionTypes.deleteCustomActivityTopic:
+            return {
+                ...state,
+                customActivityTopics: state.customActivityTopics.filter(topic => topic.key !== action.payload),
+            };
+
         case ActionTypes.updateSettings:
             {
                 const newSettings = { ...state.settings, ...action.payload };
@@ -304,6 +331,7 @@ function appReducer(state, action) {
                 brewLogs: action.payload.brewLogs || [],
                 recipes: action.payload.recipes || [],
                 alerts: action.payload.alerts || [],
+                customActivityTopics: action.payload.customActivityTopics || [],
                 journalEntries: action.payload.journalEntries || [],
             };
 
@@ -381,6 +409,9 @@ export function AppProvider({ children }) {
 
         saveData();
     }, [state, isDataLoaded]);
+
+    // Registered during render (not in an effect) so topic lookups in this render already see the latest custom topics
+    setCustomTopics(state.customActivityTopics);
 
     return (
         <AppContext.Provider value={{ state, dispatch }}>

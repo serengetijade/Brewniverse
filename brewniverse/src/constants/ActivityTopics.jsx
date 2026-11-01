@@ -1,5 +1,5 @@
 import { Activity as ActivityIcon, BottleWine, Bubbles, Check, CirclePlus, FlaskConical, FlaskRound,
-    Leaf, MoveVertical, Pill, PlayCircle, Scale, Shield, Sparkles, TestTubeDiagonal,
+    Leaf, MoveVertical, Pill, PlayCircle, Scale, Shield, Sparkles, PersonStanding, TestTubeDiagonal,
 } from 'lucide-react';
 
 export const ActivityTopicEnum = {
@@ -200,28 +200,51 @@ export const ActivityTopicConfiguration = {
     }
 };
 
+// User-defined topics, kept in sync with app state by AppProvider
+export const CustomTopicKeyPrefix = 'custom-';
+export const CustomTopicDefaultColor = '#6b7280';
+
+let customTopicConfiguration = {};
+
+const hexToRgb = (hex = CustomTopicDefaultColor) => {
+    const red = parseInt(hex.slice(1, 3), 16);
+    const green = parseInt(hex.slice(3, 5), 16);
+    const blue = parseInt(hex.slice(5, 7), 16);
+    return `${red}, ${green}, ${blue}`;
+};
+
+export const setCustomTopics = (topics = []) => {
+    customTopicConfiguration = Object.fromEntries(topics.map(topic => [topic.key, {
+        ...topic,
+        rgb: hexToRgb(topic.color),
+        icon: PersonStanding,
+        isOption: true,
+        isCustom: true
+    }]));
+};
+
 // Helpers
 export const getTopicConfig = (topic) => {
     if (!topic) return ActivityTopicConfiguration[ActivityTopicEnum.Other];
 
     const topicLower = topic.toLowerCase();
-    const config = ActivityTopicConfiguration[topicLower];
+    const config = ActivityTopicConfiguration[topicLower] || customTopicConfiguration[topicLower];
 
     return config || ActivityTopicConfiguration[ActivityTopicEnum.Other];
 };
 
 export const getAllTopics = () => {
-    return Object.values(ActivityTopicConfiguration);
+    return [...Object.values(ActivityTopicConfiguration), ...Object.values(customTopicConfiguration)];
 };
 
 export const getOptionTopics = () => {
     return getAllTopics()
         .filter(topic => topic.isOption)
-        .sort((a, b) => a.displayName.localeCompare(b.displayName));
+        .sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
 };
 
 export const getAllTopicKeys = () => {
-    return Object.keys(ActivityTopicConfiguration);
+    return getAllTopics().map(topic => topic.key);
 };
 
 export const getTopicColor = (topic) => {

@@ -316,9 +316,9 @@ class StorageService {
     }
 
     mergeData(existingData, importedData) {
-        const mergeArrays = (existing = [], imported = []) => {
-            const existingIds = new Set(existing.map(item => item.id));
-            const uniqueImported = imported.filter(item => !existingIds.has(item.id));
+        const mergeArrays = (existing = [], imported = [], idField = 'id') => {
+            const existingIds = new Set(existing.map(item => item[idField]));
+            const uniqueImported = imported.filter(item => !existingIds.has(item[idField]));
             return [...existing, ...uniqueImported];
         };
 
@@ -327,7 +327,9 @@ class StorageService {
             recipes: mergeArrays(existingData.recipes, importedData.recipes),
             alerts: mergeArrays(existingData.alerts, importedData.alerts),
             alertGroups: mergeArrays(existingData.alertGroups || [], importedData.alertGroups || []),
+            customActivityTopics: mergeArrays(existingData.customActivityTopics || [], importedData.customActivityTopics || [], 'key'),
             instructions: mergeArrays(existingData.instructions || [], importedData.instructions || []),
+            journalEntries: mergeArrays(existingData.journalEntries || [], importedData.journalEntries || []),
             recipeProgress: {
                 ...existingData.recipeProgress,
                 ...importedData.recipeProgress

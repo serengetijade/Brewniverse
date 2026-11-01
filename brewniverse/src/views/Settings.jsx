@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../Styles/Settings.css';
+import CustomActivityTopics from '../components/Activity/CustomActivityTopics';
 import Button from '../components/UI/Button';
 import { ActionTypes, useApp } from '../contexts/AppContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -89,6 +90,11 @@ function Settings() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    {/* Custom Activity Topics */}
+                    <div className="settings-section">
+                        <CustomActivityTopics />
                     </div>
 
                     {/* Data */}
