@@ -149,16 +149,11 @@ function BrewLogDetail() {
 
                 {/* Statistics Section */}
                 <div className="brewlog-content-section">
-                    <BrewLogStats brewLog={brewLog} />
-                </div>
-
-                {/* Statistics Section 
-                <div className="brewlog-content-section">
                     {renderSectionHeader('statistics', <ChartLine size={20} />, 'Brew Statistics', <BrewStatusBadge brewLog={brewLog} />)}
                     <div className={sectionContentClass('statistics')}>
                         <BrewLogStats brewLog={brewLog} showHeader={false} />
                     </div>
-                </div>*/}
+                </div>
 
                 {/* Gravity Stats & Chart Section */}
                 <div className="brewlog-content-section">
