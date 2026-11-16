@@ -6,7 +6,37 @@ import { getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal
 import { getDaysSinceAsDescription } from '../../utils/DateUtils';
 import { ActivityTopicEnum, getActivitiesByTopic } from '../Activity/Activity';
 
-function BrewLogStats({ brewLog }) {
+function getBrewStatus(brewLog) {
+    const gravityActivities = getGravityActivities(brewLog.activity || []);
+    const dateBottledActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateBottled);
+    const stabilizedActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateStabilized);
+    const dateRackedActivities = getActivitiesByTopic(brewLog, ActivityTopicEnum.DateRacked);
+
+    if (brewLog.archived)
+        return { label: 'Archived', color: 'highlight', icon: <BottleWine size={16} /> };
+    else if (dateBottledActivities.length > 0) {
+        return { label: 'Bottled', color: 'highlight', icon: <BottleWine size={16} /> };
+    } else if (stabilizedActivities.length > 0) {
+        return { label: 'Stabilized', color: 'accent', icon: <Shield size={16} /> };
+    } else if (dateRackedActivities.length > 0) {
+        return { label: 'Racked', color: 'secondary', icon: <MoveVertical size={16} /> };
+    } else if (gravityActivities.length > 0) {
+        return { label: 'Fermenting', color: 'primary', icon: <Clock size={16} /> };
+    }
+    return { label: 'Started', color: 'accent', icon: <Calendar size={16} /> };
+}
+
+export function BrewStatusBadge({ brewLog }) {
+    const status = getBrewStatus(brewLog);
+    return (
+        <div className={`brew-status-badge ${status.color}`}>
+            {status.icon}
+            {status.label}
+        </div>
+    );
+}
+
+function BrewLogStats({ brewLog, showHeader = true }) {
     const gravityActivities = getGravityActivities(brewLog.activity || []);
     let currentAbv = getCurrentAbv(gravityActivities);
     currentAbv = currentAbv ? currentAbv + "%" : "N/A"
@@ -135,32 +165,14 @@ function BrewLogStats({ brewLog }) {
         },
     ];
 
-    const getBrewStatus = () => {
-        if (brewLog.archived)
-            return { label: 'Archived', color: 'highlight', icon: <BottleWine size={16} /> };
-        else if (dateBottledActivities.length > 0) {
-            return { label: 'Bottled', color: 'highlight', icon: <BottleWine size={16} /> };
-        } else if (stabilizedActivities.length > 0) {
-            return { label: 'Stabilized', color: 'accent', icon: <Shield size={16} /> };
-        } else if (dateRackedActivities.length > 0) {
-            return { label: 'Racked', color: 'secondary', icon: <MoveVertical size={16} /> };
-        } else if (gravityActivities.length > 0) {
-            return { label: 'Fermenting', color: 'primary', icon: <Clock size={16} /> };
-        }
-        return { label: 'Started', color: 'accent', icon: <Calendar size={16} /> };
-    };
-
-    const status = getBrewStatus();
-
     return (
         <div className="brewlog-stats-container">
-            <div className="brewlog-stats-header">
-                <h3><ChartLine size={20} /> Brew Statistics</h3>
-                <div className={`brew-status-badge ${status.color}`}>
-                    {status.icon}
-                    {status.label}
+            {showHeader && (
+                <div className="brewlog-stats-header">
+                    <h3><ChartLine size={20} /> Brew Statistics</h3>
+                    <BrewStatusBadge brewLog={brewLog} />
                 </div>
-            </div>
+            )}
 
             <div className="brewlog-stats-grid">
                 {stats.map((stat) => (

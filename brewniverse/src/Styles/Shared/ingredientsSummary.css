@@ -356,3 +356,22 @@
     margin-bottom: auto;
   }
 }
+
+/* Condensed mobile layout */
+@media (max-width: 480px) {
+  .ingredients-summary {
+    padding: 0.75rem;
+  }
+
+  .main-ingredients-container {
+    gap: 0.75rem;
+  }
+
+  .main-ingredient-section {
+    padding: 0.75rem;
+  }
+
+  .ingredient-section {
+    padding: 0.75rem;
+  }
+}

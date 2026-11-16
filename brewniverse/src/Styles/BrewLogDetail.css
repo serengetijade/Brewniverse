@@ -1,3 +1,5 @@
+@import './Shared/forms.css';
+
 .brewlog-detail {
   padding: 2rem;
   max-width: 1400px;
@@ -106,6 +108,39 @@
 
 .brewlog-content-section {
   margin-bottom: 2rem;
+}
+
+/* Collapsible sections (shares the form's .section-header / .section-content styles) */
+.brewlog-detail .section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+  .brewlog-detail .section-header h3 {
+    margin: 0;
+    color: var(--color-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+.brewlog-detail .brewlog-content-section:has(.section-content.collapsed) {
+  margin-bottom: 0.5rem;
+}
+
+.brewlog-detail .brewlog-content-section:has(.section-content.collapsed) .section-header {
+  margin-bottom: 0;
+}
+
+.brewlog-detail .collapse-all-container {
+  margin-bottom: 1rem;
+}
+
+.brewlog-recipe-link {
+  margin-bottom: 1rem;
 }
 
 .brewlog-charts-row {
@@ -240,12 +275,67 @@
   }
 }
 
+/* Condensed mobile layout */
 @media (max-width: 480px) {
-    .brewlog-detail{
+    .brewlog-detail {
         padding: .5rem;
     }
 
     .brewlog-detail-header {
         gap: 0rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .brewlog-header-content {
+        min-width: 0;
+    }
+
+    .brewlog-header-content h1 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .brewlog-description {
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .brewlog-content-section {
+        margin-bottom: 0.75rem;
+    }
+
+    .brewlog-detail .section-header {
+        margin-bottom: 0.5rem;
+    }
+
+    .brewlog-detail .section-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .brewlog-detail .collapse-all-container {
+        margin-bottom: 0.5rem;
+    }
+
+    .brewlog-recipe-link {
+        margin-bottom: 0.5rem;
+    }
+
+    .brewlog-charts-row {
+        gap: 0.75rem;
+        margin-bottom: 0;
+    }
+
+    .brewlog-notes {
+        margin-top: 0;
+        padding: 0.75rem;
+    }
+
+    .brewlog-notes-content {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        line-height: 1.4;
     }
 }

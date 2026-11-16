@@ -4,7 +4,7 @@ import '../../Styles/ActivityTimeline.css';
 import { getTopicColor, getTopicConfig, getTopicIcon } from '../../constants/ActivityTopics.jsx';
 import Button from '../UI/Button';
 
-function BrewLogTimeline({ activity = [] }) {
+function BrewLogTimeline({ activity = [], showTitle = true }) {
     const [sortOrder, setSortOrder] = useState('desc'); // Start with newest first for detail view
     const [topicFilter, setTopicFilter] = useState('all');
 
@@ -69,16 +69,13 @@ function BrewLogTimeline({ activity = [] }) {
     return (
         <div className="brewlog-timeline-container">
             <div className="brewlog-timeline-header">
-                <h3>
-                    <ListOrdered size={20} />
-                    Activity Timeline
-                </h3>
+                {showTitle && (
+                    <h3>
+                        <ListOrdered size={20} />
+                        Activity Timeline
+                    </h3>
+                )}
                 <div className="timeline-controls">
-                    <span className="timeline-count">
-                        {activeTopicFilter === 'all'
-                            ? `${activity.length} events`
-                            : `${filteredActivities.length} of ${activity.length} events`}
-                    </span>
                     <Button
                         variant="secondary"
                         className="sort-toggle-btn"
@@ -87,8 +84,6 @@ function BrewLogTimeline({ activity = [] }) {
                         {sortOrder === 'asc' ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                         <span>{sortOrder === 'asc' ? 'Oldest First' : 'Newest First'}</span>
                     </Button>
-                </div>
-                <div className="timeline-filter">
                     <div className="timeline-filter-field">
                         <Filter size={16} className="timeline-filter-icon" />
                         <select

@@ -158,7 +158,7 @@ function Activity({
 
     if (activity.topic === ActivityTopicEnum.Addition) {
         return (
-            <div className="activity activity-addition">
+            <div className="activity activity-addition" data-activity-id={activityState.id}>
                 <div className="activity-inputs">
                     <div className="form-group">
                         <label className="form-label">Date</label>
@@ -260,7 +260,7 @@ function Activity({
 
     // Default render mode
     return (
-        <div className="activity">
+        <div className="activity" data-activity-id={activityState.id}>
             <div className="activity-inputs">
                 <div className="form-group">
                     <label className="form-label">{itemLabel}</label>

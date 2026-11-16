@@ -56,6 +56,9 @@ export function ActivityTopicList({
                         <option key={topic.key} value={topic.key}>{topic.displayName}</option>
                     ))}
                 </select>
+                <p className="section-description">
+                    Select an activity type to add an entry
+                </p>
             </div>
 
             {renderTopicTools?.(selectedTopic)}

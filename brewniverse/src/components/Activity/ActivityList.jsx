@@ -1,5 +1,5 @@
 import { Plus } from 'lucide-react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../Styles/Activity.css';
 import { getDate } from '../../contexts/AppContext';
 import Button from '../UI/Button';
@@ -18,6 +18,31 @@ export function ActivityList({
     modeAction
 }) {
     const buttonSize = 14;
+    const [newActivityId, setNewActivityId] = useState(null);
+
+    const handleAddEntry = () => {
+        const newActivity = addActivity(
+            setFormData,
+            getDate(),
+            getTopicDisplayName(topic),
+            null,
+            topic,
+            formData.id,
+            null);
+        setNewActivityId(newActivity?.id ?? null);
+    };
+
+    // Once the new entry has rendered, bring it into view and focus its first field
+    useEffect(() => {
+        if (!newActivityId) return;
+
+        const newEntry = document.querySelector(`[data-activity-id="${newActivityId}"]`);
+        if (newEntry) {
+            newEntry.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            newEntry.querySelector('input, select, textarea')?.focus({ preventScroll: true });
+        }
+        setNewActivityId(null);
+    }, [newActivityId]);
 
     return (
         <div className="form-group">
@@ -28,15 +53,7 @@ export function ActivityList({
                         type="button"
                         variant="outline"
                         size="small"
-                        onClick={() => addActivity(
-                            setFormData,
-                            getDate(),
-                            getTopicDisplayName(topic),
-                            null,
-                            topic,
-                            formData.id,
-                            null)
-                        }
+                        onClick={handleAddEntry}
                     >
                         <Plus size={buttonSize} />
                         Add Entry
@@ -69,15 +86,7 @@ export function ActivityList({
                                     type="button"
                                     variant="outline"
                                     size="small"
-                                    onClick={() => addActivity(
-                                        setFormData,
-                                        getDate(),
-                                        getTopicDisplayName(topic),
-                                        null,
-                                        topic,
-                                        formData.id,
-                                        null)
-                                    }
+                                    onClick={handleAddEntry}
                                 >
                                     <Plus size={buttonSize} />
                                     Add Entry

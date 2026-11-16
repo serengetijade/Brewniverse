@@ -5,7 +5,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 import { useApp } from '../../contexts/AppContext';
 import '../../Styles/RatingsChart.css';
 
-function RatingsChart({ brewLogId }) {
+function RatingsChart({ brewLogId, showTitle = true }) {
     const { theme } = useTheme();
     const { state } = useApp();
 
@@ -63,7 +63,7 @@ function RatingsChart({ brewLogId }) {
     return (
         <div className="ratings-chart-container">
             <div className="ratings-chart-header">
-                <h4><Star size={20} /> Ratings </h4>
+                {showTitle && <h4><Star size={20} /> Ratings </h4>}
                 <div className="ratings-chart-stats">
                     <span className="stat">
                         <span className="stat-label">Average:</span>

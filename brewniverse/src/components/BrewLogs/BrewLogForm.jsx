@@ -6,7 +6,7 @@ import BrewTypes from '../../constants/BrewTypes';
 import { Validation } from '../../constants/ValidationConstants';
 import { ActionTypes, generateId, getDate, useApp } from '../../contexts/AppContext';
 import BrewLog from '../../models/BrewLog';
-import { UpdateAllGravityActivityData, getCurrentAbv, getGravity13Break, getGravityActivities, getGravityFinal, getGravityOriginal, getPotentialAbv } from '../../utils/GravityCalculations';
+import { UpdateAllGravityActivityData, getCurrentAbv, getGravityActivities } from '../../utils/GravityCalculations';
 import Activity, { ActivityTopicEnum, createActivity, getActivitiesByTopic, getTopicDisplayName } from '../Activity/Activity';
 import ActivityList from '../Activity/ActivityList';
 import ActivityTopicList from '../Activity/ActivityTopicList';
@@ -17,7 +17,7 @@ import FormFooter from '../Layout/FormFooter';
 import FormHeader from '../Layout/FormHeader';
 import Button from '../UI/Button';
 import Rating from '../UI/Rating';
-import GravityChart from './GravityChart';
+import GravityStatsAndChart from './GravityStatsAndChart';
 
 function BrewLogForm() {
     const { id } = useParams();
@@ -789,65 +789,10 @@ function BrewLogForm() {
                         </h3>
                     </div>
                     <div className={`section-content ${collapsedSections.gravity ? 'collapsed' : ''}`}>
-                        {getActivitiesByTopic(formState, ActivityTopicEnum.Gravity).length === 0 && (
-                            <p className="section-description">Please add gravity entries below to see calculated values</p>
-                        )}
-
-                        <div className="gravity-stats-container">
-                            <div className="gravity-stat-card accent20">
-                                <div className="gravity-stat-label">Original Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityOriginal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityOriginal(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Starting point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent15">
-                                <div className="gravity-stat-label">1/3 Break Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravity13Break(gravityActivities) || '—'}
-                                </div>
-                                {getGravity13Break(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Add nutrient at this point</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent10">
-                                <div className="gravity-stat-label">Current Gravity</div>
-                                <div className="gravity-stat-value">
-                                    {getGravityFinal(gravityActivities) || '—'}
-                                </div>
-                                {getGravityFinal(gravityActivities) <= 1 && (
-                                    <div className="gravity-stat-subtitle">Fermentation complete</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent08">
-                                <div className="gravity-stat-label">Current ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getCurrentAbv(gravityActivities) || '—'}
-                                    {getCurrentAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getCurrentAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Present alcohol content</div>
-                                )}
-                            </div>
-
-                            <div className="gravity-stat-card accent05">
-                                <div className="gravity-stat-label">Potential Final ABV</div>
-                                <div className="gravity-stat-value">
-                                    {getPotentialAbv(gravityActivities) || '—'}
-                                    {getPotentialAbv(gravityActivities) && <span className="gravity-stat-unit">%</span>}
-                                </div>
-                                {getPotentialAbv(gravityActivities) && (
-                                    <div className="gravity-stat-subtitle">Estimated at completion</div>
-                                )}
-                            </div>
-                        </div>
-
-                        <GravityChart gravityActivities={gravityActivities} />
+                        <GravityStatsAndChart
+                            gravityActivities={gravityActivities}
+                            emptyMessage="Please add gravity entries below to see calculated values"
+                        />
                     </div>
                 </div>
 

@@ -14,7 +14,7 @@ import { getActivitiesByTopic } from '../Activity/Activity';
 import { ActivityTopicEnum } from '../../constants/ActivityTopics.jsx';
 import '../../Styles/Shared/ingredientsSummary.css';
 
-function IngredientsSummary({ brewLog }) {
+function IngredientsSummary({ brewLog, showHeader = true }) {
     // Get ingredients and sort by order
     const primaryIngredients = (brewLog.ingredientsPrimary || []).sort((a, b) => {
         const orderA = a.order !== undefined ? a.order : 999999;
@@ -92,12 +92,14 @@ function IngredientsSummary({ brewLog }) {
 
     return (
         <div className="ingredients-summary">
-            <div className="ingredients-summary-header">
-                <h2>Ingredients & Additions</h2>
-                <p className="ingredients-summary-subtitle">
-                    Complete composition breakdown of your brew
-                </p>
-            </div>
+            {showHeader && (
+                <div className="ingredients-summary-header">
+                    <h2>Ingredients & Additions</h2>
+                    <p className="ingredients-summary-subtitle">
+                        Complete composition breakdown of your brew
+                    </p>
+                </div>
+            )}
 
             {/* Main Ingredients Section */}
             {(primaryIngredients.length > 0 || secondaryIngredients.length > 0) && (
