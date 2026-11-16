@@ -18,3 +18,12 @@ Add inventory managment.
 - Inventory view
 - Naviagation menu item
 - Add inventory link to Dashboard
+
+## 11/16/26
+Redesign Brew Log detail view (v1.0.4).
+- Collapsible sections on BrewLogDetail, with a Collapse All button and state persisted like BrewLogForm
+- New GravityStatsAndChart component (gravity stat cards + chart) used by both BrewLogDetail and BrewLogForm
+- Brew status badge moved into the Brew Statistics section header
+- Condensed mobile layout (480px and under) for the detail view: two-column stat cards, tighter card padding and spacing
+- Activity Timeline controls aligned: matching sort button and topic filter, filter right-aligned
+- Add Entry on activity lists scrolls to and focuses the new entry
